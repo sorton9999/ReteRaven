@@ -14,17 +14,12 @@ namespace ReteProgram
     {
         private readonly ReteEngine _engine;
         private readonly string _ruleName;
-
-        private IReteNode _currentBranchNode;
-        private readonly List<IReteNode> _allBranchEnds = new();
-
         private IReteNode? _lastNode;
 
         public RuleBuilder(ReteEngine engine, string name) 
         { 
             _engine = engine; 
             _ruleName = name;
-            _currentBranchNode = engine.Root;
         }
 
         public RuleBuilder<TInitial> Match<T>(string name, string? debugLabel = null)
@@ -41,16 +36,6 @@ namespace ReteProgram
             alpha.AddSuccessor(adapter);
             _lastNode = beta;
             return this;
-            
-            /*
-            var alpha = _engine.GetAlphaMemory<T>();
-            var adapter = new AlphaToBetaAdapter(new BetaMemory(), name);
-            alpha.AddSuccessor(adapter);
-
-            _currentBranchNode.AddSuccessor(alpha);
-            _currentBranchNode = adapter;
-            return this;
-            */
         }
 
         public RuleBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
@@ -65,21 +50,46 @@ namespace ReteProgram
                 return result;
             };
             var alpha = _engine.GetAlphaMemory<T>();
-            BetaMemory? beta = _lastNode as BetaMemory;
-            var join = new JoinNode(beta, alpha, name,
-                (token, fact) => wrapCondition(token, (T)fact));
+            JoinNode join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
+            if (_lastNode is BetaMemory beta)
+            {
+                beta.AddSuccessor(join);
+            }
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            {
+                compositeBeta.AddSuccessor(join);
+            }
 
-            var nextBeta = new BetaMemory();
-            join.AddSuccessor(nextBeta);
+            var betaMemory = new BetaMemory();
+            join.AddSuccessor(betaMemory);
 
-            _lastNode = nextBeta;
+            _lastNode = betaMemory;
+
             return this;
         }
 
-        public RuleBuilder<TInitial> Or()
+        public RuleBuilder<TInitial> Or<T>(string name, params Func<Token, T, bool>[] orConditions)
         {
-            _allBranchEnds.Add(_currentBranchNode);
-            _currentBranchNode = _engine.Root;
+            // Save the starting point so all branches begin from the same prefix
+            var branchStartNode = _lastNode; // Previous node in the chain
+            var alpha = _engine.GetAlphaMemory<T>();
+
+            // The collector node that merges all paths
+            var orNode = new CompositeBetaMemory();
+
+            foreach (var condition in orConditions)
+            {
+                // Create a JoinNode for this specific condition
+                var join = new JoinNode(_lastNode, alpha, name,
+                    (token, fact) => condition(token, (T)fact));
+
+                // Point this branch to the OrNode
+                join.AddSuccessor(orNode);
+                //_lastNode = orNode;
+            }
+            // Update the builder state: the rest of the rule now follows the orNode
+            _lastNode = orNode;
+
             return this;
         }
 
@@ -91,22 +101,11 @@ namespace ReteProgram
             {
                 beta.AddSuccessor(terminal);
             }
-            return this;
-            
-            /*
-            _allBranchEnds.Add(_currentBranchNode);
-
-            var orNode = new OrNode();
-
-            foreach (var branchEnd in _allBranchEnds)
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
             {
-                branchEnd.AddSuccessor(orNode);
+                compositeBeta.AddSuccessor(terminal);
             }
-
-            var terminal = new TerminalNode(_ruleName, action, _engine.Agenda, salience);
-            orNode.AddSuccessor(terminal);
             return this;
-            */
         }
 
         public RuleBuilder<TInitial> Trace(string label)
@@ -127,16 +126,16 @@ namespace ReteProgram
 
         public RuleBuilder<TInitial> StartWith(AlphaMemory alpha, string factName)
         {
-            // 1. Create the very first BetaMemory for this rule's chain
+            // Create the very first BetaMemory for this rule's chain
             var firstBeta = new BetaMemory();
 
-            // 2. Use the Adapter to convert single facts from Alpha into Tokens for Beta
+            // Use the Adapter to convert single facts from Alpha into Tokens for Beta
             var adapter = new AlphaToBetaAdapter(firstBeta, factName);
             
-            // 3. Link the AlphaMemory to the Adapter
+            // Link the AlphaMemory to the Adapter
             alpha.AddSuccessor(adapter);
 
-            // 4. Update the tracker so the next 'JoinWith' knows where to connect
+            // Update the tracker so the next 'JoinWith' knows where to connect
             _lastNode = firstBeta;
 
             return this;

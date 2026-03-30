@@ -10,18 +10,25 @@ namespace ReteCore
     public class JoinNode : IReteNode
     {
         private readonly string _nextName; // The name for the new fact being joined
-        private readonly BetaMemory? _leftInput;   // Tokens from previous joins
+        private readonly IReteNode? _leftInput;   // Tokens from previous joins
         private readonly AlphaMemory? _rightInput; // Individual facts
         private readonly Func<Token, object, bool> _condition;
         private readonly List<IReteNode> _successors = new();
 
-        public JoinNode(BetaMemory? left, AlphaMemory? right, string name, Func<Token, object, bool> cond)
+        public JoinNode(IReteNode? left, AlphaMemory? right, string name, Func<Token, object, bool> cond)
         {
             _nextName = name;
             _leftInput = left;
             _rightInput = right;
             _condition = cond;
-            left?.AddSuccessor(this);
+            if (_leftInput is BetaMemory beta)
+            {
+                beta.AddSuccessor(this);
+            }
+            else if (_leftInput is CompositeBetaMemory composite)
+            {
+                composite.AddSuccessor(this);
+            }
             right?.AddSuccessor(this);
         }
 
@@ -30,29 +37,18 @@ namespace ReteCore
         // Right Activation: New fact arrives
         public void Assert(object fact)
         {
-            if (fact is Token) { return; }
-            if (_leftInput == null) { return; }
-            foreach (var token in _leftInput.Tokens)
+            if (fact is Token leftToken)
             {
-                if (_condition(token, fact))
+                foreach (var rightFact in _rightInput.Facts)
                 {
-                    var newToken = new Token(token, _nextName, fact);
-                    foreach (var s in _successors) s.Assert(newToken);
+                    EvaluateAndPropagate(leftToken, _nextName, rightFact);
                 }
             }
-        }
-
-        public void RightAssert(object newRightFact)
-        {
-            if (_leftInput == null) { return; }
-            foreach (var leftFact in _leftInput.Tokens)
+            else
             {
-                // Ensure we aren't comparing the exact same instance
-                if (!ReferenceEquals(leftFact, newRightFact) && _condition(leftFact, newRightFact))
+                foreach (var token in ((ILatentMemory)_leftInput).Tokens)
                 {
-                    // Create a Token representing the match and push to Terminal Node
-                    var matchToken = new Token(_nextName, new List<object> { leftFact, newRightFact });
-                    foreach (var succ in _successors) succ.Assert(matchToken);
+                    EvaluateAndPropagate(token, _nextName, fact);
                 }
             }
         }
@@ -93,7 +89,7 @@ namespace ReteCore
             else
             {
                 if (_leftInput == null) { return; }
-                foreach (var leftToken in _leftInput.Tokens)
+                foreach (var leftToken in ((ILatentMemory)_leftInput).Tokens)
                 {
                     this.EvaluateAndPropagate(leftToken, propertyName, factOrToken);
                 }

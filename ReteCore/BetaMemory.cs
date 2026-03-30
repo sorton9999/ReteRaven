@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace ReteCore
 {
-    public class BetaMemory : IReteNode
+    public class BetaMemory : IReteNode, ILatentMemory
     {
-        public List<Token> Tokens { get; } = new();
+        public List<Token> _tokens = new();
         private readonly List<IReteNode> _successors = new();
+
+        public IEnumerable<Token> Tokens { get { return _tokens; } }
 
         public void AddSuccessor(IReteNode node) => _successors.Add(node);
 
@@ -18,19 +20,9 @@ namespace ReteCore
             if (fact is Token token)
             {
                 if (Tokens.Any(t => t.Equals(token))) { return; }
-                Tokens.Add(token);
+                _tokens.Add(token);
                 foreach (var node in _successors)
                 {
-                    /*
-                    if (node is JoinNode join)
-                    {
-                        join.LeftAssert(token);
-                    }
-                    else
-                    {
-                        node.Assert(token);
-                    }
-                    */
                     node.Assert(token);
                 }
             }
@@ -42,7 +34,7 @@ namespace ReteCore
             var toRemove = Tokens.Where(t => t.NamedFacts.Values.Contains(fact)).ToList();
             foreach (var token in toRemove)
             {
-                Tokens.Remove(token);
+                _tokens.Remove(token);
                 foreach (var node in _successors) node.Retract(fact);
             }
         }
@@ -69,7 +61,7 @@ namespace ReteCore
         public void DebugPrint(object fact, int level = 0)
         {
             string indent = new string(' ', level * 4);
-            Console.WriteLine($"{indent}[BetaMemory] - Currently holding {Tokens.Count} partial matches.");
+            Console.WriteLine($"{indent}[BetaMemory] - Currently holding {_tokens.Count} partial matches.");
         }
     }
 }

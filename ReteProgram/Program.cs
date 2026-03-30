@@ -150,7 +150,7 @@ engine2.Assert(frontDoorM);
 // 3. Fire the Engine
 // This will satisfy the "NightIntrusion_Door" rule.
 engine2.FireAll();
-*/
+
 
 var engine3 = new ReteEngine();
 CriticalCell critCell = new() { Id="C", Value = 100, Status = "Not Critical" };
@@ -174,7 +174,7 @@ engine3.Begin("SoundAlarm")
 engine3.Assert(critCell);
 // This call will now run BOTH rules in sequence
 engine3.FireAll();
-
+*/
 
 var engine4 = new ReteEngine();
 
@@ -206,3 +206,18 @@ Console.WriteLine("Starting Fire Loop...");
     engine4.FireAll();
 //}
 Console.WriteLine("Loop Finished.");
+
+var engine5 = new ReteEngine();
+
+engine5.Begin("MatchCustomer")
+    .Match<CriticalCell>("M")
+    .Or<CriticalCell>("M",
+    (t, c) => c.Status != "Urgent",
+    (t, c) => c.Value >= 100
+    )
+    .Then(t => Console.WriteLine("This should be marked Urgent!"));
+
+engine5.Assert(new CriticalCell { Id = "M", Status = "Urgent", Value = 100 });
+
+engine5.FireAll();
+

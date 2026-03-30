@@ -21,7 +21,7 @@ namespace ReteCore
             _salience = salience;
         }
 
-        public void AddSuccessor(IReteNode node) { }
+        public void AddSuccessor(IReteNode node) { Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
 
         public void Assert(object fact)
         {
