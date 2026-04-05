@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleEngine", "RuleEngine\Ru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleEngineTest", "RuleEngineTest\RuleEngineTest.csproj", "{AA7F5800-F165-4D07-B559-00B79C32AAC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReteExample", "ReteExample\ReteExample.csproj", "{C5BAD9D6-F11C-4558-8584-F1250BDC13FB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReteCore", "ReteCore\ReteCore.csproj", "{FD617D84-5CC6-4221-A20A-61630A8B4217}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReteProgram", "ReteProgram\ReteProgram.csproj", "{0D2CE3CA-28AB-4F3F-A051-294A5BC67759}"
@@ -33,10 +31,6 @@ Global
 		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5BAD9D6-F11C-4558-8584-F1250BDC13FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5BAD9D6-F11C-4558-8584-F1250BDC13FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5BAD9D6-F11C-4558-8584-F1250BDC13FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5BAD9D6-F11C-4558-8584-F1250BDC13FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Release|Any CPU.ActiveCfg = Release|Any CPU
