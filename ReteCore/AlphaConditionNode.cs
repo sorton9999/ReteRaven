@@ -9,7 +9,7 @@ namespace ReteCore
     /// <summary>
     /// The AlphaConditionNode class represents a node in a Rete network that applies a simple condition (predicate) to incoming facts.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The fact is of this type.</typeparam>
     public class AlphaConditionNode<T> : IReteNode
     {
         /// <summary>
@@ -40,9 +40,9 @@ namespace ReteCore
         /// filter within the Rete algorithm, allowing it to efficiently evaluate incoming facts and manage their flow 
         /// through the network based on defined conditions.
         /// </summary>
-        /// <param name="propertytName"></param>
-        /// <param name="predicate"></param>
-        /// <param name="successor"></param>
+        /// <param name="propertytName">The name of the fact</param>
+        /// <param name="predicate">The filtering condition. All facts that satisfy this condition are propagated forward.</param>
+        /// <param name="successor">The successor node to propagate the fact to.</param>
         public AlphaConditionNode(string propertytName, Func<T, bool> predicate, IReteNode successor)
         {
             TargetProperty = propertytName;
@@ -65,7 +65,8 @@ namespace ReteCore
         /// you would need to modify this class to maintain
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) { }
+        public void AddSuccessor(IReteNode node) { Console.WriteLine("[AlphaConditionNode] -- This node does not implement AddSuccessor.\n" +
+            "Implement this to support multiple successors from this node."); }
 
         /// <summary>
         /// Assert a fact into the AlphaConditionNode. The node checks if the fact is of type T and if it satisfies the predicate. 

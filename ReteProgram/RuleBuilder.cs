@@ -325,7 +325,7 @@ namespace ReteProgram
         /// processing that follows in the rule evaluation process.
         /// </summary>
         /// <param name="node"></param>
-        public void AddSuccessor(IReteNode node) { Console.WriteLine("This node currently does not implement AddSuccessor.\n" +
+        public void AddSuccessor(IReteNode node) { Console.WriteLine("[AlphaToBetaAdapter] -- This node currently does not implement AddSuccessor.\n" +
             "Operations are done on the added BetaMemory explicitly to start the chain.\n" +
             "In the future this may be used for BetaMemory to BetaMemory connections."); }
 
