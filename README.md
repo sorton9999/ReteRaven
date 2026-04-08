@@ -17,6 +17,10 @@ ruleEngine.Begin("CustomerStateRule")
           .Then ((token) => PrintCustomer(token))
 ```
 
+Items or facts are input using: `ruleEngine.Assert(CustomerList)`
+
+The rule(s) are fired using: `ruleEngine.FireAll()`
+
 Using this rule engine, it is possible to write multiple rules using the logical operators and run it against input and then provide an action to run against the output.  These actions are performed in the .Then method.
 
 Full documentation can be accessed via the URL: https://sorton9999.github.io/RuleEngine
