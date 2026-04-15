@@ -204,22 +204,25 @@ engine4.FireAll();
 
 string cellName = "M";
 var engine5 = new ReteEngine();
-var criticalCell = new CriticalCell { Id = "cellName", Status = "Normal", Value = 590 };
+var criticalCell = new CriticalCell { Id = cellName, Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
-    .Match<CriticalCell>(cellName)
-    .Or<CriticalCell>(cellName, "Status-MarkOr",
+    .Match<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
+    .Or<CriticalCell>(cellName,
     (t, c) => c.Status != "Urgent",
     (t, c) => c.Value >= 100
     )
-    .And<CriticalCell>(cellName, (t, c) => c.Value < 500)
+    //.And<CriticalCell>(cellName, (t, c) => c.Value > 500)
+    .Or<CriticalCell>(cellName, 
+    (t, c) => c.Value > 500,
+    (t, c) => c.Value < 200)
     .Then(t => {
-        //Token current = t;
-        //while (current != null)
-        //{
-        //    Console.WriteLine($" -> Fact: {current.Fact}");
-        //    current = current.Parent;
-        //}
-        Console.WriteLine($">>RESULT:[{t}]: This should be marked Urgent!");
+        Token current = t;
+        var f = current.Get<CriticalCell>(cellName);
+        if (f.Value > 500)
+            f.Status = "Critical";
+        else
+            f.Status = "Normal";
+        Console.WriteLine($"[{t.Fact}]: The Status is [{f.Status}]");
         });
 
 // The original cell should not print the alert because it's normal
@@ -228,7 +231,7 @@ engine5.Assert(criticalCell);
 
 engine5.FireAll();
 
-// This value change should trigger the rule to mark it Urgent and print the alert
+// This value change should trigger the rule to mark it Normal and print the alert
 criticalCell.Value = 120;
 
 // Fire the rule again to see the affect of the value change

@@ -88,15 +88,19 @@ namespace ReteProgram
 
         private readonly Dictionary<Type, object> _alphaRegistry = new();
 
-        public AlphaMemory GetAlphaMemory<T>()
+        public AlphaMemory GetAlphaMemory<T>(string name = null, Func<T, bool> initialCondition = null)
         {
             var type = typeof(T);
             if (!_alphaRegistry.ContainsKey(type))
             {
+                AlphaConditionNode<T> alphaConditionNode = null;
                 var alpha = new AlphaMemory();
-
+                if (initialCondition != null)
+                {
+                    alphaConditionNode = new AlphaConditionNode<T>(name, initialCondition, alpha);
+                }
                 var typeNode = new ObjectTypeNode<T>();
-                typeNode.AddSuccessor(alpha);
+                typeNode.AddSuccessor(alphaConditionNode != null ? alphaConditionNode : alpha);
 
                 _root.AddSuccessor(typeNode);
 

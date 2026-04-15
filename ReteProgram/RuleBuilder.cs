@@ -64,14 +64,13 @@ namespace ReteProgram
         /// <param name="debugLabel">An optional label used for debugging purposes. If specified, diagnostic output will be written when the
         /// match is added.</param>
         /// <returns>The current RuleBuilder instance, enabling further configuration of the rule.</returns>
-        public RuleBuilder<TInitial> Match<T>(string name, string? debugLabel = null)
+        public RuleBuilder<TInitial> Match<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
         {
             if (debugLabel != null)
             {
                 Console.WriteLine($"===> Start {name}");
             }
-
-            var alpha = _engine.GetAlphaMemory<T>();
+            var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
             var beta = new BetaMemory();
             var adapter = new AlphaToBetaAdapter(beta, name);
 
