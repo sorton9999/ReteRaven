@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 438.596497
+%%BoundingBox: 0 0 500 570.175415
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 1.140000 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 0.876923 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 10 def
+/rows 13 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -178,7 +178,10 @@ boxfont setfont
 (ReteCore.AlphaMemory) cw
 (ReteCore.BetaMemory) cw
 (ReteCore.CompositeBetaMemory) cw
+(ReteCore.ExistsNode) cw
+(ReteCore.IndexedExistsNode) cw
 (ReteCore.JoinNode) cw
+(ReteCore.NotNode) cw
 (ReteCore.OrNode) cw
 (ReteCore.TerminalNode) cw
 (ReteProgram.AlphaToBetaAdapter) cw
@@ -194,12 +197,15 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (ReteCore.IReteNode) 0.000000 9.000000 box
- (ReteCore.AlphaConditionNode< T >) 1.000000 8.000000 box
- (ReteCore.AlphaMemory) 1.000000 7.000000 box
- (ReteCore.BetaMemory) 1.000000 6.000000 box
- (ReteCore.CompositeBetaMemory) 1.000000 5.000000 box
- (ReteCore.JoinNode) 1.000000 4.000000 box
+ (ReteCore.IReteNode) 0.000000 12.000000 box
+ (ReteCore.AlphaConditionNode< T >) 1.000000 11.000000 box
+ (ReteCore.AlphaMemory) 1.000000 10.000000 box
+ (ReteCore.BetaMemory) 1.000000 9.000000 box
+ (ReteCore.CompositeBetaMemory) 1.000000 8.000000 box
+ (ReteCore.ExistsNode) 1.000000 7.000000 box
+ (ReteCore.IndexedExistsNode) 1.000000 6.000000 box
+ (ReteCore.JoinNode) 1.000000 5.000000 box
+ (ReteCore.NotNode) 1.000000 4.000000 box
  (ReteCore.OrNode) 1.000000 3.000000 box
  (ReteCore.TerminalNode) 1.000000 2.000000 box
  (ReteProgram.AlphaToBetaAdapter) 1.000000 1.000000 box
@@ -208,7 +214,13 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- relations -----
 
 solid
-1 0.000000 8.250000 out
+1 0.000000 11.250000 out
+solid
+0 0.000000 11.500000 hedge
+solid
+0 0.000000 10.500000 hedge
+solid
+0 0.000000 9.500000 hedge
 solid
 0 0.000000 8.500000 hedge
 solid
@@ -228,4 +240,4 @@ solid
 solid
 0 0.000000 0.500000 hedge
 solid
-0.000000 9.000000 0.500000 vedge
+0.000000 12.000000 0.500000 vedge

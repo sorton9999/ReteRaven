@@ -207,19 +207,19 @@ var engine5 = new ReteEngine();
 var criticalCell = new CriticalCell { Id = "cellName", Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
     .Match<CriticalCell>(cellName)
-    .Or<CriticalCell>(cellName,
+    .Or<CriticalCell>(cellName, "Status-MarkOr",
     (t, c) => c.Status != "Urgent",
     (t, c) => c.Value >= 100
     )
     .And<CriticalCell>(cellName, (t, c) => c.Value < 500)
     .Then(t => {
-        Token current = t;
+        //Token current = t;
         //while (current != null)
         //{
         //    Console.WriteLine($" -> Fact: {current.Fact}");
         //    current = current.Parent;
         //}
-        Console.WriteLine($"[{t.Fact}]: This should be marked Urgent!");
+        Console.WriteLine($">>RESULT:[{t}]: This should be marked Urgent!");
         });
 
 // The original cell should not print the alert because it's normal
@@ -233,4 +233,101 @@ criticalCell.Value = 120;
 
 // Fire the rule again to see the affect of the value change
 engine5.FireAll();
+
+var engine6 = new ReteEngine();
+var criticalCell2 = new CriticalCell { Id = "Not Cell", Status = "Normal", Value = 590 };
+engine6.Begin("MatchStatusNot")
+    .Match<CriticalCell>("C")
+    .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent", "MarkNot")
+    .And<CriticalCell>("C", (t, c) => c.Value > 500, "MarkAnd")
+    .Then(t => {
+        Console.WriteLine($">>RESULT:[{t}]: This should be marked URGENT!");
+        });
+
+engine6.Assert(criticalCell2);
+engine6.FireAll();
+
+
+var engine7 = new ReteEngine();
+engine7.Begin("MatchStatusExists")
+    .Match<CriticalCell>("C")
+    .Exists<CriticalCell>("C", (t, c) => c.Status == "Normal", "MarkExists")
+    .Or<CriticalCell>("C", "Exists-MarkOr", 
+        (t, c) => c.Value > 500,
+        (t, c) => c.Value < 300
+        )
+    .Then(t => {
+        Console.WriteLine($">>RESULT:[{t}]: This Exists and should be marked URGENT!");
+        });
+
+engine7.Assert(criticalCell2);
+engine7.FireAll();
+
+var engine8 = new ReteEngine();
+engine8.Begin("Alert_Out_of_Stock_Electronics")
+    .Match<Product>("P")
+    .And<Product>("P", (t, i) => i.Category == "Electronics", "CheckCategory")
+    .Not<Inventory>("P", (t, i) => i.ProductId == t.Get<Product>("P").ProductId, "NoStock")
+    .Then(terminal =>
+    {
+        var p = terminal.Get<Product>("P");
+        Console.WriteLine($"ALERT: Order emergency stock!! Product '{p.Name}' is out of stock!", 999);
+    });
+
+engine8.Begin("Tag_High_Priority_Items")
+    .Match<Product>("P")
+    .And<Product>("P", (t, i) => i.ProductId == t.Get<Product>("P").ProductId)
+    // OR: Join logic splits here. Firing if either branch is true.
+    .Or<Product>("P", "PriceCheck",
+        (t, c) => c.Price > 1000,
+        (t, c) => c.ProductId == 998899)
+    .Then(t => {
+        Console.WriteLine($"[ACTION] Tagging {t.Get<Product>("P").Name} for Insurance.", 100);
+    });
+
+engine8.Begin("Process_Urgent_Batch")
+    .Match<Product>("P")
+    // EXISTS: We only care IF there is a pending shipment, not HOW MANY.
+    .Exists<Shipment>("P", (t, s) => s.ProductId == t.Get<Product>("P").ProductId && s.Status == "Pending")
+    .Then(t => {
+        Console.WriteLine($"[ACTION] Adding {t.Get<Product>("P").Name} to the morning truck.", 555);
+    });
+
+Product product = new Product()
+{
+    ProductId = 12345,
+    Name = "4K TV",
+    Category = "Electronics",
+    Price = 1500
+};
+Product product2 = new Product()
+{
+    ProductId = 888899,
+    Name = "Luxury Watch",
+    Category = "Accessories",
+    Price = 5000
+};
+Inventory inventory = new Inventory()
+{
+    ProductId = 12347,
+    Quantity = 0
+};
+Inventory inventory2 = new Inventory()
+{
+    ProductId = 888899,
+    Quantity = 1
+};
+Shipment shipment = new Shipment()
+{
+    ProductId = 888899,
+    Status = "Pending"
+};
+
+engine8.Assert(product);
+engine8.Assert(product2);
+engine8.Assert(inventory);
+engine8.Assert(inventory2);
+engine8.Assert(shipment);
+
+engine8.FireAll();
 

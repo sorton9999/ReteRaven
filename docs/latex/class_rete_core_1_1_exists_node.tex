@@ -1,0 +1,262 @@
+\doxysection{Rete\+Core.\+Exists\+Node Class Reference}
+\hypertarget{class_rete_core_1_1_exists_node}{}\label{class_rete_core_1_1_exists_node}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+
+
+The \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} class represents a node in a Rete network that implements the "{}exists"{} condition. It tracks partial matches from the left (beta) side and facts from the right (alpha) side, ensuring that a token is only propagated to successors if at least one matching fact exists on the right. The node maintains a count of how many right facts currently block each left token, allowing it to efficiently determine when to assert or retract tokens based on changes in the right memory. This node is essential for implementing rules that require the existence of certain conditions without needing to specify all possible combinations of facts. $<$\+Remark$>$ As a side note, in a rete network, the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} and the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} are very similar in structure and logic, with the main difference being that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} propagates tokens when at least one match exists, while the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} propagates tokens only when no matches exist. This means that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} will assert tokens when the count of blocking facts is greater than zero, whereas the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} will assert tokens when the count is zero. Both nodes must carefully manage their internal state to ensure correct propagation of tokens based on changes in the right memory.$<$/\+\+Remark$>$.  
+
+
+Inheritance diagram for Rete\+Core.\+Exists\+Node:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_exists_node}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_rete_core_1_1_exists_node_a33bd8d14e4da41d992b3f5d1c2387487}{Exists\+Node}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, object, bool $>$ constraint)
+\begin{DoxyCompactList}\small\item\em The constructor for the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} takes a name for debugging purposes and a join constraint function that determines whether a given left token and right fact should be considered a match. The join constraint is a critical component of the node, as it defines the logic for how tokens and facts are evaluated against each other to determine whether a token should be blocked or allowed to propagate. The node\+Name parameter is used for identification and debugging, allowing developers to easily trace the flow of tokens through the network and understand which nodes are responsible for certain matches or failures. The join\+Constraint function should return true if the token and fact satisfy the conditions for a match, and false otherwise. This allows for flexible and powerful rule definitions based on the specific requirements of the application using the Rete engine. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_a840910a584dc84a343884c6aa7733d8d}{Add\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} node)
+\begin{DoxyCompactList}\small\item\em Adds a successor node to this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node}. When a new successor is added, the node must "{}\+Refresh"{} it with the current valid state of tokens. This means that for each token currently in the left\+Matches dictionary that has a count of zero (indicating it is not blocked by any right facts), the node will assert that token to the new successor. This ensures that the new successor node is immediately aware of all currently valid tokens and can properly propagate them further down the network. The Refresh process is crucial for maintaining consistency in the Rete network, especially when nodes are added dynamically after some tokens have already been processed. By refreshing the new successor with the current state, we ensure that it can function correctly without missing any relevant tokens or facts. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_aff89211891e60d0b8da26cd463ef90cd}{Assert}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em The Assert method is the main entry point for handling incoming data to this node. It can receive either a \doxylink{class_rete_core_1_1_token}{Token} (from the left/\+beta side) or a single fact (from the right/\+alpha side). The method determines the type of the input and delegates to the appropriate handler method (Assert\+Left for tokens and Assert\+Right for facts). This design allows the node to maintain a clear separation of logic for handling different types of inputs while still providing a unified interface for asserting data into the node. The Assert method is responsible for ensuring that the internal state of the node is updated correctly based on the incoming data, which in turn affects how tokens are propagated to successor nodes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_a26a38871eaa471c8857a4753f18293e0}{Assert\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Handles incoming partial matches from the Left (Beta side) by evaluating them against the current facts in the right memory. For each token asserted from the left, the node checks how many facts in the right memory match it according to the join constraint. The count of matching facts is stored in the left\+Matches dictionary. If at least one match exists (count \texorpdfstring{$>$}{>} 0), the token is immediately propagated to successor nodes. This ensures that only tokens that satisfy the "{}exists"{} condition are allowed to propagate, while those that do not have any matching facts on the right are effectively blocked and not sent downstream. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_ac98086aa32ad9eaa53f40e18d532ec85}{Assert\+Right}} (object fact)
+\begin{DoxyCompactList}\small\item\em Handles incoming single facts from the Right (Alpha side) by adding them to the right memory and checking if they match any currently active left tokens. For each fact asserted from the right, the node iterates through all tokens in the left\+Matches dictionary and evaluates the join constraint against the new fact. If a match is found, the count for that token is incremented. If this is the first matching fact for that token (count changes from 0 to 1), the token is propagated to successor nodes. This ensures that when a new fact is added that satisfies the "{}exists"{} condition for any token, those tokens are activated and sent downstream, while tokens that do not have any matching facts remain blocked. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_af766708a2997732c3a8508fc24358359}{Retract}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em The Retract method is responsible for handling the removal of either a \doxylink{class_rete_core_1_1_token}{Token} (from the left/\+beta side) or a single fact (from the right/\+alpha side). Similar to the Assert method, it determines the type of input and delegates to the appropriate handler method (Retract\+Left for tokens and Retract\+Right for facts). When retracting a token from the left, the node checks if it was previously active (count \texorpdfstring{$>$}{>} 0) and if so, it propagates a retraction to successor nodes. When retracting a fact from the right, the node removes it from the right memory and checks if this causes any previously blocked tokens to become active again. If a token\textquotesingle{}s count changes from 1 to 0 due to the retraction of a fact, it means that token is no longer blocked and should be retracted from successor nodes. This ensures that the node maintains an accurate representation of which tokens are currently valid based on the presence or absence of matching facts in the right memory. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_ad7496c4c8df211a39e85ef9362e2584e}{Retract\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Retracts a token from the left side by removing it from the left\+Matches dictionary. If the token was previously active (count \texorpdfstring{$>$}{>} 0), it propagates a retraction to successor nodes. This ensures that when a token is removed from the left side, any downstream nodes that were relying on that token being active are notified and can update their state accordingly. The node does not need to check for matches against the right memory when retracting a token, as the presence of matching facts only affects whether a token is active or not, and once a token is retracted, it is no longer relevant regardless of the right memory state. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_aa85be833546f2809eee2d23ea7ae1d82}{Retract\+Right}} (object fact)
+\begin{DoxyCompactList}\small\item\em Retracts a fact from the right side by removing it from the right memory and checking if this causes any previously blocked tokens to become active again. For each token in the left\+Matches dictionary, if the retracted fact matches the token according to the join constraint, the count for that token is decremented. If this causes the count to change from 1 to 0, it means that token is no longer blocked by any facts on the right and should be retracted from successor nodes. This ensures that when a fact is removed from the right side, any tokens that were previously blocked by that fact are properly updated and downstream nodes are notified of their new state. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_aebeb99527c314fd9cb2c9550080179a5}{Refresh}} (object fact\+Or\+Token, string property\+Name)
+\begin{DoxyCompactList}\small\item\em Forces a downstream node to sync with this node\textquotesingle{}s current valid tokens. This is used when a new successor node is added, or when an existing successor node needs to be refreshed due to changes in the network. The method takes either a \doxylink{class_rete_core_1_1_token}{Token} or a fact and a property name (for fact refreshes) and determines which type of refresh to perform. For token refreshes, it checks if the token is currently blocked or not and propagates an assert if it is valid. For fact refreshes, it checks all tokens against the refreshed fact and updates their counts accordingly, propagating asserts or retracts as needed based on the new state of matches. This method ensures that successor nodes are always in sync with the current state of this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node}, allowing for correct propagation of tokens based on the latest information. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_a7718f4c18062f08100adbe5a12eea0f7}{Refresh\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Refreshes a token from the left side by checking if it is currently blocked or not and propagating an assert if it is valid. This method is used when a new successor node is added or when an existing successor node needs to be refreshed due to changes in the network. If the token is not currently in the left\+Matches dictionary, it means it has not been processed yet, so we call Assert\+Left to evaluate it against the current right memory and update its state accordingly. This ensures that any new or updated tokens are properly evaluated and propagated to successor nodes based on their current validity. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_acfdaa7944340e226dc60aa6889eabb2e}{Refresh\+Right}} (object fact, string property\+Name)
+\begin{DoxyCompactList}\small\item\em Refreshes a fact from the right side by checking all tokens against the refreshed fact and updating their counts accordingly. This method is used when a new successor node is added or when an existing successor node needs to be refreshed due to changes in the network. For each token in the left\+Matches dictionary, if the refreshed fact matches the token according to the join constraint, we check if it was previously blocked (count == 0) and if so, we increment the count and propagate an assert to successor nodes. If it was previously active (count \texorpdfstring{$>$}{>} 0), we simply update the count without propagating since it is already valid. This ensures that any changes to facts on the right side are properly reflected in the state of tokens and that successor nodes are kept up-\/to-\/date with the current valid tokens based on the latest information. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_exists_node_a6fc57f94dccc42d4a7158efb10586cb3}{Debug\+Print}} (object fact, int level=0)
+\begin{DoxyCompactList}\small\item\em Prints the internal state of this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} for debugging purposes. This method provides a visual representation of the current tokens in the left\+Matches dictionary, the facts in the right\+Memory, and how they are related in terms of blocking. The output includes the name of the node, the number of left tokens and right facts, and for each left token, it shows how many right facts are currently blocking it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} class represents a node in a Rete network that implements the "{}exists"{} condition. It tracks partial matches from the left (beta) side and facts from the right (alpha) side, ensuring that a token is only propagated to successors if at least one matching fact exists on the right. The node maintains a count of how many right facts currently block each left token, allowing it to efficiently determine when to assert or retract tokens based on changes in the right memory. This node is essential for implementing rules that require the existence of certain conditions without needing to specify all possible combinations of facts. $<$\+Remark$>$ As a side note, in a rete network, the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} and the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} are very similar in structure and logic, with the main difference being that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} propagates tokens when at least one match exists, while the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} propagates tokens only when no matches exist. This means that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} will assert tokens when the count of blocking facts is greater than zero, whereas the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} will assert tokens when the count is zero. Both nodes must carefully manage their internal state to ensure correct propagation of tokens based on changes in the right memory.$<$/\+\+Remark$>$. 
+
+\label{doc-constructors}
+\Hypertarget{class_rete_core_1_1_exists_node_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_rete_core_1_1_exists_node_a33bd8d14e4da41d992b3f5d1c2387487}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!ExistsNode@{ExistsNode}}
+\index{ExistsNode@{ExistsNode}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{ExistsNode()}{ExistsNode()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_a33bd8d14e4da41d992b3f5d1c2387487} 
+Rete\+Core.\+Exists\+Node.\+Exists\+Node (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, object, bool $>$}]{constraint}{}\end{DoxyParamCaption})}
+
+
+
+The constructor for the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} takes a name for debugging purposes and a join constraint function that determines whether a given left token and right fact should be considered a match. The join constraint is a critical component of the node, as it defines the logic for how tokens and facts are evaluated against each other to determine whether a token should be blocked or allowed to propagate. The node\+Name parameter is used for identification and debugging, allowing developers to easily trace the flow of tokens through the network and understand which nodes are responsible for certain matches or failures. The join\+Constraint function should return true if the token and fact satisfy the conditions for a match, and false otherwise. This allows for flexible and powerful rule definitions based on the specific requirements of the application using the Rete engine. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of this node as identification.\\
+\hline
+{\em constraint} & The condition to be used as the \textquotesingle{}EXISTS\textquotesingle{} constraint.\\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_exists_node_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_exists_node_a840910a584dc84a343884c6aa7733d8d}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!AddSuccessor@{AddSuccessor}}
+\index{AddSuccessor@{AddSuccessor}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{AddSuccessor()}{AddSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_a840910a584dc84a343884c6aa7733d8d} 
+void Rete\+Core.\+Exists\+Node.\+Add\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{node}{}\end{DoxyParamCaption})}
+
+
+
+Adds a successor node to this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node}. When a new successor is added, the node must "{}\+Refresh"{} it with the current valid state of tokens. This means that for each token currently in the left\+Matches dictionary that has a count of zero (indicating it is not blocked by any right facts), the node will assert that token to the new successor. This ensures that the new successor node is immediately aware of all currently valid tokens and can properly propagate them further down the network. The Refresh process is crucial for maintaining consistency in the Rete network, especially when nodes are added dynamically after some tokens have already been processed. By refreshing the new successor with the current state, we ensure that it can function correctly without missing any relevant tokens or facts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & The node to add this node to as a successor.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_aff89211891e60d0b8da26cd463ef90cd}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!Assert@{Assert}}
+\index{Assert@{Assert}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{Assert()}{Assert()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_aff89211891e60d0b8da26cd463ef90cd} 
+void Rete\+Core.\+Exists\+Node.\+Assert (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
+
+
+
+The Assert method is the main entry point for handling incoming data to this node. It can receive either a \doxylink{class_rete_core_1_1_token}{Token} (from the left/\+beta side) or a single fact (from the right/\+alpha side). The method determines the type of the input and delegates to the appropriate handler method (Assert\+Left for tokens and Assert\+Right for facts). This design allows the node to maintain a clear separation of logic for handling different types of inputs while still providing a unified interface for asserting data into the node. The Assert method is responsible for ensuring that the internal state of the node is updated correctly based on the incoming data, which in turn affects how tokens are propagated to successor nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a05567f044dd13d4de35da0591191fca2}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_exists_node_a26a38871eaa471c8857a4753f18293e0}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!AssertLeft@{AssertLeft}}
+\index{AssertLeft@{AssertLeft}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{AssertLeft()}{AssertLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_a26a38871eaa471c8857a4753f18293e0} 
+void Rete\+Core.\+Exists\+Node.\+Assert\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Handles incoming partial matches from the Left (Beta side) by evaluating them against the current facts in the right memory. For each token asserted from the left, the node checks how many facts in the right memory match it according to the join constraint. The count of matching facts is stored in the left\+Matches dictionary. If at least one match exists (count \texorpdfstring{$>$}{>} 0), the token is immediately propagated to successor nodes. This ensures that only tokens that satisfy the "{}exists"{} condition are allowed to propagate, while those that do not have any matching facts on the right are effectively blocked and not sent downstream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_ac98086aa32ad9eaa53f40e18d532ec85}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!AssertRight@{AssertRight}}
+\index{AssertRight@{AssertRight}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{AssertRight()}{AssertRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_ac98086aa32ad9eaa53f40e18d532ec85} 
+void Rete\+Core.\+Exists\+Node.\+Assert\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Handles incoming single facts from the Right (Alpha side) by adding them to the right memory and checking if they match any currently active left tokens. For each fact asserted from the right, the node iterates through all tokens in the left\+Matches dictionary and evaluates the join constraint against the new fact. If a match is found, the count for that token is incremented. If this is the first matching fact for that token (count changes from 0 to 1), the token is propagated to successor nodes. This ensures that when a new fact is added that satisfies the "{}exists"{} condition for any token, those tokens are activated and sent downstream, while tokens that do not have any matching facts remain blocked. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_a6fc57f94dccc42d4a7158efb10586cb3}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!DebugPrint@{DebugPrint}}
+\index{DebugPrint@{DebugPrint}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{DebugPrint()}{DebugPrint()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_a6fc57f94dccc42d4a7158efb10586cb3} 
+void Rete\+Core.\+Exists\+Node.\+Debug\+Print (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{int}]{level}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+Prints the internal state of this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} for debugging purposes. This method provides a visual representation of the current tokens in the left\+Matches dictionary, the facts in the right\+Memory, and how they are related in terms of blocking. The output includes the name of the node, the number of left tokens and right facts, and for each left token, it shows how many right facts are currently blocking it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact whose information is to be output.\\
+\hline
+{\em level} & A level of indentation.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_aaee4a1eb9365b5d13e8301fc3d1d9730}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_exists_node_aebeb99527c314fd9cb2c9550080179a5}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!Refresh@{Refresh}}
+\index{Refresh@{Refresh}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{Refresh()}{Refresh()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_aebeb99527c314fd9cb2c9550080179a5} 
+void Rete\+Core.\+Exists\+Node.\+Refresh (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{, }\item[{string}]{property\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Forces a downstream node to sync with this node\textquotesingle{}s current valid tokens. This is used when a new successor node is added, or when an existing successor node needs to be refreshed due to changes in the network. The method takes either a \doxylink{class_rete_core_1_1_token}{Token} or a fact and a property name (for fact refreshes) and determines which type of refresh to perform. For token refreshes, it checks if the token is currently blocked or not and propagates an assert if it is valid. For fact refreshes, it checks all tokens against the refreshed fact and updates their counts accordingly, propagating asserts or retracts as needed based on the new state of matches. This method ensures that successor nodes are always in sync with the current state of this \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node}, allowing for correct propagation of tokens based on the latest information. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+{\em property\+Name} & The name of the property in the fact cell that is being updated.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_exists_node_a7718f4c18062f08100adbe5a12eea0f7}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!RefreshLeft@{RefreshLeft}}
+\index{RefreshLeft@{RefreshLeft}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{RefreshLeft()}{RefreshLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_a7718f4c18062f08100adbe5a12eea0f7} 
+void Rete\+Core.\+Exists\+Node.\+Refresh\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Refreshes a token from the left side by checking if it is currently blocked or not and propagating an assert if it is valid. This method is used when a new successor node is added or when an existing successor node needs to be refreshed due to changes in the network. If the token is not currently in the left\+Matches dictionary, it means it has not been processed yet, so we call Assert\+Left to evaluate it against the current right memory and update its state accordingly. This ensures that any new or updated tokens are properly evaluated and propagated to successor nodes based on their current validity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_acfdaa7944340e226dc60aa6889eabb2e}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!RefreshRight@{RefreshRight}}
+\index{RefreshRight@{RefreshRight}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{RefreshRight()}{RefreshRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_acfdaa7944340e226dc60aa6889eabb2e} 
+void Rete\+Core.\+Exists\+Node.\+Refresh\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{string}]{property\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Refreshes a fact from the right side by checking all tokens against the refreshed fact and updating their counts accordingly. This method is used when a new successor node is added or when an existing successor node needs to be refreshed due to changes in the network. For each token in the left\+Matches dictionary, if the refreshed fact matches the token according to the join constraint, we check if it was previously blocked (count == 0) and if so, we increment the count and propagate an assert to successor nodes. If it was previously active (count \texorpdfstring{$>$}{>} 0), we simply update the count without propagating since it is already valid. This ensures that any changes to facts on the right side are properly reflected in the state of tokens and that successor nodes are kept up-\/to-\/date with the current valid tokens based on the latest information. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+{\em property\+Name} & The name of the property in the fact cell that is being updated.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_af766708a2997732c3a8508fc24358359}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!Retract@{Retract}}
+\index{Retract@{Retract}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_af766708a2997732c3a8508fc24358359} 
+void Rete\+Core.\+Exists\+Node.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
+
+
+
+The Retract method is responsible for handling the removal of either a \doxylink{class_rete_core_1_1_token}{Token} (from the left/\+beta side) or a single fact (from the right/\+alpha side). Similar to the Assert method, it determines the type of input and delegates to the appropriate handler method (Retract\+Left for tokens and Retract\+Right for facts). When retracting a token from the left, the node checks if it was previously active (count \texorpdfstring{$>$}{>} 0) and if so, it propagates a retraction to successor nodes. When retracting a fact from the right, the node removes it from the right memory and checks if this causes any previously blocked tokens to become active again. If a token\textquotesingle{}s count changes from 1 to 0 due to the retraction of a fact, it means that token is no longer blocked and should be retracted from successor nodes. This ensures that the node maintains an accurate representation of which tokens are currently valid based on the presence or absence of matching facts in the right memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_exists_node_ad7496c4c8df211a39e85ef9362e2584e}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!RetractLeft@{RetractLeft}}
+\index{RetractLeft@{RetractLeft}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{RetractLeft()}{RetractLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_ad7496c4c8df211a39e85ef9362e2584e} 
+void Rete\+Core.\+Exists\+Node.\+Retract\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Retracts a token from the left side by removing it from the left\+Matches dictionary. If the token was previously active (count \texorpdfstring{$>$}{>} 0), it propagates a retraction to successor nodes. This ensures that when a token is removed from the left side, any downstream nodes that were relying on that token being active are notified and can update their state accordingly. The node does not need to check for matches against the right memory when retracting a token, as the presence of matching facts only affects whether a token is active or not, and once a token is retracted, it is no longer relevant regardless of the right memory state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_exists_node_aa85be833546f2809eee2d23ea7ae1d82}\index{ReteCore.ExistsNode@{ReteCore.ExistsNode}!RetractRight@{RetractRight}}
+\index{RetractRight@{RetractRight}!ReteCore.ExistsNode@{ReteCore.ExistsNode}}
+\doxysubsubsection{\texorpdfstring{RetractRight()}{RetractRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_exists_node_aa85be833546f2809eee2d23ea7ae1d82} 
+void Rete\+Core.\+Exists\+Node.\+Retract\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Retracts a fact from the right side by removing it from the right memory and checking if this causes any previously blocked tokens to become active again. For each token in the left\+Matches dictionary, if the retracted fact matches the token according to the join constraint, the count for that token is decremented. If this causes the count to change from 1 to 0, it means that token is no longer blocked by any facts on the right and should be retracted from successor nodes. This ensures that when a fact is removed from the right side, any tokens that were previously blocked by that fact are properly updated and downstream nodes are notified of their new state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Exists\+Node.\+cs\end{DoxyCompactItemize}

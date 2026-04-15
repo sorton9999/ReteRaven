@@ -1,0 +1,262 @@
+\doxysection{Rete\+Core.\+Not\+Node Class Reference}
+\hypertarget{class_rete_core_1_1_not_node}{}\label{class_rete_core_1_1_not_node}\index{ReteCore.NotNode@{ReteCore.NotNode}}
+
+
+This class represents a NOT node in a Rete network, which implements the logical negation. It tracks partial matches from the left (Beta side) and facts from the right (Alpha side) to determine when the NOT condition is satisfied. When a new left token is asserted, it checks against all right facts to see if any block it. If none block it, the token is propagated downstream. When a new right fact is asserted, it checks if it blocks any existing left tokens and updates their state accordingly. The node also supportsretractions and refreshes to maintain correct state as facts and tokens change over time. $<$\+Remark$>$ As a side note, in a rete network, the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} and the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} are very similar in structure and logic, with the main difference being that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} propagates tokens when at least one match exists, while the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} propagates tokens only when no matches exist. This means that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} will assert tokens when the count of blocking facts is greater than zero, whereas the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} will assert tokens when the count is zero. Both nodes must carefully manage their internal state to ensure correct propagation of tokens based on changes in the right memory.$<$/\+\+Remark$>$.  
+
+
+Inheritance diagram for Rete\+Core.\+Not\+Node:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_not_node}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_rete_core_1_1_not_node_ab4715c13398692d58ca643af8c74466a}{Not\+Node}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, object, bool $>$ constraint)
+\begin{DoxyCompactList}\small\item\em The constructor for the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} takes a name for identification and a join constraint function that defines how to determine if a right fact blocks a left token. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a41d98d39c798095ea13d2b435c339905}{Add\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} node)
+\begin{DoxyCompactList}\small\item\em Adds a successor node to this NOT node. When a new successor is added, it is immediately refreshed with the current valid state of left tokens that are not blocked by any right facts, ensuring that the new node is up-\/to-\/date with the current state of matches in this NOT node. This allows for dynamic construction of the Rete network while maintaining correct propagation of matches to successor nodes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a991bc0231c5c8c584166a9dd26d0ab74}{Assert}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em The Assert method is the main entry point for incoming facts or tokens. It determines whether the input is a left token or a right fact and delegates to the appropriate method (Assert\+Left or Assert\+Right) to handle the logic specific to that side of the NOT node. This design allows for a clean separation of concerns and ensures that the correct processing logic is applied based on the type of input received. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_abdee9bdb5e65f7516a1a2959d0e97df7}{Assert\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Handles incoming partial matches from the Left (Beta side). It checks the new token against all facts in the right memory using the join constraint. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_ad10b2e13e1a0c4c995579c1f274a8008}{Assert\+Right}} (object fact)
+\begin{DoxyCompactList}\small\item\em Handles incoming single facts from the Right (Alpha side). It checks the new fact against all existing left tokens to see if it blocks any of them. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_ae6d2def5c6d12a73b87778c24aeab5f0}{Retract}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em The Retract method is the main entry point for retractions of facts or tokens. Similar to Assert, it determines whether the input is a left token or a right fact and delegates to the appropriate method (Retract or Retract\+Right) to handle the logic specific to that side of the NOT node. This allows for proper handling of retractions and ensures that the state of the NOT node is correctly updated when facts or tokens are removed from the network. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_aa82805bfae8938ef960d5ab1186fd46c}{Retract\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Handles retractions of left tokens. It removes the token from the left matches and, if it was not blocked by any right facts, it propagates a retract downstream to indicate that the NOT condition is now satisfied again. This ensures that any successor nodes that were previously blocked by this token will now receive an assertion for it, allowing the Rete network to correctly reflect the change in state caused by the retraction of the token. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a71ccc5a24b7f3b90e5bd0ba88b63f2f7}{Retract\+Right}} (object fact)
+\begin{DoxyCompactList}\small\item\em Handles retractions of right facts. It removes the fact from the right memory and checks if this retraction "{}resurrects"{} any left tokens that were previously blocked by this fact. If a left token\textquotesingle{}s block count transitions from 1 to 0, it means the NOT condition is now satisfied for that token, and it propagates an assertion downstream to indicate that the token is now valid again. This ensures that the Rete network correctly reflects the change in state caused by the retraction of the right fact and allows any successor nodes to update their state accordingly based on the new valid tokens. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_aa6b888e02450e8ac5acb782b3499afd7}{Refresh}} (object fact\+Or\+Token, string property\+Name)
+\begin{DoxyCompactList}\small\item\em Forces a downstream node to sync with this node\textquotesingle{}s current valid tokens. This is used when a new successor node is added to ensure it receives the correct state of matches from this NOT node. It checks if the input is a left token or a right fact and delegates to the appropriate refresh method to update the state of matches and propagate any necessary assertions or retractions downstream. This allows for dynamic updates to the Rete network while maintaining correct propagation of matches to successor nodes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a473deacc584249863bd439e7465a0579}{Refresh\+Left}} (\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a0fdeb9fd36db8d2d4dab7966aa132921}{Refresh\+Right}} (object fact, string property\+Name)
+\begin{DoxyCompactList}\small\item\em Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a4a2ec1c8183aa91a2a3ee8e060d52908}{Debug\+Print}} (object fact, int level=0)
+\begin{DoxyCompactList}\small\item\em A debug method to print the current state of the NOT node, including the number of left tokens, right facts, and the block counts for each left token. This can be useful for understanding how the NOT node is processing matches and how it is affected by incoming facts and tokens. The method takes an optional level parameter to control indentation for better readability when printing nested nodes in the Rete network. By providing insight into the internal state of the NOT node, this debug method can help developers diagnose issues and understand the behavior of the Rete network during development and testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class represents a NOT node in a Rete network, which implements the logical negation. It tracks partial matches from the left (Beta side) and facts from the right (Alpha side) to determine when the NOT condition is satisfied. When a new left token is asserted, it checks against all right facts to see if any block it. If none block it, the token is propagated downstream. When a new right fact is asserted, it checks if it blocks any existing left tokens and updates their state accordingly. The node also supportsretractions and refreshes to maintain correct state as facts and tokens change over time. $<$\+Remark$>$ As a side note, in a rete network, the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} and the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} are very similar in structure and logic, with the main difference being that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} propagates tokens when at least one match exists, while the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} propagates tokens only when no matches exist. This means that the \doxylink{class_rete_core_1_1_exists_node}{Exists\+Node} will assert tokens when the count of blocking facts is greater than zero, whereas the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} will assert tokens when the count is zero. Both nodes must carefully manage their internal state to ensure correct propagation of tokens based on changes in the right memory.$<$/\+\+Remark$>$. 
+
+\label{doc-constructors}
+\Hypertarget{class_rete_core_1_1_not_node_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_rete_core_1_1_not_node_ab4715c13398692d58ca643af8c74466a}\index{ReteCore.NotNode@{ReteCore.NotNode}!NotNode@{NotNode}}
+\index{NotNode@{NotNode}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{NotNode()}{NotNode()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_ab4715c13398692d58ca643af8c74466a} 
+Rete\+Core.\+Not\+Node.\+Not\+Node (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, object, bool $>$}]{constraint}{}\end{DoxyParamCaption})}
+
+
+
+The constructor for the \doxylink{class_rete_core_1_1_not_node}{Not\+Node} takes a name for identification and a join constraint function that defines how to determine if a right fact blocks a left token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of this node as identification.\\
+\hline
+{\em constraint} & The condition to be used as the \textquotesingle{}NOT\textquotesingle{} blocking constraint.\\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_not_node_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_not_node_a41d98d39c798095ea13d2b435c339905}\index{ReteCore.NotNode@{ReteCore.NotNode}!AddSuccessor@{AddSuccessor}}
+\index{AddSuccessor@{AddSuccessor}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{AddSuccessor()}{AddSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a41d98d39c798095ea13d2b435c339905} 
+void Rete\+Core.\+Not\+Node.\+Add\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{node}{}\end{DoxyParamCaption})}
+
+
+
+Adds a successor node to this NOT node. When a new successor is added, it is immediately refreshed with the current valid state of left tokens that are not blocked by any right facts, ensuring that the new node is up-\/to-\/date with the current state of matches in this NOT node. This allows for dynamic construction of the Rete network while maintaining correct propagation of matches to successor nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & The node to add this node to as a successor.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_a991bc0231c5c8c584166a9dd26d0ab74}\index{ReteCore.NotNode@{ReteCore.NotNode}!Assert@{Assert}}
+\index{Assert@{Assert}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{Assert()}{Assert()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a991bc0231c5c8c584166a9dd26d0ab74} 
+void Rete\+Core.\+Not\+Node.\+Assert (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
+
+
+
+The Assert method is the main entry point for incoming facts or tokens. It determines whether the input is a left token or a right fact and delegates to the appropriate method (Assert\+Left or Assert\+Right) to handle the logic specific to that side of the NOT node. This design allows for a clean separation of concerns and ensures that the correct processing logic is applied based on the type of input received. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a05567f044dd13d4de35da0591191fca2}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_not_node_abdee9bdb5e65f7516a1a2959d0e97df7}\index{ReteCore.NotNode@{ReteCore.NotNode}!AssertLeft@{AssertLeft}}
+\index{AssertLeft@{AssertLeft}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{AssertLeft()}{AssertLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_abdee9bdb5e65f7516a1a2959d0e97df7} 
+void Rete\+Core.\+Not\+Node.\+Assert\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Handles incoming partial matches from the Left (Beta side). It checks the new token against all facts in the right memory using the join constraint. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_ad10b2e13e1a0c4c995579c1f274a8008}\index{ReteCore.NotNode@{ReteCore.NotNode}!AssertRight@{AssertRight}}
+\index{AssertRight@{AssertRight}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{AssertRight()}{AssertRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_ad10b2e13e1a0c4c995579c1f274a8008} 
+void Rete\+Core.\+Not\+Node.\+Assert\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Handles incoming single facts from the Right (Alpha side). It checks the new fact against all existing left tokens to see if it blocks any of them. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_a4a2ec1c8183aa91a2a3ee8e060d52908}\index{ReteCore.NotNode@{ReteCore.NotNode}!DebugPrint@{DebugPrint}}
+\index{DebugPrint@{DebugPrint}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{DebugPrint()}{DebugPrint()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a4a2ec1c8183aa91a2a3ee8e060d52908} 
+void Rete\+Core.\+Not\+Node.\+Debug\+Print (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{int}]{level}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+A debug method to print the current state of the NOT node, including the number of left tokens, right facts, and the block counts for each left token. This can be useful for understanding how the NOT node is processing matches and how it is affected by incoming facts and tokens. The method takes an optional level parameter to control indentation for better readability when printing nested nodes in the Rete network. By providing insight into the internal state of the NOT node, this debug method can help developers diagnose issues and understand the behavior of the Rete network during development and testing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact whose information is to be output.\\
+\hline
+{\em level} & A level of indentation.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_aaee4a1eb9365b5d13e8301fc3d1d9730}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_not_node_aa6b888e02450e8ac5acb782b3499afd7}\index{ReteCore.NotNode@{ReteCore.NotNode}!Refresh@{Refresh}}
+\index{Refresh@{Refresh}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{Refresh()}{Refresh()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_aa6b888e02450e8ac5acb782b3499afd7} 
+void Rete\+Core.\+Not\+Node.\+Refresh (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{, }\item[{string}]{property\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Forces a downstream node to sync with this node\textquotesingle{}s current valid tokens. This is used when a new successor node is added to ensure it receives the correct state of matches from this NOT node. It checks if the input is a left token or a right fact and delegates to the appropriate refresh method to update the state of matches and propagate any necessary assertions or retractions downstream. This allows for dynamic updates to the Rete network while maintaining correct propagation of matches to successor nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+{\em property\+Name} & The name of the property in the fact cell that is being updated.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_not_node_a473deacc584249863bd439e7465a0579}\index{ReteCore.NotNode@{ReteCore.NotNode}!RefreshLeft@{RefreshLeft}}
+\index{RefreshLeft@{RefreshLeft}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{RefreshLeft()}{RefreshLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a473deacc584249863bd439e7465a0579} 
+void Rete\+Core.\+Not\+Node.\+Refresh\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_a0fdeb9fd36db8d2d4dab7966aa132921}\index{ReteCore.NotNode@{ReteCore.NotNode}!RefreshRight@{RefreshRight}}
+\index{RefreshRight@{RefreshRight}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{RefreshRight()}{RefreshRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a0fdeb9fd36db8d2d4dab7966aa132921} 
+void Rete\+Core.\+Not\+Node.\+Refresh\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{string}]{property\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+{\em property\+Name} & The name of the property in the fact cell that is being updated.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_ae6d2def5c6d12a73b87778c24aeab5f0}\index{ReteCore.NotNode@{ReteCore.NotNode}!Retract@{Retract}}
+\index{Retract@{Retract}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_ae6d2def5c6d12a73b87778c24aeab5f0} 
+void Rete\+Core.\+Not\+Node.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
+
+
+
+The Retract method is the main entry point for retractions of facts or tokens. Similar to Assert, it determines whether the input is a left token or a right fact and delegates to the appropriate method (Retract or Retract\+Right) to handle the logic specific to that side of the NOT node. This allows for proper handling of retractions and ensures that the state of the NOT node is correctly updated when facts or tokens are removed from the network. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact\+Or\+Token} & The fact or token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_not_node_aa82805bfae8938ef960d5ab1186fd46c}\index{ReteCore.NotNode@{ReteCore.NotNode}!RetractLeft@{RetractLeft}}
+\index{RetractLeft@{RetractLeft}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{RetractLeft()}{RetractLeft()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_aa82805bfae8938ef960d5ab1186fd46c} 
+void Rete\+Core.\+Not\+Node.\+Retract\+Left (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{token}{}\end{DoxyParamCaption})}
+
+
+
+Handles retractions of left tokens. It removes the token from the left matches and, if it was not blocked by any right facts, it propagates a retract downstream to indicate that the NOT condition is now satisfied again. This ensures that any successor nodes that were previously blocked by this token will now receive an assertion for it, allowing the Rete network to correctly reflect the change in state caused by the retraction of the token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_a71ccc5a24b7f3b90e5bd0ba88b63f2f7}\index{ReteCore.NotNode@{ReteCore.NotNode}!RetractRight@{RetractRight}}
+\index{RetractRight@{RetractRight}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{RetractRight()}{RetractRight()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a71ccc5a24b7f3b90e5bd0ba88b63f2f7} 
+void Rete\+Core.\+Not\+Node.\+Retract\+Right (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Handles retractions of right facts. It removes the fact from the right memory and checks if this retraction "{}resurrects"{} any left tokens that were previously blocked by this fact. If a left token\textquotesingle{}s block count transitions from 1 to 0, it means the NOT condition is now satisfied for that token, and it propagates an assertion downstream to indicate that the token is now valid again. This ensures that the Rete network correctly reflects the change in state caused by the retraction of the right fact and allows any successor nodes to update their state accordingly based on the new valid tokens. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact this operation is acting upon.\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Not\+Node.\+cs\end{DoxyCompactItemize}

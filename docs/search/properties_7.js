@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['salience_0',['Salience',['../class_rete_core_1_1_activation.html#a7c77105e84382c33dd56416856099c6b',1,'ReteCore::Activation']]]
+  ['parent_0',['Parent',['../class_rete_core_1_1_token.html#ae137839a7a4f0083205e885f94ebeb55',1,'ReteCore::Token']]]
 ];

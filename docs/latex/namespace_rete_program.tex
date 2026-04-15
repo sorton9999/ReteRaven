@@ -3,6 +3,8 @@
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_join_key_extractor}{Join\+Key\+Extractor}}
+\begin{DoxyCompactList}\small\item\em This class is responsible for analyzing a join expression provided by the user and extracting the key selector functions for both sides of the join. The Extract method takes a lambda expression representing the join condition (e.\+g., (token, fact) =\texorpdfstring{$>$}{>} token.\+Property == fact.\+Property) and processes it to identify which part of the expression corresponds to the \doxylink{class_rete_core_1_1_token}{Token} and which part corresponds to the Fact. It then compiles these parts into Func delegates that can be used to extract the join keys at runtime when processing tokens and facts in the Rete network. This allows for efficient indexing and matching of facts based on the specified join condition. \end{DoxyCompactList}\item 
 class \doxymbox{\hyperlink{class_rete_program_1_1_rete_engine}{Rete\+Engine}}
 \item 
 class \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$ TInitial $>$}}

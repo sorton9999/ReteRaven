@@ -1,0 +1,201 @@
+\doxysection{Rete\+Core.\+Fact\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_rete_core_1_1_fact-1-g}{}\label{class_rete_core_1_1_fact-1-g}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+
+
+The container for any types of data. This class implements INotify\+Property\+Changed to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each Fact instance can be uniquely identified.  
+
+
+Inheritance diagram for Rete\+Core.\+Fact\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_fact-1-g}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a69ae23fef4cf76d2ddff8067fd366eff}{Fact}} (T data)
+\begin{DoxyCompactList}\small\item\em The constructor initializes a new instance of the Fact class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the Property\+Changed event if necessary. \end{DoxyCompactList}\item 
+T \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_aefd88d33f538c875fcbc7feaac4568b2}{TValue$<$ T $>$}} ()
+\begin{DoxyCompactList}\small\item\em A helper method that retrieves the underlying fact value as a specific type T. \end{DoxyCompactList}\item 
+override bool \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_aafadbb80a33ca0358aedff9563ce8101}{Equals}} (object? obj)
+\begin{DoxyCompactList}\small\item\em The Equals method is overridden to provide a way to compare two Fact instances for equality. Two Fact instances are considered equal if they have the same unique identifier (Id). This means that even if two Fact instances contain the same underlying data, they will be treated as distinct unless they share the same Id. \end{DoxyCompactList}\item 
+override int \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a31eeb76a84bc1cc15253998e012289c5}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em Returns a hash code for this instance, which is based on the unique identifier (Id) of the fact. \end{DoxyCompactList}\item 
+override string \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_ab885f4d31ce5f41cb414bc592db88b2f}{To\+String}} ()
+\begin{DoxyCompactList}\small\item\em The override of the To\+String method provides a string representation of the Fact instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a6b3c1ff8126d71d4136368f6bb8c777f}{On\+Property\+Changed}} (\+[Caller\+Member\+Name]\+ string? property\+Name=null)
+\begin{DoxyCompactList}\small\item\em When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Guid \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a3792235ad69a3776441fa21556ab520e}{Id}} = Guid.\+New\+Guid()\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em A unique identifier. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_fact-1-g_a28ed082b2b87a02d53400dbd52975cd4}\label{class_rete_core_1_1_fact-1-g_a28ed082b2b87a02d53400dbd52975cd4} 
+T {\bfseries Value}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The templated value of this fact. \end{DoxyCompactList}\item 
+object \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a75125042b61e0abba2515f6674082d5b}{Underlying\+Object}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The data stored as an object type. \end{DoxyCompactList}\item 
+Type \doxymbox{\hyperlink{class_rete_core_1_1_fact-1-g_a25424c0c1fe031fdd3cd0a595b667844}{Data\+Type}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The type of the data stored in this fact. This property returns the Type object representing the generic type parameter T, which indicates the actual type of the data contained in this fact. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_fact-1-g_aff0a0f8182e4fa6986baac4597bfb6a4}\label{class_rete_core_1_1_fact-1-g_aff0a0f8182e4fa6986baac4597bfb6a4} 
+Property\+Changed\+Event\+Handler {\bfseries Property\+Changed}
+\begin{DoxyCompactList}\small\item\em The Property\+Changed event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed, enabling observers to react. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The container for any types of data. This class implements INotify\+Property\+Changed to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each Fact instance can be uniquely identified. 
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_fact-1-g_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_fact-1-g_aafadbb80a33ca0358aedff9563ce8101}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!Equals@{Equals}}
+\index{Equals@{Equals}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_aafadbb80a33ca0358aedff9563ce8101} 
+override bool Rete\+Core.\+Fact$<$ T $>$.Equals (\begin{DoxyParamCaption}\item[{object?}]{obj}{}\end{DoxyParamCaption})}
+
+
+
+The Equals method is overridden to provide a way to compare two Fact instances for equality. Two Fact instances are considered equal if they have the same unique identifier (Id). This means that even if two Fact instances contain the same underlying data, they will be treated as distinct unless they share the same Id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em obj} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\Hypertarget{class_rete_core_1_1_fact-1-g_a69ae23fef4cf76d2ddff8067fd366eff}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!Fact@{Fact}}
+\index{Fact@{Fact}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Fact()}{Fact()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a69ae23fef4cf76d2ddff8067fd366eff} 
+Rete\+Core.\+Fact$<$ T $>$.Fact (\begin{DoxyParamCaption}\item[{T}]{data}{}\end{DoxyParamCaption})}
+
+
+
+The constructor initializes a new instance of the Fact class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the Property\+Changed event if necessary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_fact-1-g_a31eeb76a84bc1cc15253998e012289c5}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a31eeb76a84bc1cc15253998e012289c5} 
+override int Rete\+Core.\+Fact$<$ T $>$.Get\+Hash\+Code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns a hash code for this instance, which is based on the unique identifier (Id) of the fact. 
+
+\begin{DoxyReturn}{Returns}
+The unique hash code
+\end{DoxyReturn}
+\Hypertarget{class_rete_core_1_1_fact-1-g_a6b3c1ff8126d71d4136368f6bb8c777f}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!OnPropertyChanged@{OnPropertyChanged}}
+\index{OnPropertyChanged@{OnPropertyChanged}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{OnPropertyChanged()}{OnPropertyChanged()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a6b3c1ff8126d71d4136368f6bb8c777f} 
+void Rete\+Core.\+Fact$<$ T $>$.On\+Property\+Changed (\begin{DoxyParamCaption}\item[{\+[\+Caller\+Member\+Name]\+ string?}]{property\+Name}{ = {\ttfamily null}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em property\+Name} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_fact-1-g_ab885f4d31ce5f41cb414bc592db88b2f}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!ToString@{ToString}}
+\index{ToString@{ToString}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_ab885f4d31ce5f41cb414bc592db88b2f} 
+override string Rete\+Core.\+Fact$<$ T $>$.To\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+The override of the To\+String method provides a string representation of the Fact instance. 
+
+\begin{DoxyReturn}{Returns}
+The string representation of the contents.
+\end{DoxyReturn}
+\Hypertarget{class_rete_core_1_1_fact-1-g_aefd88d33f538c875fcbc7feaac4568b2}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!TValue$<$ T $>$@{TValue$<$ T $>$}}
+\index{TValue$<$ T $>$@{TValue$<$ T $>$}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{TValue$<$ T $>$()}{TValue< T >()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_aefd88d33f538c875fcbc7feaac4568b2} 
+T Rete\+Core.\+Fact$<$ T $>$.TValue$<$ T $>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+A helper method that retrieves the underlying fact value as a specific type T. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of this object\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+The templated type
+\end{DoxyReturn}
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_fact-1-g_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_fact-1-g_a25424c0c1fe031fdd3cd0a595b667844}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!DataType@{DataType}}
+\index{DataType@{DataType}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{DataType}{DataType}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a25424c0c1fe031fdd3cd0a595b667844} 
+Type Rete\+Core.\+Fact$<$ T $>$.Data\+Type\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The type of the data stored in this fact. This property returns the Type object representing the generic type parameter T, which indicates the actual type of the data contained in this fact. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_fact}{Rete\+Core.\+IFact}}.
+
+\Hypertarget{class_rete_core_1_1_fact-1-g_a3792235ad69a3776441fa21556ab520e}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!Id@{Id}}
+\index{Id@{Id}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Id}{Id}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a3792235ad69a3776441fa21556ab520e} 
+Guid Rete\+Core.\+Fact$<$ T $>$.Id = Guid.\+New\+Guid()\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+A unique identifier. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_fact}{Rete\+Core.\+IFact}}.
+
+\Hypertarget{class_rete_core_1_1_fact-1-g_a75125042b61e0abba2515f6674082d5b}\index{ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}!UnderlyingObject@{UnderlyingObject}}
+\index{UnderlyingObject@{UnderlyingObject}!ReteCore.Fact$<$ T $>$@{ReteCore.Fact$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{UnderlyingObject}{UnderlyingObject}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact-1-g_a75125042b61e0abba2515f6674082d5b} 
+object Rete\+Core.\+Fact$<$ T $>$.Underlying\+Object\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The data stored as an object type. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_fact}{Rete\+Core.\+IFact}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Token.\+cs\end{DoxyCompactItemize}

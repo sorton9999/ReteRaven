@@ -14,10 +14,16 @@ Provides a fluent interface for constructing and configuring rules in a Rete-\/b
 \begin{DoxyCompactList}\small\item\em Adds a match condition for facts of the specified type to the rule being built. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_adcad36a524383a5d5ab55d246c3e2992}{And$<$ T $>$}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$ join\+Condition, string? debug\+Label=null)
 \begin{DoxyCompactList}\small\item\em Adds a join condition to the rule, requiring that both the previous conditions and the specified join condition are satisfied for a fact to match. \end{DoxyCompactList}\item 
-\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_ae644d05bd2dd638820e8006b18816a20}{Or$<$ T $>$}} (string name, params Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$\+[$\,$]\+ or\+Conditions)
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_ac88df3dd76ce276a7dbba6ec19a2f2f4}{Or$<$ T $>$}} (string name, string? debug\+Label=null, params Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$\+[$\,$]\+ or\+Conditions)
 \begin{DoxyCompactList}\small\item\em Adds a logical OR branch to the rule, allowing the rule to match if any of the specified conditions are satisfied for facts of the given type. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_ae3c2374a2b3084b953ec64188cf89ae6}{And\+Not$<$ T $>$}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$ join\+Condition, string? debug\+Label=null)
+\begin{DoxyCompactList}\small\item\em Adds a negated join condition to the rule, specifying that the rule should only match if there are no facts of type T that satisfy the given join condition. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a58b72ac320de7c651819d966a7e1d887}{Not$<$ T $>$}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$ join\+Condition, string? debug\+Label=null)
+\begin{DoxyCompactList}\small\item\em Adds a "{}not"{} condition to the rule, specifying that there must be no facts of type T that satisfy the given join condition for the rule to match. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a5b143194225c8522bd42c3405a5abcf8}{Exists$<$ T $>$}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$ join\+Condition, string? debug\+Label=null)
+\begin{DoxyCompactList}\small\item\em Adds an "{}exists"{} condition to the rule, specifying that there must be at least one fact of type T that satisfies the given join condition for the rule to match. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_af3e80190de31e4a76a5f040f139efd5f}{Then}} (Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, int salience=0)
-\begin{DoxyCompactList}\small\item\em Adds a terminal action to the rule that will be executed when the rule is triggered. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule\textquotesingle{}s conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule\textquotesingle{}s conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a5af47171cde840ecbe3cfc03161cdc14}{Trace}} (string label)
 \begin{DoxyCompactList}\small\item\em Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a4200804fb1a2441c066c7313b65c29bf}{Assert}} (object fact)
@@ -80,6 +86,33 @@ Use this method to combine multiple conditions in a rule using logical AND seman
 \begin{DoxyReturn}{Returns}
 The current \doxylink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$\+TInitial$>$} instance, allowing for method chaining.
 \end{DoxyReturn}
+\Hypertarget{class_rete_program_1_1_rule_builder-1-g_ae3c2374a2b3084b953ec64188cf89ae6}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!AndNot$<$ T $>$@{AndNot$<$ T $>$}}
+\index{AndNot$<$ T $>$@{AndNot$<$ T $>$}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{AndNot$<$ T $>$()}{AndNot< T >()}}
+{\footnotesize\ttfamily \label{class_rete_program_1_1_rule_builder-1-g_ae3c2374a2b3084b953ec64188cf89ae6} 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ Rete\+Program.\+Rule\+Builder$<$ TInitial $>$.And\+Not$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$}]{join\+Condition}{, }\item[{string?}]{debug\+Label}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Adds a negated join condition to the rule, specifying that the rule should only match if there are no facts of type T that satisfy the given join condition. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of fact to which the conditions apply.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name used to identify this branch in the rule for debugging or tracing purposes.\\
+\hline
+{\em join\+Condition} & A function that determines whether a given fact of type T should be joined with the current token.\\
+\hline
+{\em debug\+Label} & An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$\+TInitial$>$} instance, allowing further rule configuration.
+\end{DoxyReturn}
 \Hypertarget{class_rete_program_1_1_rule_builder-1-g_a4200804fb1a2441c066c7313b65c29bf}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!Assert@{Assert}}
 \index{Assert@{Assert}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
 \doxysubsubsection{\texorpdfstring{Assert()}{Assert()}}
@@ -95,6 +128,33 @@ Asserts the specified fact into the current context or knowledge base.
 {\em fact} & The fact to assert. Cannot be null.\\
 \hline
 \end{DoxyParams}
+\Hypertarget{class_rete_program_1_1_rule_builder-1-g_a5b143194225c8522bd42c3405a5abcf8}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!Exists$<$ T $>$@{Exists$<$ T $>$}}
+\index{Exists$<$ T $>$@{Exists$<$ T $>$}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{Exists$<$ T $>$()}{Exists< T >()}}
+{\footnotesize\ttfamily \label{class_rete_program_1_1_rule_builder-1-g_a5b143194225c8522bd42c3405a5abcf8} 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ Rete\+Program.\+Rule\+Builder$<$ TInitial $>$.Exists$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$}]{join\+Condition}{, }\item[{string?}]{debug\+Label}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Adds an "{}exists"{} condition to the rule, specifying that there must be at least one fact of type T that satisfies the given join condition for the rule to match. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of fact to which the conditions apply.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name used to identify this branch in the rule for debugging or tracing purposes.\\
+\hline
+{\em join\+Condition} & A function that determines whether a given fact of type T should be joined with the current token.\\
+\hline
+{\em debug\+Label} & An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$\+TInitial$>$} instance, allowing further rule configuration.
+\end{DoxyReturn}
 \Hypertarget{class_rete_program_1_1_rule_builder-1-g_abdd7a83d3ecec5e601f1cf53ff56b587}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!JoinWith$<$ TNext $>$@{JoinWith$<$ TNext $>$}}
 \index{JoinWith$<$ TNext $>$@{JoinWith$<$ TNext $>$}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
 \doxysubsubsection{\texorpdfstring{JoinWith$<$ TNext $>$()}{JoinWith< TNext >()}}
@@ -149,11 +209,38 @@ Use this method to specify that the rule should match facts of type T. Multiple 
 \begin{DoxyReturn}{Returns}
 The current Rule\+Builder instance, enabling further configuration of the rule.
 \end{DoxyReturn}
-\Hypertarget{class_rete_program_1_1_rule_builder-1-g_ae644d05bd2dd638820e8006b18816a20}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!Or$<$ T $>$@{Or$<$ T $>$}}
+\Hypertarget{class_rete_program_1_1_rule_builder-1-g_a58b72ac320de7c651819d966a7e1d887}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!Not$<$ T $>$@{Not$<$ T $>$}}
+\index{Not$<$ T $>$@{Not$<$ T $>$}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{Not$<$ T $>$()}{Not< T >()}}
+{\footnotesize\ttfamily \label{class_rete_program_1_1_rule_builder-1-g_a58b72ac320de7c651819d966a7e1d887} 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ Rete\+Program.\+Rule\+Builder$<$ TInitial $>$.Not$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$}]{join\+Condition}{, }\item[{string?}]{debug\+Label}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Adds a "{}not"{} condition to the rule, specifying that there must be no facts of type T that satisfy the given join condition for the rule to match. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of fact to which the conditions apply.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name used to identify this branch in the rule for debugging or tracing purposes.\\
+\hline
+{\em join\+Condition} & A function that determines whether a given fact of type T should be joined with the current token.\\
+\hline
+{\em debug\+Label} & An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$\+TInitial$>$} instance, allowing further rule configuration.
+\end{DoxyReturn}
+\Hypertarget{class_rete_program_1_1_rule_builder-1-g_ac88df3dd76ce276a7dbba6ec19a2f2f4}\index{ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}!Or$<$ T $>$@{Or$<$ T $>$}}
 \index{Or$<$ T $>$@{Or$<$ T $>$}!ReteProgram.RuleBuilder$<$ TInitial $>$@{ReteProgram.RuleBuilder$<$ TInitial $>$}}
 \doxysubsubsection{\texorpdfstring{Or$<$ T $>$()}{Or< T >()}}
-{\footnotesize\ttfamily \label{class_rete_program_1_1_rule_builder-1-g_ae644d05bd2dd638820e8006b18816a20} 
-\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ Rete\+Program.\+Rule\+Builder$<$ TInitial $>$.Or$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{params Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$\+[$\,$]\+}]{or\+Conditions}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_rete_program_1_1_rule_builder-1-g_ac88df3dd76ce276a7dbba6ec19a2f2f4} 
+\doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g_a211b486c16cd53f63e8d8c171daaa534}{Rule\+Builder}}$<$ TInitial $>$ Rete\+Program.\+Rule\+Builder$<$ TInitial $>$.Or$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{string?}]{debug\+Label}{ = {\ttfamily null}, }\item[{params Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$\+[$\,$]\+}]{or\+Conditions}{}\end{DoxyParamCaption})}
 
 
 
@@ -163,12 +250,14 @@ Each condition in {\itshape or\+Conditions}  is evaluated independently against 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em T} & The type of fact to which the OR conditions apply.\\
+{\em T} & The type of fact to which the conditions apply.\\
 \hline
 \end{DoxyTemplParams}
 
 \begin{DoxyParams}{Parameters}
-{\em name} & The name used to identify this OR branch in the rule for debugging or tracing purposes.\\
+{\em name} & The name used to identify this branch in the rule for debugging or tracing purposes.\\
+\hline
+{\em debug\+Label} & An optional label used for debugging output. If specified, debug information about the evaluation of each OR condition is written to the console.\\
 \hline
 {\em or\+Conditions} & One or more predicate functions that define the alternative conditions. The rule matches if any of these predicates return {\ttfamily true} for a given fact.\\
 \hline
@@ -223,7 +312,7 @@ A \doxylink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$\+TInitial$
 
 
 
-Adds a terminal action to the rule that will be executed when the rule is triggered. 
+Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule\textquotesingle{}s conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule\textquotesingle{}s conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others. 
 
 Use this method to specify the consequence of the rule. The action will be invoked each time the rule\textquotesingle{}s conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible.
 

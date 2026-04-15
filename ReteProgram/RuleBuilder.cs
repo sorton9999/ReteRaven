@@ -42,9 +42,9 @@ namespace ReteProgram
         /// </summary>
         /// <param name="engine">The ReteEngine instance that will be used to build and manage the rule. Cannot be null.</param>
         /// <param name="name">The name to assign to the rule being built. Cannot be null or empty.</param>
-        public RuleBuilder(ReteEngine engine, string name) 
-        { 
-            _engine = engine; 
+        public RuleBuilder(ReteEngine engine, string name)
+        {
+            _engine = engine;
             _ruleName = name;
         }
 
@@ -70,7 +70,7 @@ namespace ReteProgram
             {
                 Console.WriteLine($"===> Start {name}");
             }
-            
+
             var alpha = _engine.GetAlphaMemory<T>();
             var beta = new BetaMemory();
             var adapter = new AlphaToBetaAdapter(beta, name);
@@ -132,25 +132,49 @@ namespace ReteProgram
         /// <remarks>Each condition in <paramref name="orConditions"/> is evaluated independently against
         /// facts of type <typeparamref name="T"/>. The rule continues if at least one condition is met. This method
         /// enables branching logic within a rule, similar to a logical OR operation.</remarks>
-        /// <typeparam name="T">The type of fact to which the OR conditions apply.</typeparam>
-        /// <param name="name">The name used to identify this OR branch in the rule for debugging or tracing purposes.</param>
+        /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
+        /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of each 
+        /// OR condition is written to the console.</param>
         /// <param name="orConditions">One or more predicate functions that define the alternative conditions. The rule matches if any of these
         /// predicates return <see langword="true"/> for a given fact.</param>
         /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
-        public RuleBuilder<TInitial> Or<T>(string name, params Func<Token, T, bool>[] orConditions)
+        public RuleBuilder<TInitial> Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
         {
             // Save the starting point so all branches begin from the same prefix
             var branchStartNode = _lastNode; // Previous node in the chain
-            var alpha = _engine.GetAlphaMemory<T>();
 
             // The collector node that merges all paths
             var orNode = new CompositeBetaMemory();
 
             foreach (var condition in orConditions)
             {
+                var wrapCondition = (Token token, T fact) =>
+                {
+                    bool result = condition(token, fact);
+                    if (debugLabel != null)
+                    {
+                        Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                    }
+                    return result;
+                };
+
+                var alpha = _engine.GetAlphaMemory<T>();
+
                 // Create a JoinNode for this specific condition
-                var join = new JoinNode(_lastNode, alpha, name,
-                    (token, fact) => condition(token, (T)fact));
+                var join = new JoinNode(branchStartNode, alpha, name,
+                    (token, fact) => wrapCondition(token, (T)fact));
+
+                if (branchStartNode is BetaMemory beta)
+                {
+                    beta.AddSuccessor(join);
+                }
+                else if (branchStartNode is CompositeBetaMemory compositeBeta)
+                {
+                    compositeBeta.AddSuccessor(join);
+                }
+
+                alpha.AddSuccessor(join);
 
                 // Point this branch to the OrNode
                 join.AddSuccessor(orNode);
@@ -163,7 +187,151 @@ namespace ReteProgram
         }
 
         /// <summary>
-        /// Adds a terminal action to the rule that will be executed when the rule is triggered.
+        /// Adds a negated join condition to the rule, specifying that the rule should only match if there are no facts of 
+        /// type T that satisfy the given join condition.
+        /// </summary>
+        /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
+        /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
+        /// condition is written to the console.</param>
+        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public RuleBuilder<TInitial> AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        {
+            Func<Token, T, bool> wrapCondition = (token, fact) =>
+            {
+                bool result = joinCondition(token, fact);
+                if (debugLabel != null)
+                {
+                    Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                }
+                return !result; // Negate the condition for AND NOT semantics
+            };
+            var alpha = _engine.GetAlphaMemory<T>();
+            JoinNode join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
+            if (_lastNode is BetaMemory beta)
+            {
+                beta.AddSuccessor(join);
+            }
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            {
+                compositeBeta.AddSuccessor(join);
+            }
+            var betaMemory = new BetaMemory();
+            join.AddSuccessor(betaMemory);
+            _lastNode = betaMemory;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a "not" condition to the rule, specifying that there must be no facts of type T that satisfy the given 
+        /// join condition for the rule to match.
+        /// </summary>
+        /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
+        /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
+        /// condition is written to the console.</param>
+        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public RuleBuilder<TInitial> Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        {
+            Func<Token, T, bool> wrapCondition = (token, fact) =>
+            {
+                bool result = joinCondition(token, fact);
+                if (debugLabel != null)
+                {
+                    Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                }
+                return result;
+            };
+            var alpha = _engine.GetAlphaMemory<T>();
+            var notNode = new NotNode(name, (token, fact) => wrapCondition(token, (T)fact));
+            alpha.AddSuccessor(notNode);
+
+            if (_lastNode is BetaMemory beta)
+            {
+                beta.AddSuccessor(notNode);
+            }
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            {
+                compositeBeta.AddSuccessor(notNode);
+            }
+            var betaMemory = new BetaMemory();
+            notNode.AddSuccessor(betaMemory);
+            _lastNode = betaMemory;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an "exists" condition to the rule, specifying that there must be at least one fact of type T that satisfies
+        /// the given join condition for the rule to match.
+        /// </summary>
+        /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
+        /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
+        /// condition is written to the console.</param>
+        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public RuleBuilder<TInitial> Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        {
+
+            Func<Token, T, bool> wrapCondition = (token, fact) =>
+            {
+                bool result = joinCondition(token, fact);
+                if (debugLabel != null)
+                {
+                    Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                }
+                return result;
+            };
+
+            var alphaMem = _engine.GetAlphaMemory<T>();
+
+            JoinKeyExtractor joinKeyExtractor = new JoinKeyExtractor();
+            ExistsNode existsNode = null;
+            IndexedExistsNode indexedExistsNode = null;
+            try
+            {
+                var (leftKey, rightKey) = joinKeyExtractor.Extract((Token t, object f) => wrapCondition(t, (T)f));
+                indexedExistsNode = new IndexedExistsNode(name, leftKey, rightKey);
+            }
+            catch
+            {
+                existsNode = new ExistsNode(name, (token, fact) => wrapCondition(token, (T)fact));
+            }
+            alphaMem.AddSuccessor(existsNode != null ? existsNode : indexedExistsNode);
+
+            //var existsNode = new ExistsNode((token, fact) => wrapCondition(token, fact));
+            if (_lastNode is BetaMemory beta)
+            {
+                beta.AddSuccessor(existsNode != null ? existsNode : indexedExistsNode);
+            }
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            {
+                compositeBeta.AddSuccessor(existsNode != null ? existsNode : indexedExistsNode);
+            }
+            var betaMemory = new BetaMemory();
+            //existsNode.AddSuccessor(betaMemory);
+            if (existsNode != null)
+            {
+                existsNode.AddSuccessor(betaMemory);
+            }
+            else if (indexedExistsNode != null)
+            {
+                indexedExistsNode.AddSuccessor(betaMemory);
+            }
+            _lastNode = betaMemory;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a terminal action to the rule that will be executed when the rule is triggered.  This method finalizes the rule definition
+        /// by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience 
+        /// can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience
+        /// values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when 
+        /// they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they 
+        /// were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and 
+        /// optionally assign a salience to influence the execution order of the rule relative to others.
         /// </summary>
         /// <remarks>Use this method to specify the consequence of the rule. The action will be invoked
         /// each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are
@@ -175,7 +343,7 @@ namespace ReteProgram
         /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
         public RuleBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
-            
+
             var terminal = new TerminalNode(_ruleName, action, _engine.Agenda, salience);
             if (_lastNode is BetaMemory beta)
             {
@@ -233,7 +401,7 @@ namespace ReteProgram
 
             // Use the Adapter to convert single facts from Alpha into Tokens for Beta
             var adapter = new AlphaToBetaAdapter(firstBeta, factName);
-            
+
             // Link the AlphaMemory to the Adapter
             alpha.AddSuccessor(adapter);
 
@@ -325,9 +493,12 @@ namespace ReteProgram
         /// processing that follows in the rule evaluation process.
         /// </summary>
         /// <param name="node"></param>
-        public void AddSuccessor(IReteNode node) { Console.WriteLine("[AlphaToBetaAdapter] -- This node currently does not implement AddSuccessor.\n" +
+        public void AddSuccessor(IReteNode node)
+        {
+            Console.WriteLine("[AlphaToBetaAdapter] -- This node currently does not implement AddSuccessor.\n" +
             "Operations are done on the added BetaMemory explicitly to start the chain.\n" +
-            "In the future this may be used for BetaMemory to BetaMemory connections."); }
+            "In the future this may be used for BetaMemory to BetaMemory connections.");
+        }
 
         /// <summary>
         /// Asserts a fact into the adapter. The fact is wrapped into a Token with the specified fact name and then asserted into 
@@ -407,9 +578,10 @@ namespace ReteProgram
     class CriticalCell : Cell
     {
         string _status = String.Empty;
-        public string Status { 
-            get {  return _status; } 
-            set 
+        public string Status
+        {
+            get { return _status; }
+            set
             {
                 if (_status != value)
                 {
@@ -427,6 +599,164 @@ namespace ReteProgram
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, Value, Status);
+        }
+    }
+
+    public class Product : Cell
+    {
+        private string _name;
+        private string _category;
+        private int _productId;
+        private int _price;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+        public string Category
+        {
+            get { return _category; }
+            set
+            {
+                if (_category != value)
+                {
+                    _category = value;
+                    OnPropertyChanged(nameof(Category));
+                }
+            }
+        }
+
+        public int ProductId
+        {
+            get { return _productId; }
+            set
+            {
+                if (_productId != value)
+                {
+                    _productId = value;
+                    OnPropertyChanged(nameof(ProductId));
+                }
+            }
+        }
+
+        public int Price
+        {
+            get { return _price; }
+            set
+            {
+                if (_price != value)
+                {
+                    _price = value;
+                    OnPropertyChanged(nameof(Price));
+                }
+            }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Product product && Id == product.Id && ProductId == product.ProductId && Price == product.Price && Value == product.Value && Name == product.Name && Category == product.Category;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Value, Name, Category, Price, ProductId);
+        }
+    }
+
+    public class Inventory : Cell
+    {
+        private int _quantity;
+        private int _productId;
+        private string _location;
+        public int Quantity
+        {
+            get { return _quantity; }
+            set
+            {
+                if (_quantity != value)
+                {
+                    _quantity = value;
+                    OnPropertyChanged(nameof(Quantity));
+                }
+            }
+        }
+        public int ProductId
+        {
+            get { return _productId; }
+            set
+            {
+                if (_productId != value)
+                {
+                    _productId = value;
+                    OnPropertyChanged(nameof(ProductId));
+                }
+            }
+        }
+        public string WarehouseLocation
+        {
+            get { return _location; }
+            set
+            {
+                if (_location != value)
+                {
+                    _location = value;
+                    OnPropertyChanged(nameof(WarehouseLocation));
+                }
+            }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation);
+        }
+    }
+
+    public class Shipment : Cell
+    {
+        private int _productId;
+        private string _status;
+        public int ProductId
+        {
+            get { return _productId; }
+            set
+            {
+                if (_productId != value)
+                {
+                    _productId = value;
+                    OnPropertyChanged(nameof(ProductId));
+                }
+            }
+        }
+        public string Status
+        {
+            get { return _status; }
+            set
+            {
+                if (_status != value)
+                {
+                    _status = value;
+                    OnPropertyChanged(nameof(Status));
+                }
+            }
+        }
+        public override bool Equals(object? obj)
+        {
+            return obj is Shipment shipment && Id == shipment.Id && Value == shipment.Value && ProductId == shipment.ProductId && Status == shipment.Status;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Value, ProductId, Status);
         }
     }
 }

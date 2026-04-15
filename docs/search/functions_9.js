@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['terminalnode_0',['TerminalNode',['../class_rete_core_1_1_terminal_node.html#a538c04e19a45a69c311a5d0139646c74',1,'ReteCore::TerminalNode']]],
-  ['then_1',['Then',['../class_rete_program_1_1_rule_builder-1-g.html#af3e80190de31e4a76a5f040f139efd5f',1,'ReteProgram.RuleBuilder-1-g.Then(Action&lt; Token &gt; action, int salience=0)'],['../class_rete_program_1_1_rule_builder-1-g.html#a4642ae09a41653d325fe58630d9bf6b9',1,'ReteProgram.RuleBuilder-1-g.Then(Agenda agenda, Action&lt; Token &gt; action, int salience=0)']]],
-  ['token_2',['Token',['../class_rete_core_1_1_token.html#a8f29288b719ffe49dd9f870329f2ce11',1,'ReteCore.Token.Token(string name, object initialFact)'],['../class_rete_core_1_1_token.html#a42e3ecfc938754383eb63b664e788315',1,'ReteCore.Token.Token(Token parent, string nextName, object newFact)']]],
-  ['trace_3',['Trace',['../class_rete_program_1_1_rule_builder-1-g.html#a5af47171cde840ecbe3cfc03161cdc14',1,'ReteProgram::RuleBuilder-1-g']]]
+  ['onpropertychanged_0',['OnPropertyChanged',['../class_rete_core_1_1_cell.html#aa9e7cbad898f0953f59b6f637a22142c',1,'ReteCore.Cell.OnPropertyChanged()'],['../class_rete_core_1_1_fact-1-g.html#a6b3c1ff8126d71d4136368f6bb8c777f',1,'ReteCore.Fact-1-g.OnPropertyChanged()']]],
+  ['or_3c_20t_20_3e_1',['Or&lt; T &gt;',['../class_rete_program_1_1_rule_builder-1-g.html#ac88df3dd76ce276a7dbba6ec19a2f2f4',1,'ReteProgram::RuleBuilder-1-g']]]
 ];

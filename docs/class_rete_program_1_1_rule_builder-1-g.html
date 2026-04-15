@@ -104,10 +104,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a59f13094bf6832b983801133462e829c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a match condition for facts of the specified type to the rule being built.  <br /></td></tr>
 <tr class="memitem:adcad36a524383a5d5ab55d246c3e2992" id="r_adcad36a524383a5d5ab55d246c3e2992"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#adcad36a524383a5d5ab55d246c3e2992">And&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
 <tr class="memdesc:adcad36a524383a5d5ab55d246c3e2992"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a join condition to the rule, requiring that both the previous conditions and the specified join condition are satisfied for a fact to match.  <br /></td></tr>
-<tr class="memitem:ae644d05bd2dd638820e8006b18816a20" id="r_ae644d05bd2dd638820e8006b18816a20"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae644d05bd2dd638820e8006b18816a20">Or&lt; T &gt;</a> (string name, params Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;[] orConditions)</td></tr>
-<tr class="memdesc:ae644d05bd2dd638820e8006b18816a20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a logical OR branch to the rule, allowing the rule to match if any of the specified conditions are satisfied for facts of the given type.  <br /></td></tr>
+<tr class="memitem:ac88df3dd76ce276a7dbba6ec19a2f2f4" id="r_ac88df3dd76ce276a7dbba6ec19a2f2f4"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac88df3dd76ce276a7dbba6ec19a2f2f4">Or&lt; T &gt;</a> (string name, string? debugLabel=null, params Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;[] orConditions)</td></tr>
+<tr class="memdesc:ac88df3dd76ce276a7dbba6ec19a2f2f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a logical OR branch to the rule, allowing the rule to match if any of the specified conditions are satisfied for facts of the given type.  <br /></td></tr>
+<tr class="memitem:ae3c2374a2b3084b953ec64188cf89ae6" id="r_ae3c2374a2b3084b953ec64188cf89ae6"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae3c2374a2b3084b953ec64188cf89ae6">AndNot&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
+<tr class="memdesc:ae3c2374a2b3084b953ec64188cf89ae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a negated join condition to the rule, specifying that the rule should only match if there are no facts of type T that satisfy the given join condition.  <br /></td></tr>
+<tr class="memitem:a58b72ac320de7c651819d966a7e1d887" id="r_a58b72ac320de7c651819d966a7e1d887"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a58b72ac320de7c651819d966a7e1d887">Not&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
+<tr class="memdesc:a58b72ac320de7c651819d966a7e1d887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a "not" condition to the rule, specifying that there must be no facts of type T that satisfy the given join condition for the rule to match.  <br /></td></tr>
+<tr class="memitem:a5b143194225c8522bd42c3405a5abcf8" id="r_a5b143194225c8522bd42c3405a5abcf8"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5b143194225c8522bd42c3405a5abcf8">Exists&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
+<tr class="memdesc:a5b143194225c8522bd42c3405a5abcf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an "exists" condition to the rule, specifying that there must be at least one fact of type T that satisfies the given join condition for the rule to match.  <br /></td></tr>
 <tr class="memitem:af3e80190de31e4a76a5f040f139efd5f" id="r_af3e80190de31e4a76a5f040f139efd5f"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af3e80190de31e4a76a5f040f139efd5f">Then</a> (Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
-<tr class="memdesc:af3e80190de31e4a76a5f040f139efd5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal action to the rule that will be executed when the rule is triggered.  <br /></td></tr>
+<tr class="memdesc:af3e80190de31e4a76a5f040f139efd5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others.  <br /></td></tr>
 <tr class="memitem:a5af47171cde840ecbe3cfc03161cdc14" id="r_a5af47171cde840ecbe3cfc03161cdc14"><td class="memItemLeft"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5af47171cde840ecbe3cfc03161cdc14">Trace</a> (string label)</td></tr>
 <tr class="memdesc:a5af47171cde840ecbe3cfc03161cdc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point.  <br /></td></tr>
 <tr class="memitem:a4200804fb1a2441c066c7313b65c29bf" id="r_a4200804fb1a2441c066c7313b65c29bf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4200804fb1a2441c066c7313b65c29bf">Assert</a> (object fact)</td></tr>
@@ -179,6 +185,49 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 
 </div>
 </div>
+<a id="ae3c2374a2b3084b953ec64188cf89ae6" name="ae3c2374a2b3084b953ec64188cf89ae6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3c2374a2b3084b953ec64188cf89ae6">&#9670;&#160;</a></span>AndNot&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt; ReteProgram.RuleBuilder&lt; TInitial &gt;.AndNot&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a negated join condition to the rule, specifying that the rule should only match if there are no facts of type T that satisfy the given join condition. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of fact to which the conditions apply.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name used to identify this branch in the rule for debugging or tracing purposes.</td></tr>
+    <tr><td class="paramname">joinCondition</td><td>A function that determines whether a given fact of type T should be joined with the current token.</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_program_1_1_rule_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">RuleBuilder&lt;TInitial&gt;</a> instance, allowing further rule configuration.</dd></dl>
+
+</div>
+</div>
 <a id="a4200804fb1a2441c066c7313b65c29bf" name="a4200804fb1a2441c066c7313b65c29bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4200804fb1a2441c066c7313b65c29bf">&#9670;&#160;</a></span>Assert()</h2>
 
@@ -201,6 +250,49 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a5b143194225c8522bd42c3405a5abcf8" name="a5b143194225c8522bd42c3405a5abcf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b143194225c8522bd42c3405a5abcf8">&#9670;&#160;</a></span>Exists&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt; ReteProgram.RuleBuilder&lt; TInitial &gt;.Exists&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds an "exists" condition to the rule, specifying that there must be at least one fact of type T that satisfies the given join condition for the rule to match. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of fact to which the conditions apply.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name used to identify this branch in the rule for debugging or tracing purposes.</td></tr>
+    <tr><td class="paramname">joinCondition</td><td>A function that determines whether a given fact of type T should be joined with the current token.</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_program_1_1_rule_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">RuleBuilder&lt;TInitial&gt;</a> instance, allowing further rule configuration.</dd></dl>
 
 </div>
 </div>
@@ -280,8 +372,51 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 
 </div>
 </div>
-<a id="ae644d05bd2dd638820e8006b18816a20" name="ae644d05bd2dd638820e8006b18816a20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae644d05bd2dd638820e8006b18816a20">&#9670;&#160;</a></span>Or&lt; T &gt;()</h2>
+<a id="a58b72ac320de7c651819d966a7e1d887" name="a58b72ac320de7c651819d966a7e1d887"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58b72ac320de7c651819d966a7e1d887">&#9670;&#160;</a></span>Not&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt; ReteProgram.RuleBuilder&lt; TInitial &gt;.Not&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a "not" condition to the rule, specifying that there must be no facts of type T that satisfy the given join condition for the rule to match. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of fact to which the conditions apply.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name used to identify this branch in the rule for debugging or tracing purposes.</td></tr>
+    <tr><td class="paramname">joinCondition</td><td>A function that determines whether a given fact of type T should be joined with the current token.</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_program_1_1_rule_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">RuleBuilder&lt;TInitial&gt;</a> instance, allowing further rule configuration.</dd></dl>
+
+</div>
+</div>
+<a id="ac88df3dd76ce276a7dbba6ec19a2f2f4" name="ac88df3dd76ce276a7dbba6ec19a2f2f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88df3dd76ce276a7dbba6ec19a2f2f4">&#9670;&#160;</a></span>Or&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,6 +425,11 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
           <td class="memname"><a class="el" href="#a211b486c16cd53f63e8d8c171daaa534">RuleBuilder</a>&lt; TInitial &gt; ReteProgram.RuleBuilder&lt; TInitial &gt;.Or&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -303,13 +443,14 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 <p>Each condition in <em>orConditions</em>  is evaluated independently against facts of type <em>T</em> . The rule continues if at least one condition is met. This method enables branching logic within a rule, similar to a logical OR operation.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>The type of fact to which the OR conditions apply.</td></tr>
+    <tr><td class="paramname">T</td><td>The type of fact to which the conditions apply.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>The name used to identify this OR branch in the rule for debugging or tracing purposes.</td></tr>
+    <tr><td class="paramname">name</td><td>The name used to identify this branch in the rule for debugging or tracing purposes.</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional label used for debugging output. If specified, debug information about the evaluation of each OR condition is written to the console.</td></tr>
     <tr><td class="paramname">orConditions</td><td>One or more predicate functions that define the alternative conditions. The rule matches if any of these predicates return <code>true</code> for a given fact.</td></tr>
   </table>
   </dd>
@@ -399,7 +540,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
       </table>
 </div><div class="memdoc">
 
-<p>Adds a terminal action to the rule that will be executed when the rule is triggered. </p>
+<p>Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others. </p>
 <p>Use this method to specify the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

@@ -45,12 +45,13 @@ namespace ReteCore
         public void RemoveByFact(object fact)
         {
             // Remove any activation where the Match (Token) contains the retracted fact
-            //_activations.RemoveAll(a => a.Match.NamedFacts.Values.Contains(fact));
-            int removedCount = _activations.RemoveAll(a =>
-            a.Match.NamedFacts.Values.Any(f => ReferenceEquals(fact, f)));
-            if (removedCount > 0)
+            if (fact is Token token)
             {
-                Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
+                int removedCount = _activations.RemoveAll(a => a.Match.NamedFacts.Values.Any(f => f == token.Fact));
+                if (removedCount > 0)
+                {
+                    Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
+                }
             }
         }
 

@@ -1,0 +1,82 @@
+\doxysection{Rete\+Core.\+Fact Class Reference}
+\hypertarget{class_rete_core_1_1_fact}{}\label{class_rete_core_1_1_fact}\index{ReteCore.Fact@{ReteCore.Fact}}
+
+
+The container for your actual data of any type. This class implements INotify\+Property\+Changed to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each \doxylink{class_rete_core_1_1_fact}{Fact} instance can be uniquely identified, which is crucial for indexing and retraction logic in the Rete algorithm. The Value$<$\+T$>$() method provides a convenient way to retrieve the underlying fact as a specific type without needing to cast it manually each time. Equality and hash code operations are based on the unique Id, ensuring that each \doxylink{class_rete_core_1_1_fact}{Fact} instance is treated as distinct even if they contain the same underlying data.  
+
+
+Inheritance diagram for Rete\+Core.\+Fact:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_fact}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_fact_a09557dd9b54f4787a3efe372201857c6}\label{class_rete_core_1_1_fact_a09557dd9b54f4787a3efe372201857c6} 
+{\bfseries Fact} (object data)
+\item 
+\Hypertarget{class_rete_core_1_1_fact_aa9752915a65d77d1228445563ece0c37}\label{class_rete_core_1_1_fact_aa9752915a65d77d1228445563ece0c37} 
+T {\bfseries Value$<$ T $>$} ()
+\item 
+\Hypertarget{class_rete_core_1_1_fact_a7b5831c5fb1685237c57a391f2d62fec}\label{class_rete_core_1_1_fact_a7b5831c5fb1685237c57a391f2d62fec} 
+override bool {\bfseries Equals} (object? obj)
+\item 
+\Hypertarget{class_rete_core_1_1_fact_afab9d5c4b86fc95763d41c7da765bba7}\label{class_rete_core_1_1_fact_afab9d5c4b86fc95763d41c7da765bba7} 
+override int {\bfseries Get\+Hash\+Code} ()
+\item 
+\Hypertarget{class_rete_core_1_1_fact_aaf8838f5e8cc420f2092cd9b5c39355f}\label{class_rete_core_1_1_fact_aaf8838f5e8cc420f2092cd9b5c39355f} 
+override string {\bfseries To\+String} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_fact_ae59911a6eff66ccaa13b4c6336600dd8}{On\+Property\+Changed}} (\+[Caller\+Member\+Name]\+ string? property\+Name=null)
+\begin{DoxyCompactList}\small\item\em When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the Property\+Changed event to be notified when a property value changes, enabling features like data binding in UI frameworks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_fact_a41c4e0d6b62af9c0dc51bbf500cf1e7c}\label{class_rete_core_1_1_fact_a41c4e0d6b62af9c0dc51bbf500cf1e7c} 
+Guid {\bfseries Id} = Guid.\+New\+Guid()\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\item 
+\Hypertarget{class_rete_core_1_1_fact_abd256ef04b8cb22f9fb0d8143d81c30e}\label{class_rete_core_1_1_fact_abd256ef04b8cb22f9fb0d8143d81c30e} 
+object {\bfseries Underlying\+Fact}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\item 
+\Hypertarget{class_rete_core_1_1_fact_a6ee14fbfe29a6d48e2933c809c64da6b}\label{class_rete_core_1_1_fact_a6ee14fbfe29a6d48e2933c809c64da6b} 
+Type {\bfseries Data\+Type}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_fact_a7de0440a9d4965bc3a651f0a3f42d7f5}\label{class_rete_core_1_1_fact_a7de0440a9d4965bc3a651f0a3f42d7f5} 
+Property\+Changed\+Event\+Handler {\bfseries Property\+Changed}
+\begin{DoxyCompactList}\small\item\em The Property\+Changed event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class, allowing for responsive updates in scenarios such as data binding in user interfaces. The event handler receives the name of the property that changed, enabling observers to react specifically to changes in certain properties if needed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The container for your actual data of any type. This class implements INotify\+Property\+Changed to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each \doxylink{class_rete_core_1_1_fact}{Fact} instance can be uniquely identified, which is crucial for indexing and retraction logic in the Rete algorithm. The Value$<$\+T$>$() method provides a convenient way to retrieve the underlying fact as a specific type without needing to cast it manually each time. Equality and hash code operations are based on the unique Id, ensuring that each \doxylink{class_rete_core_1_1_fact}{Fact} instance is treated as distinct even if they contain the same underlying data. 
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_fact_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_fact_ae59911a6eff66ccaa13b4c6336600dd8}\index{ReteCore.Fact@{ReteCore.Fact}!OnPropertyChanged@{OnPropertyChanged}}
+\index{OnPropertyChanged@{OnPropertyChanged}!ReteCore.Fact@{ReteCore.Fact}}
+\doxysubsubsection{\texorpdfstring{OnPropertyChanged()}{OnPropertyChanged()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_fact_ae59911a6eff66ccaa13b4c6336600dd8} 
+void Rete\+Core.\+Fact.\+On\+Property\+Changed (\begin{DoxyParamCaption}\item[{\+[\+Caller\+Member\+Name]\+ string?}]{property\+Name}{ = {\ttfamily null}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the Property\+Changed event to be notified when a property value changes, enabling features like data binding in UI frameworks. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em property\+Name} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Token.\+cs\end{DoxyCompactItemize}

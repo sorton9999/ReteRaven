@@ -8,6 +8,11 @@ namespace ReteCore
 {
     /// <summary>
     /// The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of facts and propagates them to successor nodes.
+    /// It implements the IReteNode interface, allowing it to participate in the Rete network, and the ILatentMemory interface, indicating that it can 
+    /// hold tokens that may not yet be fully matched. The BetaMemory is responsible for managing the collection of tokens, handling assertions, 
+    /// retractions, and refreshes of facts, and ensuring that successor nodes are updated accordingly when changes occur. It serves as a crucial 
+    /// component in the Rete algorithm, enabling efficient pattern matching and rule evaluation by maintaining the state of partial matches and 
+    /// facilitating the flow of information through the network.
     /// </summary>
     public class BetaMemory : IReteNode, ILatentMemory
     {
@@ -73,11 +78,16 @@ namespace ReteCore
         public void Retract(object fact)
         {
             // Remove tokens containing the retracted fact
-            var toRemove = Tokens.Where(t => t.NamedFacts.Values.Contains(fact)).ToList();
-            foreach (var token in toRemove)
+            if (fact is Token token)
             {
-                _tokens.Remove(token);
-                foreach (var node in _successors) node.Retract(fact);
+                var toRemove = Tokens
+                    .Where(t => t.NamedFacts.Values.Any(f => f == token.Fact))
+                    .ToList();
+                foreach (var t in toRemove)
+                {
+                    _tokens.Remove(t);
+                    foreach (var node in _successors) { node.Retract(fact); }
+                }
             }
         }
 

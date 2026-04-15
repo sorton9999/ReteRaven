@@ -2,7 +2,7 @@
 \hypertarget{class_rete_core_1_1_beta_memory}{}\label{class_rete_core_1_1_beta_memory}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}}
 
 
-The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} class represents a node in a Rete network that stores partial matches (tokens) of facts and propagates them to successor nodes.  
+The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} class represents a node in a Rete network that stores partial matches (tokens) of facts and propagates them to successor nodes. It implements the \doxylink{interface_rete_core_1_1_i_rete_node}{IRete\+Node} interface, allowing it to participate in the Rete network, and the \doxylink{interface_rete_core_1_1_i_latent_memory}{ILatent\+Memory} interface, indicating that it can hold tokens that may not yet be fully matched. The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} is responsible for managing the collection of tokens, handling assertions, retractions, and refreshes of facts, and ensuring that successor nodes are updated accordingly when changes occur. It serves as a crucial component in the Rete algorithm, enabling efficient pattern matching and rule evaluation by maintaining the state of partial matches and facilitating the flow of information through the network.  
 
 
 Inheritance diagram for Rete\+Core.\+Beta\+Memory:\+\begin{figure}[H]
@@ -38,7 +38,7 @@ IEnumerable$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ \doxy
 
 
 \doxysubsection{Detailed Description}
-The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} class represents a node in a Rete network that stores partial matches (tokens) of facts and propagates them to successor nodes. 
+The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} class represents a node in a Rete network that stores partial matches (tokens) of facts and propagates them to successor nodes. It implements the \doxylink{interface_rete_core_1_1_i_rete_node}{IRete\+Node} interface, allowing it to participate in the Rete network, and the \doxylink{interface_rete_core_1_1_i_latent_memory}{ILatent\+Memory} interface, indicating that it can hold tokens that may not yet be fully matched. The \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} is responsible for managing the collection of tokens, handling assertions, retractions, and refreshes of facts, and ensuring that successor nodes are updated accordingly when changes occur. It serves as a crucial component in the Rete algorithm, enabling efficient pattern matching and rule evaluation by maintaining the state of partial matches and facilitating the flow of information through the network. 
 
 \label{doc-func-members}
 \Hypertarget{class_rete_core_1_1_beta_memory_doc-func-members}
