@@ -60,17 +60,23 @@ namespace ReteEngine
         public string RuleName { get { return _ruleName; } }
 
         /// <summary>
-        /// Adds a match condition for facts of the specified type to the rule being built.
+        /// Adds a typed fact with an optional condition to the rule being built.  This method creates an AlphaMemory node for 
+        /// the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be 
+        /// used to filter facts of type T as they are asserted into the AlphaMemory. The name parameter is used to identify 
+        /// this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug 
+        /// label is provided, diagnostic output will be written to the console when the type is added.
         /// </summary>
-        /// <remarks>Use this method to specify that the rule should match facts of type T. Multiple calls
-        /// to Match can be chained to build more complex rules. The name parameter is used to reference this match in
-        /// subsequent rule conditions or actions.</remarks>
+        /// <remarks>Use this method to specify that the rule should match facts of type T. Multiple calls to Where can be 
+        /// chained to build more complex rules. The name parameter is used to reference this type in subsequent rule 
+        /// conditions or actions.</remarks>
         /// <typeparam name="T">The type of fact to match in the rule.</typeparam>
         /// <param name="name">The name used to identify this match condition within the rule. Cannot be null or empty.</param>
-        /// <param name="debugLabel">An optional label used for debugging purposes. If specified, diagnostic output will be written when the
-        /// match is added.</param>
+        /// <param name="debugLabel">An optional label used for debugging purposes. If specified, diagnostic output will be 
+        /// written when the type is added.</param>
+        /// <param name="initialCondition">A function that defines an optional initial condition to filter facts of type T as 
+        /// they are asserted into the AlphaMemory. The rule stops at this point if this initial condition is not satisfied.</param>
         /// <returns>The current ReteBuilder instance, enabling further configuration of the rule.</returns>
-        public ReteBuilder<TInitial> Match<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
+        public ReteBuilder<TInitial> Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
         {
             if (debugLabel != null)
             {
@@ -95,10 +101,11 @@ namespace ReteEngine
         /// join condition is evaluated.</remarks>
         /// <typeparam name="T">The type of fact to join with the current rule conditions.</typeparam>
         /// <param name="name">The name used to identify the join node within the rule network.</param>
-        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token. Returns
-        /// <see langword="true"/> if the fact matches the join condition; otherwise, <see langword="false"/>.</param>
-        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the join evaluation is
-        /// written to the console.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the 
+        /// current token. Returns <see langword="true"/> if the fact matches the join condition; otherwise, 
+        /// <see langword="false"/>.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// join evaluation is written to the console.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
         public ReteBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
@@ -139,10 +146,10 @@ namespace ReteEngine
         /// enables branching logic within a rule, similar to a logical OR operation.</remarks>
         /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
         /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
-        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of each 
-        /// OR condition is written to the console.</param>
-        /// <param name="orConditions">One or more predicate functions that define the alternative conditions. The rule matches if any of these
-        /// predicates return <see langword="true"/> for a given fact.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// evaluation of each OR condition is written to the console.</param>
+        /// <param name="orConditions">One or more predicate functions that define the alternative conditions. The rule matches 
+        /// if any of these predicates return <see langword="true"/> for a given fact.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
         public ReteBuilder<TInitial> Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
         {
@@ -197,9 +204,10 @@ namespace ReteEngine
         /// </summary>
         /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
         /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
-        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
-        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
-        /// condition is written to the console.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the 
+        /// current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// evaluation of the condition is written to the console.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
         public ReteBuilder<TInitial> AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
@@ -234,9 +242,10 @@ namespace ReteEngine
         /// </summary>
         /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
         /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
-        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
-        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
-        /// condition is written to the console.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the 
+        /// current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// evaluation of the condition is written to the console.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
         public ReteBuilder<TInitial> Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
@@ -273,9 +282,10 @@ namespace ReteEngine
         /// </summary>
         /// <typeparam name="T">The type of fact to which the conditions apply.</typeparam>
         /// <param name="name">The name used to identify this branch in the rule for debugging or tracing purposes.</param>
-        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
-        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
-        /// condition is written to the console.</param>
+        /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the 
+        /// current token.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// evaluation of the condition is written to the console.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
         public ReteBuilder<TInitial> Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
@@ -425,8 +435,9 @@ namespace ReteEngine
         /// from the respective memories.</remarks>
         /// <typeparam name="TNext">The type of the facts stored in the alpha memory to be joined.</typeparam>
         /// <param name="nextAlpha">The alpha memory node to join with the current beta memory. Cannot be null.</param>
-        /// <param name="condition">A function that determines whether a token from the beta memory and a fact from the alpha memory should be
-        /// joined. Returns <see langword="true"/> to join the pair; otherwise, <see langword="false"/>.</param>
+        /// <param name="condition">A function that determines whether a token from the beta memory and a fact from the 
+        /// alpha memory should be joined. Returns <see langword="true"/> to join the pair; otherwise, <see langword="false"/>.
+        /// </param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling method chaining.</returns>
         public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition)
         {
@@ -446,9 +457,10 @@ namespace ReteEngine
         /// the rule conditions are met. The rule is then registered with the provided agenda. If multiple rules are
         /// eligible to fire, those with higher salience values are prioritized.</remarks>
         /// <param name="agenda">The agenda to which the rule will be added. Cannot be null.</param>
-        /// <param name="action">The action to execute when the rule fires. Receives the token that caused the rule to trigger. Cannot be
-        /// null.</param>
-        /// <param name="salience">The priority of the rule within the agenda. Higher values indicate higher priority. The default is 0.</param>
+        /// <param name="action">The action to execute when the rule fires. Receives the token that caused the rule to trigger. 
+        /// Cannot be null.</param>
+        /// <param name="salience">The priority of the rule within the agenda. Higher values indicate higher priority.
+        /// The default is 0.</param>
         public void Then(Agenda agenda, Action<Token> action, int salience = 0)
         {
             var terminal = new TerminalNode(_ruleName, action, agenda, salience);

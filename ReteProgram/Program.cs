@@ -98,7 +98,7 @@ var terminal = new TerminalNode("TripleJoinRule", (t) => {
 joinABC.AddSuccessor(terminal);
 
 engine.Begin("DetectConflict")
-    .Match<Cell>("FirstCell", "CheckMatch")
+    .Where<Cell>("FirstCell", "CheckMatch")
     .And<Cell>("SecondCell", (token, next) =>
         token.Get<Cell>("FirstCell").Id == next.Id &&
         token.Get<Cell>("FirstCell").Value != next.Value,
@@ -123,7 +123,7 @@ var engine2 = new ReteEngine.ReteEngine();
 
 // -- LOGIC: (Status: Night) AND (Sensor: Door Open) --
 engine2.Begin("NightIntrusion_Door")
-    .Match<SystemStatus>("NightMode") // Check global state "Night"
+    .Where<SystemStatus>("NightMode") // Check global state "Night"
     .And<Sensor>("Door", (token, s) =>
         token.Get<SystemStatus>("NightMode").IsActive &&
         s.Type == "Door" && s.IsTriggered)
@@ -135,7 +135,7 @@ engine2.Begin("NightIntrusion_Door")
 // -- LOGIC: (Status: Night) AND (Sensor: Motion Detected) --
 // This creates the "OR" effect by defining a second path to the same outcome
 engine2.Begin("NightIntrusion_Motion")
-    .Match<SystemStatus>("NightMode")
+    .Where<SystemStatus>("NightMode")
     .And<Sensor>("Motion", (token, s) =>
         token.Get<SystemStatus>("NightMode").IsActive &&
         s.Type == "Motion" && s.IsTriggered)
@@ -165,7 +165,7 @@ CriticalCell critCell = new() { Id="C", Value = 100, Status = "Not Critical" };
 
 // Rule 1: If Cell value is 100, set Status to "Critical"
 engine3.Begin("MarkCritical")
-    .Match<CriticalCell>("C")
+    .Where<CriticalCell>("C")
     .And<CriticalCell>("C", (t, c) => c.Value >= 100 && c.Status != "Critical")
     .Then(t => {
         var c = t.Get<CriticalCell>("C");
@@ -176,7 +176,7 @@ engine3.Begin("MarkCritical")
 
 // Rule 2: If Status is "Critical", sound alarm
 engine3.Begin("SoundAlarm")
-    .Match<CriticalCell>("C")
+    .Where<CriticalCell>("C")
     .And<CriticalCell>("C", (t, c) => c.Status == "Critical")
     .Then(t => Console.WriteLine("ALARM SOUNDED!"));
 engine3.Assert(critCell);
@@ -188,7 +188,7 @@ var engine4 = new ReteEngine.ReteEngine();
 
 // Rule 1: When a Cell value is high, mark it "Urgent"
 engine4.Begin("MarkUrgent")
-    .Match<CriticalCell>("M")
+    .Where<CriticalCell>("M")
     .And<CriticalCell>("M", (t, c) => c.Value > 100 && c.Status != "Urgent")
     .Then(t => {
         var c = t.Get<CriticalCell>("M");
@@ -200,7 +200,7 @@ engine4.Begin("MarkUrgent")
 
 // Rule 2: When a Cell is "Urgent", log an alert
 engine4.Begin("AlertUrgent")
-    .Match<CriticalCell>("A")
+    .Where<CriticalCell>("A")
     .And<CriticalCell>("A", (t, c) => c.Status == "Urgent")
     .Then(t => Console.WriteLine("ALERT! Urgent!"));
 
@@ -214,7 +214,7 @@ string cellName = "M";
 var engine5 = new ReteEngine.ReteEngine();
 var criticalCell = new CriticalCell { Id = cellName, Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
-    .Match<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
+    .Where<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
     //.And<CriticalCell>(cellName, (t, c) => c.Value > 500)
     .Or<CriticalCell>(cellName, "MatchOr",
     (t, c) => c.Value > 500,
@@ -244,7 +244,7 @@ engine5.FireAll();
 var engine6 = new ReteEngine.ReteEngine();
 var criticalCell2 = new CriticalCell { Id = "Not Cell", Status = "Normal", Value = 590 };
 engine6.Begin("MatchStatusNot")
-    .Match<CriticalCell>("C")
+    .Where<CriticalCell>("C")
     .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent", "MarkNot")
     .And<CriticalCell>("C", (t, c) => c.Value > 500, "MarkAnd")
     .Then(t => {
@@ -257,7 +257,7 @@ engine6.FireAll();
 
 var engine7 = new ReteEngine.ReteEngine();
 engine7.Begin("MatchStatusExists")
-    .Match<CriticalCell>("C")
+    .Where<CriticalCell>("C")
     .Exists<CriticalCell>("C", (t, c) => c.Status == "Normal", "MarkExists")
     //.Or<CriticalCell>("C", "Exists-MarkOr", 
     //    (t, c) => c.Value > 500,
@@ -273,7 +273,7 @@ engine7.FireAll();
 var engine8 = new ReteEngine.ReteEngine();
 
 engine8.Begin("Alert_Out_of_Stock_Electronics")
-    .Match<Product>("P", "MatchElec", (c) => c.Category == "Electronics")
+    .Where<Product>("P", "MatchElec", (c) => c.Category == "Electronics")
     .Not<Inventory>("P", (t, i) => i.ProductId == t.Get<Product>("P").ProductId, "NoStock")
     .Then(terminal =>
     {
@@ -282,7 +282,7 @@ engine8.Begin("Alert_Out_of_Stock_Electronics")
     }, 999);
 
 engine8.Begin("Tag_High_Priority_Items")
-    .Match<Product>("R")
+    .Where<Product>("R")
     .And<Product>("R", (t, i) => i.ProductId == t.Get<Product>("R").ProductId)
     // OR: Join logic splits here. Firing if either branch is true.
     .Or<Product>("R", "PriceCheck",
@@ -293,9 +293,9 @@ engine8.Begin("Tag_High_Priority_Items")
     }, 100);
 
 engine8.Begin("Process_Urgent_Batch")
-    .Match<Inventory>("I", null, (i) => i.WarehouseLocation == "Aisle 3")
-    .Match<Product>("Q", null, (p) => p.Name != String.Empty)
-    //.Match<TestEval>("Eval", "MatchEval")
+    .Where<Inventory>("I", null, (i) => i.WarehouseLocation == "Aisle 3")
+    .Where<Product>("Q", null, (p) => p.Name != String.Empty)
+    //.Where<TestEval>("Eval", "MatchEval")
      //EXISTS: We only care IF there is a pending shipment, not HOW MANY.
     .Exists<Shipment>("S", (t, s) => s.ProductId == t.Get<Product>("Q").ProductId && s.Status == "Pending")
     //.And<TestEval>("Eval", (t, e) => !e.IsEvaluated) // Prevents infinite loop by only allowing this to run once per Eval fact
