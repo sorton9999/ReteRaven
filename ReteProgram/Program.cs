@@ -1,8 +1,8 @@
 ﻿using ReteCore;
-using ReteProgram;
+using ReteEngine;
 
 
-var engine = new ReteEngine();
+var engine = new ReteEngine.ReteEngine();
 
 // Define a rule: "If two cells have same ID but different Values"
 engine.RegisterConflictRule<Cell>(
@@ -49,7 +49,7 @@ alphaMemoryB.Facts.Add(cell2);
 AlphaMemory alphaMemoryC = new AlphaMemory();
 alphaMemoryA.Facts.Add(cell3);
 
-RuleBuilder<int> ruleBuilder = new RuleBuilder<int>(engine, "MyBuilder");
+ReteBuilder<int> ruleBuilder = new ReteBuilder<int>(engine, "MyBuilder");
 ruleBuilder.StartWith(alphaMemoryA, "A")
     .JoinWith<int>(alphaMemoryB, (t, b) => (int)t.Get<int>("A") < b)
     .JoinWith<int>(alphaMemoryC, (t, c) => (int)t.Get<int>("B") < c)
@@ -111,7 +111,7 @@ engine.Assert(cell500);
 engine.FireAll();
 
 
-var engine2 = new ReteEngine();
+var engine2 = new ReteEngine.ReteEngine();
 
 // -- LOGIC: (Status: Night) AND (Sensor: Door Open) --
 engine2.Begin("NightIntrusion_Door")
@@ -152,7 +152,7 @@ engine2.Assert(frontDoorM);
 engine2.FireAll();
 
 
-var engine3 = new ReteEngine();
+var engine3 = new ReteEngine.ReteEngine();
 CriticalCell critCell = new() { Id="C", Value = 100, Status = "Not Critical" };
 
 // Rule 1: If Cell value is 100, set Status to "Critical"
@@ -176,7 +176,7 @@ engine3.Assert(critCell);
 engine3.FireAll();
 
 
-var engine4 = new ReteEngine();
+var engine4 = new ReteEngine.ReteEngine();
 
 // Rule 1: When a Cell value is high, mark it "Urgent"
 engine4.Begin("MarkUrgent")
@@ -203,7 +203,7 @@ engine4.Assert(new CriticalCell { Id = "A", Value = 150, Status = "Normal" });
 engine4.FireAll();
 
 string cellName = "M";
-var engine5 = new ReteEngine();
+var engine5 = new ReteEngine.ReteEngine();
 var criticalCell = new CriticalCell { Id = cellName, Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
     .Match<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
@@ -233,7 +233,7 @@ criticalCell.Value = 120;
 // Fire the rule again to see the affect of the value change
 engine5.FireAll();
 
-var engine6 = new ReteEngine();
+var engine6 = new ReteEngine.ReteEngine();
 var criticalCell2 = new CriticalCell { Id = "Not Cell", Status = "Normal", Value = 590 };
 engine6.Begin("MatchStatusNot")
     .Match<CriticalCell>("C")
@@ -247,7 +247,7 @@ engine6.Assert(criticalCell2);
 engine6.FireAll();
 
 
-var engine7 = new ReteEngine();
+var engine7 = new ReteEngine.ReteEngine();
 engine7.Begin("MatchStatusExists")
     .Match<CriticalCell>("C")
     .Exists<CriticalCell>("C", (t, c) => c.Status == "Normal", "MarkExists")
@@ -262,7 +262,7 @@ engine7.Begin("MatchStatusExists")
 engine7.Assert(criticalCell2);
 engine7.FireAll();
 
-var engine8 = new ReteEngine();
+var engine8 = new ReteEngine.ReteEngine();
 
 engine8.Begin("Alert_Out_of_Stock_Electronics")
     .Match<Product>("P", "MatchElec", (c) => c.Category == "Electronics")

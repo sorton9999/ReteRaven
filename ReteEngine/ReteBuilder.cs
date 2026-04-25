@@ -1,13 +1,11 @@
-﻿using ReteCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReteCore;
 
-namespace ReteProgram
+namespace ReteEngine
 {
     /// <summary>
     /// Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.
@@ -17,7 +15,7 @@ namespace ReteProgram
     /// execute when the rule is triggered. Each method call adds a new node or condition to the rule's execution graph.
     /// The builder is not thread-safe and should be used from a single thread during rule construction.</remarks>
     /// <typeparam name="TInitial">The type of the initial fact or object that the rule operates on.</typeparam>
-    public class RuleBuilder<TInitial>
+    public class ReteBuilder<TInitial>
     {
         /// <summary>
         /// The ReteEngine instance that this builder will configure. 
@@ -42,7 +40,7 @@ namespace ReteProgram
         /// </summary>
         /// <param name="engine">The ReteEngine instance that will be used to build and manage the rule. Cannot be null.</param>
         /// <param name="name">The name to assign to the rule being built. Cannot be null or empty.</param>
-        public RuleBuilder(ReteEngine engine, string name)
+        public ReteBuilder(ReteEngine engine, string name)
         {
             _engine = engine;
             _ruleName = name;
@@ -63,8 +61,8 @@ namespace ReteProgram
         /// <param name="name">The name used to identify this match condition within the rule. Cannot be null or empty.</param>
         /// <param name="debugLabel">An optional label used for debugging purposes. If specified, diagnostic output will be written when the
         /// match is added.</param>
-        /// <returns>The current RuleBuilder instance, enabling further configuration of the rule.</returns>
-        public RuleBuilder<TInitial> Match<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
+        /// <returns>The current ReteBuilder instance, enabling further configuration of the rule.</returns>
+        public ReteBuilder<TInitial> Match<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
         {
             if (debugLabel != null)
             {
@@ -93,8 +91,8 @@ namespace ReteProgram
         /// <see langword="true"/> if the fact matches the join condition; otherwise, <see langword="false"/>.</param>
         /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the join evaluation is
         /// written to the console.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
-        public RuleBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        public ReteBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
@@ -137,8 +135,8 @@ namespace ReteProgram
         /// OR condition is written to the console.</param>
         /// <param name="orConditions">One or more predicate functions that define the alternative conditions. The rule matches if any of these
         /// predicates return <see langword="true"/> for a given fact.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
-        public RuleBuilder<TInitial> Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public ReteBuilder<TInitial> Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
         {
             // Save the starting point so all branches begin from the same prefix
             var branchStartNode = _lastNode; // Previous node in the chain
@@ -194,8 +192,8 @@ namespace ReteProgram
         /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
         /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
         /// condition is written to the console.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
-        public RuleBuilder<TInitial> AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public ReteBuilder<TInitial> AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
@@ -231,8 +229,8 @@ namespace ReteProgram
         /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
         /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
         /// condition is written to the console.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
-        public RuleBuilder<TInitial> Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public ReteBuilder<TInitial> Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
@@ -270,8 +268,8 @@ namespace ReteProgram
         /// <param name="joinCondition">A function that determines whether a given fact of type T should be joined with the current token.</param>
         /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the evaluation of the 
         /// condition is written to the console.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
-        public RuleBuilder<TInitial> Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing further rule configuration.</returns>
+        public ReteBuilder<TInitial> Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
 
             Func<Token, T, bool> wrapCondition = (token, fact) =>
@@ -339,8 +337,8 @@ namespace ReteProgram
         /// null.</param>
         /// <param name="salience">The priority of the rule when multiple rules are eligible to fire. Higher values indicate higher priority.
         /// The default is 0.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
-        public RuleBuilder<TInitial> Then(Action<Token> action, int salience = 0)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
+        public ReteBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
 
             var terminal = new TerminalNode(_ruleName, action, _engine.Agenda, salience);
@@ -363,8 +361,8 @@ namespace ReteProgram
         /// Tracing can help diagnose rule behavior or performance issues by providing labeled checkpoints in the
         /// evaluation process.</remarks>
         /// <param name="label">The label to associate with the trace node. Used to identify the trace point during rule evaluation.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
-        public RuleBuilder<TInitial> Trace(string label)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        public ReteBuilder<TInitial> Trace(string label)
         {
             var tracer = new ReteEngine.TraceNode(label);
             if (_lastNode is BetaMemory beta)
@@ -391,9 +389,9 @@ namespace ReteProgram
         /// JoinWith or other builder methods will extend the rule from this starting point.</remarks>
         /// <param name="alpha">The AlphaMemory node that serves as the starting point for the rule's pattern matching.</param>
         /// <param name="factName">The name of the fact to be matched by the initial AlphaMemory node. Cannot be null or empty.</param>
-        /// <returns>A RuleBuilder<TInitial> instance configured to continue building the rule from the specified AlphaMemory
+        /// <returns>A ReteBuilder<TInitial> instance configured to continue building the rule from the specified AlphaMemory
         /// node.</returns>
-        public RuleBuilder<TInitial> StartWith(AlphaMemory alpha, string factName)
+        public ReteBuilder<TInitial> StartWith(AlphaMemory alpha, string factName)
         {
             // Create the very first BetaMemory for this rule's chain
             var firstBeta = new BetaMemory();
@@ -421,8 +419,8 @@ namespace ReteProgram
         /// <param name="nextAlpha">The alpha memory node to join with the current beta memory. Cannot be null.</param>
         /// <param name="condition">A function that determines whether a token from the beta memory and a fact from the alpha memory should be
         /// joined. Returns <see langword="true"/> to join the pair; otherwise, <see langword="false"/>.</param>
-        /// <returns>The current <see cref="RuleBuilder{TInitial}"/> instance, enabling method chaining.</returns>
-        public RuleBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition)
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling method chaining.</returns>
+        public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition)
         {
             BetaMemory? beta = _lastNode as BetaMemory;
             var join = new ReteCore.JoinNode(beta!, nextAlpha, "dummy", (t, f) => condition(t, (TNext)f));
@@ -561,20 +559,20 @@ namespace ReteProgram
     }
 
     // Test classes
-    class SystemStatus
+    public class SystemStatus
     {
         public string Name { get; set; }
         public bool IsActive { get; set; }
     };
 
-    class Sensor
+    public class Sensor
     {
         public string Name { get; set; }
         public string Type { get; set; }
         public bool IsTriggered { get; set; }
     };
 
-    class CriticalCell : Cell
+    public class CriticalCell : Cell
     {
         string _status = String.Empty;
         public string Status
@@ -785,3 +783,4 @@ namespace ReteProgram
         }
     }
 }
+

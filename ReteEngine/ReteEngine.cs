@@ -1,12 +1,14 @@
-﻿using ReteCore;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ReteCore;
 
 namespace ReteEngine
 {
-
     public class ReteEngine
     {
         private readonly RootNode _root = new();
@@ -15,6 +17,8 @@ namespace ReteEngine
 
         // --- Public API ---
 
+        public IReteNode Root { get { return _root; } }
+
         public void Assert(object fact)
         {
             if (!_workingMemory.Contains(fact))
@@ -22,10 +26,16 @@ namespace ReteEngine
                 _workingMemory.Add(fact);
                 if (fact is INotifyPropertyChanged observable)
                 {
-                    observable.PropertyChanged += (s, e) => _root.Refresh(s, e.PropertyName);
+                    observable.PropertyChanged += (s, e) => { _root.Refresh(s, e.PropertyName); };
                 }
                 _root.Assert(fact);
             }
+        }
+
+        public void Refresh(object fact, string propertyName = null)
+        {
+            if (fact == null) { return; }
+            _root.Refresh(fact, propertyName);
         }
 
         public void Retract(object fact)
@@ -36,7 +46,10 @@ namespace ReteEngine
             }
         }
 
-        public void FireAll() => _agenda.FireAll();
+        public void FireAll()
+        {
+            while (_agenda.HasActivations) { _agenda.FireAll(); }
+        }
 
         // Helper to build a "Conflict" rule easily
         public void RegisterConflictRule<T>(string name, Func<Token, T, bool> condition, Action<T, T> action, int salience = 0)
@@ -47,8 +60,8 @@ namespace ReteEngine
             var joinNode = new JoinNode(BetaMem, alphaMem, name, (a, b) => condition((Token)a, (T)b));
             var terminal = new TerminalNode(name, t => action((T)t.NamedFacts["A"], (T)t.NamedFacts["B"]), _agenda, salience);
 
-            _root.AddChild(typeNode);
-            typeNode.AddChild(alphaMem);
+            _root.AddSuccessor(typeNode);
+            typeNode.AddSuccessor(alphaMem);
             joinNode.AddSuccessor(terminal);
         }
 
@@ -60,38 +73,91 @@ namespace ReteEngine
             this.Assert(fact);
         }
 
+        public Agenda Agenda
+        {
+            get { return _agenda; }
+        }
+
         public ReteEngine()
         {
             // Initialize the Rete network with a root node
-            _root.AddChild(new ObjectTypeNode<object>()); // Start with a generic type node
+            _root.AddSuccessor(new ObjectTypeNode<object>()); // Start with a generic type node
         }
 
-        
+        public ReteBuilder<Cell> Begin(string ruleName) => new ReteBuilder<Cell>(this, ruleName);
+
+        private readonly Dictionary<(Type Type, string Name), object> _alphaRegistry = new();
+
+        public AlphaMemory GetAlphaMemory<T>(string name = null, Func<T, bool> initialCondition = null)
+        {
+            var type = typeof(T);
+
+            // Get or create the ObjectTypeNode for type T
+            var typeNode = _root.GetSuccessor<T>();
+            if (typeNode == null)
+            {
+                typeNode = new ObjectTypeNode<T>();
+                _root.AddSuccessor(typeNode);
+            }
+
+            // Use a combination of type and name as the key for the alpha registry.
+            // We want to reuse the same alpha memory for the same type and name,
+            // but allow different conditions to create separate alpha memories if needed.
+            var registryKey = (type, name ?? "default");
+            if (!_alphaRegistry.ContainsKey(registryKey))
+            {
+                AlphaConditionNode<T> alphaConditionNode = null;
+                var alpha = new AlphaMemory();
+                if (initialCondition != null)
+                {
+                    alphaConditionNode = new AlphaConditionNode<T>(name, initialCondition, alpha);
+                }
+                typeNode.AddSuccessor(alphaConditionNode != null ? alphaConditionNode : alpha);
+
+                _alphaRegistry[registryKey] = alpha;
+            }
+            return (AlphaMemory)_alphaRegistry[registryKey];
+        }
+
+        public void DebugPrintNetwork(object fact)
+        {
+            Console.WriteLine($"\n--- Rete Trace for Fact {fact} ---");
+            _root.DebugPrint(fact, 0);
+            Console.WriteLine("--- End Trace ---");
+        }
 
         // --- Internal Rete Network Components ---
 
         private class RootNode : IReteNode
         {
             private readonly List<IReteNode> _children = new();
-            public void AddChild(IReteNode node) => _children.Add(node);
+            public void AddSuccessor(IReteNode node) => _children.Add(node);
             public void Assert(object fact) => _children.ForEach(c => c.Assert(fact));
             public void Retract(object fact) => _children.ForEach(c => c.Retract(fact));
             public void Refresh(object fact, string propertyName)
             {
                 foreach (var child in _children)
                 {
-                    if (child is ObjectTypeNode<object> typeNode)
-                    {
-                        typeNode.Refresh(fact, propertyName);
-                    }
+                    child.Refresh(fact, propertyName);
                 }
+            }
+            public ObjectTypeNode<T> GetSuccessor<T>()
+            {
+                return _children
+                    .OfType<ObjectTypeNode<T>>()
+                    .FirstOrDefault();
+            }
+            public void DebugPrint(object fact, int level = 0)
+            {
+                Console.WriteLine($"[RootNode] Fact: {fact}");
+                foreach (var child in _children) child.DebugPrint(fact, level + 1);
             }
         }
 
         private class ObjectTypeNode<T> : IReteNode
         {
             private readonly List<IReteNode> _children = new();
-            public void AddChild(IReteNode node) => _children.Add(node);
+            public void AddSuccessor(IReteNode node) => _children.Add(node);
             public void Assert(object fact) { if (fact is T) _children.ForEach(c => c.Assert(fact)); }
             public void Retract(object fact) { if (fact is T) _children.ForEach(c => c.Retract(fact)); }
             public void Refresh(object fact, string propertyName)
@@ -100,93 +166,49 @@ namespace ReteEngine
                 {
                     foreach (var child in _children)
                     {
-                        if (child is AlphaConditionNode<T> alphaNode)
-                        {
-                            alphaNode.Refresh(typedFact, propertyName);
-                        }
-                        else
-                        {
-                            child.Assert(typedFact);
-                        }
+                        child.Refresh(fact, propertyName);
                     }
                 }
             }
-        }
-
-        /*
-        private class AlphaMemory : IReteNode
-        {
-            public List<object> Facts { get; } = new();
-            private readonly List<JoinNode> _successors = new();
-            public void AddSuccessor(JoinNode node) => _successors.Add(node);
-            public void Assert(object fact) { Facts.Add(fact); _successors.ForEach(s => s.RightAssert(fact, Facts)); }
-            public void Retract(object fact) { if (Facts.Remove(fact)) _successors.ForEach(s => s.RightRetract(fact)); }
-            public void Refresh(object fact, string propertyName)
+            public void DebugPrint(object fact, int level = 0)
             {
-                foreach (var succ in _successors)
-                {
-                    succ.Refresh(fact, propertyName);
-                }
+                bool match = fact is T;
+                string indent = new string(' ', level * 2);
+                Console.WriteLine($"{indent}[TypeNode:{typeof(T).Name}] {(match ? "MATCH" : "SKIP")}");
+                if (match) foreach (var child in _children) child.DebugPrint(fact, level + 1);
             }
         }
 
-        private class JoinNode
+        public class TraceNode : IReteNode, ILatentMemory
         {
-            private readonly Func<object, object, bool> _condition;
+            private readonly string _label;
             private readonly List<IReteNode> _successors = new();
-            public JoinNode(AlphaMemory mem, Func<object, object, bool> cond) { _condition = cond; mem.AddSuccessor(this); }
+            private Token token = new Token("Dummy Token", null);
+
+            public TraceNode(string label) => _label = label;
+            public IEnumerable<Token> Tokens { get { return new List<Token>() { token }; } }
             public void AddSuccessor(IReteNode node) => _successors.Add(node);
-            public void RightAssert(object fact, List<object> memory)
+
+            public void Assert(object fact)
             {
-                foreach (var existing in memory)
-                {
-                    if (!ReferenceEquals(fact, existing) && _condition(existing, fact))
-                        _successors.ForEach(s => s.Assert(new Token(existing as Token, "dummy", fact)));
-                }
-            }
-            public void RightRetract(object fact) => _successors.ForEach(s => s.Retract(fact));
-            public void Refresh(object factOrToken, string propertyName)
-            {
-                if (factOrToken is Token token)
-                {
-                    foreach (var rightFact in _rightInput.Facts)
-                    {
-                        this.EvaluateAndPropagate(token, propertyName, rightFact);
-                    }
-                }
-                else
-                {
-                    foreach (var leftToken in _leftInput.Facts)
-                    {
-                        this.EvaluateAndPropagate(leftToken, propertyName, factOrToken);
-                    }
-                }
+                Console.WriteLine($"[TRACE:{_label}] Fact Asserted: {fact}");
+                _successors.ForEach(s => s.Assert(fact));
             }
 
-            private void EvaluateAndPropagate(Token left, string newName, object right)
+            public void Retract(object fact)
             {
-                if (_condition(left, right))
-                {
-                    var newToken = new Token(left, newName, right);
-                    foreach (var s in _successors) { s.Assert(newToken); }
-                }
-                else
-                {
-                    foreach (var s in _successors) { s.Retract(right); }
-                }
+                Console.WriteLine($"[TRACE:{_label}] Fact Retracted: {fact}");
+                _successors.ForEach(s => s.Retract(fact));
+            }
+
+            public void Refresh(object fact, string prop) => _successors.ForEach(s => s.Refresh(fact, prop));
+
+            public void DebugPrint(object fact, int level = 0)
+            {
+                string indent = new string(' ', level * 2);
+                Console.WriteLine($"{indent}[TraceNode:{_label} -- {fact}");
             }
         }
 
-        private class TerminalNode : IReteNode
-        {
-            private readonly string _name;
-            private readonly Action<Token> _action;
-            private readonly Agenda _agenda;
-            private readonly int _salience;
-            public TerminalNode(string n, Action<Token> a, Agenda ag, int s) { _name = n; _action = a; _agenda = ag; _salience = s; }
-            public void Assert(object fact) => _agenda.Add(new Activation(_name, _action, (Token)fact, _salience));
-            public void Retract(object fact) => _agenda.RemoveByFact(fact);
-        }
-        */
     }
 }

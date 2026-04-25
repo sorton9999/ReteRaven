@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ReteCore\ReteCore.csproj" />
+    <ProjectReference Include="..\ReteEngine\ReteEngine.csproj" />
   </ItemGroup>
 
 </Project>
