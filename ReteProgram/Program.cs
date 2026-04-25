@@ -270,8 +270,8 @@ engine8.Begin("Alert_Out_of_Stock_Electronics")
     .Then(terminal =>
     {
         var p = terminal.Get<Product>("P");
-        Console.WriteLine($"ALERT: Order emergency stock!! Product '{p.Name}' is out of stock!", 999);
-    });
+        Console.WriteLine($"ALERT: Order emergency stock!! Product '{p.Name}' is out of stock!");
+    }, 999);
 
 engine8.Begin("Tag_High_Priority_Items")
     .Match<Product>("R")
@@ -281,17 +281,21 @@ engine8.Begin("Tag_High_Priority_Items")
         (t, c) => c.Price > 1000,
         (t, c) => c.ProductId == 998899)
     .Then(t => {
-        Console.WriteLine($"[ACTION] Tagging {t.Get<Product>("R").Name} for Insurance.", 100);
-    });
+        Console.WriteLine($"[ACTION] Tagging {t.Get<Product>("R").Name} for Insurance.");
+    }, 100);
 
 engine8.Begin("Process_Urgent_Batch")
     .Match<Inventory>("I", null, (i) => i.WarehouseLocation == "Aisle 3")
     .Match<Product>("Q", null, (p) => p.Name != String.Empty)
-    // EXISTS: We only care IF there is a pending shipment, not HOW MANY.
+    //.Match<TestEval>("Eval", "MatchEval")
+     //EXISTS: We only care IF there is a pending shipment, not HOW MANY.
     .Exists<Shipment>("S", (t, s) => s.ProductId == t.Get<Product>("Q").ProductId && s.Status == "Pending")
+    //.And<TestEval>("Eval", (t, e) => !e.IsEvaluated) // Prevents infinite loop by only allowing this to run once per Eval fact
     .Then(t => {
-        Console.WriteLine($"[ACTION] Adding {t.Get<Product>("Q").Name} to the morning truck.", 555);
-    });
+        //TestEval eval = t.Get<TestEval>("Eval");
+        //eval.IsEvaluated = true;
+        Console.WriteLine($"[ACTION] Adding {t.Get<Product>("Q").Name} to the morning truck.");
+    }, 555);
 
 Product product = new Product()
 {
@@ -303,9 +307,9 @@ Product product = new Product()
 Product product2 = new Product()
 {
     ProductId = 888899,
-    Name = "Luxury Watch",
+    Name = "Luxury Yacht",
     Category = "Accessories",
-    Price = 5000
+    Price = 15000000
 };
 Product product3 = new Product()
 {
@@ -356,4 +360,6 @@ engine8.FireAll();
 Console.WriteLine("Changing shipment status to Pending...");
 shipment.Status = "Pending";
 engine8.FireAll();
+
+
 

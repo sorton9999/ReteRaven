@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.36105.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateRulesLib", "EvaluateRulesLib\EvaluateRulesLib.csproj", "{9882F0B3-2F50-4C59-971F-43392DD13844}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleEngine", "RuleEngine\RuleEngine.csproj", "{D631F76F-36FD-4AC3-896A-0ECEF0C0C9CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleEngineTest", "RuleEngineTest\RuleEngineTest.csproj", "{AA7F5800-F165-4D07-B559-00B79C32AAC6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReteCore", "ReteCore\ReteCore.csproj", "{FD617D84-5CC6-4221-A20A-61630A8B4217}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReteProgram", "ReteProgram\ReteProgram.csproj", "{0D2CE3CA-28AB-4F3F-A051-294A5BC67759}"
@@ -19,18 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9882F0B3-2F50-4C59-971F-43392DD13844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9882F0B3-2F50-4C59-971F-43392DD13844}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9882F0B3-2F50-4C59-971F-43392DD13844}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9882F0B3-2F50-4C59-971F-43392DD13844}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D631F76F-36FD-4AC3-896A-0ECEF0C0C9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D631F76F-36FD-4AC3-896A-0ECEF0C0C9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D631F76F-36FD-4AC3-896A-0ECEF0C0C9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D631F76F-36FD-4AC3-896A-0ECEF0C0C9CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA7F5800-F165-4D07-B559-00B79C32AAC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD617D84-5CC6-4221-A20A-61630A8B4217}.Release|Any CPU.ActiveCfg = Release|Any CPU

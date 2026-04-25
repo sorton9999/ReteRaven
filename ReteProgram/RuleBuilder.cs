@@ -758,4 +758,30 @@ namespace ReteProgram
             return HashCode.Combine(Id, Value, ProductId, Status);
         }
     }
+
+    public class TestEval : Cell
+    {
+        private bool _isEvaluated = false;
+        public Guid GId { get; set; } = Guid.NewGuid();
+        public bool IsEvaluated
+        {
+            get { return _isEvaluated; }
+            set
+            {
+                if (_isEvaluated != value)
+                {
+                    _isEvaluated = value;
+                    OnPropertyChanged(nameof(IsEvaluated));
+                }
+            }
+        }
+        public override bool Equals(object? obj)
+        {
+            return obj is TestEval eval && Id == eval.Id && Value == eval.Value && IsEvaluated == eval.IsEvaluated && GId == eval.GId;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Value, IsEvaluated, GId);
+        }
+    }
 }
