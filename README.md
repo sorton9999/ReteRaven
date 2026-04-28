@@ -27,6 +27,8 @@ This project is open-source and distributed under the LGPL license.
 
 ------------------------------
 ## 🚀 Quick Start
+This API was developed in .NET Core 8 and assumes the use of Visual Studio 2022.
+
 ## 1. Define Your Facts
 Facts are composed of Cells that implement `INotifyPropertyChanged` representing your world state.
 
