@@ -1,8 +1,8 @@
 ```
             _______
         ___/ |    | \___          ____      _       ____
-       /   \  RETE  /   \        |  _ \ ___| |_ ___|  _ \ __ ___   _____ _ __
-      |     \ RAVEN/     |       | |_) / _ \ __/ _ \ |_) / _` \ \ / / _ \ '_ \
+       /   \        /   \        |  _ \ ___| |_ ___|  _ \ __ ___   _____ _ __
+      |   RETE   RAVEN   |       | |_) / _ \ __/ _ \ |_) / _` \ \ / / _ \ '_ \
       |      \____/      |       |  _ <  __/ |_  __/  _ < (_| |\ V /  __/ | | |
        \___          ___/        |_| \_\___|\__\___|_| \_\__,_| \_/ \___|_| |_|
            \________/
@@ -11,8 +11,11 @@
 ```
 
 ## 🧠 ReteRaven
-A high-performance, fluent Rete algorithm implementation for C# simulations.
-ReteRaven is a pattern-matching engine designed to decouple complex logic from your simulation loop. It trades memory for speed by maintaining a stateful graph of partial matches, ensuring that your simulation only "thinks" about the data that actually changes.
+
+A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity.  It features a modern fluent rule builder that allows you to define complex logic 
+using a type-safe, readable DSL. 
+Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact-matching and pattern-binding with ease. 
+This project is open-source and distributed under the LGPL license.
 ------------------------------
 ## ✨ Key Features
 
@@ -25,9 +28,15 @@ ReteRaven is a pattern-matching engine designed to decouple complex logic from y
 ------------------------------
 ## 🚀 Quick Start
 ## 1. Define Your Facts
-Facts are simple POCOs or Records representing your world state.
+Facts are composed of Cells that implement `INotifyPropertyChanged` representing your world state.
 
-`public record Task(int Id, int? ParentId, string Status);`
+```csharp
+public Task : Cell
+{
+    public int ParentId { get; set; // Throw PropertyChangeEvent }
+    public string Status { get; set; // Throw PropertyChangedEvent }
+}
+```
 
 ## 2. Configure the Engine
 Use the Fluent Builder to define your domain logic.
@@ -35,8 +44,8 @@ Use the Fluent Builder to define your domain logic.
 ```csharp
 var engine = new ReteEngine();
 
-engine.CreateRule("BubbleUpCompletion")
-    .Match<Task>("BubbleTask", parent => parent.Status == "Incomplete")
+engine.Begin("BubbleUpCompletion")
+    .Given<Task>("BubbleTask", parent => parent.Status == "Incomplete")
     // Ensure the parent has children
     .Exists<Task>("BubbleTask", (child, parent) => child.ParentId == parent.Id)
     // Only fire when NO children are still incomplete (Recursive Return)
@@ -44,7 +53,8 @@ engine.CreateRule("BubbleUpCompletion")
     .Then(match => {
         var parent = match.Get<Task>("BubbleTask");
         // Automatic Retraction handles the state swap
-        engine.Update(parent with { Status = "Complete" });
+        parent.Status = "Complete";
+        engine.Update(parent);
     });
 ```
 You can define multiple rules in the engine with different chains of conditions and assign separate actions for each.
