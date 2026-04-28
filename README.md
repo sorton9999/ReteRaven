@@ -11,8 +11,11 @@
 ```
 
 ## 🧠 ReteRaven
-A high-performance, fluent Rete algorithm implementation for C# simulations.
-ReteRaven is a pattern-matching engine designed to decouple complex logic from your simulation loop. It trades memory for speed by maintaining a stateful graph of partial matches, ensuring that your simulation only "thinks" about the data that actually changes.
+
+A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity.  It features a modern fluent rule builder that allows you to define complex logic 
+using a type-safe, readable DSL. 
+Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact-matching and pattern-binding with ease. 
+This project is open-source and distributed under the LGPL license.
 ------------------------------
 ## ✨ Key Features
 
@@ -25,9 +28,15 @@ ReteRaven is a pattern-matching engine designed to decouple complex logic from y
 ------------------------------
 ## 🚀 Quick Start
 ## 1. Define Your Facts
-Facts are simple POCOs or Records representing your world state.
+Facts are composed of Cells that implement `INotifyPropertyChanged` representing your world state.
 
-`public record Task(int Id, int? ParentId, string Status);`
+```csharp
+public Task : Cell
+{
+    public int ParentId { get; set; // Throw PropertyChangeEvent }
+    public string Status { get; set; // Throw PropertyChangedEvent }
+}
+```
 
 ## 2. Configure the Engine
 Use the Fluent Builder to define your domain logic.
