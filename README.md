@@ -35,8 +35,8 @@ Facts are composed of Cells that implement `INotifyPropertyChanged` representing
 ```csharp
 public Task : Cell
 {
-    public int ParentId { get; set; // Throw PropertyChangeEvent }
-    public string Status { get; set; // Throw PropertyChangedEvent }
+    public int ParentId { get; set; } // Throw PropertyChangeEvent
+    public string Status { get; set; } // Throw PropertyChangedEvent
 }
 ```
 
