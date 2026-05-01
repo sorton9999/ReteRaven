@@ -47,7 +47,7 @@ Use the Fluent Builder to define your domain logic.
 var engine = new ReteEngine();
 
 engine.Begin("BubbleUpCompletion")
-    .Given<Task>("BubbleTask", parent => parent.Status == "Incomplete")
+    .Where<Task>("BubbleTask", parent => parent.Status == "Incomplete")
     // Ensure the parent has children
     .Exists<Task>("BubbleTask", (child, parent) => child.ParentId == parent.Id)
     // Only fire when NO children are still incomplete (Recursive Return)
