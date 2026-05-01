@@ -588,6 +588,7 @@ namespace ReteEngine
     public class Sensor
     {
         public string Name { get; set; }
+        public Guid Id { get; set; }
         public string Type { get; set; }
         public bool IsTriggered { get; set; }
     };
@@ -692,6 +693,7 @@ namespace ReteEngine
         private int _quantity;
         private int _productId;
         private string _location;
+        private int _count;
         public int Quantity
         {
             get { return _quantity; }
@@ -729,13 +731,26 @@ namespace ReteEngine
             }
         }
 
+        public int Count
+        {
+            get { return _count; }
+            set
+            {
+                if (_count != value)
+                {
+                    _count = value;
+                    OnPropertyChanged(nameof(Count));
+                }
+            }
+        }
+
         public override bool Equals(object? obj)
         {
-            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation;
+            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation && Count == inventory.Count;
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation);
+            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation, Count);
         }
     }
 
