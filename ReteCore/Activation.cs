@@ -23,7 +23,7 @@ namespace ReteCore
     /// The salience value allows for prioritizing activations when multiple rules are activated simultaneously, with higher salience 
     /// values being executed first.
     /// </summary>
-    public class Activation
+    public class Activation : IComparable<Activation>
     {
         /// <summary>
         /// The name of the rule associated with this activation. This is used for identification and debugging purposes, 
@@ -55,6 +55,23 @@ namespace ReteCore
         /// activations.
         /// </summary>
         public int Salience { get; }
+        /// <summary>
+        /// A numeric value representing the priority of this activation relative to others in the agenda. Higher priority 
+        /// values indicate that the rule will fire before lower priority ones when multiple activations are pending in the 
+        /// agenda. This allows for additional control over the execution order of rules, especially when salience values 
+        /// are equal or when further differentiation is needed beyond salience alone.
+        /// </summary>
+        public int Priority { get; }
+        /// <summary>
+        /// A timestamp indicating when this activation was created. This can be used to break ties when multiple activations 
+        /// have the same salience and priority, ensuring a consistent and predictable firing order based on the order of 
+        /// creation.
+        /// </summary>
+        public long Timestamp { get; } = DateTime.UtcNow.Ticks;
+        /// <summary>
+        /// A private field to store the timestamp. This is so the timestamp can be set at the time of instantiation.
+        /// </summary>
+        private long _timestamp = 0;
 
         /// <summary>
         /// Creates a new Activation instance with the specified rule name, action, token match, and salience. This 
@@ -68,12 +85,16 @@ namespace ReteCore
         /// <param name="action">The action that executes when this activation fires.</param>
         /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
         /// <param name="salience">A priority value relative to other activations.</param>
-        public Activation(string name, Action<Token> action, Token match, int salience)
+        public Activation(string name, Action<Token> action, Token match, int priority, int salience)
         {
+            // Mark the timestamp on this object's instantiation which will be used for tie-breaking when mutiple
+            // activations have the same Priority and Salience.
+            _timestamp = Timestamp;
             RuleName = name;
             Action = action;
             Match = match;
             Salience = salience;
+            Priority = priority;
         }
 
         /// <summary>
@@ -84,5 +105,26 @@ namespace ReteCore
         /// information available in the token.
         /// </summary>
         public void Fire() => Action(Match);
+
+        /// <summary>
+        /// A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. 
+        /// This is used by the agenda to sort activations when multiple activations are pending, ensuring that the most 
+        /// important or the most desired activations fire before lesser ones.
+        /// </summary>
+        /// <param name="other">The Activation object to compare to.</param>
+        /// <returns>An integer indicating the relative order of the activations.</returns>
+        public int CompareTo(Activation? other)
+        {
+            // Compare Priority (Primary)
+            int priorityCompare = other?.Priority.CompareTo(this.Priority) ?? 0;
+            if (priorityCompare != 0) return priorityCompare;
+
+            // Priority is equal, compare Salience (Secondary tie-breaker)
+            int salienceCompare = other?.Salience.CompareTo(this.Salience) ?? 0;
+            if (salienceCompare != 0) return salienceCompare;
+
+            // Priority and Salience are equal, compare Timestamp in a LIFO manner (Tertiary tie-breaker)
+            return other?.Timestamp.CompareTo(this.Timestamp) ?? 0;
+        }
     }
 }

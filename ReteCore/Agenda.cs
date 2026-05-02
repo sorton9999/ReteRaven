@@ -41,8 +41,13 @@ namespace ReteCore
         /// creating an activation that represents the pending execution of that rule. The activation is added to the 
         /// list of pending activations, which will be processed later during the firing phase.
         /// </summary>
-        /// <param name="a">The Activation object to add to the list of activations.</param>
-        public void Add(Activation a) => _activations.Add(a);
+        /// <param name="activation">The Activation object to add to the list of activations.</param>
+        public void Add(Activation activation)
+        {
+            _activations.Add(activation);
+            // Ensure activations are sorted by priority
+            _activations.Sort();
+        }
 
         /// <summary>
         /// Removes any pending activations from the agenda that are associated with the specified fact. This is typically 

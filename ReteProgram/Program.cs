@@ -8,19 +8,10 @@
 //-----------------------------------------------------------------------
 using ReteCore;
 using ReteEngine;
+using ReteProgram;
 
 
 var engine = new ReteEngine.ReteEngine();
-
-// Define a rule: "If two cells have same ID but different Values"
-engine.RegisterConflictRule<Cell>(
-    "ValueMismatch",
-    (c1, c2) => c1.Get<Cell>("A").Id == c2.Id && c1.Get<Cell>("A").Value != c2.Value,
-    (c1, c2) => Console.WriteLine($"Conflict: {c1.Id} has values {c1.Value} and {c2.Value}"),
-    salience: 10
-);
-
-
 
 var cell1 = new Cell { Id = "A", Value = 100 };
 var cell2 = new Cell { Id = "A", Value = 200 };
@@ -88,13 +79,19 @@ var joinABC = new JoinNode(betaMemoryAB, alphaMemoryC, "C", (t, f) => {
     var cellC = (Cell)f;
     return cellA.Id == cellB.Id && cellB.Id == cellC.Id; // Match if all three have the same ID
 });
-
-var terminal = new TerminalNode("TripleJoinRule", (t) => {
-    var fact1 = t.NamedFacts["A"];
-    var fact2 = t.NamedFacts["B"];
-    var fact3 = t.NamedFacts["C"];
-    Console.WriteLine($"3-way match! [1]:{fact1}; [2]:{fact2}; [3]:{fact3}");
-}, new Agenda());
+var metaData = new RuleMetadata()
+{ 
+    Name = "TripleJoinRule",
+    Salience = 10,
+    Agenda = new Agenda(),
+    Action = (t) =>
+    {
+        var fact1 = t.Get<Cell>("A");
+        var fact2 = t.Get<Cell>("B");
+        var fact3 = t.Get<Cell>("C");
+        Console.WriteLine($"3-way match! [1]:{fact1}; [2]:{fact2}; [3]:{fact3}");
+    }};
+var terminal = new TerminalNode(metaData);
 joinABC.AddSuccessor(terminal);
 
 engine.Begin("DetectConflict")
@@ -374,6 +371,7 @@ engine8.FireAll();
 Console.WriteLine("\n--- Testing Recursive Rule ---");
 var engine9 = new ReteEngine.ReteEngine();
 engine9.Begin("TestOrderPropagation")
+    .Next(ReteBuilder<Order>.FIRST_RULE_PRIORITY_VALUE)
     //.Trace($"OrderPropagation")
     .Where<Order>("O", null, o => !o.IsProcessed)
     .And<Officer>("F", (t, off) => off.Rank == t.Get<Order>("O").TargetRank)
@@ -428,6 +426,7 @@ engine9.FireAll();
 // If not on duty, the order is not handled by that officer.
 Console.WriteLine("\n--- Testing Duty Status ---");
 engine9.Begin("ExecuteOnDuty")
+    .First()
     //.Trace($"OnDutyTrace")
     .Where<Order>("OnDO", null, o => !o.IsProcessed)
     .And<Officer>("DF", (t, off) => off.Rank == t.Get<Order>("OnDO").TargetRank)
@@ -439,6 +438,7 @@ engine9.Begin("ExecuteOnDuty")
     });
 // Need a rule to handle the off duty case.
 engine9.Begin("HandleOffDuty")
+    .Next()
     //.Trace($"OffDutyTrace")
     .Where<Order>("OffDO", null, o => !o.IsProcessed)
     .And<Officer>("DF", (t, off) => off.Rank == t.Get<Order>("OffDO").TargetRank)

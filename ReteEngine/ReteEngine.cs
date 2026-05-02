@@ -59,20 +59,6 @@ namespace ReteEngine
             while (_agenda.HasActivations) { _agenda.FireAll(); }
         }
 
-        // Helper to build a "Conflict" rule easily
-        public void RegisterConflictRule<T>(string name, Func<Token, T, bool> condition, Action<T, T> action, int salience = 0)
-        {
-            var typeNode = new ObjectTypeNode<T>();
-            var alphaMem = new AlphaMemory();
-            var BetaMem = new BetaMemory();
-            var joinNode = new JoinNode(BetaMem, alphaMem, name, (a, b) => condition((Token)a, (T)b));
-            var terminal = new TerminalNode(name, t => action((T)t.NamedFacts["A"], (T)t.NamedFacts["B"]), _agenda, salience);
-
-            _root.AddSuccessor(typeNode);
-            typeNode.AddSuccessor(alphaMem);
-            joinNode.AddSuccessor(terminal);
-        }
-
         public void Update(object fact)
         {
             // Remove the stale state

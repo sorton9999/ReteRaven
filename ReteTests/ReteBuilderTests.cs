@@ -10,6 +10,7 @@ using System;
 using Xunit;
 using ReteEngine;
 using ReteCore;
+using ReteProgram;
 
 namespace ReteTest.Tests
 {
@@ -126,8 +127,10 @@ namespace ReteTest.Tests
             // Use engine's agenda to register the terminal action
             builder.Then(engine.Agenda, action, salience: 1);
 
+            engine.FireAll();
+
             // This test ensures the call path succeeded. Execution by the agenda is an integration concern.
-            Assert.True(true);
+            Assert.True(invoked);
         }
 
         [Fact]
@@ -173,6 +176,8 @@ namespace ReteTest.Tests
             // Call Assert on builder (should be safe; no exceptions)
             var status = new SystemStatus { Name = "X", IsActive = true };
             builder.Assert(status);
+
+            engine.FireAll();
 
             Assert.True(true);
         }
