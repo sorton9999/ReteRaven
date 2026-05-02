@@ -10,23 +10,23 @@
           [AI Decision Engine]
 ```
 
-## 🧠 ReteRaven
+## *** ReteRaven ***
 
 A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity.  It features a modern fluent rule builder that allows you to define complex logic 
 using a type-safe, readable DSL. 
 Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact-matching and pattern-binding with ease. 
 This project is open-source and distributed under the LGPL license.
 ------------------------------
-## ✨ Key Features
+## ==> Key Features
 
-* ⚡ O(1) to O(n) Pattern Matching: Avoid massive foreach loops. Rule evaluation cost is relative to the number of changes, not the size of your world.
-* 🔗 Fluent API: Define complex rules using a readable, LINQ-style syntax.
-* ♻️ Automatic Retraction: Simplifies memory management. When you Update a fact, the network automatically handles the retraction of the old state and the assertion of the new one.
-* 🚫 Advanced Logic Nodes: Full support for Negation (Not) and Existential (Exists) patterns, allowing for complex "Wait for all" and "At least one" logic.
-* 📂 Command Queue Ready: Designed to work as an inference layer that outputs executable commands, keeping your simulation state-safe.
+* = O(1) to O(n) Pattern Matching: Avoid massive foreach loops. Rule evaluation cost is relative to the number of changes, not the size of your world.
+* = Fluent API: Define complex rules using a readable, LINQ-style syntax.
+* = Automatic Retraction: Simplifies memory management. When you Update a fact, the network automatically handles the retraction of the old state and the assertion of the new one.
+* = Advanced Logic Nodes: Full support for Negation (Not) and Existential (Exists) patterns, allowing for complex "Wait for all" and "At least one" logic.
+* = Command Queue Ready: Designed to work as an inference layer that outputs executable commands, keeping your simulation state-safe.
 
 ------------------------------
-## 🚀 Quick Start
+## ==> Quick Start
 This API was developed in .NET Core 8 and assumes the use of Visual Studio 2022.
 
 ## 1. Define Your Facts
@@ -47,7 +47,7 @@ Use the Fluent Builder to define your domain logic.
 var engine = new ReteEngine();
 
 engine.Begin("BubbleUpCompletion")
-    .Given<Task>("BubbleTask", parent => parent.Status == "Incomplete")
+    .Where<Task>("BubbleTask", parent => parent.Status == "Incomplete")
     // Ensure the parent has children
     .Exists<Task>("BubbleTask", (child, parent) => child.ParentId == parent.Id)
     // Only fire when NO children are still incomplete (Recursive Return)
@@ -77,7 +77,7 @@ public void OnTick() {
 }
 ```
 ------------------------------
-## 🔄 Recursive Patterns
+## ==> Recursive Patterns
 ReteRaven excels at hierarchical logic. Because it supports Automatic Retraction and Negation, you can implement:
 
    1. Top-Down Breakdown: Rules that split "Complex Tasks" into "Sub-Tasks."
@@ -85,14 +85,21 @@ ReteRaven excels at hierarchical logic. Because it supports Automatic Retraction
    3. Recursive Chains: Propagating states through deep trees (like chain-of-command or crafting trees) without manual stack management.
 
 ------------------------------
-## 🛠 Installation & Usage
+## ==> Rule Prioritization
+ReteRaven uses a "Depth-First" conflict resolution strategy. When multiple rules are satisfied, the engine prioritizes:
+   1. Rule Priority: (Highest value first) Rule-level prioritization of firing rules
+   2. Salience: (Highest value first) Condition-level prioritization
+   3. Recency (LIFO): The most recently matched activation fires first, allowing new facts to "short-circuit" older logic.
+
+------------------------------
+## ==> Installation & Usage
 
    1. Clone the repository.
    2. Add the ReteRaven project references to your C# solution.
    3. Implement your CommandQueue and start coding your rules.
 
 ------------------------------
-## 📜 License
+## ==> License
 This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.
 ------------------------------
 

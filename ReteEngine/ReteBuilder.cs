@@ -26,6 +26,11 @@ namespace ReteEngine
     public class ReteBuilder<TInitial>
     {
         /// <summary>
+        /// A constant value representing the highest priority level for rules. Setting a rule's priority to this value 
+        /// ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire.
+        /// </summary>
+        public const int FIRST_RULE_PRIORITY_VALUE = 10000;
+        /// <summary>
         /// The ReteEngine instance that this builder will configure. 
         /// The builder will add nodes and conditions to the engine's 
         /// network as the rule is constructed.
@@ -41,10 +46,33 @@ namespace ReteEngine
         /// where to add the next condition or action.
         /// </summary>
         private IReteNode? _lastNode;
+        /// <summary>
+        /// This is the current rule levelpriority. It is used to determine the order of rule 
+        /// execution when multiple rules are eligible to fire.
+        /// </summary>
+        private int _priority = 0;
+        /// <summary>
+        /// This list holds any global conditions that should be evaluated at the time the rule fires. 
+        /// These conditions are not associated with any specific fact or token but are general predicates 
+        /// that must be satisfied for the rule to execute. They are evaluated in the terminal node before 
+        /// the action is executed, allowing for additional checks that may depend on external state or 
+        /// context at the time of firing.
+        /// </summary>
+        private readonly List<Func<bool>> _globalConditions = new();
+        /// <summary>
+        /// This list holds any late filters that should be applied at the time the rule fires. Late filters 
+        /// are conditions that are evaluated in the terminal node, similar to global conditions, but they 
+        /// can reference specific facts or tokens using aliases defined in the rule. Each late filter consists 
+        /// of an alias and a predicate function that takes an object (the fact) and returns a boolean 
+        /// indicating whether the condition is satisfied. 
+        /// Late filters allow for more complex conditions that depend on the matched facts at the time of 
+        /// firing, providing additional flexibility in defining rule consequences based on the specific data 
+        /// that triggered the rule.
+        /// </summary>
+        private readonly List<LateFilter> _lateFilters = new();
 
         /// <summary>
-        /// Initializes a new instance of the RuleBuilder class with the 
-        /// specified Rete engine and rule name.
+        /// Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.
         /// </summary>
         /// <param name="engine">The ReteEngine instance that will be used to build and manage the rule. Cannot be null.</param>
         /// <param name="name">The name to assign to the rule being built. Cannot be null or empty.</param>
@@ -75,7 +103,7 @@ namespace ReteEngine
         /// written when the type is added.</param>
         /// <param name="initialCondition">A function that defines an optional initial condition to filter facts of type T as 
         /// they are asserted into the AlphaMemory. The rule stops at this point if this initial condition is not satisfied.</param>
-        /// <returns>The current ReteBuilder instance, enabling further configuration of the rule.</returns>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
         public ReteBuilder<TInitial> Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
         {
             if (debugLabel != null)
@@ -88,6 +116,112 @@ namespace ReteEngine
 
             alpha.AddSuccessor(adapter);
             _lastNode = beta;
+            return this;
+        }
+
+        /// <summary>
+        /// The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. 
+        /// Higher priority values indicate that a rule should be executed before those with lower priority values. By default, 
+        /// the priority is set to 0, and rules with the same priority will be executed in the order they were added to the 
+        /// agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when 
+        /// there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain 
+        /// rules must take precedence over others based on business logic or specific conditions.
+        /// </summary>
+        /// <param name="level">The priority level to assign to the rule.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
+        public ReteBuilder<TInitial> Priority(int level)
+        {
+            _priority = level;
+            return this;
+        }
+
+        /// <summary>
+        /// A convenience method to set the rule's priority to a high value, ensuring that it will be executed before any rules 
+        /// with lower priority when multiple rules are eligible to fire.
+        /// </summary>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
+        public ReteBuilder<TInitial> First()
+        {
+            _priority = FIRST_RULE_PRIORITY_VALUE;
+            return this;
+        }
+
+        /// <summary>
+        /// A convenience method to decrement the rule's priority by 1, allowing it to be executed after any rules with higher priority.
+        /// </summary>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
+        public ReteBuilder<TInitial> Next()
+        {
+            _priority -= 1;
+            return this;
+        }
+
+        /// <summary>
+        /// This is in case you want to insert a rule between two other rules without needing to change the priority of
+        /// all the existing rules. You can specify a seed value to decrement the priority by, allowing you to create 
+        /// gaps in the priority values for future insertions.
+        /// </summary>
+        /// <param name="seedValue">The seed value used to calculate the next priority level.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        public ReteBuilder<TInitial> Next(int seedValue)
+        {
+            _priority = seedValue - 1;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not 
+        /// associated with any specific fact or token but are general predicates that must be satisfied for the rule to 
+        /// execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks 
+        /// that may depend on external state or context at the time of firing. Use this method to specify conditions that 
+        /// should be checked when the rule is triggered, regardless of the specific facts that matched the rule's pattern.
+        /// </summary>
+        /// <param name="name">The name used to identify the global condition within the rule network.</param>
+        /// <param name="globalCondition">A function that determines whether the global condition is satisfied. Returns 
+        /// <see langword="true"/> if the condition is met; otherwise, <see langword="false"/>.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        public ReteBuilder<TInitial> If(string name, Func<bool> globalCondition)
+        {
+            _globalConditions.Add(globalCondition);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a late filter condition to the rule, which is evaluated in the terminal node at the time the rule fires. 
+        /// Late filters are conditions that can reference specific facts or tokens using aliases defined in the rule. Each 
+        /// late filter consists of an alias and a predicate function that takes an object (the fact) and returns a boolean 
+        /// indicating whether the condition is satisfied. Late filters allow for more complex conditions that depend on the 
+        /// matched facts at the time of firing, providing additional flexibility in defining rule consequences based on the 
+        /// specific data that triggered the rule. Use this method to specify conditions that should be checked against 
+        /// specific facts when the rule is triggered, allowing for dynamic checks based on the matched data. The name 
+        /// parameter serves as an alias for the fact being evaluated, which can be referenced in the predicate function.
+        /// </summary>
+        /// <typeparam name="T">The type of the fact being evaluated.</typeparam>
+        /// <param name="name">The alias for the fact being evaluated.</param>
+        /// <param name="lateCondition">A function that determines whether the late condition is satisfied. Returns 
+        /// <see langword="true"/> if the condition is met; otherwise, <see langword="false"/>.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        /// <exception cref="InvalidCastException"></exception>
+        public ReteBuilder<TInitial> If<T>(string name, Func<T, bool> lateCondition)
+        {
+            // We need to wrap the Func<T, bool> into a Func<object, bool> for storage
+            // in TerminalNode's LateFilter list
+            Func <object, bool> wrappedPred = (fact) =>
+            {
+                if (fact is T typedFact)
+                {
+                    return lateCondition(typedFact);
+                }
+                // If the fact is not of type T, it does not satisfy the condition
+                throw new InvalidCastException(
+                    $"Rule '{_ruleName}': Alias '{name}' expected type {typeof(T).Name} " +
+                    $"but found {fact.GetType().Name}.");
+            };
+            _lateFilters.Add(new LateFilter
+            {
+                Alias = name,
+                Predicate = wrappedPred,
+            });
             return this;
         }
 
@@ -359,7 +493,16 @@ namespace ReteEngine
         public ReteBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
 
-            var terminal = new TerminalNode(_ruleName, action, _engine.Agenda, salience);
+            var terminal = new TerminalNode(new RuleMetadata
+            {
+                Name = _ruleName,
+                Action = action,
+                Agenda = _engine.Agenda,
+                GlobalGuards = _globalConditions,
+                LateFilters = _lateFilters,
+                Priority = _priority,
+                Salience = salience
+            });
             if (_lastNode is BetaMemory beta)
             {
                 beta.AddSuccessor(terminal);
@@ -463,7 +606,16 @@ namespace ReteEngine
         /// The default is 0.</param>
         public void Then(Agenda agenda, Action<Token> action, int salience = 0)
         {
-            var terminal = new TerminalNode(_ruleName, action, agenda, salience);
+            var terminal = new TerminalNode(new RuleMetadata 
+            { 
+                Name = _ruleName, 
+                Action = action, 
+                Agenda = agenda, 
+                GlobalGuards = _globalConditions, 
+                LateFilters = _lateFilters, 
+                Priority = _priority, 
+                Salience = salience 
+            });
             _lastNode = terminal;
             _lastNode.Assert(new Token("end", 250));
         }
@@ -578,402 +730,6 @@ namespace ReteEngine
         }
     }
 
-    // Test classes
-    public class SystemStatus
-    {
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
-    };
-
-    public class Sensor
-    {
-        public string Name { get; set; }
-        public Guid Id { get; set; }
-        public string Type { get; set; }
-        public bool IsTriggered { get; set; }
-    };
-
-    public class CriticalCell : Cell
-    {
-        string _status = String.Empty;
-        public string Status
-        {
-            get { return _status; }
-            set
-            {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
-            }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is CriticalCell cell && Id == cell.Id && Value == cell.Value && Status == cell.Status;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, Status);
-        }
-    }
-
-    public class Product : Cell
-    {
-        private string _name;
-        private string _category;
-        private int _productId;
-        private int _price;
-
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
-        public string Category
-        {
-            get { return _category; }
-            set
-            {
-                if (_category != value)
-                {
-                    _category = value;
-                    OnPropertyChanged(nameof(Category));
-                }
-            }
-        }
-
-        public int ProductId
-        {
-            get { return _productId; }
-            set
-            {
-                if (_productId != value)
-                {
-                    _productId = value;
-                    OnPropertyChanged(nameof(ProductId));
-                }
-            }
-        }
-
-        public int Price
-        {
-            get { return _price; }
-            set
-            {
-                if (_price != value)
-                {
-                    _price = value;
-                    OnPropertyChanged(nameof(Price));
-                }
-            }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Product product && Id == product.Id && ProductId == product.ProductId && Price == product.Price && Value == product.Value && Name == product.Name && Category == product.Category;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, Name, Category, Price, ProductId);
-        }
-    }
-
-    public class Inventory : Cell
-    {
-        private int _quantity;
-        private int _productId;
-        private string _location;
-        private int _count;
-        public int Quantity
-        {
-            get { return _quantity; }
-            set
-            {
-                if (_quantity != value)
-                {
-                    _quantity = value;
-                    OnPropertyChanged(nameof(Quantity));
-                }
-            }
-        }
-        public int ProductId
-        {
-            get { return _productId; }
-            set
-            {
-                if (_productId != value)
-                {
-                    _productId = value;
-                    OnPropertyChanged(nameof(ProductId));
-                }
-            }
-        }
-        public string WarehouseLocation
-        {
-            get { return _location; }
-            set
-            {
-                if (_location != value)
-                {
-                    _location = value;
-                    OnPropertyChanged(nameof(WarehouseLocation));
-                }
-            }
-        }
-
-        public int Count
-        {
-            get { return _count; }
-            set
-            {
-                if (_count != value)
-                {
-                    _count = value;
-                    OnPropertyChanged(nameof(Count));
-                }
-            }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation && Count == inventory.Count;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation, Count);
-        }
-    }
-
-    public class Shipment : Cell
-    {
-        private int _productId;
-        private string _status;
-        public int ProductId
-        {
-            get { return _productId; }
-            set
-            {
-                if (_productId != value)
-                {
-                    _productId = value;
-                    OnPropertyChanged(nameof(ProductId));
-                }
-            }
-        }
-        public string Status
-        {
-            get { return _status; }
-            set
-            {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
-            }
-        }
-        public override bool Equals(object? obj)
-        {
-            return obj is Shipment shipment && Id == shipment.Id && Value == shipment.Value && ProductId == shipment.ProductId && Status == shipment.Status;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, ProductId, Status);
-        }
-    }
-
-    public class Order : Cell
-    {
-        private string _text;
-        private string _targetRank;
-        private string _givenBy;
-        private bool _isProcessed;
-
-        public string Text
-        {
-            get { return _text; }
-            set
-            {
-                if (_text != value)
-                {
-                    _text = value;
-                    OnPropertyChanged(nameof(Text));
-                }
-            }
-        }
-        public string TargetRank
-        {
-            get { return _targetRank; }
-            set
-            {
-                if (_targetRank != value)
-                {
-                    _targetRank = value;
-                    OnPropertyChanged(nameof(TargetRank));
-                }
-            }
-        }
-        public string GivenBy
-        {
-            get { return _givenBy; }
-            set
-            {
-                if (_givenBy != value)
-                {
-                    _givenBy = value;
-                    OnPropertyChanged(nameof(GivenBy));
-                }
-            }
-        }
-        public bool IsProcessed
-        {
-            get { return _isProcessed; }
-            set
-            {
-                if (_isProcessed != value)
-                {
-                    _isProcessed = value;
-                    OnPropertyChanged(nameof(IsProcessed));
-                }
-            }
-        }
-        public override bool Equals(object? obj)
-        {
-            return obj is Order order && Id == order.Id && Value == order.Value && Text == order.Text && TargetRank == order.TargetRank && GivenBy == order.GivenBy && IsProcessed == order.IsProcessed;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, Text, TargetRank, GivenBy, IsProcessed);
-        }
-    }
-
-    public class Officer : Cell
-    {
-        private string _name;
-        private string _rank;
-        private string _reportsToRank;
-        private string _underling;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
-        public string Rank
-        {
-            get { return _rank; }
-            set
-            {
-                if (_rank != value)
-                {
-                    _rank = value;
-                    OnPropertyChanged(nameof(Rank));
-                }
-            }
-        }
-        public string ReportsToRank
-        {
-            get
-            {
-                if (Rank == "Lieutenant") return "Captain";
-                if (Rank == "Captain") return "Major";
-                if (Rank == "Major") return "Colonel";
-                if (Rank == "Colonel") return "General";
-                return null;
-            }
-            set
-            {
-                if (_reportsToRank != value)
-                {
-                    _reportsToRank = value;
-                    OnPropertyChanged(nameof(ReportsToRank));
-                }
-            }
-        }
-
-        public string Underling
-        {
-            get
-            {
-                if (Rank == "General") return "Colonel";
-                if (Rank == "Colonel") return "Major";
-                if (Rank == "Major") return "Captain";
-                if (Rank == "Captain") return "Lieutenant";
-                return null;
-            }
-            set
-            {
-                if (_underling != value)
-                {
-                    _underling = value;
-                    OnPropertyChanged(nameof(Underling));
-                }
-            }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Officer officer && Id == officer.Id && Value == officer.Value && Name == officer.Name && Rank == officer.Rank && ReportsToRank == officer.ReportsToRank && Underling == officer.Underling;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, Name, Rank, ReportsToRank, Underling);
-        }
-    }
-
-    public class DutyStatus : Cell
-    {
-        private string _name;
-        private bool _onDuty;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
-        public bool OnDuty
-        {
-            get { return _onDuty; }
-            set
-            {
-                if (_onDuty != value)
-                {
-                    _onDuty = value;
-                    OnPropertyChanged(nameof(OnDuty));
-                }
-            }
-        }
-        public override bool Equals(object? obj)
-        {
-            return obj is DutyStatus dutyStatus && Id == dutyStatus.Id && Value == dutyStatus.Value && OnDuty == dutyStatus.OnDuty;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Value, OnDuty);
-        }
-    }
 }
 
 

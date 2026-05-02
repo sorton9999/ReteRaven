@@ -26,11 +26,13 @@ namespace ReteCore
         /// <summary>
         /// The name of the rule associated with this terminal node. This is used for identification and debugging purposes when activations are 
         /// created and added to the agenda.
+        /// This is part of the rule metadata.
         /// </summary>
         private readonly string _ruleName;
         /// <summary>
         /// The action to execute when an activation is fired for this terminal node. This action will be called with the token that triggered the activation, 
         /// allowing it to access the matched facts and perform the desired operations when the rule fires.
+        /// This is part of the rule metadata.
         /// </summary>
         private readonly Action<Token> _action;
         /// <summary>
@@ -39,11 +41,30 @@ namespace ReteCore
         /// </summary>
         private readonly Agenda _agenda;
         /// <summary>
-        /// An integer representing the salience of activations created by this terminal node. Higher salience values indicate higher priority for 
-        /// execution when multiple activations are pending in the agenda. This allows for fine-grained control over the order in which rules are 
-        /// fired when multiple rules are activated simultaneously.
+        /// An integer representing the rule level priority of activations created by this terminal node. Higher priority values indicate that the rule will 
+        /// fire before lower priority ones when multiple activations are pending.
+        /// This is part of the rule metadata.
+        /// This is a part of the rule metadata. 
+        /// </summary>
+        private readonly int _priority;
+        /// <summary>
+        /// An integer representing the condition level priority or salience of activations created by this terminal node. Higher salience values indicate higher 
+        /// priority for execution when multiple activations are pending in the agenda. 
+        /// This is a part of the rule metadata.
         /// </summary>
         private readonly int _salience;
+        /// <summary>
+        /// A list of global guard functions that are evaluated before adding an activation to the agenda. If any global guard returns false, the activation will 
+        /// not be added.  
+        /// This is a part of the rule metadata.
+        /// </summary>
+        private readonly List<Func<bool>> _globalGuards;
+        /// <summary>
+        /// A list of late filters that are evaluated at the time of activation, just before adding the activation to the agenda. Each late filter checks a specific 
+        /// fact in the token against a predicate function. If any late filter returns false, the activation will not be added to the agenda. 
+        /// This is a part of the rule metadata.
+        /// </summary>
+        private readonly List<LateFilter> _lateFilters;
         /// <summary>
         /// A set of hash codes for tokens that have already triggered activations from this terminal node. This is used to prevent duplicate activations for the 
         /// same token, ensuring that each unique combination of facts only results in one activation being added to the agenda. When a token is retracted, 
@@ -52,19 +73,18 @@ namespace ReteCore
         private readonly HashSet<int> _firedTokens = new();
 
         /// <summary>
-        /// Initializes a new instance of the TerminalNode class with the specified rule name, action, agenda, and
-        /// optional salience.
+        /// Initializes a new instance of the TerminalNode class with the specified rule metadata.
         /// </summary>
-        /// <param name="name">The name of the rule associated with this terminal node. Cannot be null.</param>
-        /// <param name="action">The action to execute when the terminal node is activated. Cannot be null.</param>
-        /// <param name="agenda">The agenda that manages the execution order of rules. Cannot be null.</param>
-        /// <param name="salience">The priority of the rule. Higher values indicate higher priority. The default is 0.</param>
-        public TerminalNode(string name, Action<Token> action, Agenda agenda, int salience = 0)
+        /// <param name="metaData">The metadata for the rule associated with this terminal node. Cannot be null.</param>
+        public TerminalNode(RuleMetadata metaData)
         {
-            _ruleName = name;
-            _action = action;
-            _agenda = agenda;
-            _salience = salience;
+            _ruleName = metaData.Name;
+            _action = metaData.Action;
+            _agenda = metaData.Agenda;
+            _globalGuards = metaData.GlobalGuards;
+            _lateFilters = metaData.LateFilters;
+            _priority = metaData.Priority;
+            _salience = metaData.Salience;
         }
 
         /// <summary>
@@ -76,21 +96,40 @@ namespace ReteCore
         public void AddSuccessor(IReteNode node) { Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
 
         /// <summary>
-        /// Asserts a fact into the rule engine, creating an activation if the fact has not already been processed.
-        /// </summary>
-        /// <remarks>If the specified fact is a Token that has not previously triggered an activation for
-        /// this rule, an activation is added to the agenda. Duplicate assertions of the same Token are ignored. This
-        /// method is typically used to introduce new facts for rule evaluation.</remarks>
+        /// Asserts a fact into the rule engine, creating an activation if the fact has not already been processed.  Two other
+        /// checks are performed before adding the activation to the agenda:  First, any global guard conditions are evaluated.
+        /// If any global guard returns false, the activation is not loaded.  Second, any late filters are evaulated.  If any
+        /// late filter returns false, the activation is not loaded.  If both checks pass and the fact has not previously
+        /// triggered, a new activation is created and added to the agenda.  If the specified fact is a Token that has not 
+        /// previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the
+        /// same Token are ignored.        
+        /// /// </summary>
         /// <param name="fact">The fact to assert. Must be a non-null object of type Token to be considered for activation.</param>
         public void Assert(object fact)
         {
             if (fact is Token finalMatch)
             {
+                // Check if this Token has already been triggered.  If not, continue with checks
+                // before adding the activation.
                 if (!_firedTokens.Contains(finalMatch.GetHashCode()))
                 {
-                    _agenda.Add(new Activation(_ruleName, _action, finalMatch, _salience));
-                    Console.WriteLine($"[ASSERT] Activation for rule '{_ruleName}' added to agenda with salience {_salience}.");
-                    _firedTokens.Add(finalMatch.GetHashCode());
+                    // Check any global state guards first (if any)
+                    if (!_globalGuards.All(guard => guard())) return;
+
+                    // Check the late filters before adding the activation to the agenda
+                    bool lateFiltersPass = _lateFilters.All(filter =>
+                    {
+                        var factToCheck = finalMatch.Get<object>(filter.Alias);
+                        if (factToCheck == null) return false;
+                        return filter.Predicate(factToCheck);
+                    });
+                    // All checks pass. Add the activation to the Agenda and mark as triggered.
+                    if (lateFiltersPass)
+                    {
+                        _agenda.Add(new Activation(_ruleName, _action, finalMatch, _priority, _salience));
+                        Console.WriteLine($"[ASSERT] Activation for rule '{_ruleName}' added to agenda.");
+                        _firedTokens.Add(finalMatch.GetHashCode());
+                    }
                 }
             }
         }
