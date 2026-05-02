@@ -12,9 +12,14 @@ namespace ReteCore
     public class RuleMetadata
     {
         /// <summary>
+        /// Used for setting a global sequence number for rules, which can be used to determine the order in which rules 
+        /// were added to the engine.
+        /// </summary>
+        private static long _globalSequence = 0;
+        /// <summary>
         /// The index of the rule in the Rete network. This index is assigned when the rule is added to the engine.
         /// </summary>
-        public int RuleIndex { get; init; }
+        public long RuleIndex { get; init; }
         /// <summary>
         /// The name of the rule. This is used for identification and debugging purposes, allowing users to trace 
         /// which rule is being activated when an activation is fired. This is a required field.
@@ -62,6 +67,16 @@ namespace ReteCore
         /// activations relative to those with explicitly set salience values.
         /// </summary>
         public int Salience { get; init; } = 0;
+
+        /// <summary>
+        /// Constructor for the RuleMetadata class. 
+        /// This constructor initializes the RuleIndex to a unique, incrementing value using a global sequence counter.
+        /// </summary>
+        public RuleMetadata() 
+        {
+            // Ensures every rule has a unique, incrementing ID
+            RuleIndex = System.Threading.Interlocked.Increment(ref _globalSequence);
+        }
     }
 
     /// <summary>
