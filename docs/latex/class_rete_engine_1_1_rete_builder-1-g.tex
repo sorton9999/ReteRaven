@@ -12,6 +12,18 @@ Provides a fluent interface for constructing and configuring rules in a Rete-\/b
 \begin{DoxyCompactList}\small\item\em Initializes a new instance of the Rule\+Builder class with the specified Rete engine and rule name. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a64132fa5a015e68973596c2bbce2d504}{Where$<$ T $>$}} (string name, string? debug\+Label=null, Func$<$ T, bool $>$ initial\+Condition=null)
 \begin{DoxyCompactList}\small\item\em Adds a typed fact with an optional condition to the rule being built. This method creates an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a71f3e2d52a5afcf8caf9ed9549970d1f}{Priority}} (int level)
+\begin{DoxyCompactList}\small\item\em The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. Higher priority values indicate that a rule should be executed before those with lower priority values. By default, the priority is set to 0, and rules with the same priority will be executed in the order they were added to the agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain rules must take precedence over others based on business logic or specific conditions. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6f9bec33e5aaa5d18e011ffd6e5df06c}{First}} ()
+\begin{DoxyCompactList}\small\item\em A convenience method to set the rule\textquotesingle{}s priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a189a550b0c9ad5ea79731d560333b31a}{Next}} ()
+\begin{DoxyCompactList}\small\item\em A convenience method to decrement the rule\textquotesingle{}s priority by 1, allowing it to be executed after any rules with higher priority. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6fdf3947e307e40712f3422ea658118f}{Next}} (int seed\+Value)
+\begin{DoxyCompactList}\small\item\em This is in case you want to insert a rule between two other rules without needing to change the priority of all the existing rules. You can specify a seed value to decrement the priority by, allowing you to create gaps in the priority values for future insertions. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a755097e17b905b4801a9956a1228b99e}{If}} (string name, Func$<$ bool $>$ global\+Condition)
+\begin{DoxyCompactList}\small\item\em Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not associated with any specific fact or token but are general predicates that must be satisfied for the rule to execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks that may depend on external state or context at the time of firing. Use this method to specify conditions that should be checked when the rule is triggered, regardless of the specific facts that matched the rule\textquotesingle{}s pattern. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_afcdc83704ef1afe20e956b1b7b67d6cd}{If$<$ T $>$}} (string name, Func$<$ T, bool $>$ late\+Condition)
+\begin{DoxyCompactList}\small\item\em Adds a late filter condition to the rule, which is evaluated in the terminal node at the time the rule fires. Late filters are conditions that can reference specific facts or tokens using aliases defined in the rule. Each late filter consists of an alias and a predicate function that takes an object (the fact) and returns a boolean indicating whether the condition is satisfied. Late filters allow for more complex conditions that depend on the matched facts at the time of firing, providing additional flexibility in defining rule consequences based on the specific data that triggered the rule. Use this method to specify conditions that should be checked against specific facts when the rule is triggered, allowing for dynamic checks based on the matched data. The name parameter serves as an alias for the fact being evaluated, which can be referenced in the predicate function. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a40c8b6c0a56cff4dcd6865990db3a8e1}{And$<$ T $>$}} (string name, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$ join\+Condition, string? debug\+Label=null)
 \begin{DoxyCompactList}\small\item\em Adds a join condition to the rule, requiring that both the previous conditions and the specified join condition are satisfied for a fact to match. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a5947f2aad238f8d9626f13ac76cee9df}{Or$<$ T $>$}} (string name, string? debug\+Label=null, params Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, T, bool $>$\+[$\,$]\+ or\+Conditions)
@@ -34,6 +46,12 @@ void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a2c54326eb39af9
 \begin{DoxyCompactList}\small\item\em Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a90ae3342fee9a3df31a88b707ec2e627}{Then}} (\doxymbox{\hyperlink{class_rete_core_1_1_agenda}{Agenda}} agenda, Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, int salience=0)
 \begin{DoxyCompactList}\small\item\em Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_ac2ea6605d5da79b7ac17ea0b098fcb03}\label{class_rete_engine_1_1_rete_builder-1-g_ac2ea6605d5da79b7ac17ea0b098fcb03} 
+const int {\bfseries FIRST\+\_\+\+RULE\+\_\+\+PRIORITY\+\_\+\+VALUE} = 10000
+\begin{DoxyCompactList}\small\item\em A constant value representing the highest priority level for rules. Setting a rule\textquotesingle{}s priority to this value ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
@@ -155,6 +173,69 @@ Adds an "{}exists"{} condition to the rule, specifying that there must be at lea
 \begin{DoxyReturn}{Returns}
 The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, allowing further rule configuration.
 \end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a6f9bec33e5aaa5d18e011ffd6e5df06c}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!First@{First}}
+\index{First@{First}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{First()}{First()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_a6f9bec33e5aaa5d18e011ffd6e5df06c} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.First (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+A convenience method to set the rule\textquotesingle{}s priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire. 
+
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, enabling further configuration of the rule.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a755097e17b905b4801a9956a1228b99e}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!If@{If}}
+\index{If@{If}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{If()}{If()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_a755097e17b905b4801a9956a1228b99e} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.If (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ bool $>$}]{global\+Condition}{}\end{DoxyParamCaption})}
+
+
+
+Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not associated with any specific fact or token but are general predicates that must be satisfied for the rule to execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks that may depend on external state or context at the time of firing. Use this method to specify conditions that should be checked when the rule is triggered, regardless of the specific facts that matched the rule\textquotesingle{}s pattern. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name used to identify the global condition within the rule network.\\
+\hline
+{\em global\+Condition} & A function that determines whether the global condition is satisfied. Returns {\ttfamily true} if the condition is met; otherwise, {\ttfamily false}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, allowing for method chaining.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_afcdc83704ef1afe20e956b1b7b67d6cd}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!If$<$ T $>$@{If$<$ T $>$}}
+\index{If$<$ T $>$@{If$<$ T $>$}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{If$<$ T $>$()}{If< T >()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_afcdc83704ef1afe20e956b1b7b67d6cd} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a755097e17b905b4801a9956a1228b99e}{If}}$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Func$<$ T, bool $>$}]{late\+Condition}{}\end{DoxyParamCaption})}
+
+
+
+Adds a late filter condition to the rule, which is evaluated in the terminal node at the time the rule fires. Late filters are conditions that can reference specific facts or tokens using aliases defined in the rule. Each late filter consists of an alias and a predicate function that takes an object (the fact) and returns a boolean indicating whether the condition is satisfied. Late filters allow for more complex conditions that depend on the matched facts at the time of firing, providing additional flexibility in defining rule consequences based on the specific data that triggered the rule. Use this method to specify conditions that should be checked against specific facts when the rule is triggered, allowing for dynamic checks based on the matched data. The name parameter serves as an alias for the fact being evaluated, which can be referenced in the predicate function. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of the fact being evaluated.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The alias for the fact being evaluated.\\
+\hline
+{\em late\+Condition} & A function that determines whether the late condition is satisfied. Returns {\ttfamily true} if the condition is met; otherwise, {\ttfamily false}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, allowing for method chaining.
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Invalid\+Cast\+Exception} & \\
+\hline
+\end{DoxyExceptions}
 \Hypertarget{class_rete_engine_1_1_rete_builder-1-g_ad5742491212a3031c40a0046038dd044}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!JoinWith$<$ TNext $>$@{JoinWith$<$ TNext $>$}}
 \index{JoinWith$<$ TNext $>$@{JoinWith$<$ TNext $>$}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
 \doxysubsubsection{\texorpdfstring{JoinWith$<$ TNext $>$()}{JoinWith< TNext >()}}
@@ -181,6 +262,37 @@ Use this method to extend the rule network by specifying additional join conditi
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, enabling method chaining.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a189a550b0c9ad5ea79731d560333b31a}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!Next@{Next}}
+\index{Next@{Next}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{Next()}{Next()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_a189a550b0c9ad5ea79731d560333b31a} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.Next (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+A convenience method to decrement the rule\textquotesingle{}s priority by 1, allowing it to be executed after any rules with higher priority. 
+
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, enabling further configuration of the rule.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a6fdf3947e307e40712f3422ea658118f}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!Next@{Next}}
+\index{Next@{Next}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{Next()}{Next()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_a6fdf3947e307e40712f3422ea658118f} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.Next (\begin{DoxyParamCaption}\item[{int}]{seed\+Value}{}\end{DoxyParamCaption})}
+
+
+
+This is in case you want to insert a rule between two other rules without needing to change the priority of all the existing rules. You can specify a seed value to decrement the priority by, allowing you to create gaps in the priority values for future insertions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em seed\+Value} & The seed value used to calculate the next priority level.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, allowing for method chaining.
 \end{DoxyReturn}
 \Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a2eb33d7133d55771a24cf753edbf5ffd}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!Not$<$ T $>$@{Not$<$ T $>$}}
 \index{Not$<$ T $>$@{Not$<$ T $>$}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
@@ -237,6 +349,24 @@ Each condition in {\itshape or\+Conditions}  is evaluated independently against 
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, allowing further rule configuration.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a71f3e2d52a5afcf8caf9ed9549970d1f}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!Priority@{Priority}}
+\index{Priority@{Priority}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
+\doxysubsubsection{\texorpdfstring{Priority()}{Priority()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_builder-1-g_a71f3e2d52a5afcf8caf9ed9549970d1f} 
+\doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.Priority (\begin{DoxyParamCaption}\item[{int}]{level}{}\end{DoxyParamCaption})}
+
+
+
+The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. Higher priority values indicate that a rule should be executed before those with lower priority values. By default, the priority is set to 0, and rules with the same priority will be executed in the order they were added to the agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain rules must take precedence over others based on business logic or specific conditions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The priority level to assign to the rule.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, enabling further configuration of the rule.
 \end{DoxyReturn}
 \Hypertarget{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}\index{ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}!ReteBuilder@{ReteBuilder}}
 \index{ReteBuilder@{ReteBuilder}!ReteEngine.ReteBuilder$<$ TInitial $>$@{ReteEngine.ReteBuilder$<$ TInitial $>$}}
@@ -367,7 +497,7 @@ Use this method to specify that the rule should match facts of type T. Multiple 
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-The current Rete\+Builder instance, enabling further configuration of the rule.
+The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+TInitial$>$} instance, enabling further configuration of the rule.
 \end{DoxyReturn}
 
 

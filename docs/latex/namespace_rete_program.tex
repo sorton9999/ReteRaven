@@ -3,17 +3,21 @@
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \doxymbox{\hyperlink{class_rete_program_1_1_join_key_extractor}{Join\+Key\+Extractor}}
-\begin{DoxyCompactList}\small\item\em This class is responsible for analyzing a join expression provided by the user and extracting the key selector functions for both sides of the join. The Extract method takes a lambda expression representing the join condition (e.\+g., (token, fact) =\texorpdfstring{$>$}{>} token.\+Property == fact.\+Property) and processes it to identify which part of the expression corresponds to the \doxylink{class_rete_core_1_1_token}{Token} and which part corresponds to the Fact. It then compiles these parts into Func delegates that can be used to extract the join keys at runtime when processing tokens and facts in the Rete network. This allows for efficient indexing and matching of facts based on the specified join condition. \end{DoxyCompactList}\item 
-class \doxymbox{\hyperlink{class_rete_program_1_1_rete_engine}{Rete\+Engine}}
-\item 
-class \doxymbox{\hyperlink{class_rete_program_1_1_rule_builder-1-g}{Rule\+Builder$<$ TInitial $>$}}
-\begin{DoxyCompactList}\small\item\em Provides a fluent interface for constructing and configuring rules in a Rete-\/based rule engine. \end{DoxyCompactList}\item 
-class \doxymbox{\hyperlink{class_rete_program_1_1_alpha_to_beta_adapter}{Alpha\+To\+Beta\+Adapter}}
-\begin{DoxyCompactList}\small\item\em Adapts an Alpha Memory output (single fact) to a Beta Memory input (\doxylink{class_rete_core_1_1_token}{Token}). This allows the first \doxylink{class_rete_core_1_1_join_node}{Join\+Node} in a chain to receive a \doxylink{class_rete_core_1_1_token}{Token} on its left. \end{DoxyCompactList}\item 
 class \doxymbox{\hyperlink{class_rete_program_1_1_system_status}{System\+Status}}
 \item 
 class \doxymbox{\hyperlink{class_rete_program_1_1_sensor}{Sensor}}
 \item 
 class \doxymbox{\hyperlink{class_rete_program_1_1_critical_cell}{Critical\+Cell}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_product}{Product}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_inventory}{Inventory}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_shipment}{Shipment}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_order}{Order}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_officer}{Officer}}
+\item 
+class \doxymbox{\hyperlink{class_rete_program_1_1_duty_status}{Duty\+Status}}
 \end{DoxyCompactItemize}

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -96,14 +96,22 @@ $(function(){initNavTree('class_rete_core_1_1_activation.html','','class_rete_co
 
 <p>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> class represents a pending rule activation in a Rete-based rule engine. It encapsulates the information needed to execute a rule when its conditions are met, including the name of the rule, the action to perform, the token that triggered the activation, and the salience (priority) of the activation. Activations are typically created by terminal nodes in the Rete network and added to an agenda for later execution. When an activation is fired, it executes its associated action using the token that caused it to be activated. The salience value allows for prioritizing activations when multiple rules are activated simultaneously, with higher salience values being executed first.  
  <a href="#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for ReteCore.Activation:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_rete_core_1_1_activation.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa4e39ce5b5bb08a90d33534dc181f17b" id="r_aa4e39ce5b5bb08a90d33534dc181f17b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa4e39ce5b5bb08a90d33534dc181f17b">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int salience)</td></tr>
-<tr class="memdesc:aa4e39ce5b5bb08a90d33534dc181f17b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> instance with the specified rule name, action, token match, and salience. This constructor initializes the properties of the activation, allowing it to be added to an agenda for later execution when the conditions of the associated rule are satisfied. The rule name is used for identification and debugging purposes, while the action defines what will be executed when the activation fires. The token match contains the facts that triggered the activation, and the salience determines the priority of this activation relative to others in the agenda.  <br /></td></tr>
+<tr class="memitem:ab414522ad2ba19047e1765b525f8102b" id="r_ab414522ad2ba19047e1765b525f8102b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab414522ad2ba19047e1765b525f8102b">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int priority, int salience)</td></tr>
+<tr class="memdesc:ab414522ad2ba19047e1765b525f8102b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> instance with the specified rule name, action, token match, and salience. This constructor initializes the properties of the activation, allowing it to be added to an agenda for later execution when the conditions of the associated rule are satisfied. The rule name is used for identification and debugging purposes, while the action defines what will be executed when the activation fires. The token match contains the facts that triggered the activation, and the salience determines the priority of this activation relative to others in the agenda.  <br /></td></tr>
 <tr class="memitem:ad9e022585999eff1c5819acdc5ba7fc4" id="r_ad9e022585999eff1c5819acdc5ba7fc4"><td class="memItemLeft"><a id="ad9e022585999eff1c5819acdc5ba7fc4" name="ad9e022585999eff1c5819acdc5ba7fc4"></a>
 void&#160;</td><td class="memItemRight"><b>Fire</b> ()</td></tr>
 <tr class="memdesc:ad9e022585999eff1c5819acdc5ba7fc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires this activation by executing its associated action with the token that triggered it. This method is typically called by the agenda when processing pending activations, allowing the rule's action to be executed based on the matched facts contained in the token. The action can perform any operations defined by the rule, such as modifying facts, asserting new facts, or interacting with external systems, using the information available in the token. <br /></td></tr>
+<tr class="memitem:a0183c8594fcb6fe388e341b31bdd4a8f" id="r_a0183c8594fcb6fe388e341b31bdd4a8f"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a0183c8594fcb6fe388e341b31bdd4a8f">CompareTo</a> (<a class="el" href="#ab414522ad2ba19047e1765b525f8102b">Activation</a>? other)</td></tr>
+<tr class="memdesc:a0183c8594fcb6fe388e341b31bdd4a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. This is used by the agenda to sort activations when multiple activations are pending, ensuring that the most important or the most desired activations fire before lesser ones.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -119,12 +127,18 @@ Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#1
 <tr class="memitem:a7c77105e84382c33dd56416856099c6b" id="r_a7c77105e84382c33dd56416856099c6b"><td class="memItemLeft"><a id="a7c77105e84382c33dd56416856099c6b" name="a7c77105e84382c33dd56416856099c6b"></a>
 int&#160;</td><td class="memItemRight"><b>Salience</b><code> [get]</code></td></tr>
 <tr class="memdesc:a7c77105e84382c33dd56416856099c6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A numeric value representing the priority of this activation relative to others in the agenda. Higher salience values indicate higher priority, meaning that activations with higher salience will be fired before those with lower salience when multiple activations are pending in the agenda. This allows for fine-grained control over the order of rule execution, ensuring that more important rules are executed first when there are competing activations. <br /></td></tr>
+<tr class="memitem:a418e5c9c997a02b8be4eaad87acd0ad1" id="r_a418e5c9c997a02b8be4eaad87acd0ad1"><td class="memItemLeft"><a id="a418e5c9c997a02b8be4eaad87acd0ad1" name="a418e5c9c997a02b8be4eaad87acd0ad1"></a>
+int&#160;</td><td class="memItemRight"><b>Priority</b><code> [get]</code></td></tr>
+<tr class="memdesc:a418e5c9c997a02b8be4eaad87acd0ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A numeric value representing the priority of this activation relative to others in the agenda. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for additional control over the execution order of rules, especially when salience values are equal or when further differentiation is needed beyond salience alone. <br /></td></tr>
+<tr class="memitem:ae094a2ed15c188bbe01d12d0b7449497" id="r_ae094a2ed15c188bbe01d12d0b7449497"><td class="memItemLeft"><a id="ae094a2ed15c188bbe01d12d0b7449497" name="ae094a2ed15c188bbe01d12d0b7449497"></a>
+long&#160;</td><td class="memItemRight"><b>Timestamp</b> = DateTime.UtcNow.Ticks<code> [get]</code></td></tr>
+<tr class="memdesc:ae094a2ed15c188bbe01d12d0b7449497"><td class="mdescLeft">&#160;</td><td class="mdescRight">A timestamp indicating when this activation was created. This can be used to break ties when multiple activations have the same salience and priority, ensuring a consistent and predictable firing order based on the order of creation. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> class represents a pending rule activation in a Rete-based rule engine. It encapsulates the information needed to execute a rule when its conditions are met, including the name of the rule, the action to perform, the token that triggered the activation, and the salience (priority) of the activation. Activations are typically created by terminal nodes in the Rete network and added to an agenda for later execution. When an activation is fired, it executes its associated action using the token that caused it to be activated. The salience value allows for prioritizing activations when multiple rules are activated simultaneously, with higher salience values being executed first. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa4e39ce5b5bb08a90d33534dc181f17b" name="aa4e39ce5b5bb08a90d33534dc181f17b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4e39ce5b5bb08a90d33534dc181f17b">&#9670;&#160;</a></span>Activation()</h2>
+<a id="ab414522ad2ba19047e1765b525f8102b" name="ab414522ad2ba19047e1765b525f8102b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab414522ad2ba19047e1765b525f8102b">&#9670;&#160;</a></span>Activation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,6 +161,11 @@ int&#160;</td><td class="memItemRight"><b>Salience</b><code> [get]</code></td></
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>priority</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>salience</em></span>&#160;)</td>
         </tr>
       </table>
@@ -162,6 +181,33 @@ int&#160;</td><td class="memItemRight"><b>Salience</b><code> [get]</code></td></
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a0183c8594fcb6fe388e341b31bdd4a8f" name="a0183c8594fcb6fe388e341b31bdd4a8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0183c8594fcb6fe388e341b31bdd4a8f">&#9670;&#160;</a></span>CompareTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ReteCore.Activation.CompareTo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ab414522ad2ba19047e1765b525f8102b">Activation</a>?</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. This is used by the agenda to sort activations when multiple activations are pending, ensuring that the most important or the most desired activations fire before lesser ones. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> object to compare to.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An integer indicating the relative order of the activations.</dd></dl>
 
 </div>
 </div>
