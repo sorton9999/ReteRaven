@@ -14,12 +14,13 @@ Inheritance diagram for Rete\+Core.\+Terminal\+Node:\+\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_a538c04e19a45a69c311a5d0139646c74}{Terminal\+Node}} (string name, Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, \doxymbox{\hyperlink{class_rete_core_1_1_agenda}{Agenda}} agenda, int salience=0)
-\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_rete_core_1_1_terminal_node}{Terminal\+Node} class with the specified rule name, action, agenda, and optional salience. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_a9456a2c1bb657ba3744418bbfc396813}{Terminal\+Node}} (\doxymbox{\hyperlink{class_rete_core_1_1_rule_metadata}{Rule\+Metadata}} meta\+Data)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_rete_core_1_1_terminal_node}{Terminal\+Node} class with the specified rule metadata. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_a20eaf16cea219318645e06e278f46ee0}{Add\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} node)
 \begin{DoxyCompactList}\small\item\em Prevents adding a successor node to this terminal node. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_adca40726f6b783b65ebd08486d756422}{Assert}} (object fact)
-\begin{DoxyCompactList}\small\item\em Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda:\+ First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a \doxylink{class_rete_core_1_1_token}{Token} that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same \doxylink{class_rete_core_1_1_token}{Token} are ignored. ~\newline
+ /\+/\+/\+. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_a9e2e20cf83f802d84591c6782dd13e3d}{Retract}} (object fact)
 \begin{DoxyCompactList}\small\item\em Retracts the specified fact from the rule engine, removing any associated activations or tokens. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_terminal_node_a06635491c40a3a5d508248845217a5bc}{Refresh}} (object fact, string property\+Name)
@@ -36,25 +37,19 @@ A \doxylink{class_rete_core_1_1_terminal_node}{Terminal\+Node} is the endpoint o
 \label{doc-constructors}
 \Hypertarget{class_rete_core_1_1_terminal_node_doc-constructors}
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{class_rete_core_1_1_terminal_node_a538c04e19a45a69c311a5d0139646c74}\index{ReteCore.TerminalNode@{ReteCore.TerminalNode}!TerminalNode@{TerminalNode}}
+\Hypertarget{class_rete_core_1_1_terminal_node_a9456a2c1bb657ba3744418bbfc396813}\index{ReteCore.TerminalNode@{ReteCore.TerminalNode}!TerminalNode@{TerminalNode}}
 \index{TerminalNode@{TerminalNode}!ReteCore.TerminalNode@{ReteCore.TerminalNode}}
 \doxysubsubsection{\texorpdfstring{TerminalNode()}{TerminalNode()}}
-{\footnotesize\ttfamily \label{class_rete_core_1_1_terminal_node_a538c04e19a45a69c311a5d0139646c74} 
-Rete\+Core.\+Terminal\+Node.\+Terminal\+Node (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$}]{action}{, }\item[{\doxymbox{\hyperlink{class_rete_core_1_1_agenda}{Agenda}}}]{agenda}{, }\item[{int}]{salience}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_terminal_node_a9456a2c1bb657ba3744418bbfc396813} 
+Rete\+Core.\+Terminal\+Node.\+Terminal\+Node (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_rule_metadata}{Rule\+Metadata}}}]{meta\+Data}{}\end{DoxyParamCaption})}
 
 
 
-Initializes a new instance of the \doxylink{class_rete_core_1_1_terminal_node}{Terminal\+Node} class with the specified rule name, action, agenda, and optional salience. 
+Initializes a new instance of the \doxylink{class_rete_core_1_1_terminal_node}{Terminal\+Node} class with the specified rule metadata. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em name} & The name of the rule associated with this terminal node. Cannot be null.\\
-\hline
-{\em action} & The action to execute when the terminal node is activated. Cannot be null.\\
-\hline
-{\em agenda} & The agenda that manages the execution order of rules. Cannot be null.\\
-\hline
-{\em salience} & The priority of the rule. Higher values indicate higher priority. The default is 0.\\
+{\em meta\+Data} & The metadata for the rule associated with this terminal node. Cannot be null.\\
 \hline
 \end{DoxyParams}
 
@@ -87,9 +82,8 @@ void Rete\+Core.\+Terminal\+Node.\+Assert (\begin{DoxyParamCaption}\item[{object
 
 
 
-Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. 
-
-If the specified fact is a \doxylink{class_rete_core_1_1_token}{Token} that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same \doxylink{class_rete_core_1_1_token}{Token} are ignored. This method is typically used to introduce new facts for rule evaluation.
+Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda:\+ First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a \doxylink{class_rete_core_1_1_token}{Token} that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same \doxylink{class_rete_core_1_1_token}{Token} are ignored. ~\newline
+ /\+/\+/\+. 
 
 
 \begin{DoxyParams}{Parameters}

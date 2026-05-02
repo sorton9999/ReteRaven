@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -103,6 +103,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.  <br /></td></tr>
 <tr class="memitem:a64132fa5a015e68973596c2bbce2d504" id="r_a64132fa5a015e68973596c2bbce2d504"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a64132fa5a015e68973596c2bbce2d504">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
 <tr class="memdesc:a64132fa5a015e68973596c2bbce2d504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a typed fact with an optional condition to the rule being built. This method creates an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added.  <br /></td></tr>
+<tr class="memitem:a71f3e2d52a5afcf8caf9ed9549970d1f" id="r_a71f3e2d52a5afcf8caf9ed9549970d1f"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a71f3e2d52a5afcf8caf9ed9549970d1f">Priority</a> (int level)</td></tr>
+<tr class="memdesc:a71f3e2d52a5afcf8caf9ed9549970d1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. Higher priority values indicate that a rule should be executed before those with lower priority values. By default, the priority is set to 0, and rules with the same priority will be executed in the order they were added to the agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain rules must take precedence over others based on business logic or specific conditions.  <br /></td></tr>
+<tr class="memitem:a6f9bec33e5aaa5d18e011ffd6e5df06c" id="r_a6f9bec33e5aaa5d18e011ffd6e5df06c"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6f9bec33e5aaa5d18e011ffd6e5df06c">First</a> ()</td></tr>
+<tr class="memdesc:a6f9bec33e5aaa5d18e011ffd6e5df06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method to set the rule's priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire.  <br /></td></tr>
+<tr class="memitem:a189a550b0c9ad5ea79731d560333b31a" id="r_a189a550b0c9ad5ea79731d560333b31a"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189a550b0c9ad5ea79731d560333b31a">Next</a> ()</td></tr>
+<tr class="memdesc:a189a550b0c9ad5ea79731d560333b31a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method to decrement the rule's priority by 1, allowing it to be executed after any rules with higher priority.  <br /></td></tr>
+<tr class="memitem:a6fdf3947e307e40712f3422ea658118f" id="r_a6fdf3947e307e40712f3422ea658118f"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6fdf3947e307e40712f3422ea658118f">Next</a> (int seedValue)</td></tr>
+<tr class="memdesc:a6fdf3947e307e40712f3422ea658118f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is in case you want to insert a rule between two other rules without needing to change the priority of all the existing rules. You can specify a seed value to decrement the priority by, allowing you to create gaps in the priority values for future insertions.  <br /></td></tr>
+<tr class="memitem:a755097e17b905b4801a9956a1228b99e" id="r_a755097e17b905b4801a9956a1228b99e"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a755097e17b905b4801a9956a1228b99e">If</a> (string name, Func&lt; bool &gt; globalCondition)</td></tr>
+<tr class="memdesc:a755097e17b905b4801a9956a1228b99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not associated with any specific fact or token but are general predicates that must be satisfied for the rule to execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks that may depend on external state or context at the time of firing. Use this method to specify conditions that should be checked when the rule is triggered, regardless of the specific facts that matched the rule's pattern.  <br /></td></tr>
+<tr class="memitem:afcdc83704ef1afe20e956b1b7b67d6cd" id="r_afcdc83704ef1afe20e956b1b7b67d6cd"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#afcdc83704ef1afe20e956b1b7b67d6cd">If&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; lateCondition)</td></tr>
+<tr class="memdesc:afcdc83704ef1afe20e956b1b7b67d6cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a late filter condition to the rule, which is evaluated in the terminal node at the time the rule fires. Late filters are conditions that can reference specific facts or tokens using aliases defined in the rule. Each late filter consists of an alias and a predicate function that takes an object (the fact) and returns a boolean indicating whether the condition is satisfied. Late filters allow for more complex conditions that depend on the matched facts at the time of firing, providing additional flexibility in defining rule consequences based on the specific data that triggered the rule. Use this method to specify conditions that should be checked against specific facts when the rule is triggered, allowing for dynamic checks based on the matched data. The name parameter serves as an alias for the fact being evaluated, which can be referenced in the predicate function.  <br /></td></tr>
 <tr class="memitem:a40c8b6c0a56cff4dcd6865990db3a8e1" id="r_a40c8b6c0a56cff4dcd6865990db3a8e1"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a40c8b6c0a56cff4dcd6865990db3a8e1">And&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
 <tr class="memdesc:a40c8b6c0a56cff4dcd6865990db3a8e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a join condition to the rule, requiring that both the previous conditions and the specified join condition are satisfied for a fact to match.  <br /></td></tr>
 <tr class="memitem:a5947f2aad238f8d9626f13ac76cee9df" id="r_a5947f2aad238f8d9626f13ac76cee9df"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5947f2aad238f8d9626f13ac76cee9df">Or&lt; T &gt;</a> (string name, string? debugLabel=null, params Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;[] orConditions)</td></tr>
@@ -125,6 +137,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad5742491212a3031c40a0046038dd044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition.  <br /></td></tr>
 <tr class="memitem:a90ae3342fee9a3df31a88b707ec2e627" id="r_a90ae3342fee9a3df31a88b707ec2e627"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a90ae3342fee9a3df31a88b707ec2e627">Then</a> (<a class="el" href="class_rete_core_1_1_agenda.html">Agenda</a> agenda, Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
 <tr class="memdesc:a90ae3342fee9a3df31a88b707ec2e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ac2ea6605d5da79b7ac17ea0b098fcb03" id="r_ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="memItemLeft"><a id="ac2ea6605d5da79b7ac17ea0b098fcb03" name="ac2ea6605d5da79b7ac17ea0b098fcb03"></a>
+const int&#160;</td><td class="memItemRight"><b>FIRST_RULE_PRIORITY_VALUE</b> = 10000</td></tr>
+<tr class="memdesc:ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constant value representing the highest priority level for rules. Setting a rule's priority to this value ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -297,6 +315,100 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 
 </div>
 </div>
+<a id="a6f9bec33e5aaa5d18e011ffd6e5df06c" name="a6f9bec33e5aaa5d18e011ffd6e5df06c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f9bec33e5aaa5d18e011ffd6e5df06c">&#9670;&#160;</a></span>First()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.First </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A convenience method to set the rule's priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling further configuration of the rule.</dd></dl>
+
+</div>
+</div>
+<a id="a755097e17b905b4801a9956a1228b99e" name="a755097e17b905b4801a9956a1228b99e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a755097e17b905b4801a9956a1228b99e">&#9670;&#160;</a></span>If()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.If </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; bool &gt;</td>          <td class="paramname"><span class="paramname"><em>globalCondition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not associated with any specific fact or token but are general predicates that must be satisfied for the rule to execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks that may depend on external state or context at the time of firing. Use this method to specify conditions that should be checked when the rule is triggered, regardless of the specific facts that matched the rule's pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name used to identify the global condition within the rule network.</td></tr>
+    <tr><td class="paramname">globalCondition</td><td>A function that determines whether the global condition is satisfied. Returns <code>true</code> if the condition is met; otherwise, <code>false</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, allowing for method chaining.</dd></dl>
+
+</div>
+</div>
+<a id="afcdc83704ef1afe20e956b1b7b67d6cd" name="afcdc83704ef1afe20e956b1b7b67d6cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcdc83704ef1afe20e956b1b7b67d6cd">&#9670;&#160;</a></span>If&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.<a class="el" href="#a755097e17b905b4801a9956a1228b99e">If</a>&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>lateCondition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a late filter condition to the rule, which is evaluated in the terminal node at the time the rule fires. Late filters are conditions that can reference specific facts or tokens using aliases defined in the rule. Each late filter consists of an alias and a predicate function that takes an object (the fact) and returns a boolean indicating whether the condition is satisfied. Late filters allow for more complex conditions that depend on the matched facts at the time of firing, providing additional flexibility in defining rule consequences based on the specific data that triggered the rule. Use this method to specify conditions that should be checked against specific facts when the rule is triggered, allowing for dynamic checks based on the matched data. The name parameter serves as an alias for the fact being evaluated, which can be referenced in the predicate function. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the fact being evaluated.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The alias for the fact being evaluated.</td></tr>
+    <tr><td class="paramname">lateCondition</td><td>A function that determines whether the late condition is satisfied. Returns <code>true</code> if the condition is met; otherwise, <code>false</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, allowing for method chaining.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidCastException</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ad5742491212a3031c40a0046038dd044" name="ad5742491212a3031c40a0046038dd044"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5742491212a3031c40a0046038dd044">&#9670;&#160;</a></span>JoinWith&lt; TNext &gt;()</h2>
 
@@ -332,6 +444,52 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling method chaining.</dd></dl>
+
+</div>
+</div>
+<a id="a189a550b0c9ad5ea79731d560333b31a" name="a189a550b0c9ad5ea79731d560333b31a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a189a550b0c9ad5ea79731d560333b31a">&#9670;&#160;</a></span>Next() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.Next </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A convenience method to decrement the rule's priority by 1, allowing it to be executed after any rules with higher priority. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling further configuration of the rule.</dd></dl>
+
+</div>
+</div>
+<a id="a6fdf3947e307e40712f3422ea658118f" name="a6fdf3947e307e40712f3422ea658118f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fdf3947e307e40712f3422ea658118f">&#9670;&#160;</a></span>Next() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.Next </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>seedValue</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This is in case you want to insert a rule between two other rules without needing to change the priority of all the existing rules. You can specify a seed value to decrement the priority by, allowing you to create gaps in the priority values for future insertions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seedValue</td><td>The seed value used to calculate the next priority level.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, allowing for method chaining.</dd></dl>
 
 </div>
 </div>
@@ -419,6 +577,32 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, allowing further rule configuration.</dd></dl>
+
+</div>
+</div>
+<a id="a71f3e2d52a5afcf8caf9ed9549970d1f" name="a71f3e2d52a5afcf8caf9ed9549970d1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71f3e2d52a5afcf8caf9ed9549970d1f">&#9670;&#160;</a></span>Priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.Priority </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>level</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. Higher priority values indicate that a rule should be executed before those with lower priority values. By default, the priority is set to 0, and rules with the same priority will be executed in the order they were added to the agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain rules must take precedence over others based on business logic or specific conditions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>The priority level to assign to the rule.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling further configuration of the rule.</dd></dl>
 
 </div>
 </div>
@@ -620,7 +804,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The current ReteBuilder instance, enabling further configuration of the rule.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling further configuration of the rule.</dd></dl>
 
 </div>
 </div>

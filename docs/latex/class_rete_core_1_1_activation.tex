@@ -5,14 +5,22 @@
 The \doxylink{class_rete_core_1_1_activation}{Activation} class represents a pending rule activation in a Rete-\/based rule engine. It encapsulates the information needed to execute a rule when its conditions are met, including the name of the rule, the action to perform, the token that triggered the activation, and the salience (priority) of the activation. Activations are typically created by terminal nodes in the Rete network and added to an agenda for later execution. When an activation is fired, it executes its associated action using the token that caused it to be activated. The salience value allows for prioritizing activations when multiple rules are activated simultaneously, with higher salience values being executed first.  
 
 
+Inheritance diagram for Rete\+Core.\+Activation:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_activation}
+\end{center}
+\end{figure}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\doxymbox{\hyperlink{class_rete_core_1_1_activation_aa4e39ce5b5bb08a90d33534dc181f17b}{Activation}} (string name, \doxymbox{\hyperlink{class_rete_core_1_1_activation_a26bc7c07c0c8f91170cc7d4a6f0b9c04}{Action}}$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} match, int salience)
+\doxymbox{\hyperlink{class_rete_core_1_1_activation_ab414522ad2ba19047e1765b525f8102b}{Activation}} (string name, \doxymbox{\hyperlink{class_rete_core_1_1_activation_a26bc7c07c0c8f91170cc7d4a6f0b9c04}{Action}}$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} match, int priority, int salience)
 \begin{DoxyCompactList}\small\item\em Creates a new \doxylink{class_rete_core_1_1_activation}{Activation} instance with the specified rule name, action, token match, and salience. This constructor initializes the properties of the activation, allowing it to be added to an agenda for later execution when the conditions of the associated rule are satisfied. The rule name is used for identification and debugging purposes, while the action defines what will be executed when the activation fires. The token match contains the facts that triggered the activation, and the salience determines the priority of this activation relative to others in the agenda. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_core_1_1_activation_ad9e022585999eff1c5819acdc5ba7fc4}\label{class_rete_core_1_1_activation_ad9e022585999eff1c5819acdc5ba7fc4} 
 void {\bfseries Fire} ()
-\begin{DoxyCompactList}\small\item\em Fires this activation by executing its associated action with the token that triggered it. This method is typically called by the agenda when processing pending activations, allowing the rule\textquotesingle{}s action to be executed based on the matched facts contained in the token. The action can perform any operations defined by the rule, such as modifying facts, asserting new facts, or interacting with external systems, using the information available in the token. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Fires this activation by executing its associated action with the token that triggered it. This method is typically called by the agenda when processing pending activations, allowing the rule\textquotesingle{}s action to be executed based on the matched facts contained in the token. The action can perform any operations defined by the rule, such as modifying facts, asserting new facts, or interacting with external systems, using the information available in the token. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_rete_core_1_1_activation_a0183c8594fcb6fe388e341b31bdd4a8f}{Compare\+To}} (\doxymbox{\hyperlink{class_rete_core_1_1_activation_ab414522ad2ba19047e1765b525f8102b}{Activation}}? other)
+\begin{DoxyCompactList}\small\item\em A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. This is used by the agenda to sort activations when multiple activations are pending, ensuring that the most important or the most desired activations fire before lesser ones. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,7 +35,13 @@ Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ {\bfseries
 \begin{DoxyCompactList}\small\item\em The token that triggered this activation. This token contains the facts that matched the conditions of the rule associated with this activation. When the activation is fired, this token will be passed to the action delegate, allowing it to access the relevant facts and perform the necessary operations defined by the rule. The token serves as a context for the activation, providing the information needed to execute the rule\textquotesingle{}s action effectively. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_core_1_1_activation_a7c77105e84382c33dd56416856099c6b}\label{class_rete_core_1_1_activation_a7c77105e84382c33dd56416856099c6b} 
 int {\bfseries Salience}\hspace{0.3cm}{\ttfamily  \+[get]\+}
-\begin{DoxyCompactList}\small\item\em A numeric value representing the priority of this activation relative to others in the agenda. Higher salience values indicate higher priority, meaning that activations with higher salience will be fired before those with lower salience when multiple activations are pending in the agenda. This allows for fine-\/grained control over the order of rule execution, ensuring that more important rules are executed first when there are competing activations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A numeric value representing the priority of this activation relative to others in the agenda. Higher salience values indicate higher priority, meaning that activations with higher salience will be fired before those with lower salience when multiple activations are pending in the agenda. This allows for fine-\/grained control over the order of rule execution, ensuring that more important rules are executed first when there are competing activations. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_activation_a418e5c9c997a02b8be4eaad87acd0ad1}\label{class_rete_core_1_1_activation_a418e5c9c997a02b8be4eaad87acd0ad1} 
+int {\bfseries Priority}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em A numeric value representing the priority of this activation relative to others in the agenda. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for additional control over the execution order of rules, especially when salience values are equal or when further differentiation is needed beyond salience alone. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_activation_ae094a2ed15c188bbe01d12d0b7449497}\label{class_rete_core_1_1_activation_ae094a2ed15c188bbe01d12d0b7449497} 
+long {\bfseries Timestamp} = Date\+Time.\+Utc\+Now.\+Ticks\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em A timestamp indicating when this activation was created. This can be used to break ties when multiple activations have the same salience and priority, ensuring a consistent and predictable firing order based on the order of creation. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -36,11 +50,11 @@ The \doxylink{class_rete_core_1_1_activation}{Activation} class represents a pen
 \label{doc-constructors}
 \Hypertarget{class_rete_core_1_1_activation_doc-constructors}
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{class_rete_core_1_1_activation_aa4e39ce5b5bb08a90d33534dc181f17b}\index{ReteCore.Activation@{ReteCore.Activation}!Activation@{Activation}}
+\Hypertarget{class_rete_core_1_1_activation_ab414522ad2ba19047e1765b525f8102b}\index{ReteCore.Activation@{ReteCore.Activation}!Activation@{Activation}}
 \index{Activation@{Activation}!ReteCore.Activation@{ReteCore.Activation}}
 \doxysubsubsection{\texorpdfstring{Activation()}{Activation()}}
-{\footnotesize\ttfamily \label{class_rete_core_1_1_activation_aa4e39ce5b5bb08a90d33534dc181f17b} 
-Rete\+Core.\+Activation.\+Activation (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{\doxymbox{\hyperlink{class_rete_core_1_1_activation_a26bc7c07c0c8f91170cc7d4a6f0b9c04}{Action}}$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$}]{action}{, }\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{match}{, }\item[{int}]{salience}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_activation_ab414522ad2ba19047e1765b525f8102b} 
+Rete\+Core.\+Activation.\+Activation (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{\doxymbox{\hyperlink{class_rete_core_1_1_activation_a26bc7c07c0c8f91170cc7d4a6f0b9c04}{Action}}$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$}]{action}{, }\item[{\doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}}]{match}{, }\item[{int}]{priority}{, }\item[{int}]{salience}{}\end{DoxyParamCaption})}
 
 
 
@@ -57,6 +71,29 @@ Creates a new \doxylink{class_rete_core_1_1_activation}{Activation} instance wit
 {\em salience} & A priority value relative to other activations.\\
 \hline
 \end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_activation_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_activation_a0183c8594fcb6fe388e341b31bdd4a8f}\index{ReteCore.Activation@{ReteCore.Activation}!CompareTo@{CompareTo}}
+\index{CompareTo@{CompareTo}!ReteCore.Activation@{ReteCore.Activation}}
+\doxysubsubsection{\texorpdfstring{CompareTo()}{CompareTo()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_activation_a0183c8594fcb6fe388e341b31bdd4a8f} 
+int Rete\+Core.\+Activation.\+Compare\+To (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_activation_ab414522ad2ba19047e1765b525f8102b}{Activation}}?}]{other}{}\end{DoxyParamCaption})}
+
+
+
+A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. This is used by the agenda to sort activations when multiple activations are pending, ensuring that the most important or the most desired activations fire before lesser ones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The \doxylink{class_rete_core_1_1_activation}{Activation} object to compare to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer indicating the relative order of the activations.
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -99,8 +99,8 @@ $(function(){initNavTree('class_rete_core_1_1_agenda.html','','class_rete_core_1
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa59da6c4634d7579e0d6bcbdcfba9781" id="r_aa59da6c4634d7579e0d6bcbdcfba9781"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa59da6c4634d7579e0d6bcbdcfba9781">Add</a> (<a class="el" href="class_rete_core_1_1_activation.html">Activation</a> a)</td></tr>
-<tr class="memdesc:aa59da6c4634d7579e0d6bcbdcfba9781"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase.  <br /></td></tr>
+<tr class="memitem:a3ccf2720fc3cdc8345fd2f33674b0a8b" id="r_a3ccf2720fc3cdc8345fd2f33674b0a8b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3ccf2720fc3cdc8345fd2f33674b0a8b">Add</a> (<a class="el" href="class_rete_core_1_1_activation.html">Activation</a> activation)</td></tr>
+<tr class="memdesc:a3ccf2720fc3cdc8345fd2f33674b0a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase.  <br /></td></tr>
 <tr class="memitem:a2b2890ae869d56d273db3ab542931e49" id="r_a2b2890ae869d56d273db3ab542931e49"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2b2890ae869d56d273db3ab542931e49">RemoveByFact</a> (object fact)</td></tr>
 <tr class="memdesc:a2b2890ae869d56d273db3ab542931e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information.  <br /></td></tr>
 <tr class="memitem:a6c19ab804499c8813af25859a2bf8810" id="r_a6c19ab804499c8813af25859a2bf8810"><td class="memItemLeft"><a id="a6c19ab804499c8813af25859a2bf8810" name="a6c19ab804499c8813af25859a2bf8810"></a>
@@ -116,8 +116,8 @@ bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_agenda.html" title="The Agenda class manages pending rule activations in a Rete-based rule engine. It maintains a list of...">Agenda</a> class manages pending rule activations in a Rete-based rule engine. It maintains a list of activations that have been triggered but not yet executed. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="aa59da6c4634d7579e0d6bcbdcfba9781" name="aa59da6c4634d7579e0d6bcbdcfba9781"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa59da6c4634d7579e0d6bcbdcfba9781">&#9670;&#160;</a></span>Add()</h2>
+<a id="a3ccf2720fc3cdc8345fd2f33674b0a8b" name="a3ccf2720fc3cdc8345fd2f33674b0a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ccf2720fc3cdc8345fd2f33674b0a8b">&#9670;&#160;</a></span>Add()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +125,7 @@ bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code>
         <tr>
           <td class="memname">void ReteCore.Agenda.Add </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_rete_core_1_1_activation.html">Activation</a></td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_activation.html">Activation</a></td>          <td class="paramname"><span class="paramname"><em>activation</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -134,7 +134,7 @@ bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code>
 <p>Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> object to add to the list of activations.</td></tr>
+    <tr><td class="paramname">activation</td><td>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> object to add to the list of activations.</td></tr>
   </table>
   </dd>
 </dl>

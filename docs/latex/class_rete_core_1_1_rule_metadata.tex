@@ -1,0 +1,48 @@
+\doxysection{Rete\+Core.\+Rule\+Metadata Class Reference}
+\hypertarget{class_rete_core_1_1_rule_metadata}{}\label{class_rete_core_1_1_rule_metadata}\index{ReteCore.RuleMetadata@{ReteCore.RuleMetadata}}
+
+
+The \doxylink{class_rete_core_1_1_rule_metadata}{Rule\+Metadata} class encapsulates all the necessary information about a rule in a Rete-\/based rule engine.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a98c627f2058f454d88203a55fadd74fe}\label{class_rete_core_1_1_rule_metadata_a98c627f2058f454d88203a55fadd74fe} 
+{\bfseries Rule\+Metadata} ()
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{class_rete_core_1_1_rule_metadata}{Rule\+Metadata} class. This constructor initializes the Rule\+Index to a unique, incrementing value using a global sequence counter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a93a31c84f2c0e0e5f187217dcd8b738e}\label{class_rete_core_1_1_rule_metadata_a93a31c84f2c0e0e5f187217dcd8b738e} 
+long {\bfseries Rule\+Index}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The index of the rule in the Rete network. This index is assigned when the rule is added to the engine. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_ad0ec447073afdf3dc6cccc6a4e7362b4}\label{class_rete_core_1_1_rule_metadata_ad0ec447073afdf3dc6cccc6a4e7362b4} 
+required string {\bfseries Name}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The name of the rule. This is used for identification and debugging purposes, allowing users to trace which rule is being activated when an activation is fired. This is a required field. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a575e2c53607b1a6865bfd1a72eb1ee89}\label{class_rete_core_1_1_rule_metadata_a575e2c53607b1a6865bfd1a72eb1ee89} 
+required Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ {\bfseries Action}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The action delegate that defines the operation to be performed when this rule is activated. The action takes a \doxylink{class_rete_core_1_1_token}{Token} as a parameter, which contains the facts that triggered the activation. This is a required field. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a98b2b8454652408cba747729b0380749}\label{class_rete_core_1_1_rule_metadata_a98b2b8454652408cba747729b0380749} 
+required Agenda {\bfseries Agenda}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em The agenda to which activations of this rule should be added when the rule is activated. This allows for flexibility in managing activations, as different rules can be directed to different agendas if needed. This is a required field. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a3935ddf6a318cb2d1f2e402f39720d0e}\label{class_rete_core_1_1_rule_metadata_a3935ddf6a318cb2d1f2e402f39720d0e} 
+List$<$ Func$<$ bool $>$ $>$ {\bfseries Global\+Guards} = new()\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em A list of global guard functions that are evaluated before adding an activation to the agenda. If any global guard returns false, the activation will not be added, ensuring that certain conditions are met before the rule is executed. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a69797c4b08a0d7f58a27a70e1f1b602c}\label{class_rete_core_1_1_rule_metadata_a69797c4b08a0d7f58a27a70e1f1b602c} 
+List$<$ \doxymbox{\hyperlink{class_rete_core_1_1_late_filter}{Late\+Filter}} $>$ {\bfseries Late\+Filters} = new()\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em A list of late filters that are evaluated at the time of activation, just before adding the activation to the agenda. Each late filter checks a specific fact in the token against a predicate function. If any late filter returns false, the activation will not be added to the agenda, allowing for additional conditions to be enforced at the time of rule firing based on the current state of the facts in the token. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a0edab17953195a8ee545ee1d8be00d42}\label{class_rete_core_1_1_rule_metadata_a0edab17953195a8ee545ee1d8be00d42} 
+int {\bfseries Priority} = 0\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em An integer representing the rule level priority of activations created by this terminal node. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for control over the execution order of rules, when it is important to ensure that certain rules are executed before others. A default value of 0 means that if priority is not specified, it will not affect the execution order of activations relative to those with explicitly set priority values. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_rule_metadata_a4a4e8939b3afc9d4601ba993c0bc6d9e}\label{class_rete_core_1_1_rule_metadata_a4a4e8939b3afc9d4601ba993c0bc6d9e} 
+int {\bfseries Salience} = 0\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em An integer representing the condition level priority or salience of activations created by this terminal node. Higher salience values indicate higher priority for execution when multiple activations are pending in the agenda. This allows for fine-\/grained control over the order in which rule conditions are fired when multiple facts are asserted that match the same rule, ensuring that more important conditions are evaluated before less important ones. The default value is 0, which means that if salience is not specified, it will not affect the execution order of activations relative to those with explicitly set salience values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{class_rete_core_1_1_rule_metadata}{Rule\+Metadata} class encapsulates all the necessary information about a rule in a Rete-\/based rule engine. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Rule\+Metadata.\+cs\end{DoxyCompactItemize}

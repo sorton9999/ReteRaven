@@ -1,7 +1,9 @@
 var hierarchy =
 [
-    [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ],
     [ "ReteCore.Agenda", "class_rete_core_1_1_agenda.html", null ],
+    [ "IComparable", null, [
+      [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ]
+    ] ],
     [ "IEquatable", null, [
       [ "ReteCore.Token", "class_rete_core_1_1_token.html", null ]
     ] ],
@@ -15,12 +17,13 @@ var hierarchy =
     ] ],
     [ "INotifyPropertyChanged", null, [
       [ "ReteCore.Cell", "class_rete_core_1_1_cell.html", [
-        [ "ReteEngine.CriticalCell", "class_rete_engine_1_1_critical_cell.html", null ],
-        [ "ReteEngine.Inventory", "class_rete_engine_1_1_inventory.html", null ],
-        [ "ReteEngine.Officer", "class_rete_engine_1_1_officer.html", null ],
-        [ "ReteEngine.Order", "class_rete_engine_1_1_order.html", null ],
-        [ "ReteEngine.Product", "class_rete_engine_1_1_product.html", null ],
-        [ "ReteEngine.Shipment", "class_rete_engine_1_1_shipment.html", null ]
+        [ "ReteProgram.CriticalCell", "class_rete_program_1_1_critical_cell.html", null ],
+        [ "ReteProgram.DutyStatus", "class_rete_program_1_1_duty_status.html", null ],
+        [ "ReteProgram.Inventory", "class_rete_program_1_1_inventory.html", null ],
+        [ "ReteProgram.Officer", "class_rete_program_1_1_officer.html", null ],
+        [ "ReteProgram.Order", "class_rete_program_1_1_order.html", null ],
+        [ "ReteProgram.Product", "class_rete_program_1_1_product.html", null ],
+        [ "ReteProgram.Shipment", "class_rete_program_1_1_shipment.html", null ]
       ] ],
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
     ] ],
@@ -39,8 +42,10 @@ var hierarchy =
       [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
     ] ],
     [ "ReteEngine.JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", null ],
+    [ "ReteCore.LateFilter", "class_rete_core_1_1_late_filter.html", null ],
     [ "ReteEngine.ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", null ],
     [ "ReteEngine.ReteEngine", "class_rete_engine_1_1_rete_engine.html", null ],
-    [ "ReteEngine.Sensor", "class_rete_engine_1_1_sensor.html", null ],
-    [ "ReteEngine.SystemStatus", "class_rete_engine_1_1_system_status.html", null ]
+    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],
+    [ "ReteProgram.Sensor", "class_rete_program_1_1_sensor.html", null ],
+    [ "ReteProgram.SystemStatus", "class_rete_program_1_1_system_status.html", null ]
 ];

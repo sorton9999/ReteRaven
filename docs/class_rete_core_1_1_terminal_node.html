@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,12 +108,13 @@ Inheritance diagram for ReteCore.TerminalNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a538c04e19a45a69c311a5d0139646c74" id="r_a538c04e19a45a69c311a5d0139646c74"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a538c04e19a45a69c311a5d0139646c74">TerminalNode</a> (string name, Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, <a class="el" href="class_rete_core_1_1_agenda.html">Agenda</a> agenda, int salience=0)</td></tr>
-<tr class="memdesc:a538c04e19a45a69c311a5d0139646c74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> class with the specified rule name, action, agenda, and optional salience.  <br /></td></tr>
+<tr class="memitem:a9456a2c1bb657ba3744418bbfc396813" id="r_a9456a2c1bb657ba3744418bbfc396813"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9456a2c1bb657ba3744418bbfc396813">TerminalNode</a> (<a class="el" href="class_rete_core_1_1_rule_metadata.html">RuleMetadata</a> metaData)</td></tr>
+<tr class="memdesc:a9456a2c1bb657ba3744418bbfc396813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> class with the specified rule metadata.  <br /></td></tr>
 <tr class="memitem:a20eaf16cea219318645e06e278f46ee0" id="r_a20eaf16cea219318645e06e278f46ee0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a20eaf16cea219318645e06e278f46ee0">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
 <tr class="memdesc:a20eaf16cea219318645e06e278f46ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prevents adding a successor node to this terminal node.  <br /></td></tr>
 <tr class="memitem:adca40726f6b783b65ebd08486d756422" id="r_adca40726f6b783b65ebd08486d756422"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adca40726f6b783b65ebd08486d756422">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:adca40726f6b783b65ebd08486d756422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the rule engine, creating an activation if the fact has not already been processed.  <br /></td></tr>
+<tr class="memdesc:adca40726f6b783b65ebd08486d756422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda: First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> are ignored. <br  />
+ ///.  <br /></td></tr>
 <tr class="memitem:a9e2e20cf83f802d84591c6782dd13e3d" id="r_a9e2e20cf83f802d84591c6782dd13e3d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9e2e20cf83f802d84591c6782dd13e3d">Retract</a> (object fact)</td></tr>
 <tr class="memdesc:a9e2e20cf83f802d84591c6782dd13e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts the specified fact from the rule engine, removing any associated activations or tokens.  <br /></td></tr>
 <tr class="memitem:a06635491c40a3a5d508248845217a5bc" id="r_a06635491c40a3a5d508248845217a5bc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a06635491c40a3a5d508248845217a5bc">Refresh</a> (object fact, string propertyName)</td></tr>
@@ -125,8 +126,8 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Represents a terminal node in a Rete network that schedules rule activations when matching facts are asserted. </p>
 <p>A <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> is the endpoint of a Rete rule network. When a fact matching the rule conditions reaches this node, it creates an activation and adds it to the agenda for later execution. <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> instances are typically associated with a specific rule and action. No successor nodes should be added after a <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a538c04e19a45a69c311a5d0139646c74" name="a538c04e19a45a69c311a5d0139646c74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a538c04e19a45a69c311a5d0139646c74">&#9670;&#160;</a></span>TerminalNode()</h2>
+<a id="a9456a2c1bb657ba3744418bbfc396813" name="a9456a2c1bb657ba3744418bbfc396813"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9456a2c1bb657ba3744418bbfc396813">&#9670;&#160;</a></span>TerminalNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,33 +135,16 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">ReteCore.TerminalNode.TerminalNode </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_rule_metadata.html">RuleMetadata</a></td>          <td class="paramname"><span class="paramname"><em>metaData</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>action</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_rete_core_1_1_agenda.html">Agenda</a></td>          <td class="paramname"><span class="paramname"><em>agenda</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>salience</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes a new instance of the <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> class with the specified rule name, action, agenda, and optional salience. </p>
+<p>Initializes a new instance of the <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> class with the specified rule metadata. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>The name of the rule associated with this terminal node. Cannot be null.</td></tr>
-    <tr><td class="paramname">action</td><td>The action to execute when the terminal node is activated. Cannot be null.</td></tr>
-    <tr><td class="paramname">agenda</td><td>The agenda that manages the execution order of rules. Cannot be null.</td></tr>
-    <tr><td class="paramname">salience</td><td>The priority of the rule. Higher values indicate higher priority. The default is 0.</td></tr>
+    <tr><td class="paramname">metaData</td><td>The metadata for the rule associated with this terminal node. Cannot be null.</td></tr>
   </table>
   </dd>
 </dl>
@@ -209,8 +193,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. </p>
-<p>If the specified fact is a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> are ignored. This method is typically used to introduce new facts for rule evaluation.</p>
+<p>Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda: First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> are ignored. <br  />
+ ///. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to assert. Must be a non-null object of type <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> to be considered for activation.</td></tr>
