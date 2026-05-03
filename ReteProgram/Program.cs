@@ -482,3 +482,36 @@ order3.IsProcessed = false;
 engine9.Update(duty1);
 engine9.Update(order3);
 engine9.FireAll();
+
+var engineA = new ReteEngine.ReteEngine();
+int fireCount = 0;
+var order = new Order { Text = "Test Order", TargetRank = "Captain", IsProcessed = false };
+
+// High Priority - Retracts the order
+engineA.Begin("HighPriority_Retract")
+    .Priority(100)
+    .Where<Order>("O", "HighPri", o => !o.IsProcessed)
+    .Then(t => {
+        fireCount++;
+        var fact = t.Get<Order>("O");
+        // This should invalidate the next rule
+        engineA.Retract(fact);
+    });
+
+// Low Priority - Should be cancelled by TM
+engineA.Begin("LowPriority_ShouldNotFire")
+    .Priority(50)
+    .Where<Order>("O", "LowPri", o => !o.IsProcessed)
+    .Then(t => {
+        // If this runs, TM failed
+        fireCount++;
+    });
+
+// Act
+engineA.Assert(order);
+engineA.FireAll();
+
+// If TM is working, fireCount should be 1.
+Console.WriteLine($"Fire count: {fireCount}");
+
+

@@ -148,8 +148,10 @@ namespace ReteCore
                 _firedTokens.Remove(token.GetHashCode());
             }
             // Find and remove any activations in the agenda that contain this fact
-            _agenda.RemoveByFact(fact);
-            Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
+            if (_agenda.RemoveByFact(fact) > 0)
+            {
+                Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
+            }
         }
 
         /// <summary>

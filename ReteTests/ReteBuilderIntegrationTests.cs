@@ -293,5 +293,79 @@ namespace ReteTest.Tests
             engine.FireAll();
             Assert.Equal("BCAD", fireOrder);
         }
+
+        [Fact]
+        public void TruthMaintenance_Retract_PreventsLowerPriorityRule()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+            var order = new Order { Text = "Test Order", IsProcessed = false };
+
+            // Rule 1: High Priority - Retracts the order
+            engine.Begin("HighPriority_Retract")
+                .Priority(100)
+                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Then(t => {
+                    fireCount++;
+                    var fact = t.Get<Order>("O");
+                    engine.Retract(fact); // This should invalidate the next rule
+                });
+
+            // Rule 2: Low Priority - Should be cancelled by TM
+            engine.Begin("LowPriority_ShouldNotFire")
+                .Priority(50)
+                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Then(t => {
+                    fireCount++; // If this runs, TM failed
+                });
+
+            // Act
+            engine.Assert(order);
+            engine.FireAll();
+
+            // Assert
+            // If Truth Maintenance works, only Rule 1 fired.
+            Assert.Equal(1, fireCount);
+        }
+
+        [Fact]
+        public void AutoRetraction_WhenConditionFails_DerivedFactIsRemoved()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            int discountActiveCount = 0;
+
+            var order = new Inventory { Id = "1", Count = 1500 };
+
+            // Rule 1: High Value Order -> Logic Assert a Discount
+            engine.Begin("HighValueDiscount")
+                .Where<Inventory>("I", null, o => o.Count >= 1000)
+                .Then(t => {
+                    var inv = t.Get<Inventory>("I");
+                    Console.WriteLine($"High value order detected (Count: {inv.Count}), applying discount.");
+                });
+
+            // Rule 2: Track if Discount is in memory
+            engine.Begin("TrackDiscount")
+                .Where<Inventory>("I")
+                .Then(t => {
+                    discountActiveCount++;
+                });
+
+            // Initial Assertion (Order is $1500)
+            engine.Assert(order);
+            engine.FireAll();
+            Assert.Equal(1, discountActiveCount); // Discount should exist
+
+            // The Auto-Retraction Event
+            // We update the order so it no longer meets the >= 1000 criteria
+            order.Count = 500;
+            engine.Update(order);
+            engine.FireAll();
+
+            // Verify the "TrackDiscount" rule didn't fire again 
+            // Discount should have been retracted, so count should not increase
+            Assert.Equal(1, discountActiveCount);
+        }
     }
 }
