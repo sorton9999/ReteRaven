@@ -78,24 +78,32 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The Retract method removes tokens containing the specified fact from the BetaMemory and notifies all successor nodes of the retraction. 
-        /// It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to 
-        /// update their state accordingly.
+        /// The Retract method removes tokens containing the specified fact from the BetaMemory and notifies all successor nodes 
+        /// of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the 
+        /// memory, allowing successor nodes to update their state accordingly. If a fact is provided directly, it will search for
+        /// tokens that contain that fact and remove them.
         /// </summary>
-        /// <param name="fact">The fact object to retract. Cannot be null.</param>
-        public void Retract(object fact)
+        /// <param name="factOrToken">The fact or token object to retract. Cannot be null.</param>
+        public void Retract(object factOrToken)
         {
             // Remove tokens containing the retracted fact
-            if (fact is Token token)
+            List<Token> toRemove;
+            if (factOrToken is Token token)
             {
-                var toRemove = Tokens
+                toRemove = Tokens
                     .Where(t => t.NamedFacts.Values.Any(f => f == token.Fact))
                     .ToList();
-                foreach (var t in toRemove)
-                {
-                    _tokens.Remove(t);
-                    foreach (var node in _successors) { node.Retract(fact); }
-                }
+            }
+            else
+            {
+                toRemove = Tokens
+                    .Where(t => t.NamedFacts.Values.Any(f => f == factOrToken))
+                    .ToList();
+            }
+            foreach (var t in toRemove)
+            {
+                _tokens.Remove(t);
+                foreach (var node in _successors) { node.Retract(factOrToken); }
             }
         }
 

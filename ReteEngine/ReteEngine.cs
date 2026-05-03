@@ -74,8 +74,6 @@ namespace ReteEngine
 
         public ReteEngine()
         {
-            // Initialize the Rete network with a root node
-            _root.AddSuccessor(new ObjectTypeNode<object>()); // Start with a generic type node
         }
 
         public ReteBuilder<Cell> Begin(string ruleName) => new ReteBuilder<Cell>(this, ruleName);

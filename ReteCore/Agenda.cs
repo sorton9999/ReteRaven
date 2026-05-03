@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,34 +53,54 @@ namespace ReteCore
         /// <summary>
         /// Removes any pending activations from the agenda that are associated with the specified fact. This is typically 
         /// called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that 
-        /// fact but have not yet fired are cancelled and will not execute based on outdated information.
+        /// fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is
+        /// provided, it will remove activations where the token's fact matches the retracted fact.
         /// </summary>
-        /// <param name="fact">The fact object to remove.</param>
-        public void RemoveByFact(object fact)
+        /// <param name="factOrToken">The fact or token object to remove.</param>
+        /// <returns>The number of activations removed from the agenda.</returns>
+        public int RemoveByFact(object factOrToken)
         {
             // Remove any activation where the Match (Token) contains the retracted fact
-            if (fact is Token token)
+            int removedCount = 0;
+            if (factOrToken is Token token)
             {
-                int removedCount = _activations.RemoveAll(a => a.Match.NamedFacts.Values.Any(f => f == token.Fact));
-                if (removedCount > 0)
-                {
-                    Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
-                }
+                removedCount = _activations.RemoveAll(a => a.Match.NamedFacts.Values.Any(f => f == token.Fact));
             }
+            else
+            {
+                removedCount = _activations.RemoveAll(a => a.Match.NamedFacts.Values.Any(f => f == factOrToken));
+            }
+            if (removedCount > 0)
+            {
+                Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
+            }
+            return removedCount;
         }
 
         /// <summary>
         /// Fires all pending activations in the agenda, executing their associated actions in order of descending 
-        /// salience (priority). After firing, the activations are removed from the agenda. This method is typically 
-        /// called during the rule execution phase to process all activated rules based on their priority, ensuring 
-        /// that higher salience rules are executed before lower salience ones when multiple activations are present.
+        /// salience (priority). The activations are removed from the agenda as they are fired. Activated rules are 
+        /// fired based on their priority, ensuring that higher salience rules are executed before lower salience 
+        /// ones when multiple activations are present.
         /// </summary>
         public void FireAll()
         {
             if (!HasActivations) { return; }
-            var sorted = _activations.OrderByDescending(a => a.Salience).ToList();
-            _activations.Clear();
-            foreach (var activation in sorted) { activation.Fire(); }
+            var activationToFire = PopNext();
+            activationToFire?.Fire();
+        }
+
+        /// <summary>
+        /// This method retrieves and removes the next activation to fire from the agenda based on descending salience (priority).
+        /// </summary>
+        /// <returns>The next activation to fire, or null if no activations are available.</returns>
+        private Activation PopNext()
+        {
+            var sorted =  _activations.OrderByDescending(a => a.Salience).ToList();
+            if (sorted.Count == 0) return null;
+            var next = sorted[0];
+            _activations.Remove(next);
+            return next;
         }
     }
 }

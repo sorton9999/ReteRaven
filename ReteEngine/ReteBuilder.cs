@@ -252,7 +252,7 @@ namespace ReteEngine
                 }
                 return result;
             };
-            var alpha = _engine.GetAlphaMemory<T>();
+            var alpha = _engine.GetAlphaMemory<T>(name);
             JoinNode join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
             if (_lastNode is BetaMemory beta)
             {

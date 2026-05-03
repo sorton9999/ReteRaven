@@ -18,8 +18,8 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_abf63c6a4cc4869c441b3c
 \begin{DoxyCompactList}\small\item\em Adds a successor node to the list of successors that will receive tokens asserted, retracted, or refreshed through this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}. This method allows for building the Rete network by connecting nodes together. When a new successor is added, it will start receiving tokens from this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} whenever operations are performed on it. The method takes an \doxylink{interface_rete_core_1_1_i_rete_node}{IRete\+Node} as a parameter and adds it to the \+\_\+successors list, enabling the propagation of tokens to that node in future operations. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a1ca2ef72a0bb548f7b329b28f7b48129}{Assert}} (object fact)
 \begin{DoxyCompactList}\small\item\em The Assert method adds a new token to the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} if it doesn\textquotesingle{}t already exist and propagates it to all successor nodes. It checks for duplicates to avoid redundant processing. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a97ff907e76b35ed7f21a58873fb53b51}{Retract}} (object fact)
-\begin{DoxyCompactList}\small\item\em The Retract method removes tokens containing the specified fact from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_aac78c091a14f0dac0af2428321f82138}{Retract}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em The Retract method removes tokens containing the specified fact from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. If a fact is provided directly, it will search for tokens that contain that fact and remove them. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a58a08aabeec0a86d1d5ad3f761274fde}{Refresh}} (object fact, string property\+Name)
 \begin{DoxyCompactList}\small\item\em The Refresh method is responsible for updating tokens in the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} when a fact changes. It identifies tokens that contain the changed fact and propagates the refresh to all successor nodes, allowing them to re-\/evaluate their conditions based on the updated information. This ensures that the Rete network remains consistent and up-\/to-\/date as facts evolve over time. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a767831479eb726c40a59f120cce0cee2}{Debug\+Print}} (object fact, int level=0)
@@ -119,19 +119,19 @@ The Refresh method is responsible for updating tokens in the \doxylink{class_ret
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
 
-\Hypertarget{class_rete_core_1_1_beta_memory_a97ff907e76b35ed7f21a58873fb53b51}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Retract@{Retract}}
+\Hypertarget{class_rete_core_1_1_beta_memory_aac78c091a14f0dac0af2428321f82138}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
-{\footnotesize\ttfamily \label{class_rete_core_1_1_beta_memory_a97ff907e76b35ed7f21a58873fb53b51} 
-void Rete\+Core.\+Beta\+Memory.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_beta_memory_aac78c091a14f0dac0af2428321f82138} 
+void Rete\+Core.\+Beta\+Memory.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
 
 
 
-The Retract method removes tokens containing the specified fact from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. 
+The Retract method removes tokens containing the specified fact from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. If a fact is provided directly, it will search for tokens that contain that fact and remove them. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em fact} & The fact object to retract. Cannot be null.\\
+{\em fact\+Or\+Token} & The fact or token object to retract. Cannot be null.\\
 \hline
 \end{DoxyParams}
 

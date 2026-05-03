@@ -10,11 +10,11 @@ The \doxylink{class_rete_core_1_1_agenda}{Agenda} class manages pending rule act
 \item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_agenda_a3ccf2720fc3cdc8345fd2f33674b0a8b}{Add}} (\doxymbox{\hyperlink{class_rete_core_1_1_activation}{Activation}} activation)
 \begin{DoxyCompactList}\small\item\em Adds a new activation to the agenda. This method is typically called when a rule\textquotesingle{}s conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{class_rete_core_1_1_agenda_a2b2890ae869d56d273db3ab542931e49}{Remove\+By\+Fact}} (object fact)
-\begin{DoxyCompactList}\small\item\em Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_rete_core_1_1_agenda_a84333162d9672cb561525a0db44e54a3}{Remove\+By\+Fact}} (object fact\+Or\+Token)
+\begin{DoxyCompactList}\small\item\em Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is provided, it will remove activations where the token\textquotesingle{}s fact matches the retracted fact. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_core_1_1_agenda_a6c19ab804499c8813af25859a2bf8810}\label{class_rete_core_1_1_agenda_a6c19ab804499c8813af25859a2bf8810} 
 void {\bfseries Fire\+All} ()
-\begin{DoxyCompactList}\small\item\em Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). After firing, the activations are removed from the agenda. This method is typically called during the rule execution phase to process all activated rules based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The activations are removed from the agenda as they are fired. Activated rules are fired based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,21 +44,24 @@ Adds a new activation to the agenda. This method is typically called when a rule
 {\em activation} & The \doxylink{class_rete_core_1_1_activation}{Activation} object to add to the list of activations.\\
 \hline
 \end{DoxyParams}
-\Hypertarget{class_rete_core_1_1_agenda_a2b2890ae869d56d273db3ab542931e49}\index{ReteCore.Agenda@{ReteCore.Agenda}!RemoveByFact@{RemoveByFact}}
+\Hypertarget{class_rete_core_1_1_agenda_a84333162d9672cb561525a0db44e54a3}\index{ReteCore.Agenda@{ReteCore.Agenda}!RemoveByFact@{RemoveByFact}}
 \index{RemoveByFact@{RemoveByFact}!ReteCore.Agenda@{ReteCore.Agenda}}
 \doxysubsubsection{\texorpdfstring{RemoveByFact()}{RemoveByFact()}}
-{\footnotesize\ttfamily \label{class_rete_core_1_1_agenda_a2b2890ae869d56d273db3ab542931e49} 
-void Rete\+Core.\+Agenda.\+Remove\+By\+Fact (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_agenda_a84333162d9672cb561525a0db44e54a3} 
+int Rete\+Core.\+Agenda.\+Remove\+By\+Fact (\begin{DoxyParamCaption}\item[{object}]{fact\+Or\+Token}{}\end{DoxyParamCaption})}
 
 
 
-Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. 
+Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is provided, it will remove activations where the token\textquotesingle{}s fact matches the retracted fact. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em fact} & The fact object to remove.\\
+{\em fact\+Or\+Token} & The fact or token object to remove.\\
 \hline
 \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of activations removed from the agenda.
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
