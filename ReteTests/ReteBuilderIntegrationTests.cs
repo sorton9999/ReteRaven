@@ -6,11 +6,12 @@
 //     information.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using Xunit;
-using ReteEngine;
 using ReteCore;
+using ReteEngine;
 using ReteProgram;
+using System;
+using System.Net.NetworkInformation;
+using Xunit;
 
 namespace ReteTest.Tests
 {
@@ -367,5 +368,66 @@ namespace ReteTest.Tests
             // Discount should have been retracted, so count should not increase
             Assert.Equal(1, discountActiveCount);
         }
+
+        [Fact]
+        public void ForwardChaining_EmergentFact_TriggersSubsequentRule()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            string statusResult = "";
+
+            // Detect a shipment request -> Assert Emergent Fact (Shipment)
+            engine.Begin("DetectShipment")
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    var order = t.Get<Inventory>("O");
+                    // Assert the new Shipment fact
+                    engine.Assert(new Shipment { Id = "1", ProductId = order.ProductId });
+                });
+
+            // React to the Emergent Fact
+            engine.Begin("ApplyShipment")
+                .Where<Shipment>("S")
+                .Then(t => {
+                    statusResult = "Shipped";
+                });
+
+            var order = new Inventory { Id = "1", Count = 1500 };
+
+            // Start the chain going by asserting the initial fact that triggers the first rule
+            engine.Assert(order);
+
+            // FireAll must loop until no more rules are satisfied. 
+            // This allows Rule 1 to fire, then Rule 2 to react to Rule 1's output.
+            engine.FireAll();
+
+            // If Forward Chaining works, Rule 2 fired because Rule 1 created the Shipment.
+            Assert.Equal("Shipped", statusResult);
+        }
+
+        [Fact]
+        public void DynamicRule_WhenAddedAtRuntime_MatchesExistingFacts()
+        {
+            // Setup engine and assert facts FIRST
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+
+            var existingOrder = new Inventory { Id = "1", Count = 5000, ProductId = 20 };
+            engine.Assert(existingOrder);
+
+            // Define a rule AFTER the data is already in the system
+            engine.Begin("RuntimeDiscountRule")
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    fireCount++;
+                });
+
+            // This should catch the match even though the Fact was asserted earlier
+            engine.FireAll();
+
+            // Assert
+            Assert.Equal(1, fireCount);
+        }
+
+
     }
 }

@@ -56,6 +56,10 @@ namespace ReteEngine
 
         public void FireAll()
         {
+            // Work any pre-loaded facts through the network.
+            // This takes care of any facts that were asserted
+            // before the network was fully built.
+            _workingMemory.ForEach(f => _root.Assert(f));
             while (_agenda.HasActivations) { _agenda.FireAll(); }
         }
 
