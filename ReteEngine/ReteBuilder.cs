@@ -492,7 +492,7 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
         public ReteBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
-
+            // Create the terminal node with the specified action and metadata
             var terminal = new TerminalNode(new RuleMetadata
             {
                 Name = _ruleName,
@@ -503,6 +503,7 @@ namespace ReteEngine
                 Priority = _priority,
                 Salience = salience
             });
+            _engine.AddTerminalNode(terminal);
             if (_lastNode is BetaMemory beta)
             {
                 beta.AddSuccessor(terminal);
@@ -535,7 +536,10 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Asserts the specified fact into the current context or knowledge base.
+        /// Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the 
+        /// rule builder's chain, allowing it to be processed according to the defined rule conditions. The fact must be non-null and 
+        /// will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new 
+        /// facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions.
         /// </summary>
         /// <param name="fact">The fact to assert. Cannot be null.</param>
         public void Assert(object fact)
@@ -544,7 +548,9 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Begins the rule definition by specifying the initial AlphaMemory node and the fact name to match against.
+        /// Begins the rule definition by specifying the initial AlphaMemory node and the fact name to match against. Use this method 
+        /// as the starting point for constructing a rule, and then chain subsequent calls to JoinWith or other builder methods to 
+        /// extend the rule's pattern matching.
         /// </summary>
         /// <remarks>Call this method as the first step when constructing a rule. Subsequent calls to
         /// JoinWith or other builder methods will extend the rule from this starting point.</remarks>
@@ -571,7 +577,10 @@ namespace ReteEngine
 
         /// <summary>
         /// Adds a join node to the rule network that combines the current beta memory with the specified alpha memory
-        /// using the given join condition.
+        /// using the given join condition. Use this to construct more complex rules by specifying how facts from 
+        /// different alpha memories should be joined together based on the provided condition. The join condition is 
+        /// evaluated for each combination of tokens and facts from the respective memories, allowing for flexible rule 
+        /// definitions that can capture complex relationships between different types of facts in the working memory.
         /// </summary>
         /// <remarks>Use this method to extend the rule network by specifying additional join conditions
         /// between working memory elements. The join condition is evaluated for each combination of tokens and facts
@@ -594,7 +603,10 @@ namespace ReteEngine
 
         /// <summary>
         /// Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda
-        /// with an optional salience.
+        /// with an optional salience. Use this method to finalize the rule definition by specifying the consequence of the 
+        /// rule and registering it with the agenda. The action will be invoked each time the rule's conditions are satisfied, 
+        /// and salience can be used to control the execution order of the rule relative to others when multiple rules are 
+        /// eligible to fire.
         /// </summary>
         /// <remarks>This method finalizes the rule definition by specifying the action to perform when
         /// the rule conditions are met. The rule is then registered with the provided agenda. If multiple rules are
@@ -620,116 +632,6 @@ namespace ReteEngine
             _lastNode.Assert(new Token("end", 250));
         }
     }
-
-    /// <summary>
-    /// Adapts an Alpha Memory output (single fact) to a Beta Memory input (Token).
-    /// This allows the first JoinNode in a chain to receive a Token on its left.
-    /// </summary>
-    public class AlphaToBetaAdapter : IReteNode
-    {
-        /// <summary>
-        /// The BetaMemory instance that this adapter will feed tokens into. When a fact is asserted into the adapter, it will be 
-        /// wrapped into a Token and asserted into this BetaMemory.
-        /// </summary>
-        private readonly BetaMemory _betaMemory;
-        /// <summary>
-        /// The name of the fact being adapted. This is used to create a Token with a consistent identifier for the fact when it is 
-        /// wrapped and asserted into the BetaMemory. The fact name helps maintain clarity in the rule network and can be used for 
-        /// debugging or tracing purposes to identify which facts are being processed through this adapter.
-        /// </summary>
-        private readonly string _factName;
-
-        /// <summary>
-        /// This constructor initializes a new instance of the AlphaToBetaAdapter class with the specified BetaMemory and fact name. 
-        /// The adapter will take facts asserted into it, wrap them into Tokens with the given fact name, and assert those tokens into 
-        /// the provided BetaMemory. This allows for seamless integration of Alpha Memory outputs into the Beta Memory processing 
-        /// pipeline, enabling the first JoinNode in a rule to receive tokens that represent individual facts from the Alpha Memory.
-        /// </summary>
-        /// <param name="betaMemory">The BetaMemory to add the token and associated fact to</param>
-        /// <param name="factName">The name of the fact</param>
-        /// <exception cref="ArgumentNullException">Thrown on a null BetaMemory argument</exception>
-        public AlphaToBetaAdapter(BetaMemory betaMemory, string factName)
-        {
-            _betaMemory = betaMemory ?? throw new ArgumentNullException(nameof(betaMemory));
-            _factName = factName;
-        }
-
-        /// <summary>
-        /// Adds a successor node to this adapter. In the context of the Rete network, this method is used to connect the output of 
-        /// the adapter (which produces Tokens) to the next node in the network, typically a JoinNode or another BetaMemory. When a 
-        /// fact is asserted into this adapter, it will be wrapped into a Token and then passed to all successor nodes that have been 
-        /// added through this method. This allows the adapter to serve as a bridge between Alpha Memory outputs and the Beta Memory 
-        /// processing that follows in the rule evaluation process.
-        /// </summary>
-        /// <param name="node"></param>
-        public void AddSuccessor(IReteNode node)
-        {
-            Console.WriteLine("[AlphaToBetaAdapter] -- This node currently does not implement AddSuccessor.\n" +
-            "Operations are done on the added BetaMemory explicitly to start the chain.\n" +
-            "In the future this may be used for BetaMemory to BetaMemory connections.");
-        }
-
-        /// <summary>
-        /// Asserts a fact into the adapter. The fact is wrapped into a Token with the specified fact name and then asserted into 
-        /// the connected BetaMemory. This allows the first JoinNode in the rule network to receive a Token representing the fact 
-        /// from the Alpha Memory, enabling it to participate in the rule evaluation process as if it were a standard token from a 
-        /// BetaMemory. The fact name is used to maintain clarity and consistency in the tokens being processed through the network.
-        /// </summary>
-        /// <param name="fact">The fact object to be asserted and passed to successor nodes. Cannot be null.</param>
-        public void Assert(object fact)
-        {
-            // Wrap the single fact into the first Token of a potential chain
-            var initialToken = new Token(_factName, fact);
-            _betaMemory?.Assert(initialToken);
-        }
-
-        /// <summary>
-        /// Retracts a fact from the adapter. This method will remove any tokens from the connected BetaMemory that contain the 
-        /// specified fact. Since the adapter wraps facts into tokens, it relies on the BetaMemory's Retract method to identify 
-        /// and remove any tokens that include the retracted fact. This ensures that when a fact is retracted, all relevant tokens 
-        /// in the BetaMemory are updated accordingly, allowing successor nodes to adjust their state based on the change in facts.
-        /// </summary>
-        /// <param name="fact">The fact object to retract. Cannot be null.</param>
-        public void Retract(object fact)
-        {
-            // BetaMemory.Retract is already designed to find and remove 
-            // any Tokens containing this specific fact.
-            _betaMemory?.Retract(fact);
-        }
-
-        /// <summary>
-        /// Refreshes a fact in the adapter. This method will trigger a re-evaluation of any tokens in the connected BetaMemory 
-        /// that contain the specified fact, based on the property that has changed. The adapter relies on the BetaMemory's 
-        /// Refresh method to identify relevant tokens and propagate the refresh to successor nodes, allowing them to re-evaluate 
-        /// their conditions based on the updated information. This is crucial for maintaining the accuracy and responsiveness of 
-        /// the Rete network as facts evolve over time.
-        /// </summary>
-        /// <param name="fact">The fact object whose property is being refreshed. Cannot be null.</param>
-        /// <param name="propertyName">The name of the property to refresh. Cannot be null or empty.</param>
-        public void Refresh(object fact, string propertyName)
-        {
-            _betaMemory?.Refresh(fact, propertyName);
-        }
-
-        /// <summary>
-        /// A visual debugging method that prints the fact being processed and the internal state of the connected BetaMemory. 
-        /// This method can be used to trace the flow of facts through the adapter and into the BetaMemory, providing insight 
-        /// into how facts are being wrapped into tokens and how they are being processed by successor nodes. The level 
-        /// parameter can be used to control the indentation of the output for better readability when visualizing complex 
-        /// rule networks.
-        /// </summary>
-        /// <param name="fact">The fact object to include in the debug output. Can be any object; its string representation will be
-        /// printed.</param>
-        /// <param name="level">The indentation level to apply to the debug message. Each level increases indentation by spaces.
-        /// Defaults to 0.</param>
-        public void DebugPrint(object fact, int level = 0)
-        {
-            string indent = new string(' ', level * 4);
-            Console.WriteLine($"{indent}[AlphaToBetaAdapter] Wrapping Fact: {fact}");
-            _betaMemory?.DebugPrint(fact, level + 1);
-        }
-    }
-
 }
 
 

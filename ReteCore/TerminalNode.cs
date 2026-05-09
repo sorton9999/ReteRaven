@@ -71,6 +71,11 @@ namespace ReteCore
         /// its hash code is removed from this set, allowing for new activations if the same facts are asserted again in the future.
         /// </summary>
         private readonly HashSet<int> _firedTokens = new();
+        /// <summary>
+        /// The metadata for the rule associated with this terminal node. This includes the rule name, action, agenda, global guards, late filters, priority, 
+        /// and salience.
+        /// </summary>
+        private readonly RuleMetadata _ruleMetadata;
 
         /// <summary>
         /// Initializes a new instance of the TerminalNode class with the specified rule metadata.
@@ -78,6 +83,7 @@ namespace ReteCore
         /// <param name="metaData">The metadata for the rule associated with this terminal node. Cannot be null.</param>
         public TerminalNode(RuleMetadata metaData)
         {
+            _ruleMetadata = metaData;
             _ruleName = metaData.Name;
             _action = metaData.Action;
             _agenda = metaData.Agenda;
@@ -88,12 +94,29 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Accesses the metadata associated with the rule for this terminal node. This includes the rule name, action, agenda, global guards, 
+        /// late filters, priority, and salience.
+        /// </summary>
+        public RuleMetadata RuleMetadata { get { return _ruleMetadata; } }
+
+        /// <summary>
+        /// Returns an empty enumerable of successor nodes. Terminal nodes do not have any successors, as they are the endpoint 
+        /// of a Rete rule network.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => Enumerable.Empty<IReteNode>();
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
         /// Prevents adding a successor node to this terminal node.
         /// </summary>
         /// <remarks>Terminal nodes do not support successors. Calling this method has no effect other
         /// than logging a message.</remarks>
         /// <param name="node">The node that would be added as a successor. This parameter is ignored.</param>
-        public void AddSuccessor(IReteNode node) { Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
+        public void AddSuccessor(IReteNode node) { node.Parent = this; Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
 
         /// <summary>
         /// Asserts a fact into the rule engine, creating an activation if the fact has not already been processed.  Two other
@@ -168,6 +191,31 @@ namespace ReteCore
             Retract(fact);
             Assert(fact);
         }
+
+        /// <summary>
+        /// This would remove a successor node from this terminal node, but since terminal nodes do not have successors, this 
+        /// method has no effect. It is included to satisfy the IReteNode interface contract, but it does not perform any 
+        /// operations on the internal state of the terminal node. Calling this method will simply do nothing, as there are no 
+        /// successors to remove.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            Successors?.ToList().Remove(successor);
+        }
+
+        /// <summary>
+        /// A convenience method to remove this terminal node from its parent node. This is used when the terminal node is no longer needed or 
+        /// when the structure of the Rete network changes. When this method is called, it checks if the terminal node has a parent node and, 
+        /// if so, it calls the RemoveSuccessor method on the parent node to remove this terminal node from the list of successors. This 
+        /// effectively disconnects the terminal node from the Rete network and prevents it from receiving any further tokens or participating 
+        /// in rule activations. 
+        /// </summary>
+        public void RemoveFromParentNode()
+        {
+            this.Parent?.RemoveSuccessor(this);
+        }
+
         /// <summary>
         /// Writes a formatted debug message to the console that includes the rule name and the specified fact, indented
         /// according to the given level.

@@ -51,13 +51,24 @@ namespace ReteCore
         public IEnumerable<Token> Tokens { get { return _tokens; } }
 
         /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
+
+        /// <summary>
         /// Adds a successor node to the list of successors that will receive tokens asserted, retracted, or refreshed through this BetaMemory. 
         /// This method allows for building the Rete network by connecting nodes together. When a new successor is added, it will start 
         /// receiving tokens from this BetaMemory whenever operations are performed on it. The method takes an IReteNode as a parameter and adds 
         /// it to the _successors list, enabling the propagation of tokens to that node in future operations.
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) => _successors.Add(node);
+        public void AddSuccessor(IReteNode node) { node.Parent = this; _successors.Add(node); }
 
         /// <summary>
         /// The Assert method adds a new token to the BetaMemory if it doesn't already exist and propagates it to all successor nodes. It checks 
@@ -103,7 +114,7 @@ namespace ReteCore
             foreach (var t in toRemove)
             {
                 _tokens.Remove(t);
-                foreach (var node in _successors) { node.Retract(factOrToken); }
+                foreach (var node in _successors) { node.Retract(t); }
             }
         }
 
@@ -132,6 +143,18 @@ namespace ReteCore
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes a child node from the list of successors. This method allows for dynamic modification of the Rete network by disconnecting nodes 
+        /// from the BetaMemory. When a child node is removed, it will no longer receive tokens from this BetaMemory, effectively isolating it from 
+        /// the flow of information through the network. This method allows for dynamic modification of the network structure by removing connections 
+        /// between nodes as needed.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
         }
 
         /// <summary>

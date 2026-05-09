@@ -85,10 +85,21 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
         /// Adds the specified node as a successor to this node in the Rete network.
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) => _successors.Add(node);
+        public void AddSuccessor(IReteNode node) { node.Parent = this; _successors.Add(node); }
 
         /// <summary>
         /// The Assert method is responsible for processing new facts or tokens that arrive at this JoinNode. When a new fact 
@@ -156,6 +167,20 @@ namespace ReteCore
                     this.EvaluateAndPropagate(leftToken, propertyName, factOrToken);
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes a successor node from this JoinNode. This method is used when a successor node is no longer needed or when the 
+        /// structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, 
+        /// retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, 
+        /// ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network 
+        /// as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of 
+        /// the system.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
         }
 
         /// <summary>

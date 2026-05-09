@@ -48,13 +48,18 @@ namespace ReteCore
         /// access to the active tokens that have been propagated through this node, enabling successor nodes to evaluate 
         /// their conditions based on these matches.
         /// </summary>
-        public IEnumerable<Token> Tokens
-        {
-            get
-            {
-                return _supportedMatches.Keys;
-            }
-        }
+        public IEnumerable<Token> Tokens => _supportedMatches.Keys;
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
 
         /// <summary>
         /// Adds a successor node to this CompositeBetaMemory. Successor nodes will receive assertions and retractions 
@@ -64,7 +69,7 @@ namespace ReteCore
         /// that it is up-to-date with the current state of matches in this node.
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) => _successors.Add(node);
+        public void AddSuccessor(IReteNode node) { node.Parent = this; _successors.Add(node); }
 
         /// <summary>
         /// Asserts a fact (token) into this CompositeBetaMemory. If the token is not already supported by any branch, 
@@ -142,6 +147,19 @@ namespace ReteCore
             {
                 successor.Refresh(fact, propertyName);
             }
+        }
+
+        /// <summary>
+        /// Removes a child node from this CompositeBetaMemory. This method is used to detach a successor node from this node,         
+        /// which may be necessary when the structure of the Rete network changes. When a child node is removed, it will no 
+        /// longer receive assertions, retractions, or refreshes from this CompositeBetaMemory, effectively isolating it from 
+        /// the flow of matches through this part of the network. This method allows for dynamic modifications to the network 
+        /// structure, enabling the addition and removal of nodes as needed.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
         }
 
         /// <summary>

@@ -45,20 +45,20 @@ namespace ReteEngine
         /// <exception cref="Exception">Thrown when the parameters are not well-formed.</exception>
         public (Func<Token, object> LeftKey, Func<object, object> RightKey) Extract(Expression<Func<Token, object, bool>> joinExpr)
         {
-            // 1. Ensure the root is an '==' comparison
+            // Ensure the root is an '==' comparison
             if (joinExpr.Body is not BinaryExpression binary || binary.NodeType != ExpressionType.Equal)
             {
                 throw new NotSupportedException("Only equality joins (==) can be indexed.");
             }
 
-            // 2. Identify the parameters (token is index 0, fact is index 1)
+            // Identify the parameters (token is index 0, fact is index 1)
             var tokenParam = joinExpr.Parameters[0];
             var factParam = joinExpr.Parameters[1];
 
             Expression leftPart = null;
             Expression rightPart = null;
 
-            // 3. Determine which side of '==' belongs to which parameter
+            // Determine which side of '==' belongs to which parameter
             if (IsParameterDependent(binary.Left, tokenParam) && IsParameterDependent(binary.Right, factParam))
             {
                 leftPart = binary.Left;
@@ -74,7 +74,7 @@ namespace ReteEngine
                 throw new Exception("Join expression must compare a property of Token with a property of Fact.");
             }
 
-            // 4. Wrap and Compile into Funcs
+            // Wrap and Compile into Funcs
             return (CompileSelector<Token>(leftPart, tokenParam),
                     CompileSelector<object>(rightPart, factParam));
         }

@@ -67,14 +67,29 @@ namespace ReteCore
         public string TargetProperty { get; }
 
         /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors { get { return new[] { _successor }; } }
+
+        /// <summary>
         /// An AlphaConditionNode typically has one successor, which is often an AlphaMemory node that stores facts that 
         /// pass the condition. The AddSuccessor method is provided for completeness, but in a typical Rete implementation, 
         /// the successor is set at construction and does not change dynamically. If you want to support multiple successors, 
         /// you would need to modify this class to maintain
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) { Console.WriteLine("[AlphaConditionNode] -- This node does not implement AddSuccessor.\n" +
-            "Implement this to support multiple successors from this node."); }
+        public void AddSuccessor(IReteNode node) 
+        {
+            node.Parent = this;
+            Console.WriteLine("[AlphaConditionNode] -- This node does not implement AddSuccessor.\n" +
+            "Implement this to support multiple successors from this node."); 
+        }
 
         /// <summary>
         /// Assert a fact into the AlphaConditionNode. The node checks if the fact is of type T and if it satisfies the predicate. 
@@ -99,7 +114,7 @@ namespace ReteCore
         /// <param name="fact">The fact object to retract. Cannot be null.</param>
         public void Retract(object fact)
         {
-            if (fact is T typedFact && _predicate(typedFact))
+            if (fact is T typedFact)
             {
                 _successor.Retract(typedFact);
             }
@@ -123,6 +138,25 @@ namespace ReteCore
                 _successor.Retract(fact);
                 // Check new state
                 this.Assert(fact);
+            }
+        }
+
+        /// <summary>
+        /// Removes a successor node from this AlphaConditionNode. Since this implementation assumes a single successor set at 
+        /// construction, this method does not actually remove the successor but is provided for completeness. If you want to 
+        /// support dynamic changes to the successor, you would need to modify this class to allow for multiple successors and 
+        /// implement the logic to remove the specified child node from the collection of successors. In its current form, this 
+        /// method simply prints a message indicating that it is not implemented, as the design of this node does not accommodate 
+        /// multiple successors or dynamic changes to the successor. This is a placeholder for potential future enhancements to 
+        /// the class to support more complex network structures.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            if (successor == _successor)
+            {
+                Console.WriteLine("[AlphaConditionNode] -- This node does not implement RemoveSuccessor.\n" +
+                "Implement this to support dynamic changes to the successor of this node.");
             }
         }
 

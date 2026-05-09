@@ -58,6 +58,36 @@ namespace ReteTest.Tests
 
             Assert.True(fired);
         }
+        [Fact]
+
+        public void SimpleUpdateRule_Fires_When_Fact_Changes()
+        {
+            var engine = new ReteEngine.ReteEngine();
+
+            bool fired = false;
+
+            engine.Begin("SimpleUpdateRule")
+                .Where<SystemStatus>("sys", initialCondition: s => s.IsActive)
+                .And<Sensor>("sensor", (token, sensor) => sensor.IsTriggered)
+                .Then(token => fired = true);
+
+            var status = new SystemStatus { Name = "S2", IsActive = true };
+            var sensor = new Sensor { Id = Guid.NewGuid(), IsTriggered = false, Type = "Generic" };
+
+            engine.Assert(status);
+            engine.Assert(sensor);
+
+            engine.FireAll();
+            // IsTriggered is false, so the rule should not fire yet
+            Assert.False(fired);
+
+            // Now update the sensor to trigger the rule
+            sensor.IsTriggered = true;
+            engine.Update(sensor);
+            engine.FireAll();
+
+            Assert.True(fired);
+        }
 
         [Fact]
         public void NotRule_Prevents_Firing_When_NegatedFact_Present()
@@ -68,9 +98,11 @@ namespace ReteTest.Tests
 
             engine.Begin("NotRule")
                 .Where<SystemStatus>("sys", null, s => s.IsActive)
+                // This rule is saying: "I want sensors that are not triggered"
                 .Not<Sensor>("sensor-not", (token, sensor) => sensor.IsTriggered)
                 .Then(token => fired = true);
 
+            // Status is active, but the sensor is triggered, so the rule should not fire
             var status = new SystemStatus { Name = "S3", IsActive = true };
             var sensor = new Sensor { Id = Guid.NewGuid(), IsTriggered = true, Type = "Blocking" };
 
@@ -428,6 +460,57 @@ namespace ReteTest.Tests
             Assert.Equal(1, fireCount);
         }
 
+        [Fact]
+        public void UpdateRule_WhenFactNoLongerMatches_RetractsPendingActivation()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
 
+            // Only process orders that are NOT processed
+            engine.Begin("ProcessNewOrders")
+                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Then(t =>
+                {
+                    fireCount++;
+                });
+
+            var order = new Order { Id = "101", IsProcessed = false };
+
+            // Assert the fact. It matches, so an activation goes to the Agenda.
+            engine.Assert(order);
+
+            // THE UPDATE TRIGGER
+            // Change the state so it should NO LONGER match, then notify the engine.
+            order.IsProcessed = true;
+            engine.Update(order);
+
+            // Act
+            engine.FireAll();
+
+            // If Truth Maintenance via Update works, the activation was removed and fireCount is 0.
+            Assert.Equal(0, fireCount);
+        }
+
+        [Fact]
+        public void SimpleRemoveRule_PreventsRuleFromFiring()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+
+            engine.Begin("TemporaryRule")
+                .Where<Order>("O", initialCondition: order => !order.IsProcessed)
+                .And<Order>("O", (token, o) => o.Value == 55)
+                .Then(t => fireCount++);
+
+            engine.Assert(new Order() { Id = "1", IsProcessed = false, Value = 55 });
+
+            // Remove it before calling FireAll
+            engine.RemoveRule("TemporaryRule");
+            engine.FireAll();
+
+            // It should never have fired
+            Assert.Equal(0, fireCount);
+        }
     }
 }
