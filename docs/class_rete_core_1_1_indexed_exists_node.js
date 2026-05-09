@@ -7,7 +7,10 @@ var class_rete_core_1_1_indexed_exists_node =
     [ "AssertRight", "class_rete_core_1_1_indexed_exists_node.html#a7cd28201425d4b6e08e8e5b46703ab4b", null ],
     [ "DebugPrint", "class_rete_core_1_1_indexed_exists_node.html#a922af95650280db482c1e9ec96c1de1e", null ],
     [ "Refresh", "class_rete_core_1_1_indexed_exists_node.html#a798f6b6b04d92794fce35b3b72240406", null ],
+    [ "RemoveSuccessor", "class_rete_core_1_1_indexed_exists_node.html#a3ceb1861564a581adf5597bf223684f7", null ],
     [ "Retract", "class_rete_core_1_1_indexed_exists_node.html#ad3c5b419e653bc30a0893e86e22a445e", null ],
     [ "RetractLeft", "class_rete_core_1_1_indexed_exists_node.html#a15097630e419c02b782139575b4646e1", null ],
-    [ "RetractRight", "class_rete_core_1_1_indexed_exists_node.html#aa28f37728bce27cd0c50aad888dfe7cb", null ]
+    [ "RetractRight", "class_rete_core_1_1_indexed_exists_node.html#aa28f37728bce27cd0c50aad888dfe7cb", null ],
+    [ "Parent", "class_rete_core_1_1_indexed_exists_node.html#a5d5ee2cba9c2d93925f6e8de9cba5e3e", null ],
+    [ "Successors", "class_rete_core_1_1_indexed_exists_node.html#a16e5e0fa6f251e4d5ac523cb53bcc87f", null ]
 ];

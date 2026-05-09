@@ -22,6 +22,8 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_aac78c091a14f0dac0af24
 \begin{DoxyCompactList}\small\item\em The Retract method removes tokens containing the specified fact from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. If a fact is provided directly, it will search for tokens that contain that fact and remove them. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a58a08aabeec0a86d1d5ad3f761274fde}{Refresh}} (object fact, string property\+Name)
 \begin{DoxyCompactList}\small\item\em The Refresh method is responsible for updating tokens in the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} when a fact changes. It identifies tokens that contain the changed fact and propagates the refresh to all successor nodes, allowing them to re-\/evaluate their conditions based on the updated information. This ensures that the Rete network remains consistent and up-\/to-\/date as facts evolve over time. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_adb9d608f5e405cb51307bf986bbc2f0a}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Removes a child node from the list of successors. This method allows for dynamic modification of the Rete network by disconnecting nodes from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}. When a child node is removed, it will no longer receive tokens from this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}, effectively isolating it from the flow of information through the network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a767831479eb726c40a59f120cce0cee2}{Debug\+Print}} (object fact, int level=0)
 \begin{DoxyCompactList}\small\item\em The Debug\+Print method provides a way to output the current state of the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} for debugging purposes. It prints the number of tokens currently stored in the memory, along with an optional indentation level to help visualize the structure of the Rete network. This method can be called to inspect the contents of the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} at any point during execution, allowing developers to understand how facts are being matched and propagated through the network. The fact parameter is not used in this implementation but can be included for future enhancements or specific debugging scenarios. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
@@ -34,7 +36,11 @@ List$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ {\bfseries \
 \begin{DoxyCompactItemize}
 \item 
 IEnumerable$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a9921373fc5e3ab1f0adba3a612ac7b6b}{Tokens}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
-\begin{DoxyCompactList}\small\item\em A collection of tokens that have been asserted into this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}. Each token represents a combination of facts that have matched certain conditions in the Rete network. The collection allows for efficient checking of whether a token is already present, and it serves as the basis for propagating matches to successor nodes when new facts are asserted or existing facts are retracted or refreshed. When a new token is asserted, it is added to this collection if it is not already present, and when a fact is retracted, any tokens containing that fact are removed from the collection. The presence of tokens in this collection determines whether they will be propagated to successor nodes when operations are performed on them. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A collection of tokens that have been asserted into this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}. Each token represents a combination of facts that have matched certain conditions in the Rete network. The collection allows for efficient checking of whether a token is already present, and it serves as the basis for propagating matches to successor nodes when new facts are asserted or existing facts are retracted or refreshed. When a new token is asserted, it is added to this collection if it is not already present, and when a fact is retracted, any tokens containing that fact are removed from the collection. The presence of tokens in this collection determines whether they will be propagated to successor nodes when operations are performed on them. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a7fa35b8f3f7628ff5584ed2d46cf2a40}{Parent}}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_beta_memory_a434ae0975e6b050963c3be64f0fc87e0}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -119,6 +125,25 @@ The Refresh method is responsible for updating tokens in the \doxylink{class_ret
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
 
+\Hypertarget{class_rete_core_1_1_beta_memory_adb9d608f5e405cb51307bf986bbc2f0a}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_beta_memory_adb9d608f5e405cb51307bf986bbc2f0a} 
+void Rete\+Core.\+Beta\+Memory.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Removes a child node from the list of successors. This method allows for dynamic modification of the Rete network by disconnecting nodes from the \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}. When a child node is removed, it will no longer receive tokens from this \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}, effectively isolating it from the flow of information through the network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & The successor node to remove. Cannot be null.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_beta_memory_aac78c091a14f0dac0af2428321f82138}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
@@ -143,6 +168,34 @@ Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202b
 \label{doc-property-members}
 \Hypertarget{class_rete_core_1_1_beta_memory_doc-property-members}
 \doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_beta_memory_a7fa35b8f3f7628ff5584ed2d46cf2a40}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_beta_memory_a7fa35b8f3f7628ff5584ed2d46cf2a40} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Beta\+Memory.\+Parent\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_beta_memory_a434ae0975e6b050963c3be64f0fc87e0}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_beta_memory_a434ae0975e6b050963c3be64f0fc87e0} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Beta\+Memory.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_beta_memory_a9921373fc5e3ab1f0adba3a612ac7b6b}\index{ReteCore.BetaMemory@{ReteCore.BetaMemory}!Tokens@{Tokens}}
 \index{Tokens@{Tokens}!ReteCore.BetaMemory@{ReteCore.BetaMemory}}
 \doxysubsubsection{\texorpdfstring{Tokens}{Tokens}}

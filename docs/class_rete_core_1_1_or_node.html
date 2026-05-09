@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -116,8 +116,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:adcca0f2a0f6edb66df205a5aa976267e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts the specified fact from the rule engine, removing it from further consideration in rule evaluation.  <br /></td></tr>
 <tr class="memitem:a9467839c50e763c15111c8b43a773296" id="r_a9467839c50e763c15111c8b43a773296"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9467839c50e763c15111c8b43a773296">Refresh</a> (object fact, string prop)</td></tr>
 <tr class="memdesc:a9467839c50e763c15111c8b43a773296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagates a refresh operation for the specified fact and property to all successor nodes.  <br /></td></tr>
+<tr class="memitem:a89497d211cebbef24f1888cd1e14d286" id="r_a89497d211cebbef24f1888cd1e14d286"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a89497d211cebbef24f1888cd1e14d286">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:a89497d211cebbef24f1888cd1e14d286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_or_node.html" title="Represents a node in a Rete network that forwards facts to multiple successor nodes,...">OrNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:a75403cc73318556ea79cd25258b2bef9" id="r_a75403cc73318556ea79cd25258b2bef9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a75403cc73318556ea79cd25258b2bef9">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a75403cc73318556ea79cd25258b2bef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a formatted debug message to the console that includes the specified fact and the current number of successors.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a130bae8eec2069e4b50aadf7be6abf61" id="r_a130bae8eec2069e4b50aadf7be6abf61"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a130bae8eec2069e4b50aadf7be6abf61">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:a130bae8eec2069e4b50aadf7be6abf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
+<tr class="memitem:ac370621c20b9be5154bf8c85a1bc47eb" id="r_ac370621c20b9be5154bf8c85a1bc47eb"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#ac370621c20b9be5154bf8c85a1bc47eb">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ac370621c20b9be5154bf8c85a1bc47eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a node in a Rete network that forwards facts to multiple successor nodes, effectively implementing a logical OR branch. </p>
@@ -241,6 +250,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a89497d211cebbef24f1888cd1e14d286" name="a89497d211cebbef24f1888cd1e14d286"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89497d211cebbef24f1888cd1e14d286">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.OrNode.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_or_node.html" title="Represents a node in a Rete network that forwards facts to multiple successor nodes,...">OrNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="adcca0f2a0f6edb66df205a5aa976267e" name="adcca0f2a0f6edb66df205a5aa976267e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adcca0f2a0f6edb66df205a5aa976267e">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -266,6 +302,59 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a451a325202ba1ccd36246273eea6a749">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="ac370621c20b9be5154bf8c85a1bc47eb" name="ac370621c20b9be5154bf8c85a1bc47eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac370621c20b9be5154bf8c85a1bc47eb">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.OrNode.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="a130bae8eec2069e4b50aadf7be6abf61" name="a130bae8eec2069e4b50aadf7be6abf61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a130bae8eec2069e4b50aadf7be6abf61">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.OrNode.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>

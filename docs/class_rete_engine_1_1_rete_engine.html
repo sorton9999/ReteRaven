@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -93,37 +93,294 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_engine.html','','class_rete
   <div class="headertitle"><div class="title">ReteEngine.ReteEngine Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> class represents the core of a Rete-based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> serves as the main interface for interacting with the Rete-based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively.  
+ <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:TraceNode" id="r_TraceNode"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html">TraceNode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> for context.  <a href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa5ebe4a5c3e34e17d0316c05906c5124" id="r_aa5ebe4a5c3e34e17d0316c05906c5124"><td class="memItemLeft"><a id="aa5ebe4a5c3e34e17d0316c05906c5124" name="aa5ebe4a5c3e34e17d0316c05906c5124"></a>
-void&#160;</td><td class="memItemRight"><b>Assert</b> (object fact)</td></tr>
-<tr class="memitem:a18758b98c310f4445f0faeef7beb449e" id="r_a18758b98c310f4445f0faeef7beb449e"><td class="memItemLeft"><a id="a18758b98c310f4445f0faeef7beb449e" name="a18758b98c310f4445f0faeef7beb449e"></a>
-void&#160;</td><td class="memItemRight"><b>Refresh</b> (object fact, string propertyName=null)</td></tr>
-<tr class="memitem:a717718935426e662c587c586659ad566" id="r_a717718935426e662c587c586659ad566"><td class="memItemLeft"><a id="a717718935426e662c587c586659ad566" name="a717718935426e662c587c586659ad566"></a>
-void&#160;</td><td class="memItemRight"><b>Retract</b> (object fact)</td></tr>
+<tr class="memitem:ad9fbfeeb72021b42a55fa0cb0f4bf86b" id="r_ad9fbfeeb72021b42a55fa0cb0f4bf86b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad9fbfeeb72021b42a55fa0cb0f4bf86b">AddTerminalNode</a> (<a class="el" href="class_rete_core_1_1_terminal_node.html">TerminalNode</a> node)</td></tr>
+<tr class="memdesc:ad9fbfeeb72021b42a55fa0cb0f4bf86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes.  <br /></td></tr>
+<tr class="memitem:aa5ebe4a5c3e34e17d0316c05906c5124" id="r_aa5ebe4a5c3e34e17d0316c05906c5124"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa5ebe4a5c3e34e17d0316c05906c5124">Assert</a> (object fact)</td></tr>
+<tr class="memdesc:aa5ebe4a5c3e34e17d0316c05906c5124"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a fact to the working memory and asserts it into the Rete network. If the fact is not already present in the working memory, it is added to the list. The PropertyChanged event is subscribed to if the fact implements INotifyPropertyChanged, allowing the engine to automatically refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through the network and potentially trigger rule activations based on the conditions defined in the terminal nodes.  <br /></td></tr>
+<tr class="memitem:a18758b98c310f4445f0faeef7beb449e" id="r_a18758b98c310f4445f0faeef7beb449e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a18758b98c310f4445f0faeef7beb449e">Refresh</a> (object fact, string propertyName=null)</td></tr>
+<tr class="memdesc:a18758b98c310f4445f0faeef7beb449e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the Rete network, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time.  <br /></td></tr>
+<tr class="memitem:a717718935426e662c587c586659ad566" id="r_a717718935426e662c587c586659ad566"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a717718935426e662c587c586659ad566">Retract</a> (object fact)</td></tr>
+<tr class="memdesc:a717718935426e662c587c586659ad566"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.  <br /></td></tr>
 <tr class="memitem:a494a476b7fe765daac2afc64047b7cd2" id="r_a494a476b7fe765daac2afc64047b7cd2"><td class="memItemLeft"><a id="a494a476b7fe765daac2afc64047b7cd2" name="a494a476b7fe765daac2afc64047b7cd2"></a>
 void&#160;</td><td class="memItemRight"><b>FireAll</b> ()</td></tr>
-<tr class="memitem:aee9c66cca25aa52f22607ea114d007c8" id="r_aee9c66cca25aa52f22607ea114d007c8"><td class="memItemLeft"><a id="aee9c66cca25aa52f22607ea114d007c8" name="aee9c66cca25aa52f22607ea114d007c8"></a>
-void&#160;</td><td class="memItemRight"><b>Update</b> (object fact)</td></tr>
-<tr class="memitem:a8cc4e3e56b368152eca15f625b805842" id="r_a8cc4e3e56b368152eca15f625b805842"><td class="memItemLeft"><a id="a8cc4e3e56b368152eca15f625b805842" name="a8cc4e3e56b368152eca15f625b805842"></a>
-ReteBuilder&lt; <a class="el" href="class_rete_core_1_1_cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight"><b>Begin</b> (string ruleName)</td></tr>
-<tr class="memitem:a7b0c9639fc6104e43b47d4a33a347b69" id="r_a7b0c9639fc6104e43b47d4a33a347b69"><td class="memItemLeft"><a id="a7b0c9639fc6104e43b47d4a33a347b69" name="a7b0c9639fc6104e43b47d4a33a347b69"></a>
-<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a>&#160;</td><td class="memItemRight"><b>GetAlphaMemory&lt; T &gt;</b> (string name=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
-<tr class="memitem:a5a8c8aa05c56f4f5dccb3de993e8e8d3" id="r_a5a8c8aa05c56f4f5dccb3de993e8e8d3"><td class="memItemLeft"><a id="a5a8c8aa05c56f4f5dccb3de993e8e8d3" name="a5a8c8aa05c56f4f5dccb3de993e8e8d3"></a>
-void&#160;</td><td class="memItemRight"><b>DebugPrintNetwork</b> (object fact)</td></tr>
+<tr class="memdesc:a494a476b7fe765daac2afc64047b7cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired. <br /></td></tr>
+<tr class="memitem:aee9c66cca25aa52f22607ea114d007c8" id="r_aee9c66cca25aa52f22607ea114d007c8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aee9c66cca25aa52f22607ea114d007c8">Update</a> (object fact)</td></tr>
+<tr class="memdesc:aee9c66cca25aa52f22607ea114d007c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact has changed and needs to be re-evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by asserting it again, it is re-introduced and re-evaluated against all conditions, potentially triggering new activations based on the updated state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.  <br /></td></tr>
+<tr class="memitem:a8cc4e3e56b368152eca15f625b805842" id="r_a8cc4e3e56b368152eca15f625b805842"><td class="memItemLeft">ReteBuilder&lt; <a class="el" href="class_rete_core_1_1_cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8cc4e3e56b368152eca15f625b805842">Begin</a> (string ruleName)</td></tr>
+<tr class="memdesc:a8cc4e3e56b368152eca15f625b805842"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the definition of a new rule in the Rete engine. This method initializes a new ReteBuilder instance for the specified rule name, allowing users to define the conditions and actions of the rule using a fluent interface. The ReteBuilder provides methods for specifying the conditions of the rule, as well as the actions to be executed when the rule is triggered. By calling the Begin method, users can start building a new rule and ultimately add it to the Rete network, where it will be evaluated against asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed.  <br /></td></tr>
+<tr class="memitem:a7b0c9639fc6104e43b47d4a33a347b69" id="r_a7b0c9639fc6104e43b47d4a33a347b69"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a>&#160;</td><td class="memItemRight"><a class="el" href="#a7b0c9639fc6104e43b47d4a33a347b69">GetAlphaMemory&lt; T &gt;</a> (string name=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
+<tr class="memdesc:a7b0c9639fc6104e43b47d4a33a347b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> for the specified type and optional name. This method retrieves an existing <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> from the alpha registry if it exists, or creates a new one if it does not. The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> is associated with a specific type and an optional name, allowing for efficient retrieval and reuse of alpha memories based on the type and name of the facts they are associated with. If an initial condition is provided, an AlphaConditionNode is created to evaluate the condition against facts of the specified type, and the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> is added as a successor to the ObjectTypeNode for that type. This method allows for dynamic creation and management of alpha memories in the Rete network, enabling users to define conditions for specific types of facts and manage the flow of facts through the network based on those conditions. The use of a registry ensures that alpha memories are reused when possible, preventing unnecessary duplication and improving the efficiency of the network.  <br /></td></tr>
+<tr class="memitem:a45ed9b79fc9b9b70baa52605f4e2e579" id="r_a45ed9b79fc9b9b70baa52605f4e2e579"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a45ed9b79fc9b9b70baa52605f4e2e579">RemoveRule</a> (string ruleName)</td></tr>
+<tr class="memdesc:a45ed9b79fc9b9b70baa52605f4e2e579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a rule from the Rete network based on its name. This method removes any alpha memories associated with the specified rule name from the alpha registry, removes any activations associated with the rule from the agenda, and removes the terminal node for the rule from the network. The method also prunes any orphaned nodes that may result from the removal of the terminal node, ensuring that the network remains clean and efficient. This allows for dynamic modification of the Rete network by removing rules that are no longer needed or relevant, while maintaining the integrity of the network.  <br /></td></tr>
+<tr class="memitem:a5a8c8aa05c56f4f5dccb3de993e8e8d3" id="r_a5a8c8aa05c56f4f5dccb3de993e8e8d3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5a8c8aa05c56f4f5dccb3de993e8e8d3">DebugPrintNetwork</a> (object fact)</td></tr>
+<tr class="memdesc:a5a8c8aa05c56f4f5dccb3de993e8e8d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A debugging method to visualize the flow of a fact through the Rete network. This method prints out the structure of the network and how the specified fact is processed at each node.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a9f9bbed9f002ef62bcf3717a2eaf7a87" id="r_a9f9bbed9f002ef62bcf3717a2eaf7a87"><td class="memItemLeft"><a id="a9f9bbed9f002ef62bcf3717a2eaf7a87" name="a9f9bbed9f002ef62bcf3717a2eaf7a87"></a>
 <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&#160;</td><td class="memItemRight"><b>Root</b><code> [get]</code></td></tr>
+<tr class="memdesc:a9f9bbed9f002ef62bcf3717a2eaf7a87"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the root node of the Rete network. This property allows external code to access the root node, which serves as the entry point for all facts asserted into the network. <br /></td></tr>
 <tr class="memitem:a3bed090030ab23747f4af9d81690bf10" id="r_a3bed090030ab23747f4af9d81690bf10"><td class="memItemLeft"><a id="a3bed090030ab23747f4af9d81690bf10" name="a3bed090030ab23747f4af9d81690bf10"></a>
 Agenda&#160;</td><td class="memItemRight"><b>Agenda</b><code> [get]</code></td></tr>
+<tr class="memdesc:a3bed090030ab23747f4af9d81690bf10"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the agenda of the Rete engine. This property allows external code to access the agenda, which manages pending rule activations in the rule engine. The agenda maintains a list of activations that have been triggered but not yet executed, and it processes these activations based on their salience (priority) when the FireAll method is called. <br /></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> class represents the core of a Rete-based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> serves as the main interface for interacting with the Rete-based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ad9fbfeeb72021b42a55fa0cb0f4bf86b" name="ad9fbfeeb72021b42a55fa0cb0f4bf86b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9fbfeeb72021b42a55fa0cb0f4bf86b">&#9670;&#160;</a></span>AddTerminalNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.AddTerminalNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_terminal_node.html">TerminalNode</a></td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa5ebe4a5c3e34e17d0316c05906c5124" name="aa5ebe4a5c3e34e17d0316c05906c5124"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5ebe4a5c3e34e17d0316c05906c5124">&#9670;&#160;</a></span>Assert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.Assert </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a fact to the working memory and asserts it into the Rete network. If the fact is not already present in the working memory, it is added to the list. The PropertyChanged event is subscribed to if the fact implements INotifyPropertyChanged, allowing the engine to automatically refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through the network and potentially trigger rule activations based on the conditions defined in the terminal nodes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8cc4e3e56b368152eca15f625b805842" name="a8cc4e3e56b368152eca15f625b805842"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cc4e3e56b368152eca15f625b805842">&#9670;&#160;</a></span>Begin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteBuilder&lt; <a class="el" href="class_rete_core_1_1_cell.html">Cell</a> &gt; ReteEngine.ReteEngine.Begin </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>ruleName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Starts the definition of a new rule in the Rete engine. This method initializes a new ReteBuilder instance for the specified rule name, allowing users to define the conditions and actions of the rule using a fluent interface. The ReteBuilder provides methods for specifying the conditions of the rule, as well as the actions to be executed when the rule is triggered. By calling the Begin method, users can start building a new rule and ultimately add it to the Rete network, where it will be evaluated against asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ruleName</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a5a8c8aa05c56f4f5dccb3de993e8e8d3" name="a5a8c8aa05c56f4f5dccb3de993e8e8d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a8c8aa05c56f4f5dccb3de993e8e8d3">&#9670;&#160;</a></span>DebugPrintNetwork()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.DebugPrintNetwork </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A debugging method to visualize the flow of a fact through the Rete network. This method prints out the structure of the network and how the specified fact is processed at each node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td>The fact to print information from</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7b0c9639fc6104e43b47d4a33a347b69" name="a7b0c9639fc6104e43b47d4a33a347b69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b0c9639fc6104e43b47d4a33a347b69">&#9670;&#160;</a></span>GetAlphaMemory&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> ReteEngine.ReteEngine.GetAlphaMemory&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>initialCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> for the specified type and optional name. This method retrieves an existing <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> from the alpha registry if it exists, or creates a new one if it does not. The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> is associated with a specific type and an optional name, allowing for efficient retrieval and reuse of alpha memories based on the type and name of the facts they are associated with. If an initial condition is provided, an AlphaConditionNode is created to evaluate the condition against facts of the specified type, and the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> is added as a successor to the ObjectTypeNode for that type. This method allows for dynamic creation and management of alpha memories in the Rete network, enabling users to define conditions for specific types of facts and manage the flow of facts through the network based on those conditions. The use of a registry ensures that alpha memories are reused when possible, preventing unnecessary duplication and improving the efficiency of the network. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the facts for which the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> is being retrieved or created.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>An optional name for the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, allowing for differentiation between multiple alpha memories of the same type.</td></tr>
+    <tr><td class="paramname">initialCondition</td><td>An optional initial condition to be applied to the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, represented as a function that takes a fact of type T and returns a boolean.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> associated with the specified type and name.</dd></dl>
+
+</div>
+</div>
+<a id="a18758b98c310f4445f0faeef7beb449e" name="a18758b98c310f4445f0faeef7beb449e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18758b98c310f4445f0faeef7beb449e">&#9670;&#160;</a></span>Refresh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.Refresh </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Refreshes a fact in the Rete network, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td></td></tr>
+    <tr><td class="paramname">propertyName</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a45ed9b79fc9b9b70baa52605f4e2e579" name="a45ed9b79fc9b9b70baa52605f4e2e579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45ed9b79fc9b9b70baa52605f4e2e579">&#9670;&#160;</a></span>RemoveRule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.RemoveRule </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>ruleName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a rule from the Rete network based on its name. This method removes any alpha memories associated with the specified rule name from the alpha registry, removes any activations associated with the rule from the agenda, and removes the terminal node for the rule from the network. The method also prunes any orphaned nodes that may result from the removal of the terminal node, ensuring that the network remains clean and efficient. This allows for dynamic modification of the Rete network by removing rules that are no longer needed or relevant, while maintaining the integrity of the network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ruleName</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a717718935426e662c587c586659ad566" name="a717718935426e662c587c586659ad566"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a717718935426e662c587c586659ad566">&#9670;&#160;</a></span>Retract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.Retract </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aee9c66cca25aa52f22607ea114d007c8" name="aee9c66cca25aa52f22607ea114d007c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee9c66cca25aa52f22607ea114d007c8">&#9670;&#160;</a></span>Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.Update </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact has changed and needs to be re-evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by asserting it again, it is re-introduced and re-evaluated against all conditions, potentially triggering new activations based on the updated state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>ReteEngine/<b>ReteEngine.cs</b></li>
 </ul>

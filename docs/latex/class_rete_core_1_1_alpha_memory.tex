@@ -22,6 +22,8 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a5368329c19e1537943af
 \begin{DoxyCompactList}\small\item\em The Retract method removes a fact from the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} if it exists and notifies all successor nodes of the retraction. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_af8b3d3e7a90f0d262447bb46db171867}{Refresh}} (object fact, string property\+Name)
 \begin{DoxyCompactList}\small\item\em The Refresh method is used to update the state of a fact in the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} without changing its presence. If the fact exists, it propagates the refresh to all successor nodes, allowing them to update their state based on the new information. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a9e71676075e9182da20e4fd03f49cc53}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Remove the given child node from the list of successors. This method is used to disconnect a node from this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, preventing it from receiving further facts asserted, retracted, or refreshed through this node. When a child node is removed, it will no longer be part of the propagation path for facts in this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, which can affect the flow of information and the activation of rules in the Rete network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a591b04e69de9d1686ab414d3edf9db1e}{Debug\+Print}} (object fact, int level=0)
 \begin{DoxyCompactList}\small\item\em A debugging method that prints the current state of the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, including whether a specific fact is present and the total number of facts stored. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
@@ -29,7 +31,11 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a591b04e69de9d1686ab4
 \item 
 \Hypertarget{class_rete_core_1_1_alpha_memory_a61d986788bcd2d42e091c532461fe8a3}\label{class_rete_core_1_1_alpha_memory_a61d986788bcd2d42e091c532461fe8a3} 
 List$<$ object $>$ {\bfseries Facts} = new()\hspace{0.3cm}{\ttfamily  \+[get]\+}
-\begin{DoxyCompactList}\small\item\em A collection of facts that have been asserted into this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}. Each fact is stored as an object, and the collection allows for efficient checking of whether a fact is already present. When a new fact is asserted, it is added to this collection if it is not already present, and when a fact is retracted, it is removed from the collection. The presence of a fact in this collection determines whether it will be propagated to successor nodes when operations are performed on it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A collection of facts that have been asserted into this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}. Each fact is stored as an object, and the collection allows for efficient checking of whether a fact is already present. When a new fact is asserted, it is added to this collection if it is not already present, and when a fact is retracted, it is removed from the collection. The presence of a fact in this collection determines whether it will be propagated to successor nodes when operations are performed on it. \end{DoxyCompactList}\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a02b056d90e4e07075b03ad6106598ea6}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory_a1420b28657304d697b974cfbe67912d1}{Parent}}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -114,6 +120,25 @@ The Refresh method is used to update the state of a fact in the \doxylink{class_
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
 
+\Hypertarget{class_rete_core_1_1_alpha_memory_a9e71676075e9182da20e4fd03f49cc53}\index{ReteCore.AlphaMemory@{ReteCore.AlphaMemory}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.AlphaMemory@{ReteCore.AlphaMemory}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_alpha_memory_a9e71676075e9182da20e4fd03f49cc53} 
+void Rete\+Core.\+Alpha\+Memory.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Remove the given child node from the list of successors. This method is used to disconnect a node from this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, preventing it from receiving further facts asserted, retracted, or refreshed through this node. When a child node is removed, it will no longer be part of the propagation path for facts in this \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, which can affect the flow of information and the activation of rules in the Rete network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & The successor node to remove. Cannot be null.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_alpha_memory_a5368329c19e1537943afc854d1bb5cf6}\index{ReteCore.AlphaMemory@{ReteCore.AlphaMemory}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.AlphaMemory@{ReteCore.AlphaMemory}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
@@ -132,6 +157,39 @@ The Retract method removes a fact from the \doxylink{class_rete_core_1_1_alpha_m
 
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_alpha_memory_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_alpha_memory_a1420b28657304d697b974cfbe67912d1}\index{ReteCore.AlphaMemory@{ReteCore.AlphaMemory}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.AlphaMemory@{ReteCore.AlphaMemory}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_alpha_memory_a1420b28657304d697b974cfbe67912d1} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Alpha\+Memory.\+Parent\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_alpha_memory_a02b056d90e4e07075b03ad6106598ea6}\index{ReteCore.AlphaMemory@{ReteCore.AlphaMemory}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.AlphaMemory@{ReteCore.AlphaMemory}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_alpha_memory_a02b056d90e4e07075b03ad6106598ea6} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Alpha\+Memory.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
 
 
 

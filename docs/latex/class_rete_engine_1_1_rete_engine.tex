@@ -1,46 +1,206 @@
 \doxysection{Rete\+Engine.\+Rete\+Engine Class Reference}
 \hypertarget{class_rete_engine_1_1_rete_engine}{}\label{class_rete_engine_1_1_rete_engine}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+
+
+The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} class represents the core of a Rete-\/based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} serves as the main interface for interacting with the Rete-\/based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively.  
+
+
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
 class \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_1_1_trace_node}{Trace\+Node}}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The \doxylink{class_rete_engine_1_1_rete_engine_1_1_trace_node}{Trace\+Node} class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the \doxylink{interface_rete_core_1_1_i_rete_node}{IRete\+Node} interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the \doxylink{class_rete_engine_1_1_rete_engine_1_1_trace_node}{Trace\+Node} for context. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_aa5ebe4a5c3e34e17d0316c05906c5124}\label{class_rete_engine_1_1_rete_engine_aa5ebe4a5c3e34e17d0316c05906c5124} 
-void {\bfseries Assert} (object fact)
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_a18758b98c310f4445f0faeef7beb449e}\label{class_rete_engine_1_1_rete_engine_a18758b98c310f4445f0faeef7beb449e} 
-void {\bfseries Refresh} (object fact, string property\+Name=null)
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_a717718935426e662c587c586659ad566}\label{class_rete_engine_1_1_rete_engine_a717718935426e662c587c586659ad566} 
-void {\bfseries Retract} (object fact)
-\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_ad9fbfeeb72021b42a55fa0cb0f4bf86b}{Add\+Terminal\+Node}} (\doxymbox{\hyperlink{class_rete_core_1_1_terminal_node}{Terminal\+Node}} node)
+\begin{DoxyCompactList}\small\item\em Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_aa5ebe4a5c3e34e17d0316c05906c5124}{Assert}} (object fact)
+\begin{DoxyCompactList}\small\item\em Adds a fact to the working memory and asserts it into the Rete network. If the fact is not already present in the working memory, it is added to the list. The Property\+Changed event is subscribed to if the fact implements INotify\+Property\+Changed, allowing the engine to automatically refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through the network and potentially trigger rule activations based on the conditions defined in the terminal nodes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a18758b98c310f4445f0faeef7beb449e}{Refresh}} (object fact, string property\+Name=null)
+\begin{DoxyCompactList}\small\item\em Refreshes a fact in the Rete network, which may trigger re-\/evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a717718935426e662c587c586659ad566}{Retract}} (object fact)
+\begin{DoxyCompactList}\small\item\em Removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_engine_1_1_rete_engine_a494a476b7fe765daac2afc64047b7cd2}\label{class_rete_engine_1_1_rete_engine_a494a476b7fe765daac2afc64047b7cd2} 
 void {\bfseries Fire\+All} ()
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_aee9c66cca25aa52f22607ea114d007c8}\label{class_rete_engine_1_1_rete_engine_aee9c66cca25aa52f22607ea114d007c8} 
-void {\bfseries Update} (object fact)
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_a8cc4e3e56b368152eca15f625b805842}\label{class_rete_engine_1_1_rete_engine_a8cc4e3e56b368152eca15f625b805842} 
-Rete\+Builder$<$ \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Cell}} $>$ {\bfseries Begin} (string rule\+Name)
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_a7b0c9639fc6104e43b47d4a33a347b69}\label{class_rete_engine_1_1_rete_engine_a7b0c9639fc6104e43b47d4a33a347b69} 
-\doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}} {\bfseries Get\+Alpha\+Memory$<$ T $>$} (string name=null, Func$<$ T, bool $>$ initial\+Condition=null)
-\item 
-\Hypertarget{class_rete_engine_1_1_rete_engine_a5a8c8aa05c56f4f5dccb3de993e8e8d3}\label{class_rete_engine_1_1_rete_engine_a5a8c8aa05c56f4f5dccb3de993e8e8d3} 
-void {\bfseries Debug\+Print\+Network} (object fact)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-\/loaded facts in the working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_aee9c66cca25aa52f22607ea114d007c8}{Update}} (object fact)
+\begin{DoxyCompactList}\small\item\em Updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact has changed and needs to be re-\/evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by asserting it again, it is re-\/introduced and re-\/evaluated against all conditions, potentially triggering new activations based on the updated state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. \end{DoxyCompactList}\item 
+Rete\+Builder$<$ \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Cell}} $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a8cc4e3e56b368152eca15f625b805842}{Begin}} (string rule\+Name)
+\begin{DoxyCompactList}\small\item\em Starts the definition of a new rule in the Rete engine. This method initializes a new Rete\+Builder instance for the specified rule name, allowing users to define the conditions and actions of the rule using a fluent interface. The Rete\+Builder provides methods for specifying the conditions of the rule, as well as the actions to be executed when the rule is triggered. By calling the Begin method, users can start building a new rule and ultimately add it to the Rete network, where it will be evaluated against asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}} \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a7b0c9639fc6104e43b47d4a33a347b69}{Get\+Alpha\+Memory$<$ T $>$}} (string name=null, Func$<$ T, bool $>$ initial\+Condition=null)
+\begin{DoxyCompactList}\small\item\em Returns an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} for the specified type and optional name. This method retrieves an existing \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} from the alpha registry if it exists, or creates a new one if it does not. The \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} is associated with a specific type and an optional name, allowing for efficient retrieval and reuse of alpha memories based on the type and name of the facts they are associated with. If an initial condition is provided, an Alpha\+Condition\+Node is created to evaluate the condition against facts of the specified type, and the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} is added as a successor to the Object\+Type\+Node for that type. This method allows for dynamic creation and management of alpha memories in the Rete network, enabling users to define conditions for specific types of facts and manage the flow of facts through the network based on those conditions. The use of a registry ensures that alpha memories are reused when possible, preventing unnecessary duplication and improving the efficiency of the network. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a45ed9b79fc9b9b70baa52605f4e2e579}{Remove\+Rule}} (string rule\+Name)
+\begin{DoxyCompactList}\small\item\em Removes a rule from the Rete network based on its name. This method removes any alpha memories associated with the specified rule name from the alpha registry, removes any activations associated with the rule from the agenda, and removes the terminal node for the rule from the network. The method also prunes any orphaned nodes that may result from the removal of the terminal node, ensuring that the network remains clean and efficient. This allows for dynamic modification of the Rete network by removing rules that are no longer needed or relevant, while maintaining the integrity of the network. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_engine_a5a8c8aa05c56f4f5dccb3de993e8e8d3}{Debug\+Print\+Network}} (object fact)
+\begin{DoxyCompactList}\small\item\em A debugging method to visualize the flow of a fact through the Rete network. This method prints out the structure of the network and how the specified fact is processed at each node. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{class_rete_engine_1_1_rete_engine_a9f9bbed9f002ef62bcf3717a2eaf7a87}\label{class_rete_engine_1_1_rete_engine_a9f9bbed9f002ef62bcf3717a2eaf7a87} 
 \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} {\bfseries Root}\hspace{0.3cm}{\ttfamily  \+[get]\+}
-\item 
+\begin{DoxyCompactList}\small\item\em The accessor for the root node of the Rete network. This property allows external code to access the root node, which serves as the entry point for all facts asserted into the network. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_engine_1_1_rete_engine_a3bed090030ab23747f4af9d81690bf10}\label{class_rete_engine_1_1_rete_engine_a3bed090030ab23747f4af9d81690bf10} 
 Agenda {\bfseries Agenda}\hspace{0.3cm}{\ttfamily  \+[get]\+}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The accessor for the agenda of the Rete engine. This property allows external code to access the agenda, which manages pending rule activations in the rule engine. The agenda maintains a list of activations that have been triggered but not yet executed, and it processes these activations based on their salience (priority) when the Fire\+All method is called. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} class represents the core of a Rete-\/based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The \doxylink{class_rete_engine_1_1_rete_engine}{Rete\+Engine} serves as the main interface for interacting with the Rete-\/based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively. 
+
+\label{doc-func-members}
+\Hypertarget{class_rete_engine_1_1_rete_engine_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_engine_1_1_rete_engine_ad9fbfeeb72021b42a55fa0cb0f4bf86b}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!AddTerminalNode@{AddTerminalNode}}
+\index{AddTerminalNode@{AddTerminalNode}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{AddTerminalNode()}{AddTerminalNode()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_ad9fbfeeb72021b42a55fa0cb0f4bf86b} 
+void Rete\+Engine.\+Rete\+Engine.\+Add\+Terminal\+Node (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_rete_core_1_1_terminal_node}{Terminal\+Node}}}]{node}{}\end{DoxyParamCaption})}
+
+
+
+Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_aa5ebe4a5c3e34e17d0316c05906c5124}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!Assert@{Assert}}
+\index{Assert@{Assert}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{Assert()}{Assert()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_aa5ebe4a5c3e34e17d0316c05906c5124} 
+void Rete\+Engine.\+Rete\+Engine.\+Assert (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Adds a fact to the working memory and asserts it into the Rete network. If the fact is not already present in the working memory, it is added to the list. The Property\+Changed event is subscribed to if the fact implements INotify\+Property\+Changed, allowing the engine to automatically refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through the network and potentially trigger rule activations based on the conditions defined in the terminal nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a8cc4e3e56b368152eca15f625b805842}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!Begin@{Begin}}
+\index{Begin@{Begin}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{Begin()}{Begin()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a8cc4e3e56b368152eca15f625b805842} 
+Rete\+Builder$<$ \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Cell}} $>$ Rete\+Engine.\+Rete\+Engine.\+Begin (\begin{DoxyParamCaption}\item[{string}]{rule\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Starts the definition of a new rule in the Rete engine. This method initializes a new Rete\+Builder instance for the specified rule name, allowing users to define the conditions and actions of the rule using a fluent interface. The Rete\+Builder provides methods for specifying the conditions of the rule, as well as the actions to be executed when the rule is triggered. By calling the Begin method, users can start building a new rule and ultimately add it to the Rete network, where it will be evaluated against asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rule\+Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a5a8c8aa05c56f4f5dccb3de993e8e8d3}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!DebugPrintNetwork@{DebugPrintNetwork}}
+\index{DebugPrintNetwork@{DebugPrintNetwork}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{DebugPrintNetwork()}{DebugPrintNetwork()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a5a8c8aa05c56f4f5dccb3de993e8e8d3} 
+void Rete\+Engine.\+Rete\+Engine.\+Debug\+Print\+Network (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+A debugging method to visualize the flow of a fact through the Rete network. This method prints out the structure of the network and how the specified fact is processed at each node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & The fact to print information from\\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a7b0c9639fc6104e43b47d4a33a347b69}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!GetAlphaMemory$<$ T $>$@{GetAlphaMemory$<$ T $>$}}
+\index{GetAlphaMemory$<$ T $>$@{GetAlphaMemory$<$ T $>$}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{GetAlphaMemory$<$ T $>$()}{GetAlphaMemory< T >()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a7b0c9639fc6104e43b47d4a33a347b69} 
+\doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}} Rete\+Engine.\+Rete\+Engine.\+Get\+Alpha\+Memory$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{ = {\ttfamily null}, }\item[{Func$<$ T, bool $>$}]{initial\+Condition}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Returns an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} for the specified type and optional name. This method retrieves an existing \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} from the alpha registry if it exists, or creates a new one if it does not. The \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} is associated with a specific type and an optional name, allowing for efficient retrieval and reuse of alpha memories based on the type and name of the facts they are associated with. If an initial condition is provided, an Alpha\+Condition\+Node is created to evaluate the condition against facts of the specified type, and the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} is added as a successor to the Object\+Type\+Node for that type. This method allows for dynamic creation and management of alpha memories in the Rete network, enabling users to define conditions for specific types of facts and manage the flow of facts through the network based on those conditions. The use of a registry ensures that alpha memories are reused when possible, preventing unnecessary duplication and improving the efficiency of the network. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of the facts for which the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} is being retrieved or created.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & An optional name for the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, allowing for differentiation between multiple alpha memories of the same type.\\
+\hline
+{\em initial\+Condition} & An optional initial condition to be applied to the \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, represented as a function that takes a fact of type T and returns a boolean.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} associated with the specified type and name.
+\end{DoxyReturn}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a18758b98c310f4445f0faeef7beb449e}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!Refresh@{Refresh}}
+\index{Refresh@{Refresh}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{Refresh()}{Refresh()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a18758b98c310f4445f0faeef7beb449e} 
+void Rete\+Engine.\+Rete\+Engine.\+Refresh (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{string}]{property\+Name}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Refreshes a fact in the Rete network, which may trigger re-\/evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+{\em property\+Name} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a45ed9b79fc9b9b70baa52605f4e2e579}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!RemoveRule@{RemoveRule}}
+\index{RemoveRule@{RemoveRule}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{RemoveRule()}{RemoveRule()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a45ed9b79fc9b9b70baa52605f4e2e579} 
+void Rete\+Engine.\+Rete\+Engine.\+Remove\+Rule (\begin{DoxyParamCaption}\item[{string}]{rule\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Removes a rule from the Rete network based on its name. This method removes any alpha memories associated with the specified rule name from the alpha registry, removes any activations associated with the rule from the agenda, and removes the terminal node for the rule from the network. The method also prunes any orphaned nodes that may result from the removal of the terminal node, ensuring that the network remains clean and efficient. This allows for dynamic modification of the Rete network by removing rules that are no longer needed or relevant, while maintaining the integrity of the network. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rule\+Name} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_a717718935426e662c587c586659ad566}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!Retract@{Retract}}
+\index{Retract@{Retract}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_a717718935426e662c587c586659ad566} 
+void Rete\+Engine.\+Rete\+Engine.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_rete_engine_1_1_rete_engine_aee9c66cca25aa52f22607ea114d007c8}\index{ReteEngine.ReteEngine@{ReteEngine.ReteEngine}!Update@{Update}}
+\index{Update@{Update}!ReteEngine.ReteEngine@{ReteEngine.ReteEngine}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_rete_engine_1_1_rete_engine_aee9c66cca25aa52f22607ea114d007c8} 
+void Rete\+Engine.\+Rete\+Engine.\+Update (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact has changed and needs to be re-\/evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by asserting it again, it is re-\/introduced and re-\/evaluated against all conditions, potentially triggering new activations based on the updated state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}

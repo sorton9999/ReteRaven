@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -116,6 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5368329c19e1537943afc854d1bb5cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Retract method removes a fact from the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> if it exists and notifies all successor nodes of the retraction.  <br /></td></tr>
 <tr class="memitem:af8b3d3e7a90f0d262447bb46db171867" id="r_af8b3d3e7a90f0d262447bb46db171867"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af8b3d3e7a90f0d262447bb46db171867">Refresh</a> (object fact, string propertyName)</td></tr>
 <tr class="memdesc:af8b3d3e7a90f0d262447bb46db171867"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Refresh method is used to update the state of a fact in the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> without changing its presence. If the fact exists, it propagates the refresh to all successor nodes, allowing them to update their state based on the new information.  <br /></td></tr>
+<tr class="memitem:a9e71676075e9182da20e4fd03f49cc53" id="r_a9e71676075e9182da20e4fd03f49cc53"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9e71676075e9182da20e4fd03f49cc53">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:a9e71676075e9182da20e4fd03f49cc53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the given child node from the list of successors. This method is used to disconnect a node from this <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, preventing it from receiving further facts asserted, retracted, or refreshed through this node. When a child node is removed, it will no longer be part of the propagation path for facts in this <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, which can affect the flow of information and the activation of rules in the Rete network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed.  <br /></td></tr>
 <tr class="memitem:a591b04e69de9d1686ab414d3edf9db1e" id="r_a591b04e69de9d1686ab414d3edf9db1e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a591b04e69de9d1686ab414d3edf9db1e">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a591b04e69de9d1686ab414d3edf9db1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A debugging method that prints the current state of the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, including whether a specific fact is present and the total number of facts stored.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -124,6 +126,10 @@ Properties</h2></td></tr>
 <tr class="memitem:a61d986788bcd2d42e091c532461fe8a3" id="r_a61d986788bcd2d42e091c532461fe8a3"><td class="memItemLeft"><a id="a61d986788bcd2d42e091c532461fe8a3" name="a61d986788bcd2d42e091c532461fe8a3"></a>
 List&lt; object &gt;&#160;</td><td class="memItemRight"><b>Facts</b> = new()<code> [get]</code></td></tr>
 <tr class="memdesc:a61d986788bcd2d42e091c532461fe8a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A collection of facts that have been asserted into this <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. Each fact is stored as an object, and the collection allows for efficient checking of whether a fact is already present. When a new fact is asserted, it is added to this collection if it is not already present, and when a fact is retracted, it is removed from the collection. The presence of a fact in this collection determines whether it will be propagated to successor nodes when operations are performed on it. <br /></td></tr>
+<tr class="memitem:a02b056d90e4e07075b03ad6106598ea6" id="r_a02b056d90e4e07075b03ad6106598ea6"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a02b056d90e4e07075b03ad6106598ea6">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:a02b056d90e4e07075b03ad6106598ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
+<tr class="memitem:a1420b28657304d697b974cfbe67912d1" id="r_a1420b28657304d697b974cfbe67912d1"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#a1420b28657304d697b974cfbe67912d1">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a1420b28657304d697b974cfbe67912d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> class represents a node in a Rete network that stores individual facts and propagates them to successor nodes. It maintains a collection of facts that have been asserted and provides methods for asserting, retracting, and refreshing facts. When a fact is asserted, it is added to the collection and propagated to all successor nodes. When a fact is retracted, it is removed from the collection and successors are notified of the retraction. The Refresh method allows for updating the state of a fact without changing its presence in the memory. This class is a fundamental component of the Rete algorithm, enabling efficient pattern matching and rule evaluation in a rule engine. </p>
@@ -244,6 +250,33 @@ List&lt; object &gt;&#160;</td><td class="memItemRight"><b>Facts</b> = new()<cod
 
 </div>
 </div>
+<a id="a9e71676075e9182da20e4fd03f49cc53" name="a9e71676075e9182da20e4fd03f49cc53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e71676075e9182da20e4fd03f49cc53">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.AlphaMemory.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the given child node from the list of successors. This method is used to disconnect a node from this <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, preventing it from receiving further facts asserted, retracted, or refreshed through this node. When a child node is removed, it will no longer be part of the propagation path for facts in this <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, which can affect the flow of information and the activation of rules in the Rete network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="a5368329c19e1537943afc854d1bb5cf6" name="a5368329c19e1537943afc854d1bb5cf6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5368329c19e1537943afc854d1bb5cf6">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -268,6 +301,59 @@ List&lt; object &gt;&#160;</td><td class="memItemRight"><b>Facts</b> = new()<cod
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a451a325202ba1ccd36246273eea6a749">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a1420b28657304d697b974cfbe67912d1" name="a1420b28657304d697b974cfbe67912d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1420b28657304d697b974cfbe67912d1">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.AlphaMemory.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="a02b056d90e4e07075b03ad6106598ea6" name="a02b056d90e4e07075b03ad6106598ea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02b056d90e4e07075b03ad6106598ea6">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.AlphaMemory.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>

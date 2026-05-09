@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -117,6 +117,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1398475c3e317c22a8d981c5e87011bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact (token) from this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. If the token is supported by only one branch, it will be removed from the _supportedMatches dictionary, and the retraction will be propagated to all successor nodes. If the token is supported by multiple branches, the count will simply be decremented, indicating that one less branch supports this match. This method ensures that the node accurately tracks which tokens are active based on the branches that support them, allowing for correct propagation of matches through the network as conditions change.  <br /></td></tr>
 <tr class="memitem:adf87e6e4469a3136092a747de53b20a2" id="r_adf87e6e4469a3136092a747de53b20a2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adf87e6e4469a3136092a747de53b20a2">Refresh</a> (object fact, string propertyName)</td></tr>
 <tr class="memdesc:adf87e6e4469a3136092a747de53b20a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact (token) in this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. This method is called when a property of a fact changes, and it allows the node to re-evaluate the token against its conditions. The refresh will be propagated to all successor nodes, ensuring that any changes in the token's properties are reflected in the matches that are active in those nodes. This method is essential for maintaining the accuracy of matches in the network as facts evolve over time.  <br /></td></tr>
+<tr class="memitem:ac94c61d06894782111c34a9f412436dc" id="r_ac94c61d06894782111c34a9f412436dc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac94c61d06894782111c34a9f412436dc">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:ac94c61d06894782111c34a9f412436dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a child node from this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. This method is used to detach a successor node from this node, <br  />
+ which may be necessary when the structure of the Rete network changes. When a child node is removed, it will no longer receive assertions, retractions, or refreshes from this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>, effectively isolating it from the flow of matches through this part of the network. This method allows for dynamic modifications to the network structure, enabling the addition and removal of nodes as needed.  <br /></td></tr>
 <tr class="memitem:a311c4b6c3cd7d820f0aa5330b589bcfe" id="r_a311c4b6c3cd7d820f0aa5330b589bcfe"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a311c4b6c3cd7d820f0aa5330b589bcfe">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a311c4b6c3cd7d820f0aa5330b589bcfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is used for debugging purposes to print the current state of the <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. It displays the fact being processed, whether it is currently active (supported by at least one branch), and recursively prints.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -124,6 +127,10 @@ Public Member Functions</h2></td></tr>
 Properties</h2></td></tr>
 <tr class="memitem:ab37ac49598fbb4f14c5164299735f508" id="r_ab37ac49598fbb4f14c5164299735f508"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab37ac49598fbb4f14c5164299735f508">Tokens</a><code> [get]</code></td></tr>
 <tr class="memdesc:ab37ac49598fbb4f14c5164299735f508"><td class="mdescLeft">&#160;</td><td class="mdescRight">A collection of tokens that are currently supported by at least one branch in this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. Each token is associated with a count of how many branches support it, allowing the node to manage the activation and deactivation of matches as branches are asserted and retracted. This property provides access to the active tokens that have been propagated through this node, enabling successor nodes to evaluate their conditions based on these matches.  <br /></td></tr>
+<tr class="memitem:add4bb3a3c208d3d34bf33b5e56f6ca38" id="r_add4bb3a3c208d3d34bf33b5e56f6ca38"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#add4bb3a3c208d3d34bf33b5e56f6ca38">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:add4bb3a3c208d3d34bf33b5e56f6ca38"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
+<tr class="memitem:a568ddf19e47a3c0d25409826cfdd0e01" id="r_a568ddf19e47a3c0d25409826cfdd0e01"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a568ddf19e47a3c0d25409826cfdd0e01">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:a568ddf19e47a3c0d25409826cfdd0e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a> class represents a node in a Rete network that combines multiple branches of tokens (partial matches) using an OR logic. </p>
@@ -244,6 +251,34 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="ac94c61d06894782111c34a9f412436dc" name="ac94c61d06894782111c34a9f412436dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac94c61d06894782111c34a9f412436dc">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.CompositeBetaMemory.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a child node from this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>. This method is used to detach a successor node from this node, <br  />
+ which may be necessary when the structure of the Rete network changes. When a child node is removed, it will no longer receive assertions, retractions, or refreshes from this <a class="el" href="class_rete_core_1_1_composite_beta_memory.html" title="The CompositeBetaMemory class represents a node in a Rete network that combines multiple branches of ...">CompositeBetaMemory</a>, effectively isolating it from the flow of matches through this part of the network. This method allows for dynamic modifications to the network structure, enabling the addition and removal of nodes as needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="a1398475c3e317c22a8d981c5e87011bf" name="a1398475c3e317c22a8d981c5e87011bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1398475c3e317c22a8d981c5e87011bf">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -272,6 +307,58 @@ Properties</h2></td></tr>
 </div>
 </div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="add4bb3a3c208d3d34bf33b5e56f6ca38" name="add4bb3a3c208d3d34bf33b5e56f6ca38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add4bb3a3c208d3d34bf33b5e56f6ca38">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.CompositeBetaMemory.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="a568ddf19e47a3c0d25409826cfdd0e01" name="a568ddf19e47a3c0d25409826cfdd0e01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a568ddf19e47a3c0d25409826cfdd0e01">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.CompositeBetaMemory.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="ab37ac49598fbb4f14c5164299735f508" name="ab37ac49598fbb4f14c5164299735f508"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab37ac49598fbb4f14c5164299735f508">&#9670;&#160;</a></span>Tokens</h2>
 

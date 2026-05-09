@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -106,6 +106,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6c19ab804499c8813af25859a2bf8810" id="r_a6c19ab804499c8813af25859a2bf8810"><td class="memItemLeft"><a id="a6c19ab804499c8813af25859a2bf8810" name="a6c19ab804499c8813af25859a2bf8810"></a>
 void&#160;</td><td class="memItemRight"><b>FireAll</b> ()</td></tr>
 <tr class="memdesc:a6c19ab804499c8813af25859a2bf8810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The activations are removed from the agenda as they are fired. Activated rules are fired based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. <br /></td></tr>
+<tr class="memitem:ac4f2725ceecb7d76d8020e491f9441a7" id="r_ac4f2725ceecb7d76d8020e491f9441a7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ac4f2725ceecb7d76d8020e491f9441a7">RemoveActivationsByRule</a> (string ruleName)</td></tr>
+<tr class="memdesc:ac4f2725ceecb7d76d8020e491f9441a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all pending activations from the agenda that are associated with the specified rule name.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -138,6 +140,32 @@ bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ac4f2725ceecb7d76d8020e491f9441a7" name="ac4f2725ceecb7d76d8020e491f9441a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4f2725ceecb7d76d8020e491f9441a7">&#9670;&#160;</a></span>RemoveActivationsByRule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Agenda.RemoveActivationsByRule </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>ruleName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes all pending activations from the agenda that are associated with the specified rule name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ruleName</td><td>The name of the rule whose associated activations should be removed.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if any activations were removed; otherwise, false.</dd></dl>
 
 </div>
 </div>

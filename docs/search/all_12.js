@@ -8,6 +8,6 @@ var searchData=
   ['tokens_5',['Tokens',['../class_rete_engine_1_1_rete_engine_1_1_trace_node.html#ad07f66ce8140e23f6ac3931e88a425ea',1,'ReteEngine.ReteEngine.TraceNode.Tokens'],['../class_rete_core_1_1_beta_memory.html#a9921373fc5e3ab1f0adba3a612ac7b6b',1,'ReteCore.BetaMemory.Tokens'],['../class_rete_core_1_1_composite_beta_memory.html#ab37ac49598fbb4f14c5164299735f508',1,'ReteCore.CompositeBetaMemory.Tokens'],['../interface_rete_core_1_1_i_latent_memory.html#ad9776d1fb39ea10e40625b1c124596b0',1,'ReteCore.ILatentMemory.Tokens']]],
   ['tostring_6',['ToString',['../class_rete_core_1_1_fact-1-g.html#ab885f4d31ce5f41cb414bc592db88b2f',1,'ReteCore::Fact-1-g']]],
   ['trace_7',['Trace',['../class_rete_engine_1_1_rete_builder-1-g.html#ae3963d94678b6b291afb06f21d7e0342',1,'ReteEngine::ReteBuilder-1-g']]],
-  ['tracenode_8',['TraceNode',['../class_rete_engine_1_1_rete_engine_1_1_trace_node.html',1,'ReteEngine::ReteEngine']]],
+  ['tracenode_8',['TraceNode',['../class_rete_engine_1_1_rete_engine_1_1_trace_node.html',1,'ReteEngine.ReteEngine.TraceNode'],['../class_rete_engine_1_1_rete_engine_1_1_trace_node.html#a5ceb7937f37cd8ccf647aa74d1cf576e',1,'ReteEngine.ReteEngine.TraceNode.TraceNode()']]],
   ['tvalue_3c_20t_20_3e_9',['TValue&lt; T &gt;',['../class_rete_core_1_1_fact-1-g.html#aefd88d33f538c875fcbc7feaac4568b2',1,'ReteCore::Fact-1-g']]]
 ];

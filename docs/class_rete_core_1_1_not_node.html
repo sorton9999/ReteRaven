@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -130,8 +130,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a473deacc584249863bd439e7465a0579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node.  <br /></td></tr>
 <tr class="memitem:a0fdeb9fd36db8d2d4dab7966aa132921" id="r_a0fdeb9fd36db8d2d4dab7966aa132921"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0fdeb9fd36db8d2d4dab7966aa132921">RefreshRight</a> (object fact, string propertyName)</td></tr>
 <tr class="memdesc:a0fdeb9fd36db8d2d4dab7966aa132921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node.  <br /></td></tr>
+<tr class="memitem:a457b268979c99a525134d96750c3a26a" id="r_a457b268979c99a525134d96750c3a26a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a457b268979c99a525134d96750c3a26a">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:a457b268979c99a525134d96750c3a26a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:a4a2ec1c8183aa91a2a3ee8e060d52908" id="r_a4a2ec1c8183aa91a2a3ee8e060d52908"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4a2ec1c8183aa91a2a3ee8e060d52908">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a4a2ec1c8183aa91a2a3ee8e060d52908"><td class="mdescLeft">&#160;</td><td class="mdescRight">A debug method to print the current state of the NOT node, including the number of left tokens, right facts, and the block counts for each left token. This can be useful for understanding how the NOT node is processing matches and how it is affected by incoming facts and tokens. The method takes an optional level parameter to control indentation for better readability when printing nested nodes in the Rete network. By providing insight into the internal state of the NOT node, this debug method can help developers diagnose issues and understand the behavior of the Rete network during development and testing.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a62381eb2a696bc57483ac8c4e807bbf1" id="r_a62381eb2a696bc57483ac8c4e807bbf1"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a62381eb2a696bc57483ac8c4e807bbf1">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:a62381eb2a696bc57483ac8c4e807bbf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
+<tr class="memitem:a59850f3b39932da90ec19cc25e7c14dc" id="r_a59850f3b39932da90ec19cc25e7c14dc"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#a59850f3b39932da90ec19cc25e7c14dc">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a59850f3b39932da90ec19cc25e7c14dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class represents a NOT node in a Rete network, which implements the logical negation. It tracks partial matches from the left (Beta side) and facts from the right (Alpha side) to determine when the NOT condition is satisfied. When a new left token is asserted, it checks against all right facts to see if any block it. If none block it, the token is propagated downstream. When a new right fact is asserted, it checks if it blocks any existing left tokens and updates their state accordingly. The node also supportsretractions and refreshes to maintain correct state as facts and tokens change over time. &lt;Remark&gt; As a side note, in a rete network, the <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a> and the <a class="el" href="class_rete_core_1_1_exists_node.html" title="The ExistsNode class represents a node in a Rete network that implements the &quot;exists&quot; condition....">ExistsNode</a> are very similar in structure and logic, with the main difference being that the <a class="el" href="class_rete_core_1_1_exists_node.html" title="The ExistsNode class represents a node in a Rete network that implements the &quot;exists&quot; condition....">ExistsNode</a> propagates tokens when at least one match exists, while the <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a> propagates tokens only when no matches exist. This means that the <a class="el" href="class_rete_core_1_1_exists_node.html" title="The ExistsNode class represents a node in a Rete network that implements the &quot;exists&quot; condition....">ExistsNode</a> will assert tokens when the count of blocking facts is greater than zero, whereas the <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a> will assert tokens when the count is zero. Both nodes must carefully manage their internal state to ensure correct propagation of tokens based on changes in the right memory.&lt;/Remark&gt;. </p>
@@ -388,6 +397,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a457b268979c99a525134d96750c3a26a" name="a457b268979c99a525134d96750c3a26a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a457b268979c99a525134d96750c3a26a">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.NotNode.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="ae6d2def5c6d12a73b87778c24aeab5f0" name="ae6d2def5c6d12a73b87778c24aeab5f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae6d2def5c6d12a73b87778c24aeab5f0">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -462,6 +498,59 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a59850f3b39932da90ec19cc25e7c14dc" name="a59850f3b39932da90ec19cc25e7c14dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59850f3b39932da90ec19cc25e7c14dc">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.NotNode.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="a62381eb2a696bc57483ac8c4e807bbf1" name="a62381eb2a696bc57483ac8c4e807bbf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62381eb2a696bc57483ac8c4e807bbf1">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.NotNode.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>

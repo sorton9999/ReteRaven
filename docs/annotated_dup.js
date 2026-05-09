@@ -5,6 +5,7 @@ var annotated_dup =
       [ "Agenda", "class_rete_core_1_1_agenda.html", "class_rete_core_1_1_agenda" ],
       [ "AlphaConditionNode&lt; T &gt;", "class_rete_core_1_1_alpha_condition_node-1-g.html", "class_rete_core_1_1_alpha_condition_node-1-g" ],
       [ "AlphaMemory", "class_rete_core_1_1_alpha_memory.html", "class_rete_core_1_1_alpha_memory" ],
+      [ "AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", "class_rete_core_1_1_alpha_to_beta_adapter" ],
       [ "BetaMemory", "class_rete_core_1_1_beta_memory.html", "class_rete_core_1_1_beta_memory" ],
       [ "CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", "class_rete_core_1_1_composite_beta_memory" ],
       [ "ExistsNode", "class_rete_core_1_1_exists_node.html", "class_rete_core_1_1_exists_node" ],
@@ -15,7 +16,9 @@ var annotated_dup =
       [ "IReteNode", "interface_rete_core_1_1_i_rete_node.html", "interface_rete_core_1_1_i_rete_node" ],
       [ "JoinNode", "class_rete_core_1_1_join_node.html", "class_rete_core_1_1_join_node" ],
       [ "NotNode", "class_rete_core_1_1_not_node.html", "class_rete_core_1_1_not_node" ],
+      [ "ObjectTypeNode&lt; T &gt;", "class_rete_core_1_1_object_type_node-1-g.html", "class_rete_core_1_1_object_type_node-1-g" ],
       [ "OrNode", "class_rete_core_1_1_or_node.html", "class_rete_core_1_1_or_node" ],
+      [ "RootNode", "class_rete_core_1_1_root_node.html", "class_rete_core_1_1_root_node" ],
       [ "RuleMetadata", "class_rete_core_1_1_rule_metadata.html", "class_rete_core_1_1_rule_metadata" ],
       [ "LateFilter", "class_rete_core_1_1_late_filter.html", "class_rete_core_1_1_late_filter" ],
       [ "TerminalNode", "class_rete_core_1_1_terminal_node.html", "class_rete_core_1_1_terminal_node" ],
@@ -25,7 +28,6 @@ var annotated_dup =
     [ "ReteEngine", "namespace_rete_engine.html", [
       [ "JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", "class_rete_engine_1_1_join_key_extractor" ],
       [ "ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", "class_rete_engine_1_1_rete_builder-1-g" ],
-      [ "AlphaToBetaAdapter", "class_rete_engine_1_1_alpha_to_beta_adapter.html", "class_rete_engine_1_1_alpha_to_beta_adapter" ],
       [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ]
     ] ],
     [ "ReteProgram", "namespace_rete_program.html", [
