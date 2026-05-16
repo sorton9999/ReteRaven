@@ -18,12 +18,12 @@ override int {\bfseries Get\+Hash\+Code} ()
 \doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Rete\+Core.\+Cell}}}
 \begin{DoxyCompactItemize}
 \item 
-override bool {\bfseries Equals} (object? obj)
-\item 
-override int {\bfseries Get\+Hash\+Code} ()
-\item 
-override string {\bfseries To\+String} ()
-\end{DoxyCompactItemize}
+override bool \doxymbox{\hyperlink{class_rete_core_1_1_cell_ab5ed8db777a03db4e24c1f3756c2e689}{Equals}} (object? obj)
+\begin{DoxyCompactList}\small\item\em The Equals method is overridden to provide a way to compare two \doxylink{class_rete_core_1_1_cell}{Cell} instances for equality. \end{DoxyCompactList}\item 
+override int \doxymbox{\hyperlink{class_rete_core_1_1_cell_a8d01e5bed934c3e2df94d7dcccddde8f}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em The Get\+Hash\+Code method is overridden to provide a hash code that is consistent with the Equals method. \end{DoxyCompactList}\item 
+override string \doxymbox{\hyperlink{class_rete_core_1_1_cell_a0e8b60d7a59bbc3738ae206d1602784c}{To\+String}} ()
+\begin{DoxyCompactList}\small\item\em The To\+String method is overridden to provide a string representation of the \doxylink{class_rete_core_1_1_cell}{Cell} instance, which includes the Id and Value for easy identification when debugging or logging. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
@@ -33,21 +33,23 @@ string {\bfseries Status}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
 \doxysubsection*{Properties inherited from \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Rete\+Core.\+Cell}}}
 \begin{DoxyCompactItemize}
 \item 
-String {\bfseries Id}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
-\item 
-int {\bfseries Value}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
-\end{DoxyCompactItemize}
+Guid {\bfseries Id}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior. \end{DoxyCompactList}\item 
+string {\bfseries Name} = string.\+Empty\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use. \end{DoxyCompactList}\item 
+object? {\bfseries Value}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the Property\+Changed event is raised to notify any observers that the value has changed. The Value property can hold any object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Additional Inherited Members}
 \doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Rete\+Core.\+Cell}}}
 \begin{DoxyCompactItemize}
 \item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_cell_aa9e7cbad898f0953f59b6f637a22142c}{On\+Property\+Changed}} (\+[Caller\+Member\+Name]\+ string property\+Name=null)
-\begin{DoxyCompactList}\small\item\em When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the Property\+Changed event to be notified when a property value changes, enabling features like data binding in UI frameworks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em When a property value changes, this method is called to raise the Property\+Changed event. The Caller\+Member\+Name attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. Observers can subscribe to the Property\+Changed event to be notified when a property value changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Events inherited from \doxymbox{\hyperlink{class_rete_core_1_1_cell}{Rete\+Core.\+Cell}}}
 \begin{DoxyCompactItemize}
 \item 
 Property\+Changed\+Event\+Handler {\bfseries Property\+Changed}
-\begin{DoxyCompactList}\small\item\em The Property\+Changed event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class, allowing for responsive updates in scenarios such as data binding in user interfaces. The event handler receives the name of the property that changed, enabling observers to react specifically to changes in certain properties if needed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The Property\+Changed event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}

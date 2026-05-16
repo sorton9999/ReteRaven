@@ -114,35 +114,86 @@ Inheritance diagram for ReteCore.Cell:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab5ed8db777a03db4e24c1f3756c2e689" id="r_ab5ed8db777a03db4e24c1f3756c2e689"><td class="memItemLeft"><a id="ab5ed8db777a03db4e24c1f3756c2e689" name="ab5ed8db777a03db4e24c1f3756c2e689"></a>
-override bool&#160;</td><td class="memItemRight"><b>Equals</b> (object? obj)</td></tr>
-<tr class="memitem:a8d01e5bed934c3e2df94d7dcccddde8f" id="r_a8d01e5bed934c3e2df94d7dcccddde8f"><td class="memItemLeft"><a id="a8d01e5bed934c3e2df94d7dcccddde8f" name="a8d01e5bed934c3e2df94d7dcccddde8f"></a>
-override int&#160;</td><td class="memItemRight"><b>GetHashCode</b> ()</td></tr>
-<tr class="memitem:a0e8b60d7a59bbc3738ae206d1602784c" id="r_a0e8b60d7a59bbc3738ae206d1602784c"><td class="memItemLeft"><a id="a0e8b60d7a59bbc3738ae206d1602784c" name="a0e8b60d7a59bbc3738ae206d1602784c"></a>
-override string&#160;</td><td class="memItemRight"><b>ToString</b> ()</td></tr>
+<tr class="memitem:ab5ed8db777a03db4e24c1f3756c2e689" id="r_ab5ed8db777a03db4e24c1f3756c2e689"><td class="memItemLeft">override bool&#160;</td><td class="memItemRight"><a class="el" href="#ab5ed8db777a03db4e24c1f3756c2e689">Equals</a> (object? obj)</td></tr>
+<tr class="memdesc:ab5ed8db777a03db4e24c1f3756c2e689"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Equals method is overridden to provide a way to compare two <a class="el" href="class_rete_core_1_1_cell.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Cell</a> instances for equality.  <br /></td></tr>
+<tr class="memitem:a8d01e5bed934c3e2df94d7dcccddde8f" id="r_a8d01e5bed934c3e2df94d7dcccddde8f"><td class="memItemLeft">override int&#160;</td><td class="memItemRight"><a class="el" href="#a8d01e5bed934c3e2df94d7dcccddde8f">GetHashCode</a> ()</td></tr>
+<tr class="memdesc:a8d01e5bed934c3e2df94d7dcccddde8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GetHashCode method is overridden to provide a hash code that is consistent with the Equals method.  <br /></td></tr>
+<tr class="memitem:a0e8b60d7a59bbc3738ae206d1602784c" id="r_a0e8b60d7a59bbc3738ae206d1602784c"><td class="memItemLeft">override string&#160;</td><td class="memItemRight"><a class="el" href="#a0e8b60d7a59bbc3738ae206d1602784c">ToString</a> ()</td></tr>
+<tr class="memdesc:a0e8b60d7a59bbc3738ae206d1602784c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ToString method is overridden to provide a string representation of the <a class="el" href="class_rete_core_1_1_cell.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Cell</a> instance, which includes the Id and Value for easy identification when debugging or logging.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa9e7cbad898f0953f59b6f637a22142c" id="r_aa9e7cbad898f0953f59b6f637a22142c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa9e7cbad898f0953f59b6f637a22142c">OnPropertyChanged</a> ([CallerMemberName] string propertyName=null)</td></tr>
-<tr class="memdesc:aa9e7cbad898f0953f59b6f637a22142c"><td class="mdescLeft">&#160;</td><td class="mdescRight">When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the PropertyChanged event to be notified when a property value changes, enabling features like data binding in UI frameworks.  <br /></td></tr>
+<tr class="memdesc:aa9e7cbad898f0953f59b6f637a22142c"><td class="mdescLeft">&#160;</td><td class="mdescRight">When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. Observers can subscribe to the PropertyChanged event to be notified when a property value changes.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a67d6176090215ec03d92a692eb16b00a" id="r_a67d6176090215ec03d92a692eb16b00a"><td class="memItemLeft"><a id="a67d6176090215ec03d92a692eb16b00a" name="a67d6176090215ec03d92a692eb16b00a"></a>
-String&#160;</td><td class="memItemRight"><b>Id</b><code> [get, set]</code></td></tr>
-<tr class="memitem:a894e843ce343f049f17bf8fe38e61062" id="r_a894e843ce343f049f17bf8fe38e61062"><td class="memItemLeft"><a id="a894e843ce343f049f17bf8fe38e61062" name="a894e843ce343f049f17bf8fe38e61062"></a>
-int&#160;</td><td class="memItemRight"><b>Value</b><code> [get, set]</code></td></tr>
+<tr class="memitem:aff04bf4a57fb77e5ea398b2f40d443db" id="r_aff04bf4a57fb77e5ea398b2f40d443db"><td class="memItemLeft"><a id="aff04bf4a57fb77e5ea398b2f40d443db" name="aff04bf4a57fb77e5ea398b2f40d443db"></a>
+Guid&#160;</td><td class="memItemRight"><b>Id</b><code> [get, set]</code></td></tr>
+<tr class="memdesc:aff04bf4a57fb77e5ea398b2f40d443db"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior. <br /></td></tr>
+<tr class="memitem:a34a6c272207d5434260febbc3fbf7e73" id="r_a34a6c272207d5434260febbc3fbf7e73"><td class="memItemLeft"><a id="a34a6c272207d5434260febbc3fbf7e73" name="a34a6c272207d5434260febbc3fbf7e73"></a>
+string&#160;</td><td class="memItemRight"><b>Name</b> = string.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:a34a6c272207d5434260febbc3fbf7e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use. <br /></td></tr>
+<tr class="memitem:a5298b11522de03dabdb94043bacc99b8" id="r_a5298b11522de03dabdb94043bacc99b8"><td class="memItemLeft"><a id="a5298b11522de03dabdb94043bacc99b8" name="a5298b11522de03dabdb94043bacc99b8"></a>
+object?&#160;</td><td class="memItemRight"><b>Value</b><code> [get, set]</code></td></tr>
+<tr class="memdesc:a5298b11522de03dabdb94043bacc99b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value property can hold any object. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
 <tr class="memitem:a033e0bb40fef9abd67403d1fa09873b0" id="r_a033e0bb40fef9abd67403d1fa09873b0"><td class="memItemLeft"><a id="a033e0bb40fef9abd67403d1fa09873b0" name="a033e0bb40fef9abd67403d1fa09873b0"></a>
 PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChanged</b></td></tr>
-<tr class="memdesc:a033e0bb40fef9abd67403d1fa09873b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class, allowing for responsive updates in scenarios such as data binding in user interfaces. The event handler receives the name of the property that changed, enabling observers to react specifically to changes in certain properties if needed. <br /></td></tr>
+<tr class="memdesc:a033e0bb40fef9abd67403d1fa09873b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a data cell with an identifier and a value, supporting property change notification. </p>
 <p>The <a class="el" href="class_rete_core_1_1_cell.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Cell</a> class implements INotifyPropertyChanged to support data binding scenarios, such as those found in UI frameworks. PropertyChanged is raised when the Value property changes, allowing observers to react to updates. Equality and hash code operations are based on both the Id and Value properties.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ab5ed8db777a03db4e24c1f3756c2e689" name="ab5ed8db777a03db4e24c1f3756c2e689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5ed8db777a03db4e24c1f3756c2e689">&#9670;&#160;</a></span>Equals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override bool ReteCore.Cell.Equals </td>
+          <td>(</td>
+          <td class="paramtype">object?</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The Equals method is overridden to provide a way to compare two <a class="el" href="class_rete_core_1_1_cell.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Cell</a> instances for equality. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">obj</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a8d01e5bed934c3e2df94d7dcccddde8f" name="a8d01e5bed934c3e2df94d7dcccddde8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d01e5bed934c3e2df94d7dcccddde8f">&#9670;&#160;</a></span>GetHashCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override int ReteCore.Cell.GetHashCode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The GetHashCode method is overridden to provide a hash code that is consistent with the Equals method. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a id="aa9e7cbad898f0953f59b6f637a22142c" name="aa9e7cbad898f0953f59b6f637a22142c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9e7cbad898f0953f59b6f637a22142c">&#9670;&#160;</a></span>OnPropertyChanged()</h2>
 
@@ -166,13 +217,33 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 </table>
 </div><div class="memdoc">
 
-<p>When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the PropertyChanged event to be notified when a property value changes, enabling features like data binding in UI frameworks. </p>
+<p>When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. Observers can subscribe to the PropertyChanged event to be notified when a property value changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">propertyName</td><td></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a0e8b60d7a59bbc3738ae206d1602784c" name="a0e8b60d7a59bbc3738ae206d1602784c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e8b60d7a59bbc3738ae206d1602784c">&#9670;&#160;</a></span>ToString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override string ReteCore.Cell.ToString </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The ToString method is overridden to provide a string representation of the <a class="el" href="class_rete_core_1_1_cell.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Cell</a> instance, which includes the Id and Value for easy identification when debugging or logging. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
