@@ -14,7 +14,9 @@ int \doxymbox{\hyperlink{class_rete_core_1_1_agenda_a84333162d9672cb561525a0db44
 \begin{DoxyCompactList}\small\item\em Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is provided, it will remove activations where the token\textquotesingle{}s fact matches the retracted fact. \end{DoxyCompactList}\item 
 \Hypertarget{class_rete_core_1_1_agenda_a6c19ab804499c8813af25859a2bf8810}\label{class_rete_core_1_1_agenda_a6c19ab804499c8813af25859a2bf8810} 
 void {\bfseries Fire\+All} ()
-\begin{DoxyCompactList}\small\item\em Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The activations are removed from the agenda as they are fired. Activated rules are fired based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The activations are removed from the agenda as they are fired. Activated rules are fired based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_rete_core_1_1_agenda_ac4f2725ceecb7d76d8020e491f9441a7}{Remove\+Activations\+By\+Rule}} (string rule\+Name)
+\begin{DoxyCompactList}\small\item\em Removes all pending activations from the agenda that are associated with the specified rule name. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,6 +46,24 @@ Adds a new activation to the agenda. This method is typically called when a rule
 {\em activation} & The \doxylink{class_rete_core_1_1_activation}{Activation} object to add to the list of activations.\\
 \hline
 \end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_agenda_ac4f2725ceecb7d76d8020e491f9441a7}\index{ReteCore.Agenda@{ReteCore.Agenda}!RemoveActivationsByRule@{RemoveActivationsByRule}}
+\index{RemoveActivationsByRule@{RemoveActivationsByRule}!ReteCore.Agenda@{ReteCore.Agenda}}
+\doxysubsubsection{\texorpdfstring{RemoveActivationsByRule()}{RemoveActivationsByRule()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_agenda_ac4f2725ceecb7d76d8020e491f9441a7} 
+bool Rete\+Core.\+Agenda.\+Remove\+Activations\+By\+Rule (\begin{DoxyParamCaption}\item[{string}]{rule\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Removes all pending activations from the agenda that are associated with the specified rule name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rule\+Name} & The name of the rule whose associated activations should be removed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if any activations were removed; otherwise, false.
+\end{DoxyReturn}
 \Hypertarget{class_rete_core_1_1_agenda_a84333162d9672cb561525a0db44e54a3}\index{ReteCore.Agenda@{ReteCore.Agenda}!RemoveByFact@{RemoveByFact}}
 \index{RemoveByFact@{RemoveByFact}!ReteCore.Agenda@{ReteCore.Agenda}}
 \doxysubsubsection{\texorpdfstring{RemoveByFact()}{RemoveByFact()}}

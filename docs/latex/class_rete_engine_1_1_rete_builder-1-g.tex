@@ -39,13 +39,13 @@ Provides a fluent interface for constructing and configuring rules in a Rete-\/b
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_ae3963d94678b6b291afb06f21d7e0342}{Trace}} (string label)
 \begin{DoxyCompactList}\small\item\em Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a2c54326eb39af9bb6759ec6a8bdaaf3e}{Assert}} (object fact)
-\begin{DoxyCompactList}\small\item\em Asserts the specified fact into the current context or knowledge base. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the rule builder\textquotesingle{}s chain, allowing it to be processed according to the defined rule conditions. The fact must be non-\/null and will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_ab3a75a471153c28eebd45b16769ea111}{Start\+With}} (\doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}} alpha, string fact\+Name)
-\begin{DoxyCompactList}\small\item\em Begins the rule definition by specifying the initial \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} node and the fact name to match against. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Begins the rule definition by specifying the initial \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} node and the fact name to match against. Use this method as the starting point for constructing a rule, and then chain subsequent calls to Join\+With or other builder methods to extend the rule\textquotesingle{}s pattern matching. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a6d5b7d1ea2696cc4a6b00e8e4167c0cd}{Rete\+Builder}}$<$ TInitial $>$ \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_ad5742491212a3031c40a0046038dd044}{Join\+With$<$ TNext $>$}} (\doxymbox{\hyperlink{class_rete_core_1_1_alpha_memory}{Rete\+Core.\+Alpha\+Memory}} next\+Alpha, Func$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}}, TNext, bool $>$ condition)
-\begin{DoxyCompactList}\small\item\em Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. Use this to construct more complex rules by specifying how facts from different alpha memories should be joined together based on the provided condition. The join condition is evaluated for each combination of tokens and facts from the respective memories, allowing for flexible rule definitions that can capture complex relationships between different types of facts in the working memory. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_engine_1_1_rete_builder-1-g_a90ae3342fee9a3df31a88b707ec2e627}{Then}} (\doxymbox{\hyperlink{class_rete_core_1_1_agenda}{Agenda}} agenda, Action$<$ \doxymbox{\hyperlink{class_rete_core_1_1_token}{Token}} $>$ action, int salience=0)
-\begin{DoxyCompactList}\small\item\em Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. Use this method to finalize the rule definition by specifying the consequence of the rule and registering it with the agenda. The action will be invoked each time the rule\textquotesingle{}s conditions are satisfied, and salience can be used to control the execution order of the rule relative to others when multiple rules are eligible to fire. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -139,7 +139,7 @@ void Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.Assert (\begin{DoxyParamCaptio
 
 
 
-Asserts the specified fact into the current context or knowledge base. 
+Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the rule builder\textquotesingle{}s chain, allowing it to be processed according to the defined rule conditions. The fact must be non-\/null and will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -244,7 +244,7 @@ The current \doxylink{class_rete_engine_1_1_rete_builder-1-g}{Rete\+Builder$<$\+
 
 
 
-Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. 
+Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. Use this to construct more complex rules by specifying how facts from different alpha memories should be joined together based on the provided condition. The join condition is evaluated for each combination of tokens and facts from the respective memories, allowing for flexible rule definitions that can capture complex relationships between different types of facts in the working memory. 
 
 Use this method to extend the rule network by specifying additional join conditions between working memory elements. The join condition is evaluated for each combination of tokens and facts from the respective memories.
 
@@ -393,7 +393,7 @@ Initializes a new instance of the Rule\+Builder class with the specified Rete en
 
 
 
-Begins the rule definition by specifying the initial \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} node and the fact name to match against. 
+Begins the rule definition by specifying the initial \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} node and the fact name to match against. Use this method as the starting point for constructing a rule, and then chain subsequent calls to Join\+With or other builder methods to extend the rule\textquotesingle{}s pattern matching. 
 
 Call this method as the first step when constructing a rule. Subsequent calls to Join\+With or other builder methods will extend the rule from this starting point.
 
@@ -437,7 +437,7 @@ void Rete\+Engine.\+Rete\+Builder$<$ TInitial $>$.Then (\begin{DoxyParamCaption}
 
 
 
-Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. 
+Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. Use this method to finalize the rule definition by specifying the consequence of the rule and registering it with the agenda. The action will be invoked each time the rule\textquotesingle{}s conditions are satisfied, and salience can be used to control the execution order of the rule relative to others when multiple rules are eligible to fire. 
 
 This method finalizes the rule definition by specifying the action to perform when the rule conditions are met. The rule is then registered with the provided agenda. If multiple rules are eligible to fire, those with higher salience values are prioritized.
 

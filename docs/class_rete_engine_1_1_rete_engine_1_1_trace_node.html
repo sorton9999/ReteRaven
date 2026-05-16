@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -93,6 +93,9 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_engine_1_1_trace_node.html'
   <div class="headertitle"><div class="title">ReteEngine.ReteEngine.TraceNode Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> for context.  
+ <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for ReteEngine.ReteEngine.TraceNode:</div>
 <div class="dyncontent">
@@ -106,25 +109,84 @@ Inheritance diagram for ReteEngine.ReteEngine.TraceNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5ceb7937f37cd8ccf647aa74d1cf576e" id="r_a5ceb7937f37cd8ccf647aa74d1cf576e"><td class="memItemLeft"><a id="a5ceb7937f37cd8ccf647aa74d1cf576e" name="a5ceb7937f37cd8ccf647aa74d1cf576e"></a>
-&#160;</td><td class="memItemRight"><b>TraceNode</b> (string label)</td></tr>
-<tr class="memitem:ab06ef8d1bc8aa7fed7fe812bcac63795" id="r_ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="memItemLeft"><a id="ab06ef8d1bc8aa7fed7fe812bcac63795" name="ab06ef8d1bc8aa7fed7fe812bcac63795"></a>
-void&#160;</td><td class="memItemRight"><b>AddSuccessor</b> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memitem:a5ceb7937f37cd8ccf647aa74d1cf576e" id="r_a5ceb7937f37cd8ccf647aa74d1cf576e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5ceb7937f37cd8ccf647aa74d1cf576e">TraceNode</a> (string label)</td></tr>
+<tr class="memdesc:a5ceb7937f37cd8ccf647aa74d1cf576e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor for the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class takes a label as a parameter, which is used to identify the node in debug output.  <br /></td></tr>
+<tr class="memitem:ab06ef8d1bc8aa7fed7fe812bcac63795" id="r_ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab06ef8d1bc8aa7fed7fe812bcac63795">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memdesc:ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a successor node to this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. This method is used to build the structure of the Rete network by connecting nodes together.  <br /></td></tr>
 <tr class="memitem:a690f3fa8a839cd577b4bb40aab57478f" id="r_a690f3fa8a839cd577b4bb40aab57478f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a690f3fa8a839cd577b4bb40aab57478f">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:a690f3fa8a839cd577b4bb40aab57478f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.g., <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, etc.) and how it processes incoming facts. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might simply store the fact and propagate it to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations.  <br /></td></tr>
+<tr class="memdesc:a690f3fa8a839cd577b4bb40aab57478f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> and passes it downstream in the network. A message will print out indicating that the fact has been asserted along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>.  <br /></td></tr>
 <tr class="memitem:abe3660692f2b9915c0cd5678316a4b4a" id="r_abe3660692f2b9915c0cd5678316a4b4a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abe3660692f2b9915c0cd5678316a4b4a">Retract</a> (object fact)</td></tr>
-<tr class="memdesc:abe3660692f2b9915c0cd5678316a4b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might remove the fact from its collection and propagate the retraction to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.  <br /></td></tr>
+<tr class="memdesc:abe3660692f2b9915c0cd5678316a4b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger the removal of the fact from successor nodes.  <br /></td></tr>
 <tr class="memitem:aa762b68da6e3eeab26f0e41643a80441" id="r_aa762b68da6e3eeab26f0e41643a80441"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa762b68da6e3eeab26f0e41643a80441">Refresh</a> (object fact, string prop)</td></tr>
-<tr class="memdesc:aa762b68da6e3eeab26f0e41643a80441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the Rete node, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might check if the changed property is relevant to its conditions and re-evaluate the fact accordingly, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might need to re-evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time.  <br /></td></tr>
+<tr class="memdesc:aa762b68da6e3eeab26f0e41643a80441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary.  <br /></td></tr>
+<tr class="memitem:af3c8139f8db4e200a2f7a429bef39e02" id="r_af3c8139f8db4e200a2f7a429bef39e02"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af3c8139f8db4e200a2f7a429bef39e02">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:af3c8139f8db4e200a2f7a429bef39e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_root_node.html" title="The RootNode class represents the root of the Rete network. It serves as the entry point for all fact...">RootNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:a6b1f4378bd067995780835725416e796" id="r_a6b1f4378bd067995780835725416e796"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6b1f4378bd067995780835725416e796">DebugPrint</a> (object fact, int level=0)</td></tr>
-<tr class="memdesc:a6b1f4378bd067995780835725416e796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks.  <br /></td></tr>
+<tr class="memdesc:a6b1f4378bd067995780835725416e796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a formatted debug message to the console that includes the specified fact and the current number of successors.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:ad07f66ce8140e23f6ac3931e88a425ea" id="r_ad07f66ce8140e23f6ac3931e88a425ea"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad07f66ce8140e23f6ac3931e88a425ea">Tokens</a><code> [get]</code></td></tr>
-<tr class="memdesc:ad07f66ce8140e23f6ac3931e88a425ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">The collection of tokens that are currently stored in this latent memory. Each token represents a combination of facts that have matched certain conditions in the Rete network but have not yet been fully processed or activated.  <br /></td></tr>
+<tr class="memdesc:ad07f66ce8140e23f6ac3931e88a425ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This object keeps track of the current token state for this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. It is initialized with a dummy token and can be updated as facts are processed through the network. The token can be used to store information about the current state of the node, such as the fact being processed or any relevant metadata. This allows for more detailed tracing and debugging of the flow of facts through the network, as the token can provide context about what is happening at this node when a fact is asserted, retracted, or refreshed.  <br /></td></tr>
+<tr class="memitem:ac8fdf94eca1a1ec0b7af4df7aa555fcf" id="r_ac8fdf94eca1a1ec0b7af4df7aa555fcf"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac8fdf94eca1a1ec0b7af4df7aa555fcf">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:ac8fdf94eca1a1ec0b7af4df7aa555fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
+<tr class="memitem:abb987b130d38de0c1500193dcce37ba6" id="r_abb987b130d38de0c1500193dcce37ba6"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#abb987b130d38de0c1500193dcce37ba6">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:abb987b130d38de0c1500193dcce37ba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> for context. </p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5ceb7937f37cd8ccf647aa74d1cf576e" name="a5ceb7937f37cd8ccf647aa74d1cf576e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ceb7937f37cd8ccf647aa74d1cf576e">&#9670;&#160;</a></span>TraceNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteEngine.ReteEngine.TraceNode.TraceNode </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The constructor for the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class takes a label as a parameter, which is used to identify the node in debug output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ab06ef8d1bc8aa7fed7fe812bcac63795" name="ab06ef8d1bc8aa7fed7fe812bcac63795"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab06ef8d1bc8aa7fed7fe812bcac63795">&#9670;&#160;</a></span>AddSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.TraceNode.AddSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a successor node to this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. This method is used to build the structure of the Rete network by connecting nodes together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The node to add as a successor</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a690f3fa8a839cd577b4bb40aab57478f" name="a690f3fa8a839cd577b4bb40aab57478f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a690f3fa8a839cd577b4bb40aab57478f">&#9670;&#160;</a></span>Assert()</h2>
 
@@ -140,10 +202,10 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.g., <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, etc.) and how it processes incoming facts. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might simply store the fact and propagate it to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations. </p>
+<p>Asserts a fact into the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> and passes it downstream in the network. A message will print out indicating that the fact has been asserted along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
+    <tr><td class="paramname">fact</td><td>The fact to pass on through the network</td></tr>
   </table>
   </dd>
 </dl>
@@ -171,11 +233,11 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks. </p>
+<p>Writes a formatted debug message to the console that includes the specified fact and the current number of successors. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
-    <tr><td class="paramname">level</td><td></td></tr>
+    <tr><td class="paramname">fact</td><td>The fact object to include in the debug output. Can be any object; its string representation will be printed.</td></tr>
+    <tr><td class="paramname">level</td><td>The indentation level to apply to the debug message. Each level increases indentation by spaces. Defaults to 0.</td></tr>
   </table>
   </dd>
 </dl>
@@ -198,21 +260,48 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>prop</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Refreshes a fact in the Rete node, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might check if the changed property is relevant to its conditions and re-evaluate the fact accordingly, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might need to re-evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. </p>
+<p>Refreshes a fact in the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
-    <tr><td class="paramname">propertyName</td><td></td></tr>
+    <tr><td class="paramname">fact</td><td>The fact to refresh</td></tr>
+    <tr><td class="paramname">prop</td><td>The property of the fact that has changed</td></tr>
   </table>
   </dd>
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad9bdb84d1351f3db578f74bd067c09bc">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="af3c8139f8db4e200a2f7a429bef39e02" name="af3c8139f8db4e200a2f7a429bef39e02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3c8139f8db4e200a2f7a429bef39e02">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.ReteEngine.TraceNode.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_root_node.html" title="The RootNode class represents the root of the Rete network. It serves as the entry point for all fact...">RootNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>
@@ -231,10 +320,10 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might remove the fact from its collection and propagate the retraction to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. </p>
+<p>Retracts a fact from the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger the removal of the fact from successor nodes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
+    <tr><td class="paramname">fact</td><td>The fact to retract</td></tr>
   </table>
   </dd>
 </dl>
@@ -244,6 +333,58 @@ Properties</h2></td></tr>
 </div>
 </div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="abb987b130d38de0c1500193dcce37ba6" name="abb987b130d38de0c1500193dcce37ba6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb987b130d38de0c1500193dcce37ba6">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteEngine.ReteEngine.TraceNode.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="ac8fdf94eca1a1ec0b7af4df7aa555fcf" name="ac8fdf94eca1a1ec0b7af4df7aa555fcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8fdf94eca1a1ec0b7af4df7aa555fcf">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteEngine.ReteEngine.TraceNode.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="ad07f66ce8140e23f6ac3931e88a425ea" name="ad07f66ce8140e23f6ac3931e88a425ea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad07f66ce8140e23f6ac3931e88a425ea">&#9670;&#160;</a></span>Tokens</h2>
 
@@ -264,7 +405,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The collection of tokens that are currently stored in this latent memory. Each token represents a combination of facts that have matched certain conditions in the Rete network but have not yet been fully processed or activated. </p>
+<p>This object keeps track of the current token state for this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. It is initialized with a dummy token and can be updated as facts are processed through the network. The token can be used to store information about the current state of the node, such as the fact being processed or any relevant metadata. This allows for more detailed tracing and debugging of the flow of facts through the network, as the token can provide context about what is happening at this node when a fact is asserted, retracted, or refreshed. </p>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_latent_memory.html#ad9776d1fb39ea10e40625b1c124596b0">ReteCore.ILatentMemory</a>.</p>
 

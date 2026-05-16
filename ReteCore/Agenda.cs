@@ -102,5 +102,14 @@ namespace ReteCore
             _activations.Remove(next);
             return next;
         }
+        /// <summary>
+        /// Removes all pending activations from the agenda that are associated with the specified rule name.
+        /// </summary>
+        /// <param name="ruleName">The name of the rule whose associated activations should be removed.</param>
+        /// <returns>True if any activations were removed; otherwise, false.</returns>
+        public bool RemoveActivationsByRule(string ruleName)
+        {
+            return _activations.RemoveAll(a => a.RuleName == ruleName) > 0;
+        }
     }
 }

@@ -63,7 +63,7 @@ namespace ReteCore
         /// affect the order in which tokens are propagated to them, but does not affect the logic of the
         /// Rete network.
         /// </summary>
-        private readonly List<IReteNode> successors = new List<IReteNode>();
+        private readonly List<IReteNode> _successors = new List<IReteNode>();
         /// <summary>
         /// The join constraint function that determines whether a given left token and right fact should
         /// be considered a match. This function is critical for the operation of the ExistsNode, as it 
@@ -103,6 +103,17 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
         /// Adds a successor node to this ExistsNode. When a new successor is added, the node must 
         /// "Refresh" it with the current valid state of tokens. This means that for each token currently
         /// in the leftMatches dictionary that has a count of zero (indicating it is not blocked by any 
@@ -116,7 +127,8 @@ namespace ReteCore
         /// <param name="node">The node to add this node to as a successor.</param>
         public void AddSuccessor(IReteNode node)
         {
-            successors.Add(node);
+            node.Parent = this;
+            _successors.Add(node);
             // When a new node is added, we must "Refresh" it with current valid state
             foreach (var entry in leftMatches)
             {
@@ -362,6 +374,21 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Removes a successor node from this ExistsNode. This method is used when a successor node is no 
+        /// longer needed or when the structure of the Rete network changes. When a successor is removed, it 
+        /// will no longer receive any tokens asserted, retracted, or refreshed through this node. The method 
+        /// simply removes the specified child node from the list of successors, ensuring that it is no longer 
+        /// part of the propagation path for tokens. This allows for dynamic modification of the Rete network 
+        /// as it evolves over time and ensures that nodes can be added or removed as needed without affecting 
+        /// the overall functionality of the system.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
+        }
+
+        /// <summary>
         /// Propagates an assert of a token to all successor nodes. This method is called when a token 
         /// becomes valid (i.e., it has at least one matching fact on the right) and needs to be sent 
         /// downstream to successor nodes. The method iterates through all successor nodes and calls 
@@ -369,7 +396,7 @@ namespace ReteCore
         /// logic and potentially propagate it further down the network. 
         /// </summary>
         /// <param name="token">The token to send to each successor.</param>
-        private void PropagateAssert(Token token) => successors.ForEach(s => s.Assert(token));
+        private void PropagateAssert(Token token) => _successors.ForEach(s => s.Assert(token));
 
         /// <summary>
         /// Propagates a retraction of a token to all successor nodes. This method is called when a 
@@ -379,7 +406,7 @@ namespace ReteCore
         /// accordingly and potentially retract it further down the network. 
         /// </summary>
         /// <param name="token">The token to retract from each successor.</param>
-        private void PropagateRetract(Token token) => successors.ForEach(s => s.Retract(token));
+        private void PropagateRetract(Token token) => _successors.ForEach(s => s.Retract(token));
 
         /// <summary>
         /// Prints the internal state of this ExistsNode for debugging purposes. This method provides a 

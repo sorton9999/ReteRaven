@@ -139,9 +139,28 @@ namespace ReteCore
     /// react to updates. Equality and hash code operations are based on both the Id and Value properties.</remarks>
     public class Cell : INotifyPropertyChanged
     {
-        private int _value;
-        public String Id { get; set; }
-        public int Value 
+        /// <summary>
+        /// The value stored in this cell. When the value is set, if it differs from the current value, the PropertyChanged 
+        /// event is raised to notify observers of the change. 
+        /// </summary>
+        private object? _value;
+        /// <summary>
+        /// The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain 
+        /// constant for the lifetime of the cell to ensure consistent behavior.
+        /// </summary>
+        public Guid Id { get; set; }
+        /// <summary>
+        /// A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific 
+        /// role or meaning in the context of its use.
+        /// </summary>
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The accessor for the value stored in this cell. When setting the Value, if the new value is different from the 
+        /// current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value 
+        /// property can hold any object.
+        /// </summary>
+        public object? Value 
         {
             get { return _value; }
             set
@@ -154,7 +173,10 @@ namespace ReteCore
             }
         }
         /// <summary>
-        /// When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. This simplifies the code and reduces the likelihood of errors when raising property change notifications. Observers can subscribe to the PropertyChanged event to be notified when a property value changes, enabling features like data binding in UI frameworks.
+        /// When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName 
+        /// attribute allows the caller to omit the property name when calling this method, as it will automatically use the 
+        /// name of the calling property. Observers can subscribe to the PropertyChanged event to be notified when a property 
+        /// value changes.
         /// </summary>
         /// <param name="propertyName"></param>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -163,20 +185,36 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class, allowing for responsive updates in scenarios such as data binding in user interfaces. The event handler receives the name of the property that changed, enabling observers to react specifically to changes in certain properties if needed.
+        /// The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be 
+        /// notified of changes to the properties of this class. The event handler receives the name of the property that 
+        /// changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// The Equals method is overridden to provide a way to compare two Cell instances for equality.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             return obj is Cell other && Id == other.Id && Value == other.Value;
         }
 
+        /// <summary>
+        /// The GetHashCode method is overridden to provide a hash code that is consistent with the Equals method.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, Value);
         }
 
+        /// <summary>
+        /// The ToString method is overridden to provide a string representation of the Cell instance, which includes the 
+        /// Id and Value for easy identification when debugging or logging.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => $"[ID:{Id}, Val:{Value}]";
     }
 

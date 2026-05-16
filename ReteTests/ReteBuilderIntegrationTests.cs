@@ -6,11 +6,12 @@
 //     information.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using Xunit;
-using ReteEngine;
 using ReteCore;
+using ReteEngine;
 using ReteProgram;
+using System;
+using System.Net.NetworkInformation;
+using Xunit;
 
 namespace ReteTest.Tests
 {
@@ -57,6 +58,36 @@ namespace ReteTest.Tests
 
             Assert.True(fired);
         }
+        [Fact]
+
+        public void SimpleUpdateRule_Fires_When_Fact_Changes()
+        {
+            var engine = new ReteEngine.ReteEngine();
+
+            bool fired = false;
+
+            engine.Begin("SimpleUpdateRule")
+                .Where<SystemStatus>("sys", initialCondition: s => s.IsActive)
+                .And<Sensor>("sensor", (token, sensor) => sensor.IsTriggered)
+                .Then(token => fired = true);
+
+            var status = new SystemStatus { Name = "S2", IsActive = true };
+            var sensor = new Sensor { Id = Guid.NewGuid(), IsTriggered = false, Type = "Generic" };
+
+            engine.Assert(status);
+            engine.Assert(sensor);
+
+            engine.FireAll();
+            // IsTriggered is false, so the rule should not fire yet
+            Assert.False(fired);
+
+            // Now update the sensor to trigger the rule
+            sensor.IsTriggered = true;
+            engine.Update(sensor);
+            engine.FireAll();
+
+            Assert.True(fired);
+        }
 
         [Fact]
         public void NotRule_Prevents_Firing_When_NegatedFact_Present()
@@ -67,9 +98,11 @@ namespace ReteTest.Tests
 
             engine.Begin("NotRule")
                 .Where<SystemStatus>("sys", null, s => s.IsActive)
+                // This rule is saying: "I want sensors that are not triggered"
                 .Not<Sensor>("sensor-not", (token, sensor) => sensor.IsTriggered)
                 .Then(token => fired = true);
 
+            // Status is active, but the sensor is triggered, so the rule should not fire
             var status = new SystemStatus { Name = "S3", IsActive = true };
             var sensor = new Sensor { Id = Guid.NewGuid(), IsTriggered = true, Type = "Blocking" };
 
@@ -335,7 +368,7 @@ namespace ReteTest.Tests
             var engine = new ReteEngine.ReteEngine();
             int discountActiveCount = 0;
 
-            var order = new Inventory { Id = "1", Count = 1500 };
+            var order = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
 
             // Rule 1: High Value Order -> Logic Assert a Discount
             engine.Begin("HighValueDiscount")
@@ -366,6 +399,118 @@ namespace ReteTest.Tests
             // Verify the "TrackDiscount" rule didn't fire again 
             // Discount should have been retracted, so count should not increase
             Assert.Equal(1, discountActiveCount);
+        }
+
+        [Fact]
+        public void ForwardChaining_EmergentFact_TriggersSubsequentRule()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            string statusResult = "";
+
+            // Detect a shipment request -> Assert Emergent Fact (Shipment)
+            engine.Begin("DetectShipment")
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    var order = t.Get<Inventory>("O");
+                    // Assert the new Shipment fact
+                    engine.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
+                });
+
+            // React to the Emergent Fact
+            engine.Begin("ApplyShipment")
+                .Where<Shipment>("S")
+                .Then(t => {
+                    statusResult = "Shipped";
+                });
+
+            var order = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
+
+            // Start the chain going by asserting the initial fact that triggers the first rule
+            engine.Assert(order);
+
+            // FireAll must loop until no more rules are satisfied. 
+            // This allows Rule 1 to fire, then Rule 2 to react to Rule 1's output.
+            engine.FireAll();
+
+            // If Forward Chaining works, Rule 2 fired because Rule 1 created the Shipment.
+            Assert.Equal("Shipped", statusResult);
+        }
+
+        [Fact]
+        public void DynamicRule_WhenAddedAtRuntime_MatchesExistingFacts()
+        {
+            // Setup engine and assert facts FIRST
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+
+            var existingOrder = new Inventory { Id = Guid.NewGuid(), Count = 5000, ProductId = 20 };
+            engine.Assert(existingOrder);
+
+            // Define a rule AFTER the data is already in the system
+            engine.Begin("RuntimeDiscountRule")
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    fireCount++;
+                });
+
+            // This should catch the match even though the Fact was asserted earlier
+            engine.FireAll();
+
+            // Assert
+            Assert.Equal(1, fireCount);
+        }
+
+        [Fact]
+        public void UpdateRule_WhenFactNoLongerMatches_RetractsPendingActivation()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+
+            // Only process orders that are NOT processed
+            engine.Begin("ProcessNewOrders")
+                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Then(t =>
+                {
+                    fireCount++;
+                });
+
+            var order = new Order { Id = Guid.NewGuid(), IsProcessed = false };
+
+            // Assert the fact. It matches, so an activation goes to the Agenda.
+            engine.Assert(order);
+
+            // THE UPDATE TRIGGER
+            // Change the state so it should NO LONGER match, then notify the engine.
+            order.IsProcessed = true;
+            engine.Update(order);
+
+            // Act
+            engine.FireAll();
+
+            // If Truth Maintenance via Update works, the activation was removed and fireCount is 0.
+            Assert.Equal(0, fireCount);
+        }
+
+        [Fact]
+        public void SimpleRemoveRule_PreventsRuleFromFiring()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            int fireCount = 0;
+
+            engine.Begin("TemporaryRule")
+                .Where<Order>("O", initialCondition: order => !order.IsProcessed)
+                .And<Order>("O", (token, o) => o.Value as int? == 55)
+                .Then(t => fireCount++);
+
+            engine.Assert(new Order() { Id = Guid.NewGuid(), IsProcessed = false, Value = 55 });
+
+            // Remove it before calling FireAll
+            engine.RemoveRule("TemporaryRule");
+            engine.FireAll();
+
+            // It should never have fired
+            Assert.Equal(0, fireCount);
         }
     }
 }

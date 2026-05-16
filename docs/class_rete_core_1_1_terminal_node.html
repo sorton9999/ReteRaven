@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,7 +108,7 @@ Inheritance diagram for ReteCore.TerminalNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9456a2c1bb657ba3744418bbfc396813" id="r_a9456a2c1bb657ba3744418bbfc396813"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9456a2c1bb657ba3744418bbfc396813">TerminalNode</a> (<a class="el" href="class_rete_core_1_1_rule_metadata.html">RuleMetadata</a> metaData)</td></tr>
+<tr class="memitem:a9456a2c1bb657ba3744418bbfc396813" id="r_a9456a2c1bb657ba3744418bbfc396813"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9456a2c1bb657ba3744418bbfc396813">TerminalNode</a> (<a class="el" href="#a929304aa8e41bd548a2282785f643702">RuleMetadata</a> metaData)</td></tr>
 <tr class="memdesc:a9456a2c1bb657ba3744418bbfc396813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_core_1_1_terminal_node.html" title="Represents a terminal node in a Rete network that schedules rule activations when matching facts are ...">TerminalNode</a> class with the specified rule metadata.  <br /></td></tr>
 <tr class="memitem:a20eaf16cea219318645e06e278f46ee0" id="r_a20eaf16cea219318645e06e278f46ee0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a20eaf16cea219318645e06e278f46ee0">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
 <tr class="memdesc:a20eaf16cea219318645e06e278f46ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prevents adding a successor node to this terminal node.  <br /></td></tr>
@@ -119,8 +119,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9e2e20cf83f802d84591c6782dd13e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts the specified fact from the rule engine, removing any associated activations or tokens.  <br /></td></tr>
 <tr class="memitem:a06635491c40a3a5d508248845217a5bc" id="r_a06635491c40a3a5d508248845217a5bc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a06635491c40a3a5d508248845217a5bc">Refresh</a> (object fact, string propertyName)</td></tr>
 <tr class="memdesc:a06635491c40a3a5d508248845217a5bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the specified fact in the working memory, re-evaluating any rules that depend on the given property.  <br /></td></tr>
+<tr class="memitem:a18a25f0b14d9cb17987f93c01defa252" id="r_a18a25f0b14d9cb17987f93c01defa252"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a18a25f0b14d9cb17987f93c01defa252">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:a18a25f0b14d9cb17987f93c01defa252"><td class="mdescLeft">&#160;</td><td class="mdescRight">This would remove a successor node from this terminal node, but since terminal nodes do not have successors, this method has no effect. It is included to satisfy the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface contract, but it does not perform any operations on the internal state of the terminal node. Calling this method will simply do nothing, as there are no successors to remove.  <br /></td></tr>
+<tr class="memitem:a0e4a2d47fe2ed85240ffb65babbd9ed7" id="r_a0e4a2d47fe2ed85240ffb65babbd9ed7"><td class="memItemLeft"><a id="a0e4a2d47fe2ed85240ffb65babbd9ed7" name="a0e4a2d47fe2ed85240ffb65babbd9ed7"></a>
+void&#160;</td><td class="memItemRight"><b>RemoveFromParentNode</b> ()</td></tr>
+<tr class="memdesc:a0e4a2d47fe2ed85240ffb65babbd9ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method to remove this terminal node from its parent node. This is used when the terminal node is no longer needed or when the structure of the Rete network changes. When this method is called, it checks if the terminal node has a parent node and, if so, it calls the RemoveSuccessor method on the parent node to remove this terminal node from the list of successors. This effectively disconnects the terminal node from the Rete network and prevents it from receiving any further tokens or participating in rule activations. <br /></td></tr>
 <tr class="memitem:a32a9c105601776380db6e56665c96cde" id="r_a32a9c105601776380db6e56665c96cde"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a32a9c105601776380db6e56665c96cde">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a32a9c105601776380db6e56665c96cde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a formatted debug message to the console that includes the rule name and the specified fact, indented according to the given level.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a929304aa8e41bd548a2282785f643702" id="r_a929304aa8e41bd548a2282785f643702"><td class="memItemLeft"><a id="a929304aa8e41bd548a2282785f643702" name="a929304aa8e41bd548a2282785f643702"></a>
+RuleMetadata&#160;</td><td class="memItemRight"><b>RuleMetadata</b><code> [get]</code></td></tr>
+<tr class="memdesc:a929304aa8e41bd548a2282785f643702"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accesses the metadata associated with the rule for this terminal node. This includes the rule name, action, agenda, global guards, late filters, priority, and salience. <br /></td></tr>
+<tr class="memitem:af840cf7a3fd16152edbe039c85abf7df" id="r_af840cf7a3fd16152edbe039c85abf7df"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af840cf7a3fd16152edbe039c85abf7df">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:af840cf7a3fd16152edbe039c85abf7df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an empty enumerable of successor nodes. Terminal nodes do not have any successors, as they are the endpoint of a Rete rule network.  <br /></td></tr>
+<tr class="memitem:a5f75f65dc18c8d0655fe1345840bd34f" id="r_a5f75f65dc18c8d0655fe1345840bd34f"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#a5f75f65dc18c8d0655fe1345840bd34f">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a5f75f65dc18c8d0655fe1345840bd34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a terminal node in a Rete network that schedules rule activations when matching facts are asserted. </p>
@@ -135,7 +150,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">ReteCore.TerminalNode.TerminalNode </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_rete_core_1_1_rule_metadata.html">RuleMetadata</a></td>          <td class="paramname"><span class="paramname"><em>metaData</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#a929304aa8e41bd548a2282785f643702">RuleMetadata</a></td>          <td class="paramname"><span class="paramname"><em>metaData</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -271,6 +286,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a18a25f0b14d9cb17987f93c01defa252" name="a18a25f0b14d9cb17987f93c01defa252"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18a25f0b14d9cb17987f93c01defa252">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.TerminalNode.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This would remove a successor node from this terminal node, but since terminal nodes do not have successors, this method has no effect. It is included to satisfy the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface contract, but it does not perform any operations on the internal state of the terminal node. Calling this method will simply do nothing, as there are no successors to remove. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="a9e2e20cf83f802d84591c6782dd13e3d" name="a9e2e20cf83f802d84591c6782dd13e3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e2e20cf83f802d84591c6782dd13e3d">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -296,6 +338,59 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a451a325202ba1ccd36246273eea6a749">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a5f75f65dc18c8d0655fe1345840bd34f" name="a5f75f65dc18c8d0655fe1345840bd34f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f75f65dc18c8d0655fe1345840bd34f">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.TerminalNode.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="af840cf7a3fd16152edbe039c85abf7df" name="af840cf7a3fd16152edbe039c85abf7df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af840cf7a3fd16152edbe039c85abf7df">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.TerminalNode.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an empty enumerable of successor nodes. Terminal nodes do not have any successors, as they are the endpoint of a Rete rule network. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>

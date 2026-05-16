@@ -24,8 +24,17 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_join_node_ace23893280e89a4ca7f31da
 \begin{DoxyCompactList}\small\item\em The Retract method for left activations is responsible for handling the retraction of tokens that arrive from the left input. When a token is retracted, any matches that were previously established based on that token must be invalidated and retracted from successor nodes. This method iterates through all successor nodes and calls their Retract method with the specified token, ensuring that any tokens that were created as a result of the join condition involving the retracted token are also retracted from the network. This helps maintain the integrity of the Rete network as facts change over time. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_join_node_a029c58f15421c1a7c724805faea3cbd2}{Refresh}} (object fact\+Or\+Token, string property\+Name)
 \begin{DoxyCompactList}\small\item\em The Refresh method is responsible for re-\/evaluating existing tokens or facts when a relevant change occurs. If a token or fact that is part of the join condition changes, this method will be called to ensure that all matches are re-\/evaluated and updated accordingly. For example, if a fact that was previously joined with a token changes, the Refresh method will re-\/evaluate the join condition for all tokens that were joined with that fact and propagate any necessary updates to successor nodes. This helps maintain the accuracy and consistency of the Rete network as facts and tokens evolve over time. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_join_node_a46413c9e934f4266a5d60f2b0953b6ba}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Removes a successor node from this \doxylink{class_rete_core_1_1_join_node}{Join\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_join_node_aa1dec06c20b9592255ad18b1905bff60}{Debug\+Print}} (object fact, int level=0)
 \begin{DoxyCompactList}\small\item\em The Debug\+Print method is a utility function that outputs the current state of the \doxylink{class_rete_core_1_1_join_node}{Join\+Node} for debugging purposes. It prints the name of the node and indicates that it has been reached, along with information about checking against the left memory. This method can be used to trace the flow of facts and tokens through the Rete network during development and troubleshooting, providing insight into how the \doxylink{class_rete_core_1_1_join_node}{Join\+Node} is processing incoming data and interacting with its inputs and successors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_join_node_a66afde6434f45546cbec19695c90f4b0}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_join_node_a65b733bc20aee70108f1d5187edb6dc8}{Parent}}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -138,6 +147,25 @@ The Refresh method is responsible for re-\/evaluating existing tokens or facts w
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
 
+\Hypertarget{class_rete_core_1_1_join_node_a46413c9e934f4266a5d60f2b0953b6ba}\index{ReteCore.JoinNode@{ReteCore.JoinNode}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.JoinNode@{ReteCore.JoinNode}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_join_node_a46413c9e934f4266a5d60f2b0953b6ba} 
+void Rete\+Core.\+Join\+Node.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Removes a successor node from this \doxylink{class_rete_core_1_1_join_node}{Join\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & The successor node to remove. Cannot be null.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_join_node_ace23893280e89a4ca7f31da52f416515}\index{ReteCore.JoinNode@{ReteCore.JoinNode}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.JoinNode@{ReteCore.JoinNode}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
@@ -156,6 +184,39 @@ The Retract method for left activations is responsible for handling the retracti
 
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_join_node_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_join_node_a65b733bc20aee70108f1d5187edb6dc8}\index{ReteCore.JoinNode@{ReteCore.JoinNode}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.JoinNode@{ReteCore.JoinNode}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_join_node_a65b733bc20aee70108f1d5187edb6dc8} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Join\+Node.\+Parent\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_join_node_a66afde6434f45546cbec19695c90f4b0}\index{ReteCore.JoinNode@{ReteCore.JoinNode}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.JoinNode@{ReteCore.JoinNode}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_join_node_a66afde6434f45546cbec19695c90f4b0} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Join\+Node.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
 
 
 

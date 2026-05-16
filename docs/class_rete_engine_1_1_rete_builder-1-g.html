@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -130,13 +130,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae3963d94678b6b291afb06f21d7e0342" id="r_ae3963d94678b6b291afb06f21d7e0342"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae3963d94678b6b291afb06f21d7e0342">Trace</a> (string label)</td></tr>
 <tr class="memdesc:ae3963d94678b6b291afb06f21d7e0342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point.  <br /></td></tr>
 <tr class="memitem:a2c54326eb39af9bb6759ec6a8bdaaf3e" id="r_a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2c54326eb39af9bb6759ec6a8bdaaf3e">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts the specified fact into the current context or knowledge base.  <br /></td></tr>
+<tr class="memdesc:a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the rule builder's chain, allowing it to be processed according to the defined rule conditions. The fact must be non-null and will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions.  <br /></td></tr>
 <tr class="memitem:ab3a75a471153c28eebd45b16769ea111" id="r_ab3a75a471153c28eebd45b16769ea111"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab3a75a471153c28eebd45b16769ea111">StartWith</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alpha, string factName)</td></tr>
-<tr class="memdesc:ab3a75a471153c28eebd45b16769ea111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begins the rule definition by specifying the initial <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node and the fact name to match against.  <br /></td></tr>
+<tr class="memdesc:ab3a75a471153c28eebd45b16769ea111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begins the rule definition by specifying the initial <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node and the fact name to match against. Use this method as the starting point for constructing a rule, and then chain subsequent calls to JoinWith or other builder methods to extend the rule's pattern matching.  <br /></td></tr>
 <tr class="memitem:ad5742491212a3031c40a0046038dd044" id="r_ad5742491212a3031c40a0046038dd044"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad5742491212a3031c40a0046038dd044">JoinWith&lt; TNext &gt;</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">ReteCore.AlphaMemory</a> nextAlpha, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, TNext, bool &gt; condition)</td></tr>
-<tr class="memdesc:ad5742491212a3031c40a0046038dd044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition.  <br /></td></tr>
+<tr class="memdesc:ad5742491212a3031c40a0046038dd044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. Use this to construct more complex rules by specifying how facts from different alpha memories should be joined together based on the provided condition. The join condition is evaluated for each combination of tokens and facts from the respective memories, allowing for flexible rule definitions that can capture complex relationships between different types of facts in the working memory.  <br /></td></tr>
 <tr class="memitem:a90ae3342fee9a3df31a88b707ec2e627" id="r_a90ae3342fee9a3df31a88b707ec2e627"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a90ae3342fee9a3df31a88b707ec2e627">Then</a> (<a class="el" href="class_rete_core_1_1_agenda.html">Agenda</a> agenda, Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
-<tr class="memdesc:a90ae3342fee9a3df31a88b707ec2e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience.  <br /></td></tr>
+<tr class="memdesc:a90ae3342fee9a3df31a88b707ec2e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. Use this method to finalize the rule definition by specifying the consequence of the rule and registering it with the agenda. The action will be invoked each time the rule's conditions are satisfied, and salience can be used to control the execution order of the rule relative to others when multiple rules are eligible to fire.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -262,7 +262,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
       </table>
 </div><div class="memdoc">
 
-<p>Asserts the specified fact into the current context or knowledge base. </p>
+<p>Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the rule builder's chain, allowing it to be processed according to the defined rule conditions. The fact must be non-null and will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to assert. Cannot be null.</td></tr>
@@ -428,7 +428,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
       </table>
 </div><div class="memdoc">
 
-<p>Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. </p>
+<p>Adds a join node to the rule network that combines the current beta memory with the specified alpha memory using the given join condition. Use this to construct more complex rules by specifying how facts from different alpha memories should be joined together based on the provided condition. The join condition is evaluated for each combination of tokens and facts from the respective memories, allowing for flexible rule definitions that can capture complex relationships between different types of facts in the working memory. </p>
 <p>Use this method to extend the rule network by specifying additional join conditions between working memory elements. The join condition is evaluated for each combination of tokens and facts from the respective memories.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -628,7 +628,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 <p>Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">engine</td><td>The <a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> instance that will be used to build and manage the rule. Cannot be null.</td></tr>
+    <tr><td class="paramname">engine</td><td>The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> instance that will be used to build and manage the rule. Cannot be null.</td></tr>
     <tr><td class="paramname">name</td><td>The name to assign to the rule being built. Cannot be null or empty.</td></tr>
   </table>
   </dd>
@@ -655,7 +655,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
       </table>
 </div><div class="memdoc">
 
-<p>Begins the rule definition by specifying the initial <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node and the fact name to match against. </p>
+<p>Begins the rule definition by specifying the initial <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node and the fact name to match against. Use this method as the starting point for constructing a rule, and then chain subsequent calls to JoinWith or other builder methods to extend the rule's pattern matching. </p>
 <p>Call this method as the first step when constructing a rule. Subsequent calls to JoinWith or other builder methods will extend the rule from this starting point.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -724,7 +724,7 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
       </table>
 </div><div class="memdoc">
 
-<p>Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. </p>
+<p>Defines the terminal action to execute when the rule is triggered, and adds the rule to the specified agenda with an optional salience. Use this method to finalize the rule definition by specifying the consequence of the rule and registering it with the agenda. The action will be invoked each time the rule's conditions are satisfied, and salience can be used to control the execution order of the rule relative to others when multiple rules are eligible to fire. </p>
 <p>This method finalizes the rule definition by specifying the action to perform when the rule conditions are met. The rule is then registered with the provided agenda. If multiple rules are eligible to fire, those with higher salience values are prioritized.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

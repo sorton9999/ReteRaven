@@ -56,7 +56,7 @@ namespace ReteCore
         /// Stores the successor nodes that will receive propagated assertions and retractions when 
         /// matches are found or lost.  Each successor is an IReteNode that will be affected by 
         /// 
-        private readonly List<IReteNode> successors = new List<IReteNode>();
+        private readonly List<IReteNode> _successors = new List<IReteNode>();
         /// <summary>
         /// The function used to extract the join key from tokens on the left side of the node.  This 
         /// selector is provided when the node is constructed and is used to determine how tokens are 
@@ -91,11 +91,22 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
         /// Adds a successor node to this IndexedExistsNode.  Successors will receive propagated 
         /// assertions and retractions when matches are found or lost.
         /// </summary>
         /// <param name="node">The node to add this node to as a successor.</param>
-        public void AddSuccessor(IReteNode node) => successors.Add(node);
+        public void AddSuccessor(IReteNode node) => _successors.Add(node);
 
         /// <summary>
         /// The Assert method takes either a Token (from the left side) or a fact (from the right side) 
@@ -240,12 +251,26 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Removes a successor node from this OrNode. This method is used when a successor node is no longer needed or when the 
+        /// structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, 
+        /// retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, 
+        /// ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network 
+        /// as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of 
+        /// the system.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
+        }
+
+        /// <summary>
         /// Propagates an assertion to all successor nodes.  This is called when a token on the left 
         /// side finds a match on the right side, indicating that the "exists" condition is satisfied 
         /// for that token.
         /// </summary>
         /// <param name="token">The token to send to each successor.</param>
-        private void PropagateAssert(Token token) => successors.ForEach(s => s.Assert(token));
+        private void PropagateAssert(Token token) => _successors.ForEach(s => s.Assert(token));
 
         /// <summary>
         /// Propagates a retraction to all successor nodes.  This is called when a token on the left 
@@ -253,7 +278,7 @@ namespace ReteCore
         /// longer satisfied for that token.
         /// </summary>
         /// <param name="token">The token to retract from each successor.</param>
-        private void PropagateRetract(Token token) => successors.ForEach(s => s.Retract(token));
+        private void PropagateRetract(Token token) => _successors.ForEach(s => s.Retract(token));
 
         /// <summary>
         /// Prints the internal state of the node for debugging purposes.  It shows the current tokens
@@ -266,7 +291,7 @@ namespace ReteCore
         {
             string indent = new string(' ', level * 2);
             Console.WriteLine($"{indent}IndexedExistsNode:[{nodeName}] Fact: {fact}");
-            foreach (var child in successors) { child.DebugPrint(fact, level + 1); }
+            foreach (var child in _successors) { child.DebugPrint(fact, level + 1); }
         }
     }
 }

@@ -22,8 +22,17 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_or_node_adcca0f2a0f6edb66df205a5aa
 \begin{DoxyCompactList}\small\item\em Retracts the specified fact from the rule engine, removing it from further consideration in rule evaluation. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_or_node_a9467839c50e763c15111c8b43a773296}{Refresh}} (object fact, string prop)
 \begin{DoxyCompactList}\small\item\em Propagates a refresh operation for the specified fact and property to all successor nodes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_or_node_a89497d211cebbef24f1888cd1e14d286}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Removes a successor node from this \doxylink{class_rete_core_1_1_or_node}{Or\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_or_node_a75403cc73318556ea79cd25258b2bef9}{Debug\+Print}} (object fact, int level=0)
 \begin{DoxyCompactList}\small\item\em Writes a formatted debug message to the console that includes the specified fact and the current number of successors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_or_node_a130bae8eec2069e4b50aadf7be6abf61}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_or_node_ac370621c20b9be5154bf8c85a1bc47eb}{Parent}}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -114,6 +123,25 @@ Use this method to notify all successor nodes that a particular property of a fa
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
 
+\Hypertarget{class_rete_core_1_1_or_node_a89497d211cebbef24f1888cd1e14d286}\index{ReteCore.OrNode@{ReteCore.OrNode}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.OrNode@{ReteCore.OrNode}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_or_node_a89497d211cebbef24f1888cd1e14d286} 
+void Rete\+Core.\+Or\+Node.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Removes a successor node from this \doxylink{class_rete_core_1_1_or_node}{Or\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & The successor node to remove. Cannot be null.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_or_node_adcca0f2a0f6edb66df205a5aa976267e}\index{ReteCore.OrNode@{ReteCore.OrNode}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.OrNode@{ReteCore.OrNode}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
@@ -134,6 +162,39 @@ If the specified fact is not currently asserted, this method has no effect. Retr
 
 
 Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_or_node_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_or_node_ac370621c20b9be5154bf8c85a1bc47eb}\index{ReteCore.OrNode@{ReteCore.OrNode}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.OrNode@{ReteCore.OrNode}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_or_node_ac370621c20b9be5154bf8c85a1bc47eb} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Or\+Node.\+Parent\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_or_node_a130bae8eec2069e4b50aadf7be6abf61}\index{ReteCore.OrNode@{ReteCore.OrNode}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.OrNode@{ReteCore.OrNode}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_or_node_a130bae8eec2069e4b50aadf7be6abf61} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Or\+Node.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
 
 
 

@@ -30,15 +30,17 @@ var hierarchy =
     [ "ReteCore.IReteNode", "interface_rete_core_1_1_i_rete_node.html", [
       [ "ReteCore.AlphaConditionNode< T >", "class_rete_core_1_1_alpha_condition_node-1-g.html", null ],
       [ "ReteCore.AlphaMemory", "class_rete_core_1_1_alpha_memory.html", null ],
+      [ "ReteCore.AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", null ],
       [ "ReteCore.BetaMemory", "class_rete_core_1_1_beta_memory.html", null ],
       [ "ReteCore.CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", null ],
       [ "ReteCore.ExistsNode", "class_rete_core_1_1_exists_node.html", null ],
       [ "ReteCore.IndexedExistsNode", "class_rete_core_1_1_indexed_exists_node.html", null ],
       [ "ReteCore.JoinNode", "class_rete_core_1_1_join_node.html", null ],
       [ "ReteCore.NotNode", "class_rete_core_1_1_not_node.html", null ],
+      [ "ReteCore.ObjectTypeNode< T >", "class_rete_core_1_1_object_type_node-1-g.html", null ],
       [ "ReteCore.OrNode", "class_rete_core_1_1_or_node.html", null ],
+      [ "ReteCore.RootNode", "class_rete_core_1_1_root_node.html", null ],
       [ "ReteCore.TerminalNode", "class_rete_core_1_1_terminal_node.html", null ],
-      [ "ReteEngine.AlphaToBetaAdapter", "class_rete_engine_1_1_alpha_to_beta_adapter.html", null ],
       [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
     ] ],
     [ "ReteEngine.JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", null ],

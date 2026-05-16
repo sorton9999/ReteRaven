@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -118,8 +118,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ace23893280e89a4ca7f31da52f416515"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Retract method for left activations is responsible for handling the retraction of tokens that arrive from the left input. When a token is retracted, any matches that were previously established based on that token must be invalidated and retracted from successor nodes. This method iterates through all successor nodes and calls their Retract method with the specified token, ensuring that any tokens that were created as a result of the join condition involving the retracted token are also retracted from the network. This helps maintain the integrity of the Rete network as facts change over time.  <br /></td></tr>
 <tr class="memitem:a029c58f15421c1a7c724805faea3cbd2" id="r_a029c58f15421c1a7c724805faea3cbd2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a029c58f15421c1a7c724805faea3cbd2">Refresh</a> (object factOrToken, string propertyName)</td></tr>
 <tr class="memdesc:a029c58f15421c1a7c724805faea3cbd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Refresh method is responsible for re-evaluating existing tokens or facts when a relevant change occurs. If a token or fact that is part of the join condition changes, this method will be called to ensure that all matches are re-evaluated and updated accordingly. For example, if a fact that was previously joined with a token changes, the Refresh method will re-evaluate the join condition for all tokens that were joined with that fact and propagate any necessary updates to successor nodes. This helps maintain the accuracy and consistency of the Rete network as facts and tokens evolve over time.  <br /></td></tr>
+<tr class="memitem:a46413c9e934f4266a5d60f2b0953b6ba" id="r_a46413c9e934f4266a5d60f2b0953b6ba"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a46413c9e934f4266a5d60f2b0953b6ba">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
+<tr class="memdesc:a46413c9e934f4266a5d60f2b0953b6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:aa1dec06c20b9592255ad18b1905bff60" id="r_aa1dec06c20b9592255ad18b1905bff60"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa1dec06c20b9592255ad18b1905bff60">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:aa1dec06c20b9592255ad18b1905bff60"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DebugPrint method is a utility function that outputs the current state of the <a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a> for debugging purposes. It prints the name of the node and indicates that it has been reached, along with information about checking against the left memory. This method can be used to trace the flow of facts and tokens through the Rete network during development and troubleshooting, providing insight into how the <a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a> is processing incoming data and interacting with its inputs and successors.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a66afde6434f45546cbec19695c90f4b0" id="r_a66afde6434f45546cbec19695c90f4b0"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a66afde6434f45546cbec19695c90f4b0">Successors</a><code> [get]</code></td></tr>
+<tr class="memdesc:a66afde6434f45546cbec19695c90f4b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
+<tr class="memitem:a65b733bc20aee70108f1d5187edb6dc8" id="r_a65b733bc20aee70108f1d5187edb6dc8"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#a65b733bc20aee70108f1d5187edb6dc8">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a65b733bc20aee70108f1d5187edb6dc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a join node in a RETE network that combines partial matches from the left input with facts from the right input based on a specified condition. </p>
@@ -284,6 +293,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a46413c9e934f4266a5d60f2b0953b6ba" name="a46413c9e934f4266a5d60f2b0953b6ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46413c9e934f4266a5d60f2b0953b6ba">&#9670;&#160;</a></span>RemoveSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.JoinNode.RemoveSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a0edeac77711a00aca9ebcd085e95eaae">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="ace23893280e89a4ca7f31da52f416515" name="ace23893280e89a4ca7f31da52f416515"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ace23893280e89a4ca7f31da52f416515">&#9670;&#160;</a></span>Retract()</h2>
 
@@ -308,6 +344,59 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a451a325202ba1ccd36246273eea6a749">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a65b733bc20aee70108f1d5187edb6dc8" name="a65b733bc20aee70108f1d5187edb6dc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65b733bc20aee70108f1d5187edb6dc8">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>? ReteCore.JoinNode.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The parent node in the Rete network. This property allows for navigation back up the network from this node. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ac2c5f340f04b5fbc6f1d82feb1d26c44">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a id="a66afde6434f45546cbec19695c90f4b0" name="a66afde6434f45546cbec19695c90f4b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66afde6434f45546cbec19695c90f4b0">&#9670;&#160;</a></span>Successors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&gt; ReteCore.JoinNode.Successors</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>

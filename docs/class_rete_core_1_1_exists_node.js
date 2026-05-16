@@ -9,7 +9,10 @@ var class_rete_core_1_1_exists_node =
     [ "Refresh", "class_rete_core_1_1_exists_node.html#aebeb99527c314fd9cb2c9550080179a5", null ],
     [ "RefreshLeft", "class_rete_core_1_1_exists_node.html#a7718f4c18062f08100adbe5a12eea0f7", null ],
     [ "RefreshRight", "class_rete_core_1_1_exists_node.html#acfdaa7944340e226dc60aa6889eabb2e", null ],
+    [ "RemoveSuccessor", "class_rete_core_1_1_exists_node.html#acd706b3a9333c7544a9a7118108c5d67", null ],
     [ "Retract", "class_rete_core_1_1_exists_node.html#af766708a2997732c3a8508fc24358359", null ],
     [ "RetractLeft", "class_rete_core_1_1_exists_node.html#ad7496c4c8df211a39e85ef9362e2584e", null ],
-    [ "RetractRight", "class_rete_core_1_1_exists_node.html#aa85be833546f2809eee2d23ea7ae1d82", null ]
+    [ "RetractRight", "class_rete_core_1_1_exists_node.html#aa85be833546f2809eee2d23ea7ae1d82", null ],
+    [ "Parent", "class_rete_core_1_1_exists_node.html#aab1c4bcc7d3808462cf42456120da079", null ],
+    [ "Successors", "class_rete_core_1_1_exists_node.html#ac4d4f6112e3d02022c8f43438ac0fb46", null ]
 ];

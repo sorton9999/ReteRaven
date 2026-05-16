@@ -33,7 +33,7 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Properties", "functions_prop.html", null ],
@@ -46,7 +46,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"class_rete_core_1_1_terminal_node.html#a06635491c40a3a5d508248845217a5bc"
+"class_rete_core_1_1_late_filter.html#a39fcd90e9ea14c8120434be6cf33fec1",
+"class_rete_program_1_1_sensor.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

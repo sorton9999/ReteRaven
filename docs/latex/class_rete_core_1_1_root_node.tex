@@ -1,0 +1,184 @@
+\doxysection{Rete\+Core.\+Root\+Node Class Reference}
+\hypertarget{class_rete_core_1_1_root_node}{}\label{class_rete_core_1_1_root_node}\index{ReteCore.RootNode@{ReteCore.RootNode}}
+
+
+The \doxylink{class_rete_core_1_1_root_node}{Root\+Node} class represents the root of the Rete network. It serves as the entry point for all facts asserted into the network and is responsible for propagating facts to its successor nodes. The \doxylink{class_rete_core_1_1_root_node}{Root\+Node} does not perform any specific processing on the facts but simply serves as a starting point for the flow of facts through the network. This class provides the foundation for how facts are introduced and propagated through the network.  
+
+
+Inheritance diagram for Rete\+Core.\+Root\+Node:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_rete_core_1_1_root_node}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_rete_core_1_1_root_node_a5bbfacc512bb4281e79393bd90f20327}\label{class_rete_core_1_1_root_node_a5bbfacc512bb4281e79393bd90f20327} 
+void {\bfseries Add\+Successor} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} node)
+\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a5c51826ec4c598b952a5ee910b4364d5}{Assert}} (object fact)
+\begin{DoxyCompactList}\small\item\em Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.\+g., \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}, etc.) and how it processes incoming facts. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might simply store the fact and propagate it to successors, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a92ac0b40c2e4e8fc80209a508105d398}{Retract}} (object fact)
+\begin{DoxyCompactList}\small\item\em Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might remove the fact from its collection and propagate the retraction to successors, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a3ddb2c21b57d3467681ecb5639d569fb}{Refresh}} (object fact, string property\+Name)
+\begin{DoxyCompactList}\small\item\em Refreshes a fact in the Rete node, which may trigger re-\/evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might check if the changed property is relevant to its conditions and re-\/evaluate the fact accordingly, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might need to re-\/evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. \end{DoxyCompactList}\item 
+\Hypertarget{class_rete_core_1_1_root_node_aead7c690eff2fd0bfbec83367fb7d760}\label{class_rete_core_1_1_root_node_aead7c690eff2fd0bfbec83367fb7d760} 
+Object\+Type\+Node$<$ T $>$ {\bfseries Get\+Successor$<$ T $>$} ()
+\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a66143b1a1ad90793269b68cd2a09df8d}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Removes a successor node from this \doxylink{class_rete_core_1_1_root_node}{Root\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a04d9dde9b35766a3e8dbaa3e2b0ad80e}{Debug\+Print}} (object fact, int level=0)
+\begin{DoxyCompactList}\small\item\em Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a6e6c95a79dda7fdb3d8607b1ade16f35}{Parent}} = null\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_root_node_a6ca8cbb8ab491101bf11adc5e01814f0}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Gets the collection of successor nodes connected to this node in the Rete network. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{class_rete_core_1_1_root_node}{Root\+Node} class represents the root of the Rete network. It serves as the entry point for all facts asserted into the network and is responsible for propagating facts to its successor nodes. The \doxylink{class_rete_core_1_1_root_node}{Root\+Node} does not perform any specific processing on the facts but simply serves as a starting point for the flow of facts through the network. This class provides the foundation for how facts are introduced and propagated through the network. 
+
+\label{doc-func-members}
+\Hypertarget{class_rete_core_1_1_root_node_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_rete_core_1_1_root_node_a5c51826ec4c598b952a5ee910b4364d5}\index{ReteCore.RootNode@{ReteCore.RootNode}!Assert@{Assert}}
+\index{Assert@{Assert}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{Assert()}{Assert()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a5c51826ec4c598b952a5ee910b4364d5} 
+void Rete\+Core.\+Root\+Node.\+Assert (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.\+g., \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory}, \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory}, etc.) and how it processes incoming facts. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might simply store the fact and propagate it to successors, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a05567f044dd13d4de35da0591191fca2}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_root_node_a04d9dde9b35766a3e8dbaa3e2b0ad80e}\index{ReteCore.RootNode@{ReteCore.RootNode}!DebugPrint@{DebugPrint}}
+\index{DebugPrint@{DebugPrint}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{DebugPrint()}{DebugPrint()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a04d9dde9b35766a3e8dbaa3e2b0ad80e} 
+void Rete\+Core.\+Root\+Node.\+Debug\+Print (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{int}]{level}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+{\em level} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_aaee4a1eb9365b5d13e8301fc3d1d9730}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_root_node_a3ddb2c21b57d3467681ecb5639d569fb}\index{ReteCore.RootNode@{ReteCore.RootNode}!Refresh@{Refresh}}
+\index{Refresh@{Refresh}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{Refresh()}{Refresh()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a3ddb2c21b57d3467681ecb5639d569fb} 
+void Rete\+Core.\+Root\+Node.\+Refresh (\begin{DoxyParamCaption}\item[{object}]{fact}{, }\item[{string}]{property\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Refreshes a fact in the Rete node, which may trigger re-\/evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might check if the changed property is relevant to its conditions and re-\/evaluate the fact accordingly, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might need to re-\/evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+{\em property\+Name} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad9bdb84d1351f3db578f74bd067c09bc}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_root_node_a66143b1a1ad90793269b68cd2a09df8d}\index{ReteCore.RootNode@{ReteCore.RootNode}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a66143b1a1ad90793269b68cd2a09df8d} 
+void Rete\+Core.\+Root\+Node.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Removes a successor node from this \doxylink{class_rete_core_1_1_root_node}{Root\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_root_node_a92ac0b40c2e4e8fc80209a508105d398}\index{ReteCore.RootNode@{ReteCore.RootNode}!Retract@{Retract}}
+\index{Retract@{Retract}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a92ac0b40c2e4e8fc80209a508105d398} 
+void Rete\+Core.\+Root\+Node.\+Retract (\begin{DoxyParamCaption}\item[{object}]{fact}{}\end{DoxyParamCaption})}
+
+
+
+Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an \doxylink{class_rete_core_1_1_alpha_memory}{Alpha\+Memory} might remove the fact from its collection and propagate the retraction to successors, while a \doxylink{class_rete_core_1_1_beta_memory}{Beta\+Memory} might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fact} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a451a325202ba1ccd36246273eea6a749}{Rete\+Core.\+IRete\+Node}}.
+
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_root_node_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_root_node_a6e6c95a79dda7fdb3d8607b1ade16f35}\index{ReteCore.RootNode@{ReteCore.RootNode}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a6e6c95a79dda7fdb3d8607b1ade16f35} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Root\+Node.\+Parent = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_root_node_a6ca8cbb8ab491101bf11adc5e01814f0}\index{ReteCore.RootNode@{ReteCore.RootNode}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.RootNode@{ReteCore.RootNode}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_root_node_a6ca8cbb8ab491101bf11adc5e01814f0} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Root\+Node.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the collection of successor nodes connected to this node in the Rete network. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Rete\+Core/\+Root\+Node.\+cs\end{DoxyCompactItemize}

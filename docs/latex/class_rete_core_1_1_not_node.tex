@@ -36,8 +36,17 @@ void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a473deacc584249863bd439e7
 \begin{DoxyCompactList}\small\item\em Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a0fdeb9fd36db8d2d4dab7966aa132921}{Refresh\+Right}} (object fact, string property\+Name)
 \begin{DoxyCompactList}\small\item\em Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a457b268979c99a525134d96750c3a26a}{Remove\+Successor}} (\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} successor)
+\begin{DoxyCompactList}\small\item\em Removes a successor node from this \doxylink{class_rete_core_1_1_not_node}{Not\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a4a2ec1c8183aa91a2a3ee8e060d52908}{Debug\+Print}} (object fact, int level=0)
 \begin{DoxyCompactList}\small\item\em A debug method to print the current state of the NOT node, including the number of left tokens, right facts, and the block counts for each left token. This can be useful for understanding how the NOT node is processing matches and how it is affected by incoming facts and tokens. The method takes an optional level parameter to control indentation for better readability when printing nested nodes in the Rete network. By providing insight into the internal state of the NOT node, this debug method can help developers diagnose issues and understand the behavior of the Rete network during development and testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+IEnumerable$<$ \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}} $>$ \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a62381eb2a696bc57483ac8c4e807bbf1}{Successors}}\hspace{0.3cm}{\ttfamily  \+[get]\+}
+\begin{DoxyCompactList}\small\item\em Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? \doxymbox{\hyperlink{class_rete_core_1_1_not_node_a59850f3b39932da90ec19cc25e7c14dc}{Parent}}\hspace{0.3cm}{\ttfamily  \+[get, set]\+}
+\begin{DoxyCompactList}\small\item\em The parent node in the Rete network. This property allows for navigation back up the network from this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -206,6 +215,25 @@ Handles refreshes of right facts. It checks if the fact blocks any existing left
 {\em property\+Name} & The name of the property in the fact cell that is being updated.\\
 \hline
 \end{DoxyParams}
+\Hypertarget{class_rete_core_1_1_not_node_a457b268979c99a525134d96750c3a26a}\index{ReteCore.NotNode@{ReteCore.NotNode}!RemoveSuccessor@{RemoveSuccessor}}
+\index{RemoveSuccessor@{RemoveSuccessor}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{RemoveSuccessor()}{RemoveSuccessor()}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a457b268979c99a525134d96750c3a26a} 
+void Rete\+Core.\+Not\+Node.\+Remove\+Successor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}}]{successor}{}\end{DoxyParamCaption})}
+
+
+
+Removes a successor node from this \doxylink{class_rete_core_1_1_not_node}{Not\+Node}. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em successor} & The successor node to remove. Cannot be null.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_a0edeac77711a00aca9ebcd085e95eaae}{Rete\+Core.\+IRete\+Node}}.
+
 \Hypertarget{class_rete_core_1_1_not_node_ae6d2def5c6d12a73b87778c24aeab5f0}\index{ReteCore.NotNode@{ReteCore.NotNode}!Retract@{Retract}}
 \index{Retract@{Retract}!ReteCore.NotNode@{ReteCore.NotNode}}
 \doxysubsubsection{\texorpdfstring{Retract()}{Retract()}}
@@ -255,6 +283,39 @@ Handles retractions of right facts. It removes the fact from the right memory an
 {\em fact} & The fact this operation is acting upon.\\
 \hline
 \end{DoxyParams}
+
+
+\label{doc-property-members}
+\Hypertarget{class_rete_core_1_1_not_node_doc-property-members}
+\doxysubsection{Property Documentation}
+\Hypertarget{class_rete_core_1_1_not_node_a59850f3b39932da90ec19cc25e7c14dc}\index{ReteCore.NotNode@{ReteCore.NotNode}!Parent@{Parent}}
+\index{Parent@{Parent}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{Parent}{Parent}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a59850f3b39932da90ec19cc25e7c14dc} 
+\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}? Rete\+Core.\+Not\+Node.\+Parent\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The parent node in the Rete network. This property allows for navigation back up the network from this node. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ac2c5f340f04b5fbc6f1d82feb1d26c44}{Rete\+Core.\+IRete\+Node}}.
+
+\Hypertarget{class_rete_core_1_1_not_node_a62381eb2a696bc57483ac8c4e807bbf1}\index{ReteCore.NotNode@{ReteCore.NotNode}!Successors@{Successors}}
+\index{Successors@{Successors}!ReteCore.NotNode@{ReteCore.NotNode}}
+\doxysubsubsection{\texorpdfstring{Successors}{Successors}}
+{\footnotesize\ttfamily \label{class_rete_core_1_1_not_node_a62381eb2a696bc57483ac8c4e807bbf1} 
+IEnumerable$<$\doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node}{IRete\+Node}}$>$ Rete\+Core.\+Not\+Node.\+Successors\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate. 
+
+
+
+Implements \doxymbox{\hyperlink{interface_rete_core_1_1_i_rete_node_ad8be8ec8825b865030c7282ea768f103}{Rete\+Core.\+IRete\+Node}}.
+
 
 
 The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}

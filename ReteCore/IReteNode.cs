@@ -21,6 +21,15 @@ namespace ReteCore
     public interface IReteNode
     {
         /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from 
+        /// this node.
+        /// </summary>
+        IReteNode? Parent { get; set; }
+        /// <summary>
+        /// Gets the collection of successor nodes connected to this node in the Rete network.
+        /// </summary>
+        IEnumerable<IReteNode> Successors { get; }
+        /// <summary>
         /// Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor 
         /// nodes. The specific behavior of this method depends on the type of node (e.g., AlphaMemory, 
         /// BetaMemory, etc.) and how it processes incoming facts. For example, an AlphaMemory might simply 
@@ -53,6 +62,16 @@ namespace ReteCore
         /// <param name="fact"></param>
         /// <param name="propertyName"></param>
         void Refresh(object fact, string propertyName);
+        /// <summary>
+        /// Removws a successor node from the current Rete node, which may be necessary when the structure of the Rete 
+        /// network changes. This method allows for dynamic modification of the network by removing a successor node from 
+        /// the list of successors. When a successor is removed, it will no longer receive facts asserted, retracted, or 
+        /// refreshed through this node, which can affect the flow of information and the activation of rules in the 
+        /// network depending on the role of the removed successor. The RemoveSuccessor method is important for maintaining 
+        /// the flexibility and adaptability of the Rete network as it evolves over time.
+        /// </summary>
+        /// <param name="node">The node to remove.</param>
+        void RemoveSuccessor(IReteNode node);
         /// <summary>
         /// Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to 
         /// print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, 

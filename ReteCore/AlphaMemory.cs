@@ -32,6 +32,7 @@ namespace ReteCore
         /// collection determines whether it will be propagated to successor nodes when operations are performed on it.
         /// </summary>
         public List<object> Facts { get; } = new();
+
         /// <summary>
         /// The list of successor nodes that will receive facts asserted, retracted, or refreshed through this AlphaMemory. Each successor 
         /// is an IReteNode that will be affected by operations performed on this node. The collection is initialized as an empty list and 
@@ -41,13 +42,24 @@ namespace ReteCore
         private readonly List<IReteNode> _successors = new();
 
         /// <summary>
+        /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
+        /// facts that satisfy the condition defined by the predicate.
+        /// </summary>
+        public IEnumerable<IReteNode> Successors => _successors;
+
+        /// <summary>
+        /// The parent node in the Rete network. This property allows for navigation back up the network from this node.
+        /// </summary>
+        public IReteNode? Parent { get; set; }
+
+        /// <summary>
         /// Adds a successor node to this AlphaMemory. Successor nodes will receive facts asserted, retracted, or refreshed through this 
         /// AlphaMemory. This method allows for building the Rete network by connecting nodes together. When a new successor is added, 
         /// it will immediately receive all existing facts in this AlphaMemory through the Assert method, ensuring that the new node is 
         /// up-to-date with the current state of facts.
         /// </summary>
         /// <param name="node">The node to add as a successor. Cannot be null.</param>
-        public void AddSuccessor(IReteNode node) => _successors.Add(node);
+        public void AddSuccessor(IReteNode node) { node.Parent = this; _successors.Add(node); }
 
         /// <summary>
         /// The Assert method adds a fact to the AlphaMemory if it is not already present and propagates it to all successor nodes.
@@ -97,6 +109,18 @@ namespace ReteCore
                     succ.Refresh(fact, propertyName);
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove the given child node from the list of successors. This method is used to disconnect a node from this AlphaMemory, preventing it 
+        /// from receiving further facts asserted, retracted, or refreshed through this node. When a child node is removed, it will no longer be 
+        /// part of the propagation path for facts in this AlphaMemory, which can affect the flow of information and the activation of rules in the 
+        /// Rete network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed.
+        /// </summary>
+        /// <param name="successor">The successor node to remove. Cannot be null.</param>
+        public void RemoveSuccessor(IReteNode successor)
+        {
+            _successors.Remove(successor);
         }
 
         /// <summary>
