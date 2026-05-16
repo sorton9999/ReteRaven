@@ -368,7 +368,7 @@ namespace ReteTest.Tests
             var engine = new ReteEngine.ReteEngine();
             int discountActiveCount = 0;
 
-            var order = new Inventory { Id = "1", Count = 1500 };
+            var order = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
 
             // Rule 1: High Value Order -> Logic Assert a Discount
             engine.Begin("HighValueDiscount")
@@ -413,7 +413,7 @@ namespace ReteTest.Tests
                 .Then(t => {
                     var order = t.Get<Inventory>("O");
                     // Assert the new Shipment fact
-                    engine.Assert(new Shipment { Id = "1", ProductId = order.ProductId });
+                    engine.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
                 });
 
             // React to the Emergent Fact
@@ -423,7 +423,7 @@ namespace ReteTest.Tests
                     statusResult = "Shipped";
                 });
 
-            var order = new Inventory { Id = "1", Count = 1500 };
+            var order = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
 
             // Start the chain going by asserting the initial fact that triggers the first rule
             engine.Assert(order);
@@ -443,7 +443,7 @@ namespace ReteTest.Tests
             var engine = new ReteEngine.ReteEngine();
             int fireCount = 0;
 
-            var existingOrder = new Inventory { Id = "1", Count = 5000, ProductId = 20 };
+            var existingOrder = new Inventory { Id = Guid.NewGuid(), Count = 5000, ProductId = 20 };
             engine.Assert(existingOrder);
 
             // Define a rule AFTER the data is already in the system
@@ -475,7 +475,7 @@ namespace ReteTest.Tests
                     fireCount++;
                 });
 
-            var order = new Order { Id = "101", IsProcessed = false };
+            var order = new Order { Id = Guid.NewGuid(), IsProcessed = false };
 
             // Assert the fact. It matches, so an activation goes to the Agenda.
             engine.Assert(order);
@@ -500,10 +500,10 @@ namespace ReteTest.Tests
 
             engine.Begin("TemporaryRule")
                 .Where<Order>("O", initialCondition: order => !order.IsProcessed)
-                .And<Order>("O", (token, o) => o.Value == 55)
+                .And<Order>("O", (token, o) => o.Value as int? == 55)
                 .Then(t => fireCount++);
 
-            engine.Assert(new Order() { Id = "1", IsProcessed = false, Value = 55 });
+            engine.Assert(new Order() { Id = Guid.NewGuid(), IsProcessed = false, Value = 55 });
 
             // Remove it before calling FireAll
             engine.RemoveRule("TemporaryRule");
