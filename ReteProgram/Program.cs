@@ -13,8 +13,8 @@ using ReteProgram;
 
 var engine = new ReteEngine.ReteEngine();
 
-var cell1 = new Cell { Id = "A", Value = 100 };
-var cell2 = new Cell { Id = "A", Value = 200 };
+var cell1 = new Cell { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
+var cell2 = new Cell { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
 cell1.PropertyChanged += Cell_PropertyChanged;
 cell2.PropertyChanged += Cell_PropertyChanged;
 
@@ -25,7 +25,7 @@ engine.FireAll();      // Nothing prints because of the retraction
 
 cell1.Value = 300; // Update cell1's value
 cell2.Value = 500; // Update cell2's value to match cell1
-var cell3 = new Cell { Id = "A", Value = 1000 };
+var cell3 = new Cell { Id = Guid.NewGuid(), Name = "Cell3", Value = 1000 };
 
 cell3.PropertyChanged += Cell_PropertyChanged;
 
@@ -107,8 +107,8 @@ engine.Begin("DetectConflict")
         Console.WriteLine($"Conflict found on {a.Id}!");
     }, salience: 10);
 
-Cell cell100 = new Cell() { Id = "FirstCell", Value = 100 };
-Cell cell500 = new Cell() { Id = "SecondCell", Value = 500 };
+Cell cell100 = new Cell() { Id = Guid.NewGuid(), Name = "FirstCell", Value = 100 };
+Cell cell500 = new Cell() { Id = Guid.NewGuid(), Name = "SecondCell", Value = 500 };
 
 engine.Assert(cell100);
 engine.Assert(cell500);
@@ -158,12 +158,12 @@ engine2.FireAll();
 
 
 var engine3 = new ReteEngine.ReteEngine();
-CriticalCell critCell = new() { Id="C", Value = 100, Status = "Not Critical" };
+CriticalCell critCell = new() { Id=Guid.NewGuid(), Name="C", Value = 100, Status = "Not Critical" };
 
 // Rule 1: If Cell value is 100, set Status to "Critical"
 engine3.Begin("MarkCritical")
     .Where<CriticalCell>("C")
-    .And<CriticalCell>("C", (t, c) => c.Value >= 100 && c.Status != "Critical")
+    .And<CriticalCell>("C", (t, c) => c.Value as int? >= 100 && c.Status != "Critical")
     .Then(t => {
         var c = t.Get<CriticalCell>("C");
         c.Status = "Critical";
@@ -186,7 +186,7 @@ var engine4 = new ReteEngine.ReteEngine();
 // Rule 1: When a Cell value is high, mark it "Urgent"
 engine4.Begin("MarkUrgent")
     .Where<CriticalCell>("M")
-    .And<CriticalCell>("M", (t, c) => c.Value > 100 && c.Status != "Urgent")
+    .And<CriticalCell>("M", (t, c) => c.Value as int? > 100 && c.Status != "Urgent")
     .Then(t => {
         var c = t.Get<CriticalCell>("M");
         c.Status = "Urgent";
@@ -202,24 +202,24 @@ engine4.Begin("AlertUrgent")
     .Then(t => Console.WriteLine("ALERT! Urgent!"));
 
 // ASSERT DATA
-engine4.Assert(new CriticalCell { Id = "A", Value = 150, Status = "Normal" });
+engine4.Assert(new CriticalCell { Id = Guid.NewGuid(), Name = "A", Value = 150, Status = "Normal" });
 
 // RECURSIVE FIRE LOOP
 engine4.FireAll();
 
 string cellName = "M";
 var engine5 = new ReteEngine.ReteEngine();
-var criticalCell = new CriticalCell { Id = cellName, Status = "Normal", Value = 590 };
+var criticalCell = new CriticalCell { Id = Guid.NewGuid(), Name = cellName, Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
     .Where<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
     //.And<CriticalCell>(cellName, (t, c) => c.Value > 500)
     .Or<CriticalCell>(cellName, "MatchOr",
-    (t, c) => c.Value > 500,
-    (t, c) => c.Value < 200)
+    (t, c) => c.Value as int? > 500,
+    (t, c) => c.Value as int? < 200)
     .Then(t => {
         Token current = t;
         var f = current.Get<CriticalCell>(cellName);
-        if (f.Value > 500)
+        if (f.Value as int? > 500)
             f.Status = "Critical";
         else
             f.Status = "Normal";
@@ -239,11 +239,11 @@ criticalCell.Value = 120;
 engine5.FireAll();
 
 var engine6 = new ReteEngine.ReteEngine();
-var criticalCell2 = new CriticalCell { Id = "Not Cell", Status = "Normal", Value = 590 };
+var criticalCell2 = new CriticalCell { Id = Guid.NewGuid(), Name = "Not Cell", Status = "Normal", Value = 590 };
 engine6.Begin("MatchStatusNot")
     .Where<CriticalCell>("C")
     .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent", "MarkNot")
-    .And<CriticalCell>("C", (t, c) => c.Value > 500, "MarkAnd")
+    .And<CriticalCell>("C", (t, c) => c.Value as int? > 500, "MarkAnd")
     .Then(t => {
         Console.WriteLine($">>RESULT:[{t}]: This should be marked URGENT!");
         });
@@ -304,6 +304,7 @@ engine8.Begin("Process_Urgent_Batch")
 
 Product product = new Product()
 {
+    Id = Guid.NewGuid(),
     ProductId = 12345,
     Name = "4K TV",
     Category = "Electronics",
@@ -311,6 +312,7 @@ Product product = new Product()
 };
 Product product2 = new Product()
 {
+    Id = Guid.NewGuid(),
     ProductId = 888899,
     Name = "Luxury Yacht",
     Category = "Accessories",
@@ -318,6 +320,7 @@ Product product2 = new Product()
 };
 Product product3 = new Product()
 {
+    Id = Guid.NewGuid(),
     ProductId = 12347,
     Name = "Frisbee",
     Category = "Sports",
@@ -325,29 +328,34 @@ Product product3 = new Product()
 };
 Inventory inventory = new Inventory()
 {
+    Id = Guid.NewGuid(),
     ProductId = 12347,
     Quantity = 1,
     WarehouseLocation = "Aisle 3"
 };
 Inventory inventory2 = new Inventory()
 {
+    Id = Guid.NewGuid(),
     ProductId = 888899,
     Quantity = 1,
     WarehouseLocation = "Aisle 5"
 };
 Inventory inventory3 = new Inventory()
 {
+    Id = Guid.NewGuid(),
     ProductId = 12349,
     Quantity = 0,
     WarehouseLocation = "Aisle 1"
 };
 Shipment shipment = new Shipment()
 {
+    Id = Guid.NewGuid(),
     ProductId = 12347,
     Status = "No Status"
 };
 Shipment shipment2 = new Shipment()
 {
+    Id = Guid.NewGuid(),
     ProductId = 888899,
     Status = "Pending"
 };
@@ -400,13 +408,13 @@ engine9.Begin("TestOrderPropagation")
         order.IsProcessed = true;
     });
 
-var order1 = new Order { Id = "1", Text = "Charge!", TargetRank = "Lieutenant", GivenBy = "General", IsProcessed = false };
-var officer1 = new Officer { Id = "1", Name = "Smith", Rank = "Lieutenant", Underling = "" };
-var officer2 = new Officer { Id = "2", Name = "Johnson", Rank = "Captain", Underling = "Lieutenant" };
-var officer3 = new Officer { Id = "3", Name = "Brown", Rank = "Major", Underling = "Captain" };
-var officer4 = new Officer { Id = "4", Name = "Davis", Rank = "Colonel", Underling = "Major" };
-var officer5 = new Officer { Id = "5", Name = "Williams", Rank = "General", Underling = "Colonel" };
-var officer6 = new Officer { Id = "6", Name = "Anderson", Rank = "Captain", Underling = "Lieutenant" };
+var order1 = new Order { Id = Guid.NewGuid(), Text = "Charge!", TargetRank = "Lieutenant", GivenBy = "General", IsProcessed = false };
+var officer1 = new Officer { Id = Guid.NewGuid(), Name = "Smith", Rank = "Lieutenant", Underling = "" };
+var officer2 = new Officer { Id = Guid.NewGuid(), Name = "Johnson", Rank = "Captain", Underling = "Lieutenant" };
+var officer3 = new Officer { Id = Guid.NewGuid(), Name = "Brown", Rank = "Major", Underling = "Captain" };
+var officer4 = new Officer { Id = Guid.NewGuid(), Name = "Davis", Rank = "Colonel", Underling = "Major" };
+var officer5 = new Officer { Id = Guid.NewGuid(), Name = "Williams", Rank = "General", Underling = "Colonel" };
+var officer6 = new Officer { Id = Guid.NewGuid(), Name = "Anderson", Rank = "Captain", Underling = "Lieutenant" };
 engine9.Assert(officer6);
 engine9.Assert(officer5);
 engine9.Assert(officer4);
@@ -418,7 +426,7 @@ engine9.Assert(order1);
 engine9.FireAll();
 
 Console.WriteLine("\n--- Testing another order, but there are 2 of that rank ---");
-var order2 = new Order { Id = "2", Text = "Retreat!", TargetRank = "Captain", GivenBy = "General", IsProcessed = false };
+var order2 = new Order { Id = Guid.NewGuid(), Name = "Order 2", Text = "Retreat!", TargetRank = "Captain", GivenBy = "General", IsProcessed = false };
 engine9.Assert(order2);
 engine9.FireAll();
 
@@ -448,12 +456,12 @@ engine9.Begin("HandleOffDuty")
         Console.WriteLine($"[ACTION] Officer {t.Get<Officer>("DF").Name} is off duty and not handling the order.");
     });
 
-var duty1 = new DutyStatus { Id = "1", Name = "Smith", OnDuty = true };
-var duty2 = new DutyStatus { Id = "2", Name = "Johnson", OnDuty = false };
-var duty3 = new DutyStatus { Id = "3", Name = "Brown", OnDuty = true };
-var duty4 = new DutyStatus { Id = "4", Name = "Davis", OnDuty = true };
-var duty5 = new DutyStatus { Id = "5", Name = "Williams", OnDuty = true };
-var duty6 = new DutyStatus { Id = "6", Name = "Anderson", OnDuty = true };
+var duty1 = new DutyStatus { Id = Guid.NewGuid(), Name = "Smith", OnDuty = true };
+var duty2 = new DutyStatus { Id = Guid.NewGuid(), Name = "Johnson", OnDuty = false };
+var duty3 = new DutyStatus { Id = Guid.NewGuid(), Name = "Brown", OnDuty = true };
+var duty4 = new DutyStatus { Id = Guid.NewGuid(), Name = "Davis", OnDuty = true };
+var duty5 = new DutyStatus { Id = Guid.NewGuid(), Name = "Williams", OnDuty = true };
+var duty6 = new DutyStatus { Id = Guid.NewGuid(), Name = "Anderson", OnDuty = true };
 engine9.Assert(duty1);
 engine9.Assert(duty2);
 engine9.Assert(duty3);
@@ -471,7 +479,7 @@ engine9.FireAll();
 // and see how the rules handle that.  We will set the officer on duty in a duty status
 // update and fire again.
 Console.WriteLine("\n--- Testing Lieutenant Off Duty ---");
-var order3 = new Order { Id = "3", Text = "Shuffle Papers", TargetRank = "Lieutenant", GivenBy = "Colonel", IsProcessed = false };
+var order3 = new Order { Id = Guid.NewGuid(), Name = "Order 3", Text = "Shuffle Papers", TargetRank = "Lieutenant", GivenBy = "Colonel", IsProcessed = false };
 engine9.Assert(order3);
 duty1.OnDuty = false;
 engine9.Update(duty1);
