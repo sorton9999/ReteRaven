@@ -3,6 +3,7 @@ var annotated_dup =
     [ "ReteCore", "namespace_rete_core.html", [
       [ "Activation", "class_rete_core_1_1_activation.html", "class_rete_core_1_1_activation" ],
       [ "Agenda", "class_rete_core_1_1_agenda.html", "class_rete_core_1_1_agenda" ],
+      [ "AllNode", "class_rete_core_1_1_all_node.html", "class_rete_core_1_1_all_node" ],
       [ "AlphaConditionNode&lt; T &gt;", "class_rete_core_1_1_alpha_condition_node-1-g.html", "class_rete_core_1_1_alpha_condition_node-1-g" ],
       [ "AlphaMemory", "class_rete_core_1_1_alpha_memory.html", "class_rete_core_1_1_alpha_memory" ],
       [ "AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", "class_rete_core_1_1_alpha_to_beta_adapter" ],
@@ -39,6 +40,7 @@ var annotated_dup =
       [ "Shipment", "class_rete_program_1_1_shipment.html", null ],
       [ "Order", "class_rete_program_1_1_order.html", null ],
       [ "Officer", "class_rete_program_1_1_officer.html", null ],
-      [ "DutyStatus", "class_rete_program_1_1_duty_status.html", null ]
+      [ "DutyStatus", "class_rete_program_1_1_duty_status.html", null ],
+      [ "LineItem", "class_rete_program_1_1_line_item.html", null ]
     ] ]
 ];

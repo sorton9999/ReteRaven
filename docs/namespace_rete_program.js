@@ -8,5 +8,6 @@ var namespace_rete_program =
     [ "Shipment", "class_rete_program_1_1_shipment.html", null ],
     [ "Order", "class_rete_program_1_1_order.html", null ],
     [ "Officer", "class_rete_program_1_1_officer.html", null ],
-    [ "DutyStatus", "class_rete_program_1_1_duty_status.html", null ]
+    [ "DutyStatus", "class_rete_program_1_1_duty_status.html", null ],
+    [ "LineItem", "class_rete_program_1_1_line_item.html", null ]
 ];

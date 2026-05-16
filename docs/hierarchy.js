@@ -28,6 +28,7 @@ var hierarchy =
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
     ] ],
     [ "ReteCore.IReteNode", "interface_rete_core_1_1_i_rete_node.html", [
+      [ "ReteCore.AllNode", "class_rete_core_1_1_all_node.html", null ],
       [ "ReteCore.AlphaConditionNode< T >", "class_rete_core_1_1_alpha_condition_node-1-g.html", null ],
       [ "ReteCore.AlphaMemory", "class_rete_core_1_1_alpha_memory.html", null ],
       [ "ReteCore.AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", null ],
@@ -45,6 +46,7 @@ var hierarchy =
     ] ],
     [ "ReteEngine.JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", null ],
     [ "ReteCore.LateFilter", "class_rete_core_1_1_late_filter.html", null ],
+    [ "ReteProgram.LineItem", "class_rete_program_1_1_line_item.html", null ],
     [ "ReteEngine.ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", null ],
     [ "ReteEngine.ReteEngine", "class_rete_engine_1_1_rete_engine.html", null ],
     [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],

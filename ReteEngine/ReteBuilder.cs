@@ -474,6 +474,118 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// This method provides a way to aggregate facts of a specific type T into the token under a given alias. The optional 
+        /// join condition allows you to specify criteria for which facts of type T should be included in the aggregation. If the join 
+        /// condition is null or not provided, all facts of type T will be included in the aggregation. The aggregated facts are stored 
+        /// in the token under the specified alias, which can then be referenced in subsequent conditions or actions using that alias. 
+        /// This method is useful for scenarios where you want to collect related facts together and evaluate conditions based on the 
+        /// aggregated collection at the time the rule fires.  
+        /// 
+        /// NOTE: This method is especially useful when combined with the All<T> method, which allows you to define conditions on the 
+        /// aggregated collection of facts.  They are tied together by the given alias, which serves as the key for storing the 
+        /// collection of facts in the token and referencing it in the aggregate condition.
+        /// </summary>
+        /// <typeparam name="T">Type of facts to aggregate.</typeparam>
+        /// <param name="alias">The alpha memory name AND alias to store the collection under on the token.</param>
+        /// <param name="joinCondition">Optional join constraint per token/fact. If null, every fact is included.</param>
+        /// <param name="debugLabel">An optional label used for debugging output. If specified, debug information about the 
+        /// evaluation of the condition is written to the console.</param>
+        public ReteBuilder<TInitial> From<T>(string alias, Func<Token, T, bool> joinCondition = null, string? debugLabel = null)
+        {
+            Func<Token, object, bool> wrapped = (token, fact) =>
+            {
+                if (joinCondition == null) return true;
+                bool result = joinCondition(token, (T)fact);
+                if (debugLabel != null)
+                {
+                    Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                }
+                return result;
+            };
+
+            var alpha = _engine.GetAlphaMemory<T>(alias);
+            var allNode = new AllNode(alias, wrapped);
+
+            // connect alpha to allNode
+            alpha.AddSuccessor(allNode);
+
+            // connect previous chain to allNode
+            if (_lastNode is BetaMemory beta)
+            {
+                beta.AddSuccessor(allNode);
+            }
+            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            {
+                compositeBeta.AddSuccessor(allNode);
+            }
+
+            // add a beta memory after the aggregator
+            var betaMemory = new BetaMemory();
+            allNode.AddSuccessor(betaMemory);
+            _lastNode = betaMemory;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Allows you to define an aggregate condition on a collection of facts of type T that have been aggregated into the 
+        /// token given the specified alias. The provided predicate will be evaluated against the collection of facts at the 
+        /// time the rule fires, allowing you to specify conditions that depend on the aggregated data. 
+        /// You could use this method to check if all facts in the collection satisfy a certain condition, if any fact meets a 
+        /// criterion, or if the collection contains a specific number of items. 
+        /// 
+        /// NOTE: The alias parameter should match the name used in a previous From<T> method call that aggregated the facts into 
+        /// the token. 
+        /// 
+        /// The aggregate predicate is a function that takes an IEnumerable<T> (the collection of facts) and returns a boolean 
+        /// indicating whether the condition is satisfied. 
+        /// </summary>
+        /// <typeparam name="T">Element type of the collection.</typeparam>
+        /// <param name="alias">Alias under which the collection is stored in the token.</param>
+        /// <param name="aggregatePredicate">Predicate evaluated against the collection.</param>
+
+        public ReteBuilder<TInitial> All<T>(string alias, Func<IEnumerable<T>, bool> aggregatePredicate)
+        {
+            // Create a wrapper predicate that can handle the fact as either an IEnumerable<T> or
+            // a non-generic IEnumerable that we attempt to cast
+            Func<object, bool> wrappedPred = (fact) =>
+            {
+                // Strongly typed, call directly
+                if (fact is IEnumerable<T> typedSeq) { return aggregatePredicate(typedSeq); }
+
+                // Non-generic IEnumerable, attempt to cast elements to T
+                if (fact is System.Collections.IEnumerable ie)
+                {
+                    var list = new List<T>();
+                    foreach (var o in ie)
+                    {
+                        if (o is T t)
+                        {
+                            list.Add(t);
+                        }
+                        else
+                        {
+                            throw new InvalidCastException(
+                                $"Rule '{_ruleName}': Alias '{alias}' expected IEnumerable<{typeof(T).Name}> but contained {o?.GetType().Name ?? "null"}.");
+                        }
+                    }
+                    return aggregatePredicate(list);
+                }
+
+                throw new InvalidCastException(
+                    $"Rule '{_ruleName}': Alias '{alias}' expected IEnumerable<{typeof(T).Name}> but found {fact?.GetType().Name ?? "null"}.");
+            };
+
+            _lateFilters.Add(new LateFilter
+            {
+                Alias = alias,
+                Predicate = wrappedPred
+            });
+
+            return this;
+        }
+
+        /// <summary>
         /// Adds a terminal action to the rule that will be executed when the rule is triggered.  This method finalizes the rule definition
         /// by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience 
         /// can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience

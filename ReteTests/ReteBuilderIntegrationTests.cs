@@ -437,6 +437,77 @@ namespace ReteTest.Tests
         }
 
         [Fact]
+        public void FromAllAggregator_Fires_When_SumExceedsThreshold()
+        {
+            // This test validates both branches in the ReteBuilder.All predicate:
+            // 1) When the late-filter receives a strongly-typed IEnumerable<T> (e.g. List<LineItem>)
+            // 2) When the late-filter receives a non-generic IEnumerable (e.g. ReadOnlyCollection<object>)
+            //
+            // We implement two small rule scenarios to exercise each branch.
+
+            var engine = new ReteEngine.ReteEngine();
+
+            // (1) -- Rule creating a non-generic IEnumerable created by the AllNode aggregator
+            bool firedNonGeneric = false;
+
+            engine.Begin("AggregateRule_NonGeneric")
+                .Where<Order>("order", initialCondition: o => true)
+                // The AllNode aggregator
+                .From<LineItem>("lineitems", (token, li) =>
+                {
+                    // Join line items to the current order by OrderId == Order.Id
+                    var ord = token.Get<Order>("order");
+                    return li.OrderId == ord.Id;
+                })
+                // From the aggregation created in the .From call, note the common name 'lineitems'
+                .All<LineItem>("lineitems", items => items.Sum(i => i.Amount) > 500m)
+                .Then(token => firedNonGeneric = true);
+
+            var orderA = new Order { Id = Guid.NewGuid() };
+            var itemA1 = new LineItem { OrderId = orderA.Id, Amount = 300m };
+            var itemA2 = new LineItem { OrderId = orderA.Id, Amount = 300m };
+
+            engine.Assert(orderA);
+            engine.Assert(itemA1);
+            engine.Assert(itemA2);
+
+            engine.FireAll();
+
+            Assert.True(firedNonGeneric, "Aggregate (non-generic IEnumerable produced by AllNode) should fire when sum > 500.");
+
+            // (2) -- Rule for strongly-typed IEnumerable<T> path (alpha fact is List<LineItem>) ---
+            bool firedGeneric = false;
+
+            // Build a new rule that receives a List<LineItem> directly from an alpha memory in an .And call
+            engine.Begin("AggregateRule_Generic")
+                .Where<Order>("order", initialCondition: o => true)
+                // Introduce a strongly-typed IEnumerable<LineItem>
+                .And<IEnumerable<LineItem>>("lineitemsGen", (token, items) =>
+                {
+                    // Just let everything through
+                    return true;
+                })
+                .All<LineItem>("lineitemsGen", items => items.Sum(i => i.Amount) > 500m)
+                .Then(token => firedGeneric = true);
+
+            var orderB = new Order { Id = Guid.NewGuid() };
+            // Create the aggregate IEnumerable<LineItem> as a List
+            var itemList = new List<LineItem>
+            {
+                new LineItem { OrderId = orderB.Id, Amount = 300m },
+                new LineItem { OrderId = orderB.Id, Amount = 300m }
+            };
+
+            engine.Assert(orderB);
+            // Assert the strongly-typed list as a single alpha fact.
+            engine.Assert(itemList);
+
+            engine.FireAll();
+
+            Assert.True(firedGeneric, "Aggregate (strongly-typed IEnumerable<LineItem> alpha fact) should fire when sum > 500.");
+        }
+
+        [Fact]
         public void DynamicRule_WhenAddedAtRuntime_MatchesExistingFacts()
         {
             // Setup engine and assert facts FIRST
