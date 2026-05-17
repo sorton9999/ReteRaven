@@ -150,7 +150,7 @@ namespace ReteEngine
             // This takes care of any facts that were asserted
             // before the network was fully built.
             _workingMemory.ForEach(f => _root.Assert(f));
-            while (_agenda.HasActivations) { _agenda.FireAll(); }
+            _agenda.FireAll();
         }
 
         /// <summary>

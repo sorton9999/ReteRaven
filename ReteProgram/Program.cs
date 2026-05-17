@@ -522,4 +522,54 @@ engineA.FireAll();
 // If TM is working, fireCount should be 1.
 Console.WriteLine($"Fire count: {fireCount}");
 
+Console.WriteLine("\n--- Testing TM with Refresh ---");
+var engineB = new ReteEngine.ReteEngine();
+string statusResult = "Pending";
+bool lateRuleFired = false;
+
+// Create initial test data
+var highStockInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 101, Count = 1500 };
+
+// Define the first two baseline forward-chaining rules
+engineB.Begin("DetectShipment")
+    .Where<Inventory>("O", "Inventory", o => o.Count > 1000)
+    .Then(t => {
+        var order = t.Get<Inventory>("O");
+        // Assert the emergent Shipment fact
+        engineB.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
+    });
+
+engineB.Begin("ApplyShipment")
+    .Where<Shipment>("S", "Shipment")
+    .Then(t => {
+        statusResult = "Shipped";
+    });
+
+// (1) -- Assert initial data and execute baseline network
+engineB.Assert(highStockInventory);
+engineB.FireAll();
+
+// Sanity Check: Baseline forward-chaining worked
+Console.WriteLine($"Initial Shipment Status: {statusResult}");
+
+// (2) -- Define a NEW rule LATE (Facts are already inside the engine)
+engineB.Begin("LateAuditRule")
+    .Where<Inventory>("I", "LateInventory", i => i.Count > 1000)
+    // This joins the existing facts
+    .Where<Shipment>("L", "LateShipment")
+    .Then(t => {
+        // If this fires, our late rule successfully matched both facts
+        lateRuleFired = true;
+    });
+
+// At this specific moment, 'lateRuleFired' is still FALSE because 
+// the facts already passed the entry nodes before this rule existed.
+Console.WriteLine($"Late Rule Should not Fire: {lateRuleFired}");
+
+// (3) -- Trigger the Refresh to push facts back through
+engineB.Refresh(highStockInventory, "I");
+engineB.FireAll();
+
+Console.WriteLine($"Late Rule Fired after Refresh: {lateRuleFired}");
+
 

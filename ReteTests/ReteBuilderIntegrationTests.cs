@@ -12,6 +12,7 @@ using ReteProgram;
 using System;
 using System.Net.NetworkInformation;
 using Xunit;
+using static ReteCore.Activation;
 
 namespace ReteTest.Tests
 {
@@ -409,6 +410,7 @@ namespace ReteTest.Tests
 
             // Detect a shipment request -> Assert Emergent Fact (Shipment)
             engine.Begin("DetectShipment")
+                .First()
                 .Where<Inventory>("O", null, o => o.Count > 1000)
                 .Then(t => {
                     var order = t.Get<Inventory>("O");
@@ -583,5 +585,94 @@ namespace ReteTest.Tests
             // It should never have fired
             Assert.Equal(0, fireCount);
         }
+
+        [Fact]
+        public void Refresh_ShouldPropagateExistingFacts_ToRulesAddedAfterAssertion()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            string statusResult = "Pending";
+            bool lateRuleFired = false;
+
+            // Create initial test data
+            var highStockInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 101, Count = 1500 };
+
+            // Define the first two baseline forward-chaining rules
+            engine.Begin("DetectShipment")
+                .First()
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    var order = t.Get<Inventory>("O");
+                    // Assert the emergent Shipment fact
+                    engine.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
+                });
+
+            engine.Begin("ApplyShipment")
+                .Next()
+                .Where<Shipment>("S")
+                .Then(t => {
+                    statusResult = "Shipped";
+                });
+
+            // (1) -- Assert initial data and execute baseline network
+            engine.Assert(highStockInventory);
+            engine.FireAll();
+
+            // Sanity Check: Baseline forward-chaining worked
+            Assert.Equal("Shipped", statusResult);
+
+            // (2) -- Define a NEW rule LATE (Facts are already inside the engine)
+            engine.Begin("LateAuditRule")
+                .Where<Inventory>("I", null, i => i.Count > 1000)
+                // This joins the existing facts
+                .Where<Shipment>("L")
+                .Then(t => {
+                    // If this fires, our late rule successfully matched both facts
+                    lateRuleFired = true;
+                });
+
+            // At this specific moment, 'lateRuleFired' is still FALSE because 
+            // the facts already passed the entry nodes before this rule existed.
+            Assert.False(lateRuleFired);
+
+            // (3) -- Trigger the Refresh to push facts back through
+            engine.Refresh(highStockInventory, "I");
+            engine.FireAll();
+
+            Assert.True(lateRuleFired, "The late rule failed to fire after calling Refresh().");
+        }
+
+        [Fact]
+        public void FireAll_ShouldRetainActivationsInList_AndMarkThemAsFired()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            bool ruleFired = false;
+
+            // Register a basic rule
+            engine.Begin("SimpleVerificationRule")
+                .Where<Inventory>("I", null, i => i.Count > 10)
+                .Then(t => {
+                    ruleFired = true;
+                });
+
+            // Fire the rule
+            engine.Assert(new Inventory { ProductId = 999, Count = 50 });
+            engine.FireAll();
+
+            Assert.True(ruleFired, "The rule should have fired.");
+
+            // Grabbing the historical activations from the Agenda after firing
+            var historicalActivations = engine.Agenda.Activations;
+
+            // Verify it still exists in the collection
+            Assert.Single(historicalActivations);
+
+            // Verify its exact state transition
+            // The activation should have been changed to Fired, but not removed from the list.
+            var loggedActivation = historicalActivations.First();
+            Assert.Equal("SimpleVerificationRule", loggedActivation.RuleName);
+            Assert.Equal(ActivationState.Fired, loggedActivation.State);
+        }
+
     }
+
 }

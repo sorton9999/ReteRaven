@@ -26,6 +26,20 @@ namespace ReteCore
     public class Activation : IComparable<Activation>
     {
         /// <summary>
+        /// An enumeration representing the processing state of an activation. This indicates whether the activation is pending, has been 
+        /// fired, or has been cancelled. The state of an activation can be used to manage the lifecycle of the activation within the agenda.
+        /// </summary>
+        public enum ActivationState
+        {
+            Cancelled,
+            Pending,
+            Fired
+        }
+        /// <summary>
+        /// A unique identifier for this activation.
+        /// </summary>
+        public Guid Id { get; } = Guid.NewGuid();
+        /// <summary>
         /// The name of the rule associated with this activation. This is used for identification and debugging purposes, 
         /// allowing users to trace which rule is being activated when an activation is fired. The rule name can help 
         /// in understanding the flow of rule execution and diagnosing issues in the rule engine by providing context 
@@ -62,6 +76,10 @@ namespace ReteCore
         /// are equal or when further differentiation is needed beyond salience alone.
         /// </summary>
         public int Priority { get; }
+        /// <summary>
+        /// The current processing state of this activation.
+        /// </summary>
+        public ActivationState State { get; set; } = ActivationState.Pending;
         /// <summary>
         /// A timestamp indicating when this activation was created. This can be used to break ties when multiple activations 
         /// have the same salience and priority, ensuring a consistent and predictable firing order based on the order of 
