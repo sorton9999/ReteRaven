@@ -108,31 +108,93 @@ Inheritance diagram for ReteCore.AllNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a751482a00da14f5ea5a1bee2584ff561" id="r_a751482a00da14f5ea5a1bee2584ff561"><td class="memItemLeft"><a id="a751482a00da14f5ea5a1bee2584ff561" name="a751482a00da14f5ea5a1bee2584ff561"></a>
-&#160;</td><td class="memItemRight"><b>AllNode</b> (string alias, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt; joinConstraint=null)</td></tr>
-<tr class="memitem:ac5973d50650da57e49c46af62d6a3bf8" id="r_ac5973d50650da57e49c46af62d6a3bf8"><td class="memItemLeft"><a id="ac5973d50650da57e49c46af62d6a3bf8" name="ac5973d50650da57e49c46af62d6a3bf8"></a>
-void&#160;</td><td class="memItemRight"><b>AddSuccessor</b> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memitem:a751482a00da14f5ea5a1bee2584ff561" id="r_a751482a00da14f5ea5a1bee2584ff561"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a751482a00da14f5ea5a1bee2584ff561">AllNode</a> (string alias, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt; joinConstraint=null)</td></tr>
+<tr class="memdesc:a751482a00da14f5ea5a1bee2584ff561"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor for the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> class. It initializes the node with a specified alias for the aggregated collection and an optional join constraint function. The alias is used to identify the collection of matching right facts in the derived token that this node produces. The join constraint function is used to determine whether a given left token and right fact should be considered a match when computing the aggregated tokens. If no join constraint is provided, it defaults to a function that always returns true, meaning that all right facts will be considered matches for any left token. The constructor also sets the node name for debugging purposes, incorporating the alias to provide context when printing the state of the node.  <br /></td></tr>
+<tr class="memitem:ac5973d50650da57e49c46af62d6a3bf8" id="r_ac5973d50650da57e49c46af62d6a3bf8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac5973d50650da57e49c46af62d6a3bf8">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memdesc:ac5973d50650da57e49c46af62d6a3bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a successor node to this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. When a new successor is added, it immediately receives all existing aggregated tokens through the Assert method, ensuring that the new node is up-to-date with the current state of the network.  <br /></td></tr>
 <tr class="memitem:a337656b9ca7d7172ec324031feb2b6c5" id="r_a337656b9ca7d7172ec324031feb2b6c5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a337656b9ca7d7172ec324031feb2b6c5">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
-<tr class="memdesc:a337656b9ca7d7172ec324031feb2b6c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removws a successor node from the current Rete node, which may be necessary when the structure of the Rete network changes. This method allows for dynamic modification of the network by removing a successor node from the list of successors. When a successor is removed, it will no longer receive facts asserted, retracted, or refreshed through this node, which can affect the flow of information and the activation of rules in the network depending on the role of the removed successor. The RemoveSuccessor method is important for maintaining the flexibility and adaptability of the Rete network as it evolves over time.  <br /></td></tr>
+<tr class="memdesc:a337656b9ca7d7172ec324031feb2b6c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. This method does not perform any additional cleanup or state management for the removed successor.  <br /></td></tr>
 <tr class="memitem:a33aa6762c650818a885f5caf6521eb9c" id="r_a33aa6762c650818a885f5caf6521eb9c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a33aa6762c650818a885f5caf6521eb9c">Assert</a> (object factOrToken)</td></tr>
-<tr class="memdesc:a33aa6762c650818a885f5caf6521eb9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.g., <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, etc.) and how it processes incoming facts. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might simply store the fact and propagate it to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations.  <br /></td></tr>
+<tr class="memdesc:a33aa6762c650818a885f5caf6521eb9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a fact or token to this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. If the input is a token, it is treated as a left token and the node computes the matching right facts from the right memory to create an aggregated token, which is then propagated to the successors. If the input is a fact, it is added to the right memory, and the node updates any existing left tokens that match this new fact by creating new aggregated tokens and propagating them to the successors. This method ensures that the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> is consistent with the new information being asserted, and that all relevant matches are updated accordingly.  <br /></td></tr>
 <tr class="memitem:a950275f09284f51d5fae19601c7e7174" id="r_a950275f09284f51d5fae19601c7e7174"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a950275f09284f51d5fae19601c7e7174">Retract</a> (object factOrToken)</td></tr>
-<tr class="memdesc:a950275f09284f51d5fae19601c7e7174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might remove the fact from its collection and propagate the retraction to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.  <br /></td></tr>
+<tr class="memdesc:a950275f09284f51d5fae19601c7e7174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a fact or token from this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. If the input is a token, it is treated as a left token and the node retracts any propagated aggregated token associated with it, and removes the left token from the matches. If the input is a fact, it is removed from the right memory, and the node updates any existing left tokens that included this fact in their matches by creating new aggregated tokens without this fact and propagating them to the successors. This method ensures that the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> remains consistent with the removal of information, and that all relevant matches are updated accordingly.  <br /></td></tr>
 <tr class="memitem:afb07aa8a2b00561a924816eaafe3f838" id="r_afb07aa8a2b00561a924816eaafe3f838"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afb07aa8a2b00561a924816eaafe3f838">Refresh</a> (object factOrToken, string propertyName)</td></tr>
-<tr class="memdesc:afb07aa8a2b00561a924816eaafe3f838"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the Rete node, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might check if the changed property is relevant to its conditions and re-evaluate the fact accordingly, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might need to re-evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time.  <br /></td></tr>
+<tr class="memdesc:afb07aa8a2b00561a924816eaafe3f838"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is used to refresh the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> when external changes occur that may affect the join constraints. If the input is a token, it is treated as a left token and the node recomputes the matching right facts from the right memory to create a new aggregated token, which is then propagated to the successors. If the input is a fact, it is treated as a right fact and the node updates any existing left tokens that match this fact by creating new aggregated tokens and propagating them to the successors. This method ensures that the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> can respond to changes in external state that may affect the join constraints, and that all relevant matches are updated accordingly to maintain the integrity of the network's state.  <br /></td></tr>
 <tr class="memitem:a5726406a871de893b022177b7de0d038" id="r_a5726406a871de893b022177b7de0d038"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5726406a871de893b022177b7de0d038">DebugPrint</a> (object fact, int level=0)</td></tr>
-<tr class="memdesc:a5726406a871de893b022177b7de0d038"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks.  <br /></td></tr>
+<tr class="memdesc:a5726406a871de893b022177b7de0d038"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the current state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> for debugging purposes. This method outputs the name of the node, the number of left tokens and right facts currently stored, and the details of each left token and its corresponding matches.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a8ef39c161a5edfbc48c77fc5bc39c016" id="r_a8ef39c161a5edfbc48c77fc5bc39c016"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8ef39c161a5edfbc48c77fc5bc39c016">Successors</a><code> [get]</code></td></tr>
-<tr class="memdesc:a8ef39c161a5edfbc48c77fc5bc39c016"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the collection of successor nodes connected to this node in the Rete network.  <br /></td></tr>
+<tr class="memdesc:a8ef39c161a5edfbc48c77fc5bc39c016"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of successor nodes that will receive the aggregated tokens produced by this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>.  <br /></td></tr>
 <tr class="memitem:aa9081be0f229d35a2a7ecc0e0a81a57f" id="r_aa9081be0f229d35a2a7ecc0e0a81a57f"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#aa9081be0f229d35a2a7ecc0e0a81a57f">Parent</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:aa9081be0f229d35a2a7ecc0e0a81a57f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Aggregates all matching right-side facts for each left token and emits a derived token with a named collection under the specified alias. </p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a751482a00da14f5ea5a1bee2584ff561" name="a751482a00da14f5ea5a1bee2584ff561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a751482a00da14f5ea5a1bee2584ff561">&#9670;&#160;</a></span>AllNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteCore.AllNode.AllNode </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alias</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinConstraint</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The constructor for the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> class. It initializes the node with a specified alias for the aggregated collection and an optional join constraint function. The alias is used to identify the collection of matching right facts in the derived token that this node produces. The join constraint function is used to determine whether a given left token and right fact should be considered a match when computing the aggregated tokens. If no join constraint is provided, it defaults to a function that always returns true, meaning that all right facts will be considered matches for any left token. The constructor also sets the node name for debugging purposes, incorporating the alias to provide context when printing the state of the node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alias</td><td>The alias for the aggregated collection of matching right facts.</td></tr>
+    <tr><td class="paramname">joinConstraint</td><td>The optional join constraint function to determine matches between left tokens and right facts.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">ArgumentNullException</td><td>Thrown when the alias is null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ac5973d50650da57e49c46af62d6a3bf8" name="ac5973d50650da57e49c46af62d6a3bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5973d50650da57e49c46af62d6a3bf8">&#9670;&#160;</a></span>AddSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.AllNode.AddSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a successor node to this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. When a new successor is added, it immediately receives all existing aggregated tokens through the Assert method, ensuring that the new node is up-to-date with the current state of the network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The successor node to add.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a33aa6762c650818a885f5caf6521eb9c" name="a33aa6762c650818a885f5caf6521eb9c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33aa6762c650818a885f5caf6521eb9c">&#9670;&#160;</a></span>Assert()</h2>
 
@@ -142,16 +204,16 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void ReteCore.AllNode.Assert </td>
           <td>(</td>
-          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>factOrToken</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.g., <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, etc.) and how it processes incoming facts. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might simply store the fact and propagate it to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations. </p>
+<p>Adds a fact or token to this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. If the input is a token, it is treated as a left token and the node computes the matching right facts from the right memory to create an aggregated token, which is then propagated to the successors. If the input is a fact, it is added to the right memory, and the node updates any existing left tokens that match this new fact by creating new aggregated tokens and propagating them to the successors. This method ensures that the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> is consistent with the new information being asserted, and that all relevant matches are updated accordingly. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
+    <tr><td class="paramname">factOrToken</td><td>The fact or token to assert.</td></tr>
   </table>
   </dd>
 </dl>
@@ -179,11 +241,11 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Visualizes the current state of the Rete node for debugging purposes. This method can be implemented to print out the internal state of the node, such as the facts it currently holds, the tokens it has generated, or any other relevant information that would help a developer understand how the node is processing facts. The level parameter can be used to indicate the depth in the network or to control the amount of detail printed, allowing for a more structured and readable output when visualizing complex Rete networks. </p>
+<p>Prints the current state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> for debugging purposes. This method outputs the name of the node, the number of left tokens and right facts currently stored, and the details of each left token and its corresponding matches. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
-    <tr><td class="paramname">level</td><td></td></tr>
+    <tr><td class="paramname">fact</td><td>The fact to debug.</td></tr>
+    <tr><td class="paramname">level</td><td>The indentation level for the debug output.</td></tr>
   </table>
   </dd>
 </dl>
@@ -201,7 +263,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void ReteCore.AllNode.Refresh </td>
           <td>(</td>
-          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span>, </td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>factOrToken</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -211,11 +273,11 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Refreshes a fact in the Rete node, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might check if the changed property is relevant to its conditions and re-evaluate the fact accordingly, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might need to re-evaluate any tokens that contain the changed fact. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time. </p>
+<p>This method is used to refresh the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> when external changes occur that may affect the join constraints. If the input is a token, it is treated as a left token and the node recomputes the matching right facts from the right memory to create a new aggregated token, which is then propagated to the successors. If the input is a fact, it is treated as a right fact and the node updates any existing left tokens that match this fact by creating new aggregated tokens and propagating them to the successors. This method ensures that the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> can respond to changes in external state that may affect the join constraints, and that all relevant matches are updated accordingly to maintain the integrity of the network's state. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
-    <tr><td class="paramname">propertyName</td><td></td></tr>
+    <tr><td class="paramname">factOrToken</td><td>The fact or token to refresh.</td></tr>
+    <tr><td class="paramname">propertyName</td><td>The name of the property that changed, if applicable.</td></tr>
   </table>
   </dd>
 </dl>
@@ -233,16 +295,16 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void ReteCore.AllNode.RemoveSuccessor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>successor</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removws a successor node from the current Rete node, which may be necessary when the structure of the Rete network changes. This method allows for dynamic modification of the network by removing a successor node from the list of successors. When a successor is removed, it will no longer receive facts asserted, retracted, or refreshed through this node, which can affect the flow of information and the activation of rules in the network depending on the role of the removed successor. The RemoveSuccessor method is important for maintaining the flexibility and adaptability of the Rete network as it evolves over time. </p>
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. This method does not perform any additional cleanup or state management for the removed successor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">node</td><td>The node to remove.</td></tr>
+    <tr><td class="paramname">successor</td><td>The successor node to remove.</td></tr>
   </table>
   </dd>
 </dl>
@@ -260,16 +322,16 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void ReteCore.AllNode.Retract </td>
           <td>(</td>
-          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>factOrToken</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts a fact from the Rete node, which may trigger the removal of the fact from successor nodes. The specific behavior of this method depends on the type of node and how it manages its internal state. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might remove the fact from its collection and propagate the retraction to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might remove any tokens that contain the retracted fact and propagate those changes. The Retract method is essential for maintaining the consistency of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed. </p>
+<p>Removes a fact or token from this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. If the input is a token, it is treated as a left token and the node retracts any propagated aggregated token associated with it, and removes the left token from the matches. If the input is a fact, it is removed from the right memory, and the node updates any existing left tokens that included this fact in their matches by creating new aggregated tokens without this fact and propagating them to the successors. This method ensures that the state of the <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a> remains consistent with the removal of information, and that all relevant matches are updated accordingly. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fact</td><td></td></tr>
+    <tr><td class="paramname">factOrToken</td><td>The fact or token to retract.</td></tr>
   </table>
   </dd>
 </dl>
@@ -325,7 +387,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the collection of successor nodes connected to this node in the Rete network. </p>
+<p>The list of successor nodes that will receive the aggregated tokens produced by this <a class="el" href="class_rete_core_1_1_all_node.html" title="Aggregates all matching right-side facts for each left token and emits a derived token with a named c...">AllNode</a>. </p>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
 

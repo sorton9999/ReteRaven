@@ -103,6 +103,14 @@ Inheritance diagram for ReteCore.Activation:</div>
   <img src="class_rete_core_1_1_activation.png" alt=""/>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ac301cc5e250f94dc0dc509a5ae954d61" id="r_ac301cc5e250f94dc0dc509a5ae954d61"><td class="memItemLeft"><a id="ac301cc5e250f94dc0dc509a5ae954d61" name="ac301cc5e250f94dc0dc509a5ae954d61"></a>enum &#160;</td><td class="memItemRight"><a class="el" href="#ac301cc5e250f94dc0dc509a5ae954d61">ActivationState</a> { <b>Cancelled</b>
+, <b>Pending</b>
+, <b>Fired</b>
+ }</td></tr>
+<tr class="memdesc:ac301cc5e250f94dc0dc509a5ae954d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enumeration representing the processing state of an activation. This indicates whether the activation is pending, has been fired, or has been cancelled. The state of an activation can be used to manage the lifecycle of the activation within the agenda. <br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab414522ad2ba19047e1765b525f8102b" id="r_ab414522ad2ba19047e1765b525f8102b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab414522ad2ba19047e1765b525f8102b">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int priority, int salience)</td></tr>
@@ -115,6 +123,9 @@ void&#160;</td><td class="memItemRight"><b>Fire</b> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:ac5827d58f0b6774d29051444e9245636" id="r_ac5827d58f0b6774d29051444e9245636"><td class="memItemLeft"><a id="ac5827d58f0b6774d29051444e9245636" name="ac5827d58f0b6774d29051444e9245636"></a>
+Guid&#160;</td><td class="memItemRight"><b>Id</b> = Guid.NewGuid()<code> [get]</code></td></tr>
+<tr class="memdesc:ac5827d58f0b6774d29051444e9245636"><td class="mdescLeft">&#160;</td><td class="mdescRight">A unique identifier for this activation. <br /></td></tr>
 <tr class="memitem:a493fc7b647c43420fdd9fd8299180bf9" id="r_a493fc7b647c43420fdd9fd8299180bf9"><td class="memItemLeft"><a id="a493fc7b647c43420fdd9fd8299180bf9" name="a493fc7b647c43420fdd9fd8299180bf9"></a>
 string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td></tr>
 <tr class="memdesc:a493fc7b647c43420fdd9fd8299180bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the rule associated with this activation. This is used for identification and debugging purposes, allowing users to trace which rule is being activated when an activation is fired. The rule name can help in understanding the flow of rule execution and diagnosing issues in the rule engine by providing context about which rules are being triggered based on the matched facts in the token. <br /></td></tr>
@@ -130,6 +141,9 @@ int&#160;</td><td class="memItemRight"><b>Salience</b><code> [get]</code></td></
 <tr class="memitem:a418e5c9c997a02b8be4eaad87acd0ad1" id="r_a418e5c9c997a02b8be4eaad87acd0ad1"><td class="memItemLeft"><a id="a418e5c9c997a02b8be4eaad87acd0ad1" name="a418e5c9c997a02b8be4eaad87acd0ad1"></a>
 int&#160;</td><td class="memItemRight"><b>Priority</b><code> [get]</code></td></tr>
 <tr class="memdesc:a418e5c9c997a02b8be4eaad87acd0ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A numeric value representing the priority of this activation relative to others in the agenda. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for additional control over the execution order of rules, especially when salience values are equal or when further differentiation is needed beyond salience alone. <br /></td></tr>
+<tr class="memitem:ab09b556d4f06c3c55db816fff8e3130b" id="r_ab09b556d4f06c3c55db816fff8e3130b"><td class="memItemLeft"><a id="ab09b556d4f06c3c55db816fff8e3130b" name="ab09b556d4f06c3c55db816fff8e3130b"></a>
+<a class="el" href="#ac301cc5e250f94dc0dc509a5ae954d61">ActivationState</a>&#160;</td><td class="memItemRight"><b>State</b> = ActivationState.Pending<code> [get, set]</code></td></tr>
+<tr class="memdesc:ab09b556d4f06c3c55db816fff8e3130b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current processing state of this activation. <br /></td></tr>
 <tr class="memitem:ae094a2ed15c188bbe01d12d0b7449497" id="r_ae094a2ed15c188bbe01d12d0b7449497"><td class="memItemLeft"><a id="ae094a2ed15c188bbe01d12d0b7449497" name="ae094a2ed15c188bbe01d12d0b7449497"></a>
 long&#160;</td><td class="memItemRight"><b>Timestamp</b> = DateTime.UtcNow.Ticks<code> [get]</code></td></tr>
 <tr class="memdesc:ae094a2ed15c188bbe01d12d0b7449497"><td class="mdescLeft">&#160;</td><td class="mdescRight">A timestamp indicating when this activation was created. This can be used to break ties when multiple activations have the same salience and priority, ensuring a consistent and predictable firing order based on the order of creation. <br /></td></tr>

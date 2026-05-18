@@ -36,6 +36,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
+        [ "Enumerations", "functions_enum.html", null ],
         [ "Properties", "functions_prop.html", null ],
         [ "Events", "functions_evnt.html", null ]
       ] ]
@@ -46,8 +47,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"class_rete_core_1_1_indexed_exists_node.html#ac11b61e5e1adfd55d2b6881310124c82",
-"class_rete_engine_1_1_rete_engine_1_1_trace_node.html#a5ceb7937f37cd8ccf647aa74d1cf576e"
+"class_rete_core_1_1_indexed_exists_node.html#a3ceb1861564a581adf5597bf223684f7",
+"class_rete_engine_1_1_rete_engine.html#a8cc4e3e56b368152eca15f625b805842"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
