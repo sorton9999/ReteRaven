@@ -82,10 +82,24 @@ namespace ReteEngine
         /// Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when 
         /// their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes. 
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The terminal node to add to the Rete network.</param>
         public void AddTerminalNode(TerminalNode node)
         {
             _terminalNodes.Add(node);
+        }
+
+        /// <summary>
+        /// The public fact insertion method that introduces facts as a batch Assert.  The private working Assert method is called for each fact in the array.
+        /// </summary>
+        /// <param name="facts">The array of facts to assert.</param>
+        /// <returns>The current instance of the ReteEngine.</returns>
+        public ReteEngine Assert(params object[] facts)
+        {
+            foreach (var fact in facts)
+            {
+                Assert(fact);
+            }
+            return this;
         }
 
         /// <summary>
@@ -94,8 +108,8 @@ namespace ReteEngine
         /// refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through 
         /// the network and potentially trigger rule activations based on the conditions defined in the terminal nodes.
         /// </summary>
-        /// <param name="fact"></param>
-        public void Assert(object fact)
+        /// <param name="fact">The fact to assert into the Rete network.</param>
+        private void Assert(object fact)
         {
             if (!_workingMemory.Contains(fact))
             {
@@ -113,8 +127,8 @@ namespace ReteEngine
         /// method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. 
         /// The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time.
         /// </summary>
-        /// <param name="fact"></param>
-        /// <param name="propertyName"></param>
+        /// <param name="fact">The fact to refresh in the Rete network.</param>
+        /// <param name="propertyName">The name of the property that changed, if applicable.</param>
         public void Refresh(object fact, string propertyName = null)
         {
             if (fact == null) { return; }
@@ -122,14 +136,28 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, it is removed from 
-        /// the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. This may trigger the 
-        /// removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, ensuring that the Rete 
-        /// network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity of the Rete network 
-        /// as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.
+        /// The public fact retraction method that removes facts as a batch Retract.  The private working Retract method is called for each fact in the array.
         /// </summary>
-        /// <param name="fact"></param>
-        public void Retract(object fact)
+        /// <param name="facts">The array of facts to retract.</param>
+        /// <returns>The current instance of the ReteEngine.</returns>
+        public ReteEngine Retract(params object[] facts)
+        {
+            foreach (var fact in facts)
+            {
+                Retract(fact);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// A private method that removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, 
+        /// it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. 
+        /// This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, 
+        /// ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity 
+        /// of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.
+        /// </summary>
+        /// <param name="fact">The fact to retract from the Rete network.</param>
+        private void Retract(object fact)
         {
             if (_workingMemory.Remove(fact))
             {
@@ -144,24 +172,40 @@ namespace ReteEngine
         /// on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the
         /// working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired.
         /// </summary>
-        public void FireAll()
+        /// <returns>The current instance of the ReteEngine.</returns>
+        public ReteEngine FireAll()
         {
             // Work any pre-loaded facts through the network.
             // This takes care of any facts that were asserted
             // before the network was fully built.
             _workingMemory.ForEach(f => _root.Assert(f));
             _agenda.FireAll();
+            return this;
         }
 
         /// <summary>
-        /// Updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact has changed and needs to 
-        /// be re-evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by asserting it again, it 
-        /// is re-introduced and re-evaluated against all conditions, potentially triggering new activations based on the updated state of the fact. The 
-        /// Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to correctly reflect the 
-        /// current state of knowledge and trigger or deactivate rules as needed.
+        /// The pubic fact update method that updates facts as a batch Update.  The private working Update method is called for each fact in the array.
         /// </summary>
-        /// <param name="fact"></param>
-        public void Update(object fact)
+        /// <param name="facts"></param>
+        /// <returns></returns>
+        public ReteEngine Update(params object[] facts)
+        {
+            foreach (var fact in facts)
+            {
+                Update(fact);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// A private method that updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact 
+        /// has changed and needs to be re-evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by 
+        /// asserting it again, it is re-introduced and re-evaluated against all conditions, potentially triggering new activations based on the updated 
+        /// state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to 
+        /// correctly reflect the current state of knowledge and trigger or deactivate rules as needed.
+        /// </summary>
+        /// <param name="fact">The fact to update in the Rete network.</param>
+        private void Update(object fact)
         {
             // Remove the stale state
             this.Retract(fact);
@@ -177,8 +221,8 @@ namespace ReteEngine
         /// asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and 
         /// management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed.
         /// </summary>
-        /// <param name="ruleName"></param>
-        /// <returns></returns>
+        /// <param name="ruleName">The name of the rule to begin defining.</param>
+        /// <returns>A ReteBuilder instance for defining the rule.</returns>
         public ReteBuilder<Cell> Begin(string ruleName) => new ReteBuilder<Cell>(this, ruleName);
 
         /// <summary>
@@ -233,7 +277,7 @@ namespace ReteEngine
         /// clean and efficient. This allows for dynamic modification of the Rete network by removing rules that are no longer needed or relevant, while 
         /// maintaining the integrity of the network. 
         /// </summary>
-        /// <param name="ruleName"></param>
+        /// <param name="ruleName">The name of the rule to remove.</param>
         public void RemoveRule(string ruleName)
         {
             if (string.IsNullOrEmpty(ruleName))
@@ -273,15 +317,16 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A convenience method to recursively prune orphaned nodes from the Rete network. This method is called after a terminal node is removed from the 
-        /// network to ensure that any nodes that no longer have successors (i.e., orphaned nodes) are also removed from the network. The method checks if 
-        /// the given node has any successors, and if it does not and is not the root node, it removes the node from its parent and then recursively calls 
-        /// itself on the parent node. This process continues up the network until it reaches a node that has no successors or the root node.
+        /// A static convenience method to recursively prune orphaned nodes from the Rete network. This method is called after a terminal node is removed 
+        /// from the network to ensure that any nodes that no longer have successors (i.e., orphaned nodes) are also removed from the network. The method 
+        /// checks if the given node has any successors, and if it does not and is not the root node, it removes the node from its parent and then 
+        /// recursively calls itself on the parent node. This process continues up the network until it reaches a node that has no successors or the root 
+        /// node.
         /// </summary>
         /// <param name="node">The node to start pruning from.</param>
-        private void PruneOrphanedNodes(IReteNode? node)
+        private static void PruneOrphanedNodes(IReteNode? node)
         {
-            if (node.Successors.Count() == 0 && node is not RootNode)
+            if (node != null && node.Successors.Count() == 0 && node is not RootNode)
             {
                 var parent = node.Parent;
                 parent?.RemoveSuccessor(node);
