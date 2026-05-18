@@ -248,8 +248,8 @@ engine6.Begin("MatchStatusNot")
         Console.WriteLine($">>RESULT:[{t}]: This should be marked URGENT!");
         });
 
-engine6.Assert(criticalCell2);
-engine6.FireAll();
+engine6.Assert(criticalCell2)
+    .FireAll();
 
 
 var engine7 = new ReteEngine.ReteEngine();
@@ -264,8 +264,8 @@ engine7.Begin("MatchStatusExists")
         Console.WriteLine($">>RESULT:[{t}]: This Exists and should be marked URGENT!");
         });
 
-engine7.Assert(criticalCell2);
-engine7.FireAll();
+engine7.Assert(criticalCell2)
+    .FireAll();
 
 var engine8 = new ReteEngine.ReteEngine();
 
@@ -360,16 +360,8 @@ Shipment shipment2 = new Shipment()
     Status = "Pending"
 };
 
-engine8.Assert(product);
-engine8.Assert(product2);
-engine8.Assert(product3);
-engine8.Assert(inventory);
-engine8.Assert(inventory2);
-engine8.Assert(inventory3);
-engine8.Assert(shipment);
-engine8.Assert(shipment2);
-
-engine8.FireAll();
+engine8.Assert(product, product2, product3, inventory, inventory2, inventory3, shipment, shipment2)
+    .FireAll();
 Console.WriteLine("Changing shipment status to Pending...");
 shipment.Status = "Pending";
 engine8.FireAll();
@@ -415,20 +407,14 @@ var officer3 = new Officer { Id = Guid.NewGuid(), Name = "Brown", Rank = "Major"
 var officer4 = new Officer { Id = Guid.NewGuid(), Name = "Davis", Rank = "Colonel", Underling = "Major" };
 var officer5 = new Officer { Id = Guid.NewGuid(), Name = "Williams", Rank = "General", Underling = "Colonel" };
 var officer6 = new Officer { Id = Guid.NewGuid(), Name = "Anderson", Rank = "Captain", Underling = "Lieutenant" };
-engine9.Assert(officer6);
-engine9.Assert(officer5);
-engine9.Assert(officer4);
-engine9.Assert(officer3);
-engine9.Assert(officer2);
-engine9.Assert(officer1);
-engine9.Assert(order1);
 
-engine9.FireAll();
+engine9.Assert(officer6, officer5, officer4, officer3, officer2, officer1, order1)
+    .FireAll();
 
 Console.WriteLine("\n--- Testing another order, but there are 2 of that rank ---");
 var order2 = new Order { Id = Guid.NewGuid(), Name = "Order 2", Text = "Retreat!", TargetRank = "Captain", GivenBy = "General", IsProcessed = false };
-engine9.Assert(order2);
-engine9.FireAll();
+engine9.Assert(order2)
+    .FireAll();
 
 // Adding new rules to check if the officers are on duty before executing orders.
 // If not on duty, the order is not handled by that officer.
@@ -462,18 +448,14 @@ var duty3 = new DutyStatus { Id = Guid.NewGuid(), Name = "Brown", OnDuty = true 
 var duty4 = new DutyStatus { Id = Guid.NewGuid(), Name = "Davis", OnDuty = true };
 var duty5 = new DutyStatus { Id = Guid.NewGuid(), Name = "Williams", OnDuty = true };
 var duty6 = new DutyStatus { Id = Guid.NewGuid(), Name = "Anderson", OnDuty = true };
-engine9.Assert(duty1);
-engine9.Assert(duty2);
-engine9.Assert(duty3);
-engine9.Assert(duty4);
-engine9.Assert(duty5);
-engine9.Assert(duty6);
+
+engine9.Assert(duty1, duty2, duty3, duty4, duty5, duty6);
 
 // Update the order to trigger the new rules.
 // This will cause the "HandleOffDuty" rule to fire for Johnson, who is off duty.
 order2.IsProcessed = false;
-engine9.Update(order2);
-engine9.FireAll();
+engine9.Update(order2)
+    .FireAll();
 
 // Let's create a scenario where there is only one officer on duty of duplicate ranks,
 // and see how the rules handle that.  We will set the officer on duty in a duty status
@@ -487,13 +469,11 @@ engine9.FireAll();
 Console.WriteLine("\n--- Testing Lieutenant Back On Duty ---");
 duty1.OnDuty = true;
 order3.IsProcessed = false;
-engine9.Update(duty1);
-engine9.Update(order3);
-engine9.FireAll();
+engine9.Update(duty1, order3).FireAll();
 
 var engineA = new ReteEngine.ReteEngine();
 int fireCount = 0;
-var order = new Order { Text = "Test Order", TargetRank = "Captain", IsProcessed = false };
+var order = new Order { Id = Guid.NewGuid(), Text = "Test Order", TargetRank = "Captain", IsProcessed = false };
 
 // High Priority - Retracts the order
 engineA.Begin("HighPriority_Retract")
@@ -516,10 +496,60 @@ engineA.Begin("LowPriority_ShouldNotFire")
     });
 
 // Act
-engineA.Assert(order);
-engineA.FireAll();
+engineA.Assert(order)
+    .FireAll();
 
 // If TM is working, fireCount should be 1.
 Console.WriteLine($"Fire count: {fireCount}");
+
+Console.WriteLine("\n--- Testing TM with Refresh ---");
+var engineB = new ReteEngine.ReteEngine();
+string statusResult = "Pending";
+bool lateRuleFired = false;
+
+// Create initial test data
+var highStockInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 101, Count = 1500 };
+
+// Define the first two baseline forward-chaining rules
+engineB.Begin("DetectShipment")
+    .Where<Inventory>("O", "Inventory", o => o.Count > 1000)
+    .Then(t => {
+        var order = t.Get<Inventory>("O");
+        // Assert the emergent Shipment fact
+        engineB.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
+    });
+
+engineB.Begin("ApplyShipment")
+    .Where<Shipment>("S", "Shipment")
+    .Then(t => {
+        statusResult = "Shipped";
+    });
+
+// (1) -- Assert initial data and execute baseline network
+engineB.Assert(highStockInventory)
+    .FireAll();
+
+// Sanity Check: Baseline forward-chaining worked
+Console.WriteLine($"Initial Shipment Status: {statusResult}");
+
+// (2) -- Define a NEW rule LATE (Facts are already inside the engine)
+engineB.Begin("LateAuditRule")
+    .Where<Inventory>("I", "LateInventory", i => i.Count > 1000)
+    // This joins the existing facts
+    .Where<Shipment>("L", "LateShipment")
+    .Then(t => {
+        // If this fires, our late rule successfully matched both facts
+        lateRuleFired = true;
+    });
+
+// At this specific moment, 'lateRuleFired' is still FALSE because 
+// the facts already passed the entry nodes before this rule existed.
+Console.WriteLine($"Late Rule Should not Fire: {lateRuleFired}");
+
+// (3) -- Trigger the Refresh to push facts back through
+engineB.Refresh(highStockInventory, "I");
+engineB.FireAll();
+
+Console.WriteLine($"Late Rule Fired after Refresh: {lateRuleFired}");
 
 

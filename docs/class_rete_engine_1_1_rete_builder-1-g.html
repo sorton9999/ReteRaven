@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -125,6 +125,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2eb33d7133d55771a24cf753edbf5ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a "not" condition to the rule, specifying that there must be no facts of type T that satisfy the given join condition for the rule to match.  <br /></td></tr>
 <tr class="memitem:a67a47e46e913d55ebf21b5b024bb14b3" id="r_a67a47e46e913d55ebf21b5b024bb14b3"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a67a47e46e913d55ebf21b5b024bb14b3">Exists&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
 <tr class="memdesc:a67a47e46e913d55ebf21b5b024bb14b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an "exists" condition to the rule, specifying that there must be at least one fact of type T that satisfies the given join condition for the rule to match.  <br /></td></tr>
+<tr class="memitem:aabc8b2215f9f3529156c523d12332a4c" id="r_aabc8b2215f9f3529156c523d12332a4c"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aabc8b2215f9f3529156c523d12332a4c">From&lt; T &gt;</a> (string alias, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition=null, string? debugLabel=null)</td></tr>
+<tr class="memdesc:aabc8b2215f9f3529156c523d12332a4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method provides a way to aggregate facts of a specific type T into the token under a given alias. The optional join condition allows you to specify criteria for which facts of type T should be included in the aggregation. If the join condition is null or not provided, all facts of type T will be included in the aggregation. The aggregated facts are stored in the token under the specified alias, which can then be referenced in subsequent conditions or actions using that alias. This method is useful for scenarios where you want to collect related facts together and evaluate conditions based on the aggregated collection at the time the rule fires.  <br /></td></tr>
+<tr class="memitem:a5eb8f017ae1e04ef08519f835c16b21a" id="r_a5eb8f017ae1e04ef08519f835c16b21a"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5eb8f017ae1e04ef08519f835c16b21a">All&lt; T &gt;</a> (string alias, Func&lt; IEnumerable&lt; T &gt;, bool &gt; aggregatePredicate)</td></tr>
+<tr class="memdesc:a5eb8f017ae1e04ef08519f835c16b21a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows you to define an aggregate condition on a collection of facts of type T that have been aggregated into the token given the specified alias. The provided predicate will be evaluated against the collection of facts at the time the rule fires, allowing you to specify conditions that depend on the aggregated data. You could use this method to check if all facts in the collection satisfy a certain condition, if any fact meets a criterion, or if the collection contains a specific number of items.  <br /></td></tr>
 <tr class="memitem:a189b596a98d88d4f0e6c6f8e5dfad756" id="r_a189b596a98d88d4f0e6c6f8e5dfad756"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189b596a98d88d4f0e6c6f8e5dfad756">Then</a> (Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
 <tr class="memdesc:a189b596a98d88d4f0e6c6f8e5dfad756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others.  <br /></td></tr>
 <tr class="memitem:ae3963d94678b6b291afb06f21d7e0342" id="r_ae3963d94678b6b291afb06f21d7e0342"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae3963d94678b6b291afb06f21d7e0342">Trace</a> (string label)</td></tr>
@@ -160,6 +164,44 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
   </dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a5eb8f017ae1e04ef08519f835c16b21a" name="a5eb8f017ae1e04ef08519f835c16b21a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eb8f017ae1e04ef08519f835c16b21a">&#9670;&#160;</a></span>All&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.All&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alias</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; IEnumerable&lt; T &gt;, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>aggregatePredicate</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Allows you to define an aggregate condition on a collection of facts of type T that have been aggregated into the token given the specified alias. The provided predicate will be evaluated against the collection of facts at the time the rule fires, allowing you to specify conditions that depend on the aggregated data. You could use this method to check if all facts in the collection satisfy a certain condition, if any fact meets a criterion, or if the collection contains a specific number of items. </p>
+<p>NOTE: The alias parameter should match the name used in a previous From&lt;T&gt; method call that aggregated the facts into the token.</p>
+<p>The aggregate predicate is a function that takes an IEnumerable&lt;T&gt; (the collection of facts) and returns a boolean indicating whether the condition is satisfied.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Element type of the collection.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alias</td><td>Alias under which the collection is stored in the token.</td></tr>
+    <tr><td class="paramname">aggregatePredicate</td><td>Predicate evaluated against the collection.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a40c8b6c0a56cff4dcd6865990db3a8e1" name="a40c8b6c0a56cff4dcd6865990db3a8e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a40c8b6c0a56cff4dcd6865990db3a8e1">&#9670;&#160;</a></span>And&lt; T &gt;()</h2>
 
@@ -332,6 +374,49 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 
 <p>A convenience method to set the rule's priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> instance, enabling further configuration of the rule.</dd></dl>
+
+</div>
+</div>
+<a id="aabc8b2215f9f3529156c523d12332a4c" name="aabc8b2215f9f3529156c523d12332a4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc8b2215f9f3529156c523d12332a4c">&#9670;&#160;</a></span>From&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.From&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alias</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This method provides a way to aggregate facts of a specific type T into the token under a given alias. The optional join condition allows you to specify criteria for which facts of type T should be included in the aggregation. If the join condition is null or not provided, all facts of type T will be included in the aggregation. The aggregated facts are stored in the token under the specified alias, which can then be referenced in subsequent conditions or actions using that alias. This method is useful for scenarios where you want to collect related facts together and evaluate conditions based on the aggregated collection at the time the rule fires. </p>
+<p>NOTE: This method is especially useful when combined with the All&lt;T&gt; method, which allows you to define conditions on the aggregated collection of facts. They are tied together by the given alias, which serves as the key for storing the collection of facts in the token and referencing it in the aggregate condition.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of facts to aggregate.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alias</td><td>The alpha memory name AND alias to store the collection under on the token.</td></tr>
+    <tr><td class="paramname">joinCondition</td><td>Optional join constraint per token/fact. If null, every fact is included.</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional label used for debugging output. If specified, debug information about the evaluation of the condition is written to the console.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

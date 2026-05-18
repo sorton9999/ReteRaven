@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.2</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -105,15 +105,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a84333162d9672cb561525a0db44e54a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is provided, it will remove activations where the token's fact matches the retracted fact.  <br /></td></tr>
 <tr class="memitem:a6c19ab804499c8813af25859a2bf8810" id="r_a6c19ab804499c8813af25859a2bf8810"><td class="memItemLeft"><a id="a6c19ab804499c8813af25859a2bf8810" name="a6c19ab804499c8813af25859a2bf8810"></a>
 void&#160;</td><td class="memItemRight"><b>FireAll</b> ()</td></tr>
-<tr class="memdesc:a6c19ab804499c8813af25859a2bf8810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The activations are removed from the agenda as they are fired. Activated rules are fired based on their priority, ensuring that higher salience rules are executed before lower salience ones when multiple activations are present. <br /></td></tr>
+<tr class="memdesc:a6c19ab804499c8813af25859a2bf8810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The method continues to process activations until there are no more pending activations left in the agenda. <br /></td></tr>
 <tr class="memitem:ac4f2725ceecb7d76d8020e491f9441a7" id="r_ac4f2725ceecb7d76d8020e491f9441a7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ac4f2725ceecb7d76d8020e491f9441a7">RemoveActivationsByRule</a> (string ruleName)</td></tr>
 <tr class="memdesc:ac4f2725ceecb7d76d8020e491f9441a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all pending activations from the agenda that are associated with the specified rule name.  <br /></td></tr>
+<tr class="memitem:a86faf96251b4be8b8310c28a09752fda" id="r_a86faf96251b4be8b8310c28a09752fda"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a86faf96251b4be8b8310c28a09752fda">GenerateActivationKey</a> (<a class="el" href="class_rete_core_1_1_activation.html">Activation</a> activation)</td></tr>
+<tr class="memdesc:a86faf96251b4be8b8310c28a09752fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a unique key for an activation based on its rule name and the facts involved in the activation. Activations are saved , so this key is used to track which activations have already been fired, preventing duplicates from executing multiple times.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a3aa3a75318c9ecb9dddf03c3fa7ab14e" id="r_a3aa3a75318c9ecb9dddf03c3fa7ab14e"><td class="memItemLeft"><a id="a3aa3a75318c9ecb9dddf03c3fa7ab14e" name="a3aa3a75318c9ecb9dddf03c3fa7ab14e"></a>
 bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code></td></tr>
 <tr class="memdesc:a3aa3a75318c9ecb9dddf03c3fa7ab14e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does the agenda currently have any pending activations? This property returns true if there are one or more activations in the agenda, indicating that there are rules that have been triggered and are waiting to be fired. If this property returns false, it means that there are no pending activations and the agenda is currently empty. <br /></td></tr>
+<tr class="memitem:a2c603d5fedf37ce173fd8aaea11d3b41" id="r_a2c603d5fedf37ce173fd8aaea11d3b41"><td class="memItemLeft"><a id="a2c603d5fedf37ce173fd8aaea11d3b41" name="a2c603d5fedf37ce173fd8aaea11d3b41"></a>
+IEnumerable&lt; <a class="el" href="class_rete_core_1_1_activation.html">Activation</a> &gt;&#160;</td><td class="memItemRight"><b>Activations</b><code> [get]</code></td></tr>
+<tr class="memdesc:a2c603d5fedf37ce173fd8aaea11d3b41"><td class="mdescLeft">&#160;</td><td class="mdescRight">An accessor for the list of pending activations in the agenda. This property returns a read-only enumerable collection of <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> objects. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_agenda.html" title="The Agenda class manages pending rule activations in a Rete-based rule engine. It maintains a list of...">Agenda</a> class manages pending rule activations in a Rete-based rule engine. It maintains a list of activations that have been triggered but not yet executed. </p>
@@ -140,6 +145,32 @@ bool&#160;</td><td class="memItemRight"><b>HasActivations</b><code> [get]</code>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a86faf96251b4be8b8310c28a09752fda" name="a86faf96251b4be8b8310c28a09752fda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86faf96251b4be8b8310c28a09752fda">&#9670;&#160;</a></span>GenerateActivationKey()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ReteCore.Agenda.GenerateActivationKey </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_activation.html">Activation</a></td>          <td class="paramname"><span class="paramname"><em>activation</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates a unique key for an activation based on its rule name and the facts involved in the activation. Activations are saved , so this key is used to track which activations have already been fired, preventing duplicates from executing multiple times. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">activation</td><td>The activation for which to generate a key.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A unique key representing the activation.</dd></dl>
 
 </div>
 </div>

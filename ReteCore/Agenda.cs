@@ -28,7 +28,6 @@ namespace ReteCore
         /// multiple activations are present.
         /// </summary>
         private readonly List<Activation> _activations = new();
-
         /// <summary>
         /// Does the agenda currently have any pending activations? This property returns true if there are one or more 
         /// activations in the agenda, indicating that there are rules that have been triggered and are waiting to be 
@@ -36,6 +35,19 @@ namespace ReteCore
         /// currently empty.
         /// </summary>
         public bool HasActivations => _activations.Count > 0;
+        /// <summary>
+        /// Stores a registry of activations that have already been fired, using a unique key generated from the rule name and 
+        /// the facts involved in the activation. This registry is used to prevent duplicate activations from firing multiple 
+        /// times, ensuring that once an activation has been executed, it will not be triggered again based on the same set of 
+        /// facts.
+        /// </summary>
+        private readonly List<string> _firedActivationsRegistry = new();
+
+        /// <summary>
+        /// An accessor for the list of pending activations in the agenda. This property returns a read-only enumerable collection 
+        /// of Activation objects.
+        /// </summary>
+        public IEnumerable<Activation> Activations => _activations.AsReadOnly();
 
         /// <summary>
         /// Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, 
@@ -45,6 +57,12 @@ namespace ReteCore
         /// <param name="activation">The Activation object to add to the list of activations.</param>
         public void Add(Activation activation)
         {
+            string keyFacts = GenerateActivationKey(activation);
+            if (_firedActivationsRegistry.Contains(keyFacts))
+            {
+                Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                return;
+            }
             _activations.Add(activation);
             // Ensure activations are sorted by priority
             _activations.Sort();
@@ -79,29 +97,47 @@ namespace ReteCore
 
         /// <summary>
         /// Fires all pending activations in the agenda, executing their associated actions in order of descending 
-        /// salience (priority). The activations are removed from the agenda as they are fired. Activated rules are 
-        /// fired based on their priority, ensuring that higher salience rules are executed before lower salience 
-        /// ones when multiple activations are present.
+        /// salience (priority). The method continues to process activations until there are no more pending 
+        /// activations left in the agenda.
         /// </summary>
         public void FireAll()
         {
-            if (!HasActivations) { return; }
-            var activationToFire = PopNext();
-            activationToFire?.Fire();
+            // As long as we have activations, look for the next pending one.
+            // Remember, activations are pre-sorted by salience and time when added, so the first pending
+            // found will always be the highest priority.
+            while (HasActivations)
+            {
+                // Find the first activation that hasn't been processed yet
+                var activation = _activations.FirstOrDefault(a => a.State == Activation.ActivationState.Pending);
+
+                // If there are absolutely no Pending activations left, we are officially done forward-chaining
+                if (activation == null)
+                {
+                    break;
+                }
+
+                string keyFacts = GenerateActivationKey(activation);
+
+                // Check duplication registry
+                if (_firedActivationsRegistry.Contains(keyFacts))
+                {
+                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                    activation.State = Activation.ActivationState.Cancelled; // Mark it so FirstOrDefault skips it next time
+                    continue;
+                }
+
+                Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+
+                // Lock the state immediately
+                activation.State = Activation.ActivationState.Fired;
+                _firedActivationsRegistry.Add(keyFacts);
+
+                // This will safely append ApplyShipment as 'Pending' to the end of the collection,
+                // and our FirstOrDefault() will seamlessly grab it on the very next loop iteration.
+                activation.Fire();
+            }
         }
 
-        /// <summary>
-        /// This method retrieves and removes the next activation to fire from the agenda based on descending salience (priority).
-        /// </summary>
-        /// <returns>The next activation to fire, or null if no activations are available.</returns>
-        private Activation PopNext()
-        {
-            var sorted =  _activations.OrderByDescending(a => a.Salience).ToList();
-            if (sorted.Count == 0) return null;
-            var next = sorted[0];
-            _activations.Remove(next);
-            return next;
-        }
         /// <summary>
         /// Removes all pending activations from the agenda that are associated with the specified rule name.
         /// </summary>
@@ -110,6 +146,19 @@ namespace ReteCore
         public bool RemoveActivationsByRule(string ruleName)
         {
             return _activations.RemoveAll(a => a.RuleName == ruleName) > 0;
+        }
+
+        /// <summary>
+        /// Generates a unique key for an activation based on its rule name and the facts involved in the activation. 
+        /// Activations are saved , so this key is used to track which activations have already been fired, preventing 
+        /// duplicates from executing multiple times.
+        /// </summary>
+        /// <param name="activation">The activation for which to generate a key.</param>
+        /// <returns>A unique key representing the activation.</returns>
+        public string GenerateActivationKey(Activation activation)
+        {
+            string keyFacts = string.Join(", ", activation.Match.NamedFacts.Select(kv => $"{kv.Key}={(kv.Value as Cell)?.Id}"));
+            return $"{activation.RuleName}_{keyFacts}";
         }
     }
 }

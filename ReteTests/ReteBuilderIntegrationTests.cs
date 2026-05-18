@@ -12,6 +12,7 @@ using ReteProgram;
 using System;
 using System.Net.NetworkInformation;
 using Xunit;
+using static ReteCore.Activation;
 
 namespace ReteTest.Tests
 {
@@ -409,6 +410,7 @@ namespace ReteTest.Tests
 
             // Detect a shipment request -> Assert Emergent Fact (Shipment)
             engine.Begin("DetectShipment")
+                .First()
                 .Where<Inventory>("O", null, o => o.Count > 1000)
                 .Then(t => {
                     var order = t.Get<Inventory>("O");
@@ -434,6 +436,77 @@ namespace ReteTest.Tests
 
             // If Forward Chaining works, Rule 2 fired because Rule 1 created the Shipment.
             Assert.Equal("Shipped", statusResult);
+        }
+
+        [Fact]
+        public void FromAllAggregator_Fires_When_SumExceedsThreshold()
+        {
+            // This test validates both branches in the ReteBuilder.All predicate:
+            // 1) When the late-filter receives a strongly-typed IEnumerable<T> (e.g. List<LineItem>)
+            // 2) When the late-filter receives a non-generic IEnumerable (e.g. ReadOnlyCollection<object>)
+            //
+            // We implement two small rule scenarios to exercise each branch.
+
+            var engine = new ReteEngine.ReteEngine();
+
+            // (1) -- Rule creating a non-generic IEnumerable created by the AllNode aggregator
+            bool firedNonGeneric = false;
+
+            engine.Begin("AggregateRule_NonGeneric")
+                .Where<Order>("order", initialCondition: o => true)
+                // The AllNode aggregator
+                .From<LineItem>("lineitems", (token, li) =>
+                {
+                    // Join line items to the current order by OrderId == Order.Id
+                    var ord = token.Get<Order>("order");
+                    return li.OrderId == ord.Id;
+                })
+                // From the aggregation created in the .From call, note the common name 'lineitems'
+                .All<LineItem>("lineitems", items => items.Sum(i => i.Amount) > 500m)
+                .Then(token => firedNonGeneric = true);
+
+            var orderA = new Order { Id = Guid.NewGuid() };
+            var itemA1 = new LineItem { OrderId = orderA.Id, Amount = 300m };
+            var itemA2 = new LineItem { OrderId = orderA.Id, Amount = 300m };
+
+            engine.Assert(orderA);
+            engine.Assert(itemA1);
+            engine.Assert(itemA2);
+
+            engine.FireAll();
+
+            Assert.True(firedNonGeneric, "Aggregate (non-generic IEnumerable produced by AllNode) should fire when sum > 500.");
+
+            // (2) -- Rule for strongly-typed IEnumerable<T> path (alpha fact is List<LineItem>) ---
+            bool firedGeneric = false;
+
+            // Build a new rule that receives a List<LineItem> directly from an alpha memory in an .And call
+            engine.Begin("AggregateRule_Generic")
+                .Where<Order>("order", initialCondition: o => true)
+                // Introduce a strongly-typed IEnumerable<LineItem>
+                .And<IEnumerable<LineItem>>("lineitemsGen", (token, items) =>
+                {
+                    // Just let everything through
+                    return true;
+                })
+                .All<LineItem>("lineitemsGen", items => items.Sum(i => i.Amount) > 500m)
+                .Then(token => firedGeneric = true);
+
+            var orderB = new Order { Id = Guid.NewGuid() };
+            // Create the aggregate IEnumerable<LineItem> as a List
+            var itemList = new List<LineItem>
+            {
+                new LineItem { OrderId = orderB.Id, Amount = 300m },
+                new LineItem { OrderId = orderB.Id, Amount = 300m }
+            };
+
+            engine.Assert(orderB);
+            // Assert the strongly-typed list as a single alpha fact.
+            engine.Assert(itemList);
+
+            engine.FireAll();
+
+            Assert.True(firedGeneric, "Aggregate (strongly-typed IEnumerable<LineItem> alpha fact) should fire when sum > 500.");
         }
 
         [Fact]
@@ -512,5 +585,94 @@ namespace ReteTest.Tests
             // It should never have fired
             Assert.Equal(0, fireCount);
         }
+
+        [Fact]
+        public void Refresh_ShouldPropagateExistingFacts_ToRulesAddedAfterAssertion()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            string statusResult = "Pending";
+            bool lateRuleFired = false;
+
+            // Create initial test data
+            var highStockInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 101, Count = 1500 };
+
+            // Define the first two baseline forward-chaining rules
+            engine.Begin("DetectShipment")
+                .First()
+                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Then(t => {
+                    var order = t.Get<Inventory>("O");
+                    // Assert the emergent Shipment fact
+                    engine.Assert(new Shipment { Id = Guid.NewGuid(), ProductId = order.ProductId });
+                });
+
+            engine.Begin("ApplyShipment")
+                .Next()
+                .Where<Shipment>("S")
+                .Then(t => {
+                    statusResult = "Shipped";
+                });
+
+            // (1) -- Assert initial data and execute baseline network
+            engine.Assert(highStockInventory);
+            engine.FireAll();
+
+            // Sanity Check: Baseline forward-chaining worked
+            Assert.Equal("Shipped", statusResult);
+
+            // (2) -- Define a NEW rule LATE (Facts are already inside the engine)
+            engine.Begin("LateAuditRule")
+                .Where<Inventory>("I", null, i => i.Count > 1000)
+                // This joins the existing facts
+                .Where<Shipment>("L")
+                .Then(t => {
+                    // If this fires, our late rule successfully matched both facts
+                    lateRuleFired = true;
+                });
+
+            // At this specific moment, 'lateRuleFired' is still FALSE because 
+            // the facts already passed the entry nodes before this rule existed.
+            Assert.False(lateRuleFired);
+
+            // (3) -- Trigger the Refresh to push facts back through
+            engine.Refresh(highStockInventory, "I");
+            engine.FireAll();
+
+            Assert.True(lateRuleFired, "The late rule failed to fire after calling Refresh().");
+        }
+
+        [Fact]
+        public void FireAll_ShouldRetainActivationsInList_AndMarkThemAsFired()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            bool ruleFired = false;
+
+            // Register a basic rule
+            engine.Begin("SimpleVerificationRule")
+                .Where<Inventory>("I", null, i => i.Count > 10)
+                .Then(t => {
+                    ruleFired = true;
+                });
+
+            // Fire the rule
+            engine.Assert(new Inventory { ProductId = 999, Count = 50 });
+            engine.FireAll();
+
+            Assert.True(ruleFired, "The rule should have fired.");
+
+            // Grabbing the historical activations from the Agenda after firing
+            var historicalActivations = engine.Agenda.Activations;
+
+            // Verify it still exists in the collection
+            Assert.Single(historicalActivations);
+
+            // Verify its exact state transition
+            // The activation should have been changed to Fired, but not removed from the list.
+            var loggedActivation = historicalActivations.First();
+            Assert.Equal("SimpleVerificationRule", loggedActivation.RuleName);
+            Assert.Equal(ActivationState.Fired, loggedActivation.State);
+        }
+
     }
+
 }
