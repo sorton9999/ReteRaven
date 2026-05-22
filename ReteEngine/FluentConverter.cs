@@ -155,7 +155,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.If that registers a global boolean condition.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.If that registers a global boolean condition.
         /// </summary>
         /// <param name="name">The name to assign to the global condition within the rule.</param>
         /// <param name="globalCondition">A function returning <c>true</c> when the global condition holds.</param>
@@ -167,7 +167,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.If that registers a typed late evaluation condition.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.If that registers a typed late evaluation condition.
         /// </summary>
         /// <typeparam name="T">The fact type the condition evaluates.</typeparam>
         /// <param name="name">The name to assign to the condition within the rule.</param>
@@ -180,7 +180,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Priority that sets rule priority.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Priority that sets rule priority.
         /// </summary>
         /// <param name="priorityVal">The priority value to assign to the rule.</param>
         /// <returns>The current <see cref="IRuleSetup"/> to continue rule setup.</returns>
@@ -191,7 +191,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.First that marks the rule as first in ordering.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.First that marks the rule as first in ordering.
         /// </summary>
         /// <returns>The current <see cref="IRuleSetup"/> to continue rule setup.</returns>
         public IRuleSetup First()
@@ -201,7 +201,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Next that advances the rule ordering.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Next that advances the rule ordering.
         /// </summary>
         /// <returns>The current <see cref="IRuleSetup"/> to continue rule setup.</returns>
         public IRuleSetup Next()
@@ -211,7 +211,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Next that advances the rule ordering using a seed.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Next that advances the rule ordering using a seed.
         /// </summary>
         /// <param name="seed">A seed value used when computing the next ordering position.</param>
         /// <returns>The current <see cref="IRuleSetup"/> to continue rule setup.</returns>
@@ -222,7 +222,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Where to add an initial evaluation condition on a fact type.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Where to add an initial evaluation condition on a fact type.
         /// </summary>
         /// <typeparam name="T">The fact type the condition evaluates.</typeparam>
         /// <param name="name">The name to assign to the fact in the rule.</param>
@@ -234,9 +234,9 @@ namespace ReteEngine
             _builder.Where(name, debugLabel, initialCondition);
             return this;
         }
-        
+
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.StartWith to begin the rule with a provided alpha memory.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.StartWith to begin the rule with a provided alpha memory.
         /// </summary>
         /// <typeparam name="T">The fact type stored in the provided alpha memory.</typeparam>
         /// <param name="alpha">The <see cref="AlphaMemory"/> to start the rule with.</param>
@@ -249,7 +249,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.JoinWith to join the current token stream with another alpha memory.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.JoinWith to join the current token stream with another alpha memory.
         /// </summary>
         /// <typeparam name="T">The fact type in the next alpha memory.</typeparam>
         /// <param name="nextAlpha">The alpha memory to join with.</param>
@@ -262,7 +262,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Not to add a negative (not) condition joined to the current token.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Not to add a negative (not) condition joined to the current token.
         /// </summary>
         /// <typeparam name="T">The fact type to test non-existence for.</typeparam>
         /// <param name="name">The name to assign to the negative test fact within the rule.</param>
@@ -276,7 +276,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.AndNot to add an additional negative (and not) condition joined to the current token.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.AndNot to add an additional negative (and not) condition joined to the current token.
         /// </summary>
         /// <typeparam name="T">The fact type to test non-existence for.</typeparam>
         /// <param name="name">The name to assign to the negative test fact within the rule.</param>
@@ -290,7 +290,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Exists to add an existence test joined to the current token.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Exists to add an existence test joined to the current token.
         /// </summary>
         /// <typeparam name="T">The fact type to test existence for.</typeparam>
         /// <param name="name">The name to assign to the existence test fact within the rule.</param>
@@ -304,7 +304,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.From to start building an aggregate from a fact source.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.From to start building an aggregate from a fact source.
         /// </summary>
         /// <typeparam name="T">The fact type that will be aggregated.</typeparam>
         /// <param name="alias">An optional alias name for the aggregate; if null the current aggregate name is preserved.</param>
@@ -319,7 +319,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.All to add an aggregate predicate that evaluates a collection of facts.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.All to add an aggregate predicate that evaluates a collection of facts.
         /// </summary>
         /// <typeparam name="T">The fact type contained in the aggregate.</typeparam>
         /// <param name="aggregatePredicate">A predicate that receives the aggregated <see cref="IEnumerable{T}"/> and returns <c>true</c> if the 
@@ -332,7 +332,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.And that adds a join condition for a named fact.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.And that adds a join condition for a named fact.
         /// </summary>
         /// <typeparam name="T">The fact type to join.</typeparam>
         /// <param name="name">The name to assign to the fact within the rule.</param>
@@ -346,7 +346,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Or that adds an OR branch for a named fact with optional multiple conditions.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Or that adds an OR branch for a named fact with optional multiple conditions.
         /// </summary>
         /// <typeparam name="T">The fact type to evaluate in the OR branch.</typeparam>
         /// <param name="name">The name to assign to the fact within the OR branch.</param>
@@ -360,7 +360,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A wrapper for <see cref="_builder"/>.Then that registers the action to execute when the rule fires.
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Then that registers the action to execute when the rule fires.
         /// </summary>
         /// <param name="action">The action to execute when the rule is activated; receives the matching <see cref="Token"/>.</param>
         /// <param name="salience">An optional salience (priority) modifier for the rule's activation.</param>

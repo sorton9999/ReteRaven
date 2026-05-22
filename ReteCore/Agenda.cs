@@ -32,9 +32,13 @@ namespace ReteCore
         /// Does the agenda currently have any pending activations? This property returns true if there are one or more 
         /// activations in the agenda, indicating that there are rules that have been triggered and are waiting to be 
         /// fired. If this property returns false, it means that there are no pending activations and the agenda is 
-        /// currently empty.
+        /// currently empty or all activations are in a non-pending state.
         /// </summary>
-        public bool HasActivations => _activations.Count > 0;
+        public bool HasActivations
+        {
+            get { return _activations.Count > 0 && 
+                    _activations.Any((a) => a.State == Activation.ActivationState.Pending); }
+        }
         /// <summary>
         /// Stores a registry of activations that have already been fired, using a unique key generated from the rule name and 
         /// the facts involved in the activation. This registry is used to prevent duplicate activations from firing multiple 
