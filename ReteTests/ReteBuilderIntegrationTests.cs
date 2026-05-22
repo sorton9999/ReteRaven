@@ -26,7 +26,7 @@ namespace ReteTest.Tests
             bool fired = false;
 
             engine.Begin("SimpleRule")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fired = true, salience: 0);
 
             var status = new SystemStatus { Name = "S1", IsActive = true };
@@ -45,7 +45,7 @@ namespace ReteTest.Tests
             bool fired = false;
 
             engine.Begin("JoinRule")
-                .Where<SystemStatus>("sys", initialCondition: s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .And<Sensor>("sensor-join", (token, sensor) => sensor.IsTriggered)
                 .Then(token => fired = true);
 
@@ -68,7 +68,7 @@ namespace ReteTest.Tests
             bool fired = false;
 
             engine.Begin("SimpleUpdateRule")
-                .Where<SystemStatus>("sys", initialCondition: s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .And<Sensor>("sensor", (token, sensor) => sensor.IsTriggered)
                 .Then(token => fired = true);
 
@@ -98,7 +98,7 @@ namespace ReteTest.Tests
             bool fired = false;
 
             engine.Begin("NotRule")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 // This rule is saying: "I want sensors that are not triggered"
                 .Not<Sensor>("sensor-not", (token, sensor) => sensor.IsTriggered)
                 .Then(token => fired = true);
@@ -123,7 +123,7 @@ namespace ReteTest.Tests
             bool fired = false;
 
             engine.Begin("ExistsRule")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Exists<Sensor>("sensor-exists", (token, sensor) => sensor.Type == "Temperature")
                 .Then(token => fired = true);
 
@@ -175,7 +175,7 @@ namespace ReteTest.Tests
 
             // First rule: fires if SystemStatus.IsActive OR a Sensor.Type == "Temperature"
             engine.Begin("OrRule")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Or<Sensor>("sensor-or", "orDbg",
                     (token, sensor) => sensor.Type == "Temperature")
                 .Then(token => firedBySensor = true);
@@ -183,7 +183,7 @@ namespace ReteTest.Tests
             // Second rule: separate rule that only depends on Where to ensure an OR can be bypassed by the other branch
             var engine2 = new ReteEngine.ReteEngine();
             engine2.Begin("OrStatusRule")
-                .Where<SystemStatus>("sys2", null, s => s.Name == "OrTrigger")
+                .Where<SystemStatus>("sys2", s => s.Name == "OrTrigger")
                 .Then(token => firedByStatus = true);
 
             // Provide only a sensor that matches the OR predicate
@@ -211,7 +211,7 @@ namespace ReteTest.Tests
             // First rule: fires if SystemStatus.IsActive OR a Sensor.Type == "Temperature"
             engine.Begin("IfRule")
                 .If("if", () => globalCondition == true)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => firedByStatus = true);
 
             // Provide only a sensor that matches the OR predicate
@@ -232,7 +232,7 @@ namespace ReteTest.Tests
             // Fires if SystemStatus.IsActive and a Sensor.Type == "Temperature",
             // but only if the sensor is triggered at the time of firing (late condition)
             engine.Begin("LateFilterRule")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .And<Sensor>("sensor", (token, sensor) => sensor.Type == "Temperature")
                 .If<Sensor>("sensor", (sensor) => sensor.IsTriggered)
                 .Then(token => firedByStatus = true);
@@ -252,11 +252,11 @@ namespace ReteTest.Tests
             string fireOrder = "";
             engine.Begin("PriorityRule1")
                 .Priority(100)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "A");
             engine.Begin("PriorityRule2")
                 .Priority(200)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "B");
             var status = new SystemStatus { Name = "S6", IsActive = true };
             engine.Assert(status);
@@ -270,11 +270,11 @@ namespace ReteTest.Tests
             string fireOrder = "";
             engine.Begin("PriorityRule1")
                 .Next()
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "A");
             engine.Begin("PriorityRule2")
                 .First()
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "B");
             var status = new SystemStatus { Name = "S7", IsActive = true };
             engine.Assert(status);
@@ -288,10 +288,10 @@ namespace ReteTest.Tests
             var engine = new ReteEngine.ReteEngine();
             string fireOrder = "";
             engine.Begin("SalienceRule1")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "A", 100);
             engine.Begin("SalienceRule2")
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "B", 200);
             var status = new SystemStatus { Name = "S8", IsActive = true };
             engine.Assert(status);
@@ -307,19 +307,19 @@ namespace ReteTest.Tests
             string fireOrder = "";
             engine.Begin("ComplexPriorityRule1")
                 .Priority(100)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "A", 200);
             engine.Begin("ComplexPriorityRule2")
                 .First()
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "B", 200);
             engine.Begin("TimeOrderPriorityRule3")
                 .Priority(100)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "C", 200);
             engine.Begin("ComplexPriorityRule4")
                 .Priority(100)
-                .Where<SystemStatus>("sys", null, s => s.IsActive)
+                .Where<SystemStatus>("sys", s => s.IsActive)
                 .Then(token => fireOrder += "D", 150);
             var status = new SystemStatus { Name = "S9", IsActive = true };
             engine.Assert(status);
@@ -339,7 +339,7 @@ namespace ReteTest.Tests
             // Rule 1: High Priority - Retracts the order
             engine.Begin("HighPriority_Retract")
                 .Priority(100)
-                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Where<Order>("O", o => !o.IsProcessed)
                 .Then(t => {
                     fireCount++;
                     var fact = t.Get<Order>("O");
@@ -349,7 +349,7 @@ namespace ReteTest.Tests
             // Rule 2: Low Priority - Should be cancelled by TM
             engine.Begin("LowPriority_ShouldNotFire")
                 .Priority(50)
-                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Where<Order>("O", o => !o.IsProcessed)
                 .Then(t => {
                     fireCount++; // If this runs, TM failed
                 });
@@ -373,7 +373,7 @@ namespace ReteTest.Tests
 
             // Rule 1: High Value Order -> Logic Assert a Discount
             engine.Begin("HighValueDiscount")
-                .Where<Inventory>("I", null, o => o.Count >= 1000)
+                .Where<Inventory>("I", o => o.Count >= 1000)
                 .Then(t => {
                     var inv = t.Get<Inventory>("I");
                     Console.WriteLine($"High value order detected (Count: {inv.Count}), applying discount.");
@@ -411,7 +411,7 @@ namespace ReteTest.Tests
             // Detect a shipment request -> Assert Emergent Fact (Shipment)
             engine.Begin("DetectShipment")
                 .First()
-                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Where<Inventory>("O", o => o.Count > 1000)
                 .Then(t => {
                     var order = t.Get<Inventory>("O");
                     // Assert the new Shipment fact
@@ -453,7 +453,7 @@ namespace ReteTest.Tests
             bool firedNonGeneric = false;
 
             engine.Begin("AggregateRule_NonGeneric")
-                .Where<Order>("order", initialCondition: o => true)
+                .Where<Order>("order", o => true)
                 // The AllNode aggregator
                 .And()
                 .From<LineItem>("lineitems", (token, li) =>
@@ -483,7 +483,7 @@ namespace ReteTest.Tests
 
             // Build a new rule that receives a List<LineItem> directly from an alpha memory in an .And call
             engine.Begin("AggregateRule_Generic")
-                .Where<Order>("order", initialCondition: o => true)
+                .Where<Order>("order", o => true)
                 // Introduce a strongly-typed IEnumerable<LineItem>
                 .And<IEnumerable<LineItem>>("lineitemsGen", (token, items) =>
                 {
@@ -524,7 +524,7 @@ namespace ReteTest.Tests
 
             // Define a rule AFTER the data is already in the system
             engine.Begin("RuntimeDiscountRule")
-                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Where<Inventory>("O", o => o.Count > 1000)
                 .Then(t => {
                     fireCount++;
                 });
@@ -545,7 +545,7 @@ namespace ReteTest.Tests
 
             // Only process orders that are NOT processed
             engine.Begin("ProcessNewOrders")
-                .Where<Order>("O", null, o => !o.IsProcessed)
+                .Where<Order>("O", o => !o.IsProcessed)
                 .Then(t =>
                 {
                     fireCount++;
@@ -575,7 +575,7 @@ namespace ReteTest.Tests
             int fireCount = 0;
 
             engine.Begin("TemporaryRule")
-                .Where<Order>("O", initialCondition: order => !order.IsProcessed)
+                .Where<Order>("O", order => !order.IsProcessed)
                 .And<Order>("O", (token, o) => o.Value as int? == 55)
                 .Then(t => fireCount++);
 
@@ -602,7 +602,7 @@ namespace ReteTest.Tests
             // Define the first two baseline forward-chaining rules
             engine.Begin("DetectShipment")
                 .First()
-                .Where<Inventory>("O", null, o => o.Count > 1000)
+                .Where<Inventory>("O", o => o.Count > 1000)
                 .Then(t => {
                     var order = t.Get<Inventory>("O");
                     // Assert the emergent Shipment fact
@@ -625,7 +625,7 @@ namespace ReteTest.Tests
 
             // (2) -- Define a NEW rule LATE (Facts are already inside the engine)
             engine.Begin("LateAuditRule")
-                .Where<Inventory>("I", null, i => i.Count > 1000)
+                .Where<Inventory>("I", i => i.Count > 1000)
                 // This joins the existing facts
                 .Where<Shipment>("L")
                 .Then(t => {
@@ -652,7 +652,7 @@ namespace ReteTest.Tests
 
             // Register a basic rule
             engine.Begin("SimpleVerificationRule")
-                .Where<Inventory>("I", null, i => i.Count > 10)
+                .Where<Inventory>("I", i => i.Count > 10)
                 .Then(t => {
                     ruleFired = true;
                 });

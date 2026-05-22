@@ -95,7 +95,7 @@ var terminal = new TerminalNode(metaData);
 joinABC.AddSuccessor(terminal);
 
 engine.Begin("DetectConflict")
-    .Where<Cell>("FirstCell", "CheckMatch")
+    .Where<Cell>("FirstCell")
     .And<Cell>("SecondCell", (token, next) =>
         token.Get<Cell>("FirstCell").Id == next.Id &&
         token.Get<Cell>("FirstCell").Value != next.Value,
@@ -211,9 +211,9 @@ string cellName = "M";
 var engine5 = new ReteEngine.ReteEngine();
 var criticalCell = new CriticalCell { Id = Guid.NewGuid(), Name = cellName, Status = "Normal", Value = 590 };
 engine5.Begin("MatchStatus")
-    .Where<CriticalCell>(cellName, "MatchStatus", (c) => { return c.Status == "Normal"; })
+    .Where<CriticalCell>(cellName, (c) => { return c.Status == "Normal"; })
     //.And<CriticalCell>(cellName, (t, c) => c.Value > 500)
-    .Or<CriticalCell>(cellName, "MatchOr",
+    .Or<CriticalCell>(cellName, null,
     (t, c) => c.Value as int? > 500,
     (t, c) => c.Value as int? < 200)
     .Then(t => {
@@ -242,8 +242,8 @@ var engine6 = new ReteEngine.ReteEngine();
 var criticalCell2 = new CriticalCell { Id = Guid.NewGuid(), Name = "Not Cell", Status = "Normal", Value = 590 };
 engine6.Begin("MatchStatusNot")
     .Where<CriticalCell>("C")
-    .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent", "MarkNot")
-    .And<CriticalCell>("C", (t, c) => c.Value as int? > 500, "MarkAnd")
+    .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent")
+    .And<CriticalCell>("C", (t, c) => c.Value as int? > 500)
     .Then(t => {
         Console.WriteLine($">>RESULT:[{t}]: This should be marked URGENT!");
         });
@@ -255,7 +255,7 @@ engine6.Assert(criticalCell2)
 var engine7 = new ReteEngine.ReteEngine();
 engine7.Begin("MatchStatusExists")
     .Where<CriticalCell>("C")
-    .Exists<CriticalCell>("C", (t, c) => c.Status == "Normal", "MarkExists")
+    .Exists<CriticalCell>("C", (t, c) => c.Status == "Normal")
     //.Or<CriticalCell>("C", "Exists-MarkOr", 
     //    (t, c) => c.Value > 500,
     //    (t, c) => c.Value < 300
@@ -270,8 +270,8 @@ engine7.Assert(criticalCell2)
 var engine8 = new ReteEngine.ReteEngine();
 
 engine8.Begin("Alert_Out_of_Stock_Electronics")
-    .Where<Product>("P", "MatchElec", (c) => c.Category == "Electronics")
-    .Not<Inventory>("P", (t, i) => i.ProductId == t.Get<Product>("P").ProductId, "NoStock")
+    .Where<Product>("P", (c) => c.Category == "Electronics")
+    .Not<Inventory>("P", (t, i) => i.ProductId == t.Get<Product>("P").ProductId)
     .Then(terminal =>
     {
         var p = terminal.Get<Product>("P");
@@ -290,8 +290,8 @@ engine8.Begin("Tag_High_Priority_Items")
     }, 100);
 
 engine8.Begin("Process_Urgent_Batch")
-    .Where<Inventory>("I", null, (i) => i.WarehouseLocation == "Aisle 3")
-    .Where<Product>("Q", null, (p) => p.Name != String.Empty)
+    .Where<Inventory>("I", (i) => i.WarehouseLocation == "Aisle 3")
+    .Where<Product>("Q", (p) => p.Name != String.Empty)
     //.Where<TestEval>("Eval", "MatchEval")
      //EXISTS: We only care IF there is a pending shipment, not HOW MANY.
     .Exists<Shipment>("S", (t, s) => s.ProductId == t.Get<Product>("Q").ProductId && s.Status == "Pending")
@@ -373,7 +373,7 @@ var engine9 = new ReteEngine.ReteEngine();
 engine9.Begin("TestOrderPropagation")
     .Next(ReteBuilder<Order>.FIRST_RULE_PRIORITY_VALUE)
     //.Trace($"OrderPropagation")
-    .Where<Order>("O", null, o => !o.IsProcessed)
+    .Where<Order>("O", o => !o.IsProcessed)
     .And<Officer>("F", (t, off) => off.Rank == t.Get<Order>("O").TargetRank)
     .Then(t => {
         var order = t.Get<Order>("O");
@@ -422,7 +422,7 @@ Console.WriteLine("\n--- Testing Duty Status ---");
 engine9.Begin("ExecuteOnDuty")
     .First()
     //.Trace($"OnDutyTrace")
-    .Where<Order>("OnDO", null, o => !o.IsProcessed)
+    .Where<Order>("OnDO", o => !o.IsProcessed)
     .And<Officer>("DF", (t, off) => off.Rank == t.Get<Order>("OnDO").TargetRank)
     .And<DutyStatus>("D", (t, d) => d.Name == t.Get<Officer>("DF").Name && d.OnDuty)
     .Then(t =>
@@ -434,7 +434,7 @@ engine9.Begin("ExecuteOnDuty")
 engine9.Begin("HandleOffDuty")
     .Next()
     //.Trace($"OffDutyTrace")
-    .Where<Order>("OffDO", null, o => !o.IsProcessed)
+    .Where<Order>("OffDO", o => !o.IsProcessed)
     .And<Officer>("DF", (t, off) => off.Rank == t.Get<Order>("OffDO").TargetRank)
     .And<DutyStatus>("DS", (t, d) => d.Name == t.Get<Officer>("DF").Name && !d.OnDuty)
     .Then(t =>
@@ -478,7 +478,7 @@ var order = new Order { Id = Guid.NewGuid(), Text = "Test Order", TargetRank = "
 // High Priority - Retracts the order
 engineA.Begin("HighPriority_Retract")
     .Priority(100)
-    .Where<Order>("O", "HighPri", o => !o.IsProcessed)
+    .Where<Order>("O", o => !o.IsProcessed)
     .Then(t => {
         fireCount++;
         var fact = t.Get<Order>("O");
@@ -489,7 +489,7 @@ engineA.Begin("HighPriority_Retract")
 // Low Priority - Should be cancelled by TM
 engineA.Begin("LowPriority_ShouldNotFire")
     .Priority(50)
-    .Where<Order>("O", "LowPri", o => !o.IsProcessed)
+    .Where<Order>("O", o => !o.IsProcessed)
     .Then(t => {
         // If this runs, TM failed
         fireCount++;
@@ -512,7 +512,7 @@ var highStockInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 101, C
 
 // Define the first two baseline forward-chaining rules
 engineB.Begin("DetectShipment")
-    .Where<Inventory>("O", "Inventory", o => o.Count > 1000)
+    .Where<Inventory>("O", o => o.Count > 1000)
     .Then(t => {
         var order = t.Get<Inventory>("O");
         // Assert the emergent Shipment fact
@@ -520,7 +520,7 @@ engineB.Begin("DetectShipment")
     });
 
 engineB.Begin("ApplyShipment")
-    .Where<Shipment>("S", "Shipment")
+    .Where<Shipment>("S")
     .Then(t => {
         statusResult = "Shipped";
     });
@@ -534,9 +534,9 @@ Console.WriteLine($"Initial Shipment Status: {statusResult}");
 
 // (2) -- Define a NEW rule LATE (Facts are already inside the engine)
 engineB.Begin("LateAuditRule")
-    .Where<Inventory>("I", "LateInventory", i => i.Count > 1000)
+    .Where<Inventory>("I", i => i.Count > 1000)
     // This joins the existing facts
-    .Where<Shipment>("L", "LateShipment")
+    .Where<Shipment>("L")
     .Then(t => {
         // If this fires, our late rule successfully matched both facts
         lateRuleFired = true;

@@ -10,6 +10,7 @@ using ReteCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,13 +39,17 @@ namespace ReteEngine
         IRuleSetup Next();
         IRuleSetup Next(int seed);
 
-        IEvaluationBuilder Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null);
+        IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
+            [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
         IEvaluationBuilder StartWith<T>(AlphaMemory alpha, string factName);
-        IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
+        IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition,
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
 
 
-        IAggregationBuilder From<T>(string? alias = null, Func<Token, T, bool> joinCondition = null, string? debugLabel = null);
+        IAggregationBuilder From<T>(string? alias = null, Func<Token, T, bool> joinCondition = null, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
     }
 
     /// <summary>
@@ -55,8 +60,10 @@ namespace ReteEngine
     /// </summary>
     public interface IConnectionBuilder : IRuleSetup
     {
-        IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IConnectionBuilder Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions);
+        IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null, 
+            params Func<Token, T, bool>[] orConditions);
         // These are for when you want to chain multiple conditions on the same fact type without needing to repeat
         // the fact type in the method signature
         IConnectionBuilder And();
@@ -71,13 +78,19 @@ namespace ReteEngine
     /// </summary>
     public interface IEvaluationBuilder
     {
-        IEvaluationBuilder Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null);
+        IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
+            [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
         IEvaluationBuilder JoinWith<T>(AlphaMemory nextAlpha, Func<Token, T, bool> condition);
-        IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IEvaluationBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null);
-        IConnectionBuilder Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions);
+        IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition,
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IEvaluationBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, 
+            [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
+        IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null,
+            params Func<Token, T, bool>[] orConditions);
         // These are for when you want to chain multiple conditions on the same fact type without needing to repeat
         // the fact type in the method signature
         IConnectionBuilder And();
@@ -229,7 +242,7 @@ namespace ReteEngine
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <param name="initialCondition">An optional predicate evaluated against facts of type <typeparamref name="T"/>.</param>
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations.</returns>
-        public IEvaluationBuilder Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
+        public IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null ,[CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null)
         {
             _builder.Where(name, debugLabel, initialCondition);
             return this;
@@ -269,7 +282,7 @@ namespace ReteEngine
         /// <param name="joinCondition">A join predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/>.</param>
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations.</returns>
-        public IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        public IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null)
         {
             _builder.Not(name, joinCondition, debugLabel);
             return this;
@@ -283,7 +296,7 @@ namespace ReteEngine
         /// <param name="joinCondition">A join predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/>.</param>
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations.</returns>
-        public IEvaluationBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        public IEvaluationBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null)
         {
             _builder.AndNot(name, joinCondition, debugLabel);
             return this;
@@ -297,7 +310,7 @@ namespace ReteEngine
         /// <param name="joinCondition">A join predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/>.</param>
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations.</returns>
-        public IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        public IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null)
         {
             _builder.Exists(name, joinCondition, debugLabel);
             return this;
@@ -311,7 +324,7 @@ namespace ReteEngine
         /// <param name="joinCondition">An optional join predicate used to relate tokens to items in the aggregate.</param>
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <returns>The current <see cref="IAggregationBuilder"/> to define aggregate predicates.</returns>
-        public IAggregationBuilder From<T>(string? alias = null, Func<Token, T, bool> joinCondition = null, string? debugLabel = null)
+        public IAggregationBuilder From<T>(string? alias = null, Func<Token, T, bool> joinCondition = null, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null)
         {
             aggregateName = alias ?? aggregateName;
             _builder.From(aggregateName, joinCondition, debugLabel);
@@ -339,7 +352,7 @@ namespace ReteEngine
         /// <param name="joinCondition">A join predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/>.</param>
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <returns>The current <see cref="IConnectionBuilder"/> to continue building connections.</returns>
-        public IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
+        public IConnectionBuilder And<T>(string name, Func<Token, T, bool> joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null)
         {
             _builder.And(name, joinCondition, debugLabel);
             return this;
@@ -353,7 +366,7 @@ namespace ReteEngine
         /// <param name="debugLabel">An optional debug label for diagnostics.</param>
         /// <param name="orConditions">Optional join predicates; if provided the OR branch will succeed when any predicate succeeds.</param>
         /// <returns>The current <see cref="IConnectionBuilder"/> to continue building connections.</returns>
-        public IConnectionBuilder Or<T>(string name, string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
+        public IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null, params Func<Token, T, bool>[] orConditions)
         {
             _builder.Or(name, debugLabel, orConditions);
             return this;
