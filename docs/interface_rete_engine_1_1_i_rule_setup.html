@@ -116,17 +116,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2cd22dff84453936e8ac790cf8a1ca7d" id="r_a2cd22dff84453936e8ac790cf8a1ca7d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2cd22dff84453936e8ac790cf8a1ca7d">First</a> ()</td></tr>
 <tr class="memitem:a43df21d39397944b8cdaca1e1ece0cc3" id="r_a43df21d39397944b8cdaca1e1ece0cc3"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a43df21d39397944b8cdaca1e1ece0cc3">Next</a> ()</td></tr>
 <tr class="memitem:a1fdc720c724019ddd5d58a80202f3a4a" id="r_a1fdc720c724019ddd5d58a80202f3a4a"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1fdc720c724019ddd5d58a80202f3a4a">Next</a> (int seed)</td></tr>
-<tr class="memitem:a24136d8f0b39ba97208d6cf97586ad36" id="r_a24136d8f0b39ba97208d6cf97586ad36"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a24136d8f0b39ba97208d6cf97586ad36">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
+<tr class="memitem:aa3d5e7469c1587161bf5a53d35783704" id="r_aa3d5e7469c1587161bf5a53d35783704"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa3d5e7469c1587161bf5a53d35783704">Where&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; initialCondition=null, [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel=null)</td></tr>
 <tr class="memitem:aa47dd7c9948c22caaee6529b4e89a45e" id="r_aa47dd7c9948c22caaee6529b4e89a45e"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa47dd7c9948c22caaee6529b4e89a45e">StartWith&lt; T &gt;</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alpha, string factName)</td></tr>
-<tr class="memitem:af6070324cf33a954f5cd34f1f4fa2821" id="r_af6070324cf33a954f5cd34f1f4fa2821"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#af6070324cf33a954f5cd34f1f4fa2821">Not&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
-<tr class="memitem:a8793b8732e790e4d2dbeee05c79e22a1" id="r_a8793b8732e790e4d2dbeee05c79e22a1"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8793b8732e790e4d2dbeee05c79e22a1">Exists&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, string? debugLabel=null)</td></tr>
-<tr class="memitem:aa414cd4f7a6a529a13e264e83acc4d1a" id="r_aa414cd4f7a6a529a13e264e83acc4d1a"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa414cd4f7a6a529a13e264e83acc4d1a">From&lt; T &gt;</a> (string? alias=null, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition=null, string? debugLabel=null)</td></tr>
+<tr class="memitem:a25440cde3f559b557a88c62e3e5f09bb" id="r_a25440cde3f559b557a88c62e3e5f09bb"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a25440cde3f559b557a88c62e3e5f09bb">Not&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel=null)</td></tr>
+<tr class="memitem:a8969c898c1fa194fbc455b460d448b32" id="r_a8969c898c1fa194fbc455b460d448b32"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8969c898c1fa194fbc455b460d448b32">Exists&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel=null)</td></tr>
+<tr class="memitem:a20fde36cfa7ca64fc3a217bbe6bf24de" id="r_a20fde36cfa7ca64fc3a217bbe6bf24de"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a20fde36cfa7ca64fc3a217bbe6bf24de">From&lt; T &gt;</a> (string? alias=null, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition=null, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel=null)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the starting point for the fluent interface for defining rules in the Rete engine. It provides methods for specifying global conditions, rule priority, and the initial conditions for the rule. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a8793b8732e790e4d2dbeee05c79e22a1" name="a8793b8732e790e4d2dbeee05c79e22a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8793b8732e790e4d2dbeee05c79e22a1">&#9670;&#160;</a></span>Exists&lt; T &gt;()</h2>
+<a id="a8969c898c1fa194fbc455b460d448b32" name="a8969c898c1fa194fbc455b460d448b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8969c898c1fa194fbc455b460d448b32">&#9670;&#160;</a></span>Exists&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,12 +144,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(joinCondition))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a725810ff180663d3ed6943ccfa6d0a93">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a3f125a77c9d25bbb8795a09c69722380">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
 
 </div>
 </div>
@@ -172,8 +172,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa414cd4f7a6a529a13e264e83acc4d1a" name="aa414cd4f7a6a529a13e264e83acc4d1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa414cd4f7a6a529a13e264e83acc4d1a">&#9670;&#160;</a></span>From&lt; T &gt;()</h2>
+<a id="a20fde36cfa7ca64fc3a217bbe6bf24de" name="a20fde36cfa7ca64fc3a217bbe6bf24de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20fde36cfa7ca64fc3a217bbe6bf24de">&#9670;&#160;</a></span>From&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,12 +191,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(joinCondition))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#afee584c600a04e41d4f4ee13d9241258">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#ae2e32fa3756079096f2bd55fc04a9fd7">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
 
 </div>
 </div>
@@ -284,8 +284,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af6070324cf33a954f5cd34f1f4fa2821" name="af6070324cf33a954f5cd34f1f4fa2821"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6070324cf33a954f5cd34f1f4fa2821">&#9670;&#160;</a></span>Not&lt; T &gt;()</h2>
+<a id="a25440cde3f559b557a88c62e3e5f09bb" name="a25440cde3f559b557a88c62e3e5f09bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25440cde3f559b557a88c62e3e5f09bb">&#9670;&#160;</a></span>Not&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,12 +303,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(joinCondition))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#ae6979c8aee917c9fab89794ad7708361">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#ac89fc7350b27d8e904c7a393f58d4233">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
 
 </div>
 </div>
@@ -354,8 +354,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a24136d8f0b39ba97208d6cf97586ad36" name="a24136d8f0b39ba97208d6cf97586ad36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24136d8f0b39ba97208d6cf97586ad36">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
+<a id="aa3d5e7469c1587161bf5a53d35783704" name="aa3d5e7469c1587161bf5a53d35783704"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d5e7469c1587161bf5a53d35783704">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,17 +368,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>initialCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>initialCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(initialCondition))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#adad094a19d704c4cb087f11dc5023b28">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a5eca80cc2e3dcbbb91f37486bf31ae4d">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
 
 </div>
 </div>
