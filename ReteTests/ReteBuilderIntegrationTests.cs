@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="ReteBuilder.cs">
+// <copyright file="ReteBuilderIntegrationTests.cs">
 //     Copyright (c) Steven Orton. All rights reserved.
 //     Licensed under the GNU Lesser General Public License v2.1.
 //     See LICENSE file in the ReteRaven project root for full license
@@ -149,7 +149,7 @@ namespace ReteTest.Tests
             var alphaInventory = engine.GetAlphaMemory<Inventory>("inventory");
 
             engine.Begin("StartJoinRule")
-                .StartWith(alphaProduct, "productFact")
+                .StartWith<Product>(alphaProduct, "productFact")
                 .JoinWith<Inventory>(alphaInventory, (token, inv) => inv.ProductId == 1)
                 .Then(token => fired = true);
 
@@ -455,6 +455,7 @@ namespace ReteTest.Tests
             engine.Begin("AggregateRule_NonGeneric")
                 .Where<Order>("order", initialCondition: o => true)
                 // The AllNode aggregator
+                .And()
                 .From<LineItem>("lineitems", (token, li) =>
                 {
                     // Join line items to the current order by OrderId == Order.Id
@@ -462,7 +463,7 @@ namespace ReteTest.Tests
                     return li.OrderId == ord.Id;
                 })
                 // From the aggregation created in the .From call, note the common name 'lineitems'
-                .All<LineItem>("lineitems", items => items.Sum(i => i.Amount) > 500m)
+                .All<LineItem>(items => items.Sum(i => i.Amount) > 500m)
                 .Then(token => firedNonGeneric = true);
 
             var orderA = new Order { Id = Guid.NewGuid() };
@@ -489,7 +490,9 @@ namespace ReteTest.Tests
                     // Just let everything through
                     return true;
                 })
-                .All<LineItem>("lineitemsGen", items => items.Sum(i => i.Amount) > 500m)
+                // This is just to name the aggregate for the .All that follows)
+                .From<LineItem>("lineitemsGen")
+                .All<LineItem>(items => items.Sum(i => i.Amount) > 500m)
                 .Then(token => firedGeneric = true);
 
             var orderB = new Order { Id = Guid.NewGuid() };

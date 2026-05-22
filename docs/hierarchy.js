@@ -1,11 +1,17 @@
 var hierarchy =
 [
     [ "ReteCore.Agenda", "class_rete_core_1_1_agenda.html", null ],
+    [ "ReteEngine.IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", [
+      [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
+    ] ],
     [ "IComparable", null, [
       [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ]
     ] ],
     [ "IEquatable", null, [
       [ "ReteCore.Token", "class_rete_core_1_1_token.html", null ]
+    ] ],
+    [ "ReteEngine.IEvaluationBuilder", "interface_rete_engine_1_1_i_evaluation_builder.html", [
+      [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
     ] ],
     [ "ReteCore.IFact", "interface_rete_core_1_1_i_fact.html", [
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
@@ -43,6 +49,12 @@ var hierarchy =
       [ "ReteCore.RootNode", "class_rete_core_1_1_root_node.html", null ],
       [ "ReteCore.TerminalNode", "class_rete_core_1_1_terminal_node.html", null ],
       [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
+    ] ],
+    [ "ReteEngine.IRuleSetup", "interface_rete_engine_1_1_i_rule_setup.html", [
+      [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ],
+      [ "ReteEngine.IConnectionBuilder", "interface_rete_engine_1_1_i_connection_builder.html", [
+        [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
+      ] ]
     ] ],
     [ "ReteEngine.JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", null ],
     [ "ReteCore.LateFilter", "class_rete_core_1_1_late_filter.html", null ],

@@ -222,8 +222,8 @@ namespace ReteEngine
         /// management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed.
         /// </summary>
         /// <param name="ruleName">The name of the rule to begin defining.</param>
-        /// <returns>A ReteBuilder instance for defining the rule.</returns>
-        public ReteBuilder<Cell> Begin(string ruleName) => new ReteBuilder<Cell>(this, ruleName);
+        /// <returns>The fluent interface for defining the start of a rule.</returns>
+        public IRuleSetup Begin(string ruleName) => new FluentConverter<Cell>(this, ruleName);
 
         /// <summary>
         /// Returns an AlphaMemory for the specified type and optional name. This method retrieves an existing AlphaMemory from the alpha registry if it 
