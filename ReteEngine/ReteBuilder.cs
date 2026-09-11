@@ -72,6 +72,13 @@ namespace ReteEngine
         private readonly List<LateFilter> _lateFilters = new();
 
         /// <summary>
+        /// Flag indicating whether this rule has late filters. When true, beta node registry caching
+        /// is disabled to ensure late filters work correctly, since cached beta memories may not
+        /// contain all the named facts expected by the late filter.
+        /// </summary>
+        private bool _hasLateFilters = false;
+
+        /// <summary>
         /// Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.
         /// </summary>
         /// <param name="engine">The ReteEngine instance that will be used to build and manage the rule. Cannot be null.</param>
@@ -111,7 +118,34 @@ namespace ReteEngine
                 Console.WriteLine($"===> Start {name}");
             }
             var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
-            var beta = new BetaMemory();
+            
+            // Generate a signature for this Where pattern
+            string patternSignature = $"Where<{typeof(T).Name}>({name})";
+
+            // This is where BetaMemory Nodes can be reused.  A cache is searched in the Beta Registry for candidate
+            // BetaMemory objects to reuse.  If one is not found, a new one is created and registered.
+            BetaMemory? beta = null;
+            if (_engine.BetaNodeRegistry != null)
+            {
+                beta = _engine.BetaNodeRegistry.GetOrCreateBetaMemory(null, patternSignature);
+                var existingAdapter = alpha.Successors
+                    .OfType<AlphaToBetaAdapter>()
+                    .FirstOrDefault(a => ReferenceEquals(a.BetaMemory, beta) || a.Name == name);
+                if (existingAdapter != null)
+                {
+                    _lastNode = beta;
+                    if (debugLabel != null)
+                    {
+                        Console.WriteLine($"[BetaRegistry] Adapter HIT: Sharing existing branch.");
+                    }
+                    return this;
+                }
+            }
+            else
+            {
+                beta = new BetaMemory();
+            }
+            
             var adapter = new AlphaToBetaAdapter(beta, name);
 
             alpha.AddSuccessor(adapter);
@@ -255,7 +289,38 @@ namespace ReteEngine
                 Alias = name,
                 Predicate = wrappedPred,
             });
+            _hasLateFilters = true;
             return this;
+        }
+
+        /// <summary>
+        /// Generates a cache key for join patterns and the token name to use when creating tokens.
+        /// This method ensures synchronization between the cache key (used for beta memory registry)
+        /// and the token name (used for late filter lookups), preventing mismatches when rules have
+        /// late filters that reference facts by name.
+        /// </summary>
+        /// <typeparam name="T">The type of fact being joined.</typeparam>
+        /// <param name="name">The logical name provided by the rule builder for this join.</param>
+        /// <param name="alpha">The alpha memory instance for this type.</param>
+        /// <param name="joinCondition">The join condition predicate function.</param>
+        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
+        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
+        private (string cacheKey, string tokenName) GenerateJoinSignature<T>(
+            string name, 
+            AlphaMemory alpha, 
+            Func<Token, T, bool> joinCondition)
+        {
+            var methodPointer = joinCondition.Method.MethodHandle.Value;
+
+            // Generate a unique cache key that includes all factors affecting join semantics
+            // This prevents false cache hits when conditions differ
+            string cacheKey = $"And<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
+
+            // The token name is always the simple provided name - this is what late filters look for
+            // by calling token.Get<T>(name)
+            string tokenName = name;
+
+            return (cacheKey, tokenName);
         }
 
         /// <summary>
@@ -285,19 +350,43 @@ namespace ReteEngine
                 }
                 return result;
             };
-            var alpha = _engine.GetAlphaMemory<T>(name);
-            JoinNode join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
-            if (_lastNode is BetaMemory beta)
-            {
-                beta.AddSuccessor(join);
-            }
-            else if (_lastNode is CompositeBetaMemory compositeBeta)
-            {
-                compositeBeta.AddSuccessor(join);
-            }
 
-            var betaMemory = new BetaMemory();
-            join.AddSuccessor(betaMemory);
+            var alpha = _engine.GetAlphaMemory<T>(name);
+
+            // Generate both cache key and token name together to ensure consistency
+            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+
+            // Use beta node registry for caching if enabled
+            JoinNode join;
+            BetaMemory betaMemory;
+
+            if (_engine.BetaNodeRegistry != null)
+            {
+                (join, betaMemory) = _engine.BetaNodeRegistry.GetOrCreateJoinPair(
+                    _lastNode, 
+                    joinSignature,
+                    tokenName,
+                    alpha, 
+                    (token, fact) => wrapCondition(token, (T)fact));
+
+                // Ensure the previous node is connected
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(_lastNode, join);
+            }
+            else
+            {
+                join = new JoinNode(_lastNode, alpha, tokenName, (token, fact) => wrapCondition(token, (T)fact));
+                if (_lastNode is BetaMemory beta)
+                {
+                    beta.AddSuccessor(join);
+                }
+                else if (_lastNode is CompositeBetaMemory compositeBeta)
+                {
+                    compositeBeta.AddSuccessor(join);
+                }
+
+                betaMemory = new BetaMemory();
+                join.AddSuccessor(betaMemory);
+            }
 
             _lastNode = betaMemory;
 
@@ -636,17 +725,27 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
         public ReteBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
+            // Capture the state of global metadata before this action so data remains unchanged
+            string ruleName = _ruleName;
+            int priority = _priority;
+
+            // Create copies of tracking lists
+            var lateFiltersCopy = new List<LateFilter>(_lateFilters);
+            var globalConditionsCopy = new List<Func<bool>>(_globalConditions);
+
             // Create the terminal node with the specified action and metadata
             var terminal = new TerminalNode(new RuleMetadata
             {
-                Name = _ruleName,
+                Name = ruleName,
                 Action = action,
                 Agenda = _engine.Agenda,
-                GlobalGuards = _globalConditions,
-                LateFilters = _lateFilters,
-                Priority = _priority,
+                GlobalGuards = globalConditionsCopy,
+                LateFilters = lateFiltersCopy,
+                Priority = priority,
                 Salience = salience
             });
+
+            // Add and tie in
             _engine.AddTerminalNode(terminal);
             if (_lastNode is BetaMemory beta)
             {

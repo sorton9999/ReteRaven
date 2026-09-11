@@ -64,6 +64,18 @@ namespace ReteEngine
         /// </summary>
         private readonly Dictionary<(Type Type, string Name), object> _alphaRegistry = new();
         /// <summary>
+        /// The beta node registry manages caching and sharing of beta memory nodes and join nodes
+        /// across multiple rules. This enables significant memory savings when multiple rules share
+        /// common prefixes in their condition chains.
+        /// </summary>
+        private readonly BetaNodeRegistry _betaNodeRegistry = new();
+        /// <summary>
+        /// Flag to enable or disable beta-node sharing at runtime (for debugging or legacy behavior).
+        /// Default is true (sharing enabled).
+        /// </summary>
+        private bool _enableBetaNodeSharing = true;
+
+        /// <summary>
         /// The accessor for the root node of the Rete network. This property allows external code to access the root node, which serves as the entry point 
         /// for all facts asserted into the network.
         /// </summary>
@@ -76,6 +88,36 @@ namespace ReteEngine
         public Agenda Agenda
         {
             get { return _agenda; }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ReteEngine with optional beta-node sharing.
+        /// </summary>
+        /// <param name="enableBetaNodeSharing">If true (default), rules with identical prefixes share nodes.</param>
+        public ReteEngine(bool enableBetaNodeSharing = true)
+        {
+            _enableBetaNodeSharing = enableBetaNodeSharing;
+        }
+
+        /// <summary>
+        /// Gets the beta node registry. Returns null if sharing is disabled.
+        /// </summary>
+        public BetaNodeRegistry? BetaNodeRegistry => _enableBetaNodeSharing ? _betaNodeRegistry : null;
+
+        /// <summary>
+        /// Gets diagnostic statistics about beta-node cache performance.
+        /// </summary>
+        public string GetBetaNodeRegistryStatistics()
+        {
+            return _betaNodeRegistry.GetStatistics();
+        }
+
+        /// <summary>
+        /// Clears the beta-node cache (useful for testing or resetting engine state).
+        /// </summary>
+        public void ClearBetaNodeCache()
+        {
+            _betaNodeRegistry.Clear();
         }
 
         /// <summary>
@@ -111,7 +153,8 @@ namespace ReteEngine
         /// <param name="fact">The fact to assert into the Rete network.</param>
         private void Assert(object fact)
         {
-            if (!_workingMemory.Contains(fact))
+            bool alreadyExists = _workingMemory.Any((f) => ReferenceEquals(f, fact));
+            if (!alreadyExists)
             {
                 _workingMemory.Add(fact);
                 if (fact is INotifyPropertyChanged observable)

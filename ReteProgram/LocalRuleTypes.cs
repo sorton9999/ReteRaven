@@ -16,18 +16,31 @@ using System.Threading.Tasks;
 namespace ReteProgram
 {
     // Test classes
-    public class SystemStatus
+    public class SystemStatus : Cell
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
     };
 
-    public class Sensor
+    public class Sensor : Cell
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
         public string Type { get; set; }
-        public bool IsTriggered { get; set; }
+        public bool IsTriggered
+        {
+            get { return _isTriggered; }
+            set
+            {
+                if (_isTriggered != value)
+                {
+                    _isTriggered = value;
+                    OnPropertyChanged(nameof(IsTriggered));
+                }
+            }
+        }
+        private bool _isTriggered;
     };
 
     public class CriticalCell : Cell

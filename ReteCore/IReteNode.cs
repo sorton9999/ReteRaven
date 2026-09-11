@@ -63,7 +63,12 @@ namespace ReteCore
         /// <param name="propertyName"></param>
         void Refresh(object fact, string propertyName);
         /// <summary>
-        /// Removws a successor node from the current Rete node, which may be necessary when the structure of the Rete 
+        /// Adds a successor node to the current Rete node, allowing for the propagation of facts to the new successor.
+        /// </summary>
+        /// <param name="nodeToConnect">The node to add as a successor.</param>
+        void AddSuccessor(IReteNode nodeToConnect);
+        /// <summary>
+        /// Removes a successor node from the current Rete node, which may be necessary when the structure of the Rete 
         /// network changes. This method allows for dynamic modification of the network by removing a successor node from 
         /// the list of successors. When a successor is removed, it will no longer receive facts asserted, retracted, or 
         /// refreshed through this node, which can affect the flow of information and the activation of rules in the 

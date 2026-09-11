@@ -186,9 +186,7 @@ namespace ReteCore
         /// <summary>
         /// The EvaluateAndPropagate method is a helper function that evaluates the join condition for a given token and fact, and if 
         /// the condition is satisfied, it creates a new token that combines the left token and the right fact, and propagates this new 
-        /// token to all successor nodes. If the condition is not satisfied, it ensures that any matches that were previously 
-        /// established based on that combination are retracted from successor nodes. This method is used in both the Assert and Refresh 
-        /// operations to maintain consistency in the Rete network as facts and tokens change over time.
+        /// token to all successor nodes.
         /// </summary>
         /// <param name="left">The left side token</param>
         /// <param name="newName">The name associated with the update. A new Token is created with this name if the stored condition is met.</param>
@@ -199,10 +197,6 @@ namespace ReteCore
             {
                 var newToken = new Token(left, newName, right);
                 foreach (var s in _successors) { s.Assert(newToken); }
-            }
-            else
-            {
-                foreach (var s in _successors) { s.Retract(right); }
             }
         }
 

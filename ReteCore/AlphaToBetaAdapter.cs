@@ -65,6 +65,16 @@ namespace ReteCore
         public IReteNode? Parent { get; set; }
 
         /// <summary>
+        /// The public accessor for thestored BetaMemory
+        /// </summary>
+        public BetaMemory BetaMemory {  get { return _betaMemory; } }
+
+        /// <summary>
+        /// The public accessor for the Fact name
+        /// </summary>
+        public string Name { get { return _factName; } }
+
+        /// <summary>
         /// Adds a successor node to this adapter. In the context of the Rete network, this method is used to connect the output of 
         /// the adapter (which produces Tokens) to the next node in the network, typically a JoinNode or another BetaMemory. When a 
         /// fact is asserted into this adapter, it will be wrapped into a Token and then passed to all successor nodes that have been 
