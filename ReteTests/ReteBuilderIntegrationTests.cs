@@ -82,9 +82,10 @@ namespace ReteTest.Tests
             // IsTriggered is false, so the rule should not fire yet
             Assert.False(fired);
 
-            // Now update the sensor to trigger the rule
+            // Now update the sensor to trigger the rule.
+            // Update is not required because the triggered field is a
+            // PropertyNotify property.
             sensor.IsTriggered = true;
-            engine.Update(sensor);
             engine.FireAll();
 
             Assert.True(fired);
@@ -227,6 +228,8 @@ namespace ReteTest.Tests
         [Fact]
         public void LateFilterRule_Fires_When_LateCondition_Matches()
         {
+            // Create an engine with no beta sharing since we are assuming use
+            // of late rules.
             var engine = new ReteEngine.ReteEngine();
             bool firedByStatus = false;
             // Fires if SystemStatus.IsActive and a Sensor.Type == "Temperature",
@@ -237,8 +240,8 @@ namespace ReteTest.Tests
                 .If<Sensor>("sensor", (sensor) => sensor.IsTriggered)
                 .Then(token => firedByStatus = true);
             // Provide both facts, but the sensor will only match the late condition, so the rule should still fire
-            var status = new SystemStatus { Name = "LateStatus", IsActive = true };
-            var sensor = new Sensor { Id = Guid.NewGuid(), IsTriggered = true, Type = "Temperature" };
+            var status = new SystemStatus { Name = "LateStatus", Id = Guid.NewGuid(), IsActive = true };
+            var sensor = new Sensor { Name = "Sensor", Id = Guid.NewGuid(), IsTriggered = true, Type = "Temperature" };
             engine.Assert(status);
             engine.Assert(sensor);
             engine.FireAll();

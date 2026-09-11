@@ -111,33 +111,70 @@ namespace ReteCore
             // found will always be the highest priority.
             while (HasActivations)
             {
-                // Find the first activation that hasn't been processed yet
-                var activation = _activations.FirstOrDefault(a => a.State == Activation.ActivationState.Pending);
+                var snapshotToFire = _activations
+                    .Where(a => a.State == Activation.ActivationState.Pending)
+                    .ToList();
 
-                // If there are absolutely no Pending activations left, we are officially done forward-chaining
-                if (activation == null)
+                foreach (var activation in snapshotToFire)
                 {
-                    break;
+                    if (activation.State != Activation.ActivationState.Pending)
+                    {
+                        continue;
+                    }
+
+                    string keyFacts = GenerateActivationKey(activation);
+
+                    // Check duplication registry
+                    if (_firedActivationsRegistry.Contains(keyFacts))
+                    {
+                        Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                        activation.State = Activation.ActivationState.Cancelled;
+                        continue;
+                    }
+
+                    Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+
+                    // Lock the state immediately
+                    activation.State = Activation.ActivationState.Fired;
+                    _firedActivationsRegistry.Add(keyFacts);
+
+                    // This will safely append to the end of the collection
+                    activation.Fire();
                 }
 
-                string keyFacts = GenerateActivationKey(activation);
-
-                // Check duplication registry
-                if (_firedActivationsRegistry.Contains(keyFacts))
+                // If executing rule actions appended any brand-new cascading pending work 
+                // into the master queue, recursively drain the next execution wave step
+                // automatically.
+                if (_activations.Any(a => a.State == Activation.ActivationState.Pending))
                 {
-                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
-                    activation.State = Activation.ActivationState.Cancelled;
-                    continue;
+                    FireAll();
                 }
+            }
+        }
 
-                Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+        /// <summary>
+        /// Cancels any activations associated with the given fact.  Any activation that has a state of Pending
+        /// is changed to Cancelled if the given fact is associated with it.
+        /// </summary>
+        /// <param name="retractedFact">Activations associated with this fact are cancelled.</param>
+        public void CancelActivationsByFact(object retractedFact)
+        {
+            if (retractedFact == null) return;
 
-                // Lock the state immediately
-                activation.State = Activation.ActivationState.Fired;
-                _firedActivationsRegistry.Add(keyFacts);
-
-                // This will safely append to the end of the collection
-                activation.Fire();
+            foreach (var activation in _activations)
+            {
+                // Only care about activations that haven't fired yet
+                if (activation.State == Activation.ActivationState.Pending)
+                {
+                    // Inspect the Token's wrapped collection of domain facts.
+                    // If this activation contains a reference to the fact being deleted, kill it!
+                    if (activation.Match.NamedFacts.Values.Any(f => ReferenceEquals(f, retractedFact) ||
+                        f.Equals(retractedFact)))
+                    {
+                        activation.State = Activation.ActivationState.Cancelled;
+                        Console.WriteLine($"[TM_RETRACT] Automatically cancelled pending activation for rule '{activation.RuleName}' due to fact retraction.");
+                    }
+                }
             }
         }
 
@@ -160,11 +197,12 @@ namespace ReteCore
         /// <returns>A unique key representing the activation.</returns>
         public string GenerateActivationKey(Activation activation)
         {
-            // Build a stable textual representation for each named fact:
-            // - If the fact is a Cell, use its Id (stable identity).
-            // - If the fact is a Token, use the token's stable ToString() (Token exposes its id).
+            // Build a textual representation for each named fact:
+            // - If the fact is a Cell, use its Id.
+            // - If the fact is a Token, use the token's ToString().
             // - If the fact is an enumerable, join its element representations.
             // - Otherwise fall back to the fact's ToString() (or "null").
+            
             string FormatValue(object? v)
             {
                 if (v == null) return "null";
@@ -182,10 +220,13 @@ namespace ReteCore
                 return v.ToString() ?? "null";
             }
 
-            var keyFacts = string.Join(", ", activation.Match.NamedFacts.Select(kv =>
-                $"{kv.Key}={FormatValue(kv.Value)}"
-            ));
-            return $"{activation.RuleName}_{keyFacts}";
+            var identityParts = activation.Match.NamedFacts
+                .Select(kv => FormatValue(kv.Value))
+                .OrderBy(id => id);
+
+            string factIdentity = string.Join(", ", identityParts);
+
+            return $"{activation.RuleName}_{factIdentity}";
         }
     }
 }

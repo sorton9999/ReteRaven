@@ -158,17 +158,25 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Retracts the specified fact from the rule engine, removing any associated activations or tokens.
+        /// Retracts the specified fact from the rule engine, removing any associated activations or tokens.  If the 
+        /// specified fact is currently part of any pending activations or has previouslyfired tokens, those will be 
+        /// removed from the agenda and internal state. This operation cancels any pending rule activations related 
+        /// to the fact.
         /// </summary>
-        /// <remarks>If the specified fact is currently part of any pending activations or has previously
-        /// fired tokens, those will be removed from the agenda and internal state. This operation cancels any pending
-        /// rule activations related to the fact.</remarks>
         /// <param name="fact">The fact object to retract. Cannot be null.</param>
         public void Retract(object fact)
         {
             if (fact is Token token)
             {
+                foreach (var domainFact in token.NamedFacts.Values)
+                {
+                    _ruleMetadata.Agenda.CancelActivationsByFact(domainFact);
+                }
                 _firedTokens.Remove(token.GetHashCode());
+            }
+            else
+            {
+                _ruleMetadata.Agenda.CancelActivationsByFact(fact);
             }
             // Find and remove any activations in the agenda that contain this fact
             if (_agenda.RemoveByFact(fact) > 0)

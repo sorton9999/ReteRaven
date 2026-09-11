@@ -9,6 +9,7 @@
 using ReteCore;
 using ReteEngine;
 using ReteProgram;
+using System.Diagnostics;
 
 
 var engine = new ReteEngine.ReteEngine();
@@ -142,14 +143,14 @@ engine2.Begin("NightIntrusion_Motion")
     }, salience: 100);
 
 // 1. Set the system to Night Mode
-var status = new SystemStatus { Name = "NightMode", IsActive = true };
+var status = new SystemStatus { Name = "NightMode", Id = Guid.NewGuid(), IsActive = true };
 engine2.Assert(status);
 
 // 2. Simulate a Sensor trigger
-var frontDoor = new Sensor { Name = "Front Door", Type = "Door", IsTriggered = false };
+var frontDoor = new Sensor { Name = "Front Door", Id = Guid.NewGuid(), Type = "Door", IsTriggered = false };
 engine2.Assert(frontDoor);
 
-var frontDoorM = new Sensor { Name = "Front Door", Type = "Motion", IsTriggered = true };
+var frontDoorM = new Sensor { Name = "Front Door", Id = Guid.NewGuid(), Type = "Motion", IsTriggered = true };
 engine2.Assert(frontDoorM);
 
 // 3. Fire the Engine
@@ -619,3 +620,94 @@ engineD.Refresh(tvInventory, "Products");
 engineD.FireAll();
 
 Console.WriteLine($"Updated Inventory Count: {finalRecordedCount}");  // Should print 15
+
+var engineE = new ReteEngine.ReteEngine(false);
+bool firedByStatus = false;
+// Fires if SystemStatus.IsActive and a Sensor.Type == "Temperature",
+// but only if the sensor is triggered at the time of firing (late condition)
+engineE.Begin("LateFilterRule")
+    .Where<SystemStatus>("sys", s => s.IsActive)
+    .And<Sensor>("sensor", (token, sensor) => sensor.Type == "Temperature")
+    .If<Sensor>("sensor", (sensor) => sensor.IsTriggered)
+    .Then(token => firedByStatus = true);
+// Provide both facts, but the sensor will only match the late condition, so the rule should still fire
+var statusE = new SystemStatus { Name = "LateStatusE", Id = Guid.NewGuid(), IsActive = true };
+var sensorE = new Sensor { Name = "SensorE", Id = Guid.NewGuid(), IsTriggered = true, Type = "Temperature" };
+engineE.Assert(statusE);
+engineE.Assert(sensorE);
+engineE.FireAll();
+
+Console.WriteLine($"Late Filter Rule Fired: {firedByStatus}");  // Should print True
+
+
+var engineF = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+int rulesFired = 0;
+
+// Act: 5 shared rules
+for (int i = 0; i < 5; i++)
+{
+    engineF.Begin($"Rule{i}")
+        .Where<Product>("P", p => p.Category == "Electronics")
+        .And<Inventory>("I", (t, inv) => inv.ProductId == t.Get<Product>("P").ProductId)
+        .Then(t => {
+            var product = t.Get<Product>("P");
+            Console.WriteLine($"*** Inventory ID: {product.Id} ***");
+            rulesFired++;
+        });
+}
+
+// Assert 100 product-inventory pairs
+for (int i = 0; i < 3; i++)
+{
+    var productF = new Product
+    {
+        Id = Guid.NewGuid(),
+        ProductId = i,
+        Category = "Electronics"
+    };
+    var inventoryF = new Inventory
+    {
+        Id = Guid.NewGuid(),
+        ProductId = i,
+        Quantity = 10 + i
+    };
+    engineF.Assert(productF, inventoryF);
+}
+
+var stopwatch = Stopwatch.StartNew();
+engineF.FireAll();
+stopwatch.Stop();
+
+var stats = engineF.GetBetaNodeRegistryStatistics();
+Console.WriteLine($"Stress test: {rulesFired} fires in {stopwatch.ElapsedMilliseconds}ms");
+Console.WriteLine("Stress test stats:" + stats);
+
+// Arrange
+var engineG = new ReteEngine.ReteEngine();
+int fireCountG = 0;
+var orderG = new Order { Text = "Test Order", Id = Guid.NewGuid(), IsProcessed = false };
+
+// Rule 1: High Priority - Retracts the order
+engineG.Begin("HighPriority_Retract")
+    .Priority(100)
+    .Where<Order>("O", o => !o.IsProcessed)
+    .Then(t => {
+        fireCountG++;
+        var fact = t.Get<Order>("O");
+        engineG.Retract(fact); // This should invalidate the next rule
+    });
+
+// Rule 2: Low Priority - Should be cancelled by TM
+engineG.Begin("LowPriority_ShouldNotFire")
+    .Priority(50)
+    .Where<Order>("O", o => !o.IsProcessed)
+    .Then(t => {
+        fireCountG++; // If this runs, TM failed
+    });
+
+// Act
+engineG.Assert(orderG);
+engineG.FireAll();
+
+// If Truth Maintenance works, only Rule 1 fired.
+Console.WriteLine($"Fire count G: {fireCountG}");  // Should print 1

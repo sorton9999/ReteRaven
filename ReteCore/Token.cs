@@ -28,6 +28,10 @@ namespace ReteCore
         /// </summary>
         private readonly Guid _id = Guid.NewGuid(); // stable identity
         /// <summary>
+        /// The name associated with this token.
+        /// </summary>
+        private string _name;
+        /// <summary>
         /// The current fact associated with this token. This is the most recently added fact in the 
         /// chain of facts represented by this token.
         /// </summary>
@@ -44,6 +48,7 @@ namespace ReteCore
         /// <param name="initialFact">The initial fact to store in the token. Can be any object.</param>
         public Token(string name, object initialFact)
         {
+            _name = name;
             Parent = null;
             _fact = initialFact;
             NamedFacts[name] = initialFact;
@@ -60,6 +65,7 @@ namespace ReteCore
         {
             Parent = parent;
             _fact = newFact;
+            _name = nextName;
             foreach (var facts in parent.NamedFacts)
             {
                 NamedFacts[facts.Key] = facts.Value;
@@ -77,18 +83,36 @@ namespace ReteCore
         public object Fact { get { return _fact; } }
 
         /// <summary>
-        /// Retrieves a fact by name and type from the collection.
+        /// Retrieves a fact by name and type from the collection, searching through the token chain if not found locally.
+        /// This method first attempts to find the fact in the current token's NamedFacts dictionary. If not found,
+        /// it walks up the parent chain to search for the fact in ancestor tokens. This is especially useful when
+        /// working with reused beta memories where tokens may have been constructed through different paths.
         /// </summary>
         /// <param name="name">The name of the fact to retrieve. Cannot be null.</param>
         /// <returns>The fact associated with the specified name, cast to type T.</returns>
-        /// <exception cref="KeyNotFoundException">Thrown if a fact with the specified name and type T does not exist in the collection.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if a fact with the specified name and type T does not exist 
+        /// in the current token or any ancestor in the token chain.</exception>
         public T Get<T>(string name)
         {
-            if (NamedFacts.TryGetValue(name, out var fact) && fact is T typedFact)
+            // Try lookup by explicit name if provided
+            if (name != null && NamedFacts.TryGetValue(name, out var fact) && fact is T typedFact)
             {
                 return typedFact;
             }
-            throw new KeyNotFoundException($"Fact named '{name}' of type {typeof(T).Name} was not found.");
+
+            // Walk up the parent chain: try named lookup first, then type-based fallback
+            Token? current = Parent;
+            while (current != null)
+            {
+                if (name != null && current.NamedFacts.TryGetValue(name, out var parentFact) && parentFact is T parentTypedFact)
+                {
+                    return parentTypedFact;
+                }
+                
+                current = current.Parent;
+            }
+
+            throw new KeyNotFoundException($"Fact named '{name}' of type {typeof(T).Name} was not found in the token or its parent chain.");
         }
 
         /// <summary>
@@ -104,9 +128,16 @@ namespace ReteCore
         #region IEquatable overrides
         public bool Equals(Token? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _id.Equals(other._id);
+            if (other == null) { return false; }
+            if (!ReferenceEquals(Fact, other.Fact) || _name != other._name)
+            {
+                return false;
+            }
+
+            if (Parent == null && other.Parent == null) { return true; }
+            if (Parent != null && other.Parent != null) { return Parent.Equals(other.Parent); }
+
+            return false;
         }
 
         public override bool Equals(object? obj)
@@ -117,13 +148,16 @@ namespace ReteCore
 
         public override int GetHashCode()
         {
-            return _id.GetHashCode();
+            int parentHash = Parent?.GetHashCode() ?? 0;
+            int factHash = Fact != null ? EqualityComparer<object>.Default.GetHashCode(Fact) : 0;
+            return HashCode.Combine(parentHash, _name, factHash);
         }
 
         public static bool operator ==(Token? left, Token? right) => Equals(left, right);
         public static bool operator !=(Token? left, Token? right) => !Equals(left, right);
 
     }
+
 
     /// <summary>
     /// Represents a data cell with an identifier and a value, supporting property change notification.
@@ -154,7 +188,7 @@ namespace ReteCore
         /// current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value 
         /// property can hold any object.
         /// </summary>
-        public object? Value 
+        public object? Value
         {
             get { return _value; }
             set
@@ -211,5 +245,6 @@ namespace ReteCore
         /// <returns></returns>
         public override string ToString() => $"[ID:{Id}, Val:{Value}]";
     }
+
 
 }
