@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -102,13 +102,15 @@ Inheritance diagram for ReteCore.Cell:</div>
  <div class="center">
   <img src="class_rete_core_1_1_cell.png" usemap="#ReteCore_2ECell_map" alt=""/>
   <map id="ReteCore_2ECell_map" name="ReteCore_2ECell_map">
-<area href="class_rete_program_1_1_critical_cell.html" alt="ReteProgram.CriticalCell" shape="rect" coords="0,112,151,136"/>
-<area href="class_rete_program_1_1_duty_status.html" alt="ReteProgram.DutyStatus" shape="rect" coords="161,112,312,136"/>
-<area href="class_rete_program_1_1_inventory.html" alt="ReteProgram.Inventory" shape="rect" coords="322,112,473,136"/>
-<area href="class_rete_program_1_1_officer.html" alt="ReteProgram.Officer" shape="rect" coords="483,112,634,136"/>
-<area href="class_rete_program_1_1_order.html" alt="ReteProgram.Order" shape="rect" coords="644,112,795,136"/>
-<area href="class_rete_program_1_1_product.html" alt="ReteProgram.Product" shape="rect" coords="805,112,956,136"/>
-<area href="class_rete_program_1_1_shipment.html" alt="ReteProgram.Shipment" shape="rect" coords="966,112,1117,136"/>
+<area href="class_rete_program_1_1_critical_cell.html" alt="ReteProgram.CriticalCell" shape="rect" coords="173,112,336,136"/>
+<area href="class_rete_program_1_1_duty_status.html" alt="ReteProgram.DutyStatus" shape="rect" coords="173,168,336,192"/>
+<area href="class_rete_program_1_1_inventory.html" alt="ReteProgram.Inventory" shape="rect" coords="173,224,336,248"/>
+<area href="class_rete_program_1_1_officer.html" alt="ReteProgram.Officer" shape="rect" coords="173,280,336,304"/>
+<area href="class_rete_program_1_1_order.html" alt="ReteProgram.Order" shape="rect" coords="173,336,336,360"/>
+<area href="class_rete_program_1_1_product.html" alt="ReteProgram.Product" shape="rect" coords="173,392,336,416"/>
+<area href="class_rete_program_1_1_sensor.html" alt="ReteProgram.Sensor" shape="rect" coords="173,448,336,472"/>
+<area href="class_rete_program_1_1_shipment.html" alt="ReteProgram.Shipment" shape="rect" coords="173,504,336,528"/>
+<area href="class_rete_program_1_1_system_status.html" alt="ReteProgram.SystemStatus" shape="rect" coords="173,560,336,584"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -128,21 +130,17 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:aff04bf4a57fb77e5ea398b2f40d443db" id="r_aff04bf4a57fb77e5ea398b2f40d443db"><td class="memItemLeft"><a id="aff04bf4a57fb77e5ea398b2f40d443db" name="aff04bf4a57fb77e5ea398b2f40d443db"></a>
-Guid&#160;</td><td class="memItemRight"><b>Id</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:aff04bf4a57fb77e5ea398b2f40d443db"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior. <br /></td></tr>
-<tr class="memitem:a34a6c272207d5434260febbc3fbf7e73" id="r_a34a6c272207d5434260febbc3fbf7e73"><td class="memItemLeft"><a id="a34a6c272207d5434260febbc3fbf7e73" name="a34a6c272207d5434260febbc3fbf7e73"></a>
-string&#160;</td><td class="memItemRight"><b>Name</b> = string.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:a34a6c272207d5434260febbc3fbf7e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use. <br /></td></tr>
-<tr class="memitem:a5298b11522de03dabdb94043bacc99b8" id="r_a5298b11522de03dabdb94043bacc99b8"><td class="memItemLeft"><a id="a5298b11522de03dabdb94043bacc99b8" name="a5298b11522de03dabdb94043bacc99b8"></a>
-object?&#160;</td><td class="memItemRight"><b>Value</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a5298b11522de03dabdb94043bacc99b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value property can hold any object. <br /></td></tr>
+<tr class="memitem:aff04bf4a57fb77e5ea398b2f40d443db" id="r_aff04bf4a57fb77e5ea398b2f40d443db"><td class="memItemLeft">Guid&#160;</td><td class="memItemRight"><a class="el" href="#aff04bf4a57fb77e5ea398b2f40d443db">Id</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:aff04bf4a57fb77e5ea398b2f40d443db"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior.  <br /></td></tr>
+<tr class="memitem:a34a6c272207d5434260febbc3fbf7e73" id="r_a34a6c272207d5434260febbc3fbf7e73"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a34a6c272207d5434260febbc3fbf7e73">Name</a> = string.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:a34a6c272207d5434260febbc3fbf7e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use.  <br /></td></tr>
+<tr class="memitem:a5298b11522de03dabdb94043bacc99b8" id="r_a5298b11522de03dabdb94043bacc99b8"><td class="memItemLeft">object?&#160;</td><td class="memItemRight"><a class="el" href="#a5298b11522de03dabdb94043bacc99b8">Value</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a5298b11522de03dabdb94043bacc99b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value property can hold any object.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
-<tr class="memitem:a033e0bb40fef9abd67403d1fa09873b0" id="r_a033e0bb40fef9abd67403d1fa09873b0"><td class="memItemLeft"><a id="a033e0bb40fef9abd67403d1fa09873b0" name="a033e0bb40fef9abd67403d1fa09873b0"></a>
-PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChanged</b></td></tr>
-<tr class="memdesc:a033e0bb40fef9abd67403d1fa09873b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed. <br /></td></tr>
+<tr class="memitem:a033e0bb40fef9abd67403d1fa09873b0" id="r_a033e0bb40fef9abd67403d1fa09873b0"><td class="memItemLeft">PropertyChangedEventHandler&#160;</td><td class="memItemRight"><a class="el" href="#a033e0bb40fef9abd67403d1fa09873b0">PropertyChanged</a></td></tr>
+<tr class="memdesc:a033e0bb40fef9abd67403d1fa09873b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a data cell with an identifier and a value, supporting property change notification. </p>
@@ -247,8 +245,98 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 
 </div>
 </div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="aff04bf4a57fb77e5ea398b2f40d443db" name="aff04bf4a57fb77e5ea398b2f40d443db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff04bf4a57fb77e5ea398b2f40d443db">&#9670;&#160;</a></span>Id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Guid ReteCore.Cell.Id</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior. </p>
+
+</div>
+</div>
+<a id="a34a6c272207d5434260febbc3fbf7e73" name="a34a6c272207d5434260febbc3fbf7e73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34a6c272207d5434260febbc3fbf7e73">&#9670;&#160;</a></span>Name</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ReteCore.Cell.Name = string.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use. </p>
+
+</div>
+</div>
+<a id="a5298b11522de03dabdb94043bacc99b8" name="a5298b11522de03dabdb94043bacc99b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5298b11522de03dabdb94043bacc99b8">&#9670;&#160;</a></span>Value</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">object? ReteCore.Cell.Value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value property can hold any object. </p>
+
+</div>
+</div>
+<a name="doc-event-members" id="doc-event-members"></a><h2 id="header-doc-event-members" class="groupheader">Event Documentation</h2>
+<a id="a033e0bb40fef9abd67403d1fa09873b0" name="a033e0bb40fef9abd67403d1fa09873b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a033e0bb40fef9abd67403d1fa09873b0">&#9670;&#160;</a></span>PropertyChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PropertyChangedEventHandler ReteCore.Cell.PropertyChanged</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>Token.cs</b></li>
+<li>ReteCore/<a class="el" href="_token_8cs.html">Token.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

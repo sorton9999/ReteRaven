@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -124,9 +124,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:adb8691fc712943c3604704202b5964b5" id="r_adb8691fc712943c3604704202b5964b5"><td class="memItemLeft"><a id="adb8691fc712943c3604704202b5964b5" name="adb8691fc712943c3604704202b5964b5"></a>
-List&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><b>_tokens</b> = new()</td></tr>
-<tr class="memdesc:adb8691fc712943c3604704202b5964b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The collection of tokens (partial matches) that have been asserted into this <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>. Each token represents a combination of facts that have matched certain conditions in the Rete network. The collection allows for efficient checking of whether a token is already present, and it serves as the basis for propagating matches to successor nodes when new facts are asserted or existing facts are retracted or refreshed. When a new token is asserted, it is added to this collection if it is not already present, and when a fact is retracted, any tokens containing that fact are removed from the collection. The presence of tokens in this collection determines whether they will be propagated to successor nodes when operations are performed on them. <br /></td></tr>
+<tr class="memitem:adb8691fc712943c3604704202b5964b5" id="r_adb8691fc712943c3604704202b5964b5"><td class="memItemLeft">List&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#adb8691fc712943c3604704202b5964b5">_tokens</a> = new()</td></tr>
+<tr class="memdesc:adb8691fc712943c3604704202b5964b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The collection of tokens (partial matches) that have been asserted into this <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>. Each token represents a combination of facts that have matched certain conditions in the Rete network. The collection allows for efficient checking of whether a token is already present, and it serves as the basis for propagating matches to successor nodes when new facts are asserted or existing facts are retracted or refreshed. When a new token is asserted, it is added to this collection if it is not already present, and when a fact is retracted, any tokens containing that fact are removed from the collection. The presence of tokens in this collection determines whether they will be propagated to successor nodes when operations are performed on them.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -162,6 +161,8 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a69dc49b54ced282def07b19f85d1af09">ReteCore.IReteNode</a>.</p>
 
 </div>
 </div>
@@ -310,6 +311,23 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="adb8691fc712943c3604704202b5964b5" name="adb8691fc712943c3604704202b5964b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb8691fc712943c3604704202b5964b5">&#9670;&#160;</a></span>_tokens</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;<a class="el" href="class_rete_core_1_1_token.html">Token</a>&gt; ReteCore.BetaMemory._tokens = new()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The collection of tokens (partial matches) that have been asserted into this <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>. Each token represents a combination of facts that have matched certain conditions in the Rete network. The collection allows for efficient checking of whether a token is already present, and it serves as the basis for propagating matches to successor nodes when new facts are asserted or existing facts are retracted or refreshed. When a new token is asserted, it is added to this collection if it is not already present, and when a fact is retracted, any tokens containing that fact are removed from the collection. The presence of tokens in this collection determines whether they will be propagated to successor nodes when operations are performed on them. </p>
+
+</div>
+</div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
 <a id="a7fa35b8f3f7628ff5584ed2d46cf2a40" name="a7fa35b8f3f7628ff5584ed2d46cf2a40"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7fa35b8f3f7628ff5584ed2d46cf2a40">&#9670;&#160;</a></span>Parent</h2>
@@ -390,7 +408,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>BetaMemory.cs</b></li>
+<li>ReteCore/<a class="el" href="_beta_memory_8cs.html">BetaMemory.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

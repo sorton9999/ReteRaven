@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -112,7 +112,7 @@ Inheritance diagram for ReteEngine.FluentConverter&lt; TInitial &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1d2fa685d208e842b0284030ad4e8ca" id="r_ac1d2fa685d208e842b0284030ad4e8ca"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac1d2fa685d208e842b0284030ad4e8ca">FluentConverter</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> engine, string ruleName)</td></tr>
+<tr class="memitem:ac1d2fa685d208e842b0284030ad4e8ca" id="r_ac1d2fa685d208e842b0284030ad4e8ca"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac1d2fa685d208e842b0284030ad4e8ca">FluentConverter</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> <a class="el" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>, string ruleName)</td></tr>
 <tr class="memdesc:ac1d2fa685d208e842b0284030ad4e8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor for the FluentConverter class. It takes a <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> instance and a rule name as parameters, which are used to create a new ReteBuilder instance.  <br /></td></tr>
 <tr class="memitem:a60940d589be5cd0435c1efcdfab60563" id="r_a60940d589be5cd0435c1efcdfab60563"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a60940d589be5cd0435c1efcdfab60563">And</a> ()</td></tr>
 <tr class="memdesc:a60940d589be5cd0435c1efcdfab60563"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method that allows for chaining multiple conditions on the same fact type without needing to repeat the fact type in the method signature. This allows for the progression of conditions in a more natural way, where you can start with a condition on a fact type and then chain additional conditions on the same fact type using <a class="el" href="#a60940d589be5cd0435c1efcdfab60563" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">And</a> and <a class="el" href="#a4fac93e495af69c0334782bf22c55e59" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">Or</a> without needing to specify the fact type again. This helps to keep the rule definition more concise and readable when dealing with multiple conditions on the same fact type.  <br /></td></tr>
@@ -122,6 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6fb889a5c0f2e8bd89c906e3704a506d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.If that registers a global boolean condition.  <br /></td></tr>
 <tr class="memitem:ab9bb36dd56a2e3b293cdb33cf2686179" id="r_ab9bb36dd56a2e3b293cdb33cf2686179"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab9bb36dd56a2e3b293cdb33cf2686179">If&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; lateCondition)</td></tr>
 <tr class="memdesc:ab9bb36dd56a2e3b293cdb33cf2686179"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.If that registers a typed late evaluation condition.  <br /></td></tr>
+<tr class="memitem:a04a62ef782dd052da567700740873e66" id="r_a04a62ef782dd052da567700740873e66"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a04a62ef782dd052da567700740873e66">AndNot&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
+<tr class="memdesc:a04a62ef782dd052da567700740873e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.AndNot that registers an .And join condition, but negated to get the Not conditional.  <br /></td></tr>
 <tr class="memitem:ad741e1abcf0e74eacf2958192261084c" id="r_ad741e1abcf0e74eacf2958192261084c"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad741e1abcf0e74eacf2958192261084c">Priority</a> (int priorityVal)</td></tr>
 <tr class="memdesc:ad741e1abcf0e74eacf2958192261084c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Priority that sets rule priority.  <br /></td></tr>
 <tr class="memitem:acd1c4c5aad87980de05018e834194972" id="r_acd1c4c5aad87980de05018e834194972"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#acd1c4c5aad87980de05018e834194972">First</a> ()</td></tr>
@@ -204,7 +206,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">ReteEngine.IAggregationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#ab94baa6eb2e4ff8367ffb2986dc6ba3d">ReteEngine.IAggregationBuilder</a>.</p>
 
 </div>
 </div>
@@ -226,7 +228,7 @@ Public Member Functions</h2></td></tr>
 <p>A convenience method that allows for chaining multiple conditions on the same fact type without needing to repeat the fact type in the method signature. This allows for the progression of conditions in a more natural way, where you can start with a condition on a fact type and then chain additional conditions on the same fact type using <a class="el" href="#a60940d589be5cd0435c1efcdfab60563" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">And</a> and <a class="el" href="#a4fac93e495af69c0334782bf22c55e59" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">Or</a> without needing to specify the fact type again. This helps to keep the rule definition more concise and readable when dealing with multiple conditions on the same fact type. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> (this instance) to continue building the rule.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a6f054fe591201ec0fe86aee1a52b8e30">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -271,12 +273,51 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> to continue building connections.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#ae5e7203f4b588cc7f726ce8d1c2e764d">ReteEngine.IEvaluationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="a04a62ef782dd052da567700740873e66" name="a04a62ef782dd052da567700740873e66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04a62ef782dd052da567700740873e66">&#9670;&#160;</a></span>AndNot&lt; T &gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.AndNot&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.AndNot that registers an .And join condition, but negated to get the Not conditional. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The fact type the condition evaluates.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name to assign to the condition within the rule.</td></tr>
+    <tr><td class="paramname">joinCondition</td><td>A predicate invoked with a token and a fact of type <em>T</em> .</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html#a18fae3f82435a22ac6c23481c1be701f">ReteEngine.IConnectionBuilder</a>.</p>
 
 </div>
 </div>
 <a id="ac4bee10c20f8cf4a88113dd1574f78e0" name="ac4bee10c20f8cf4a88113dd1574f78e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4bee10c20f8cf4a88113dd1574f78e0">&#9670;&#160;</a></span>AndNot&lt; T &gt;()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4bee10c20f8cf4a88113dd1574f78e0">&#9670;&#160;</a></span>AndNot&lt; T &gt;() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,7 +357,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#af8b9633f8c48f19dac4f6d6ad0e7d51e">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -355,7 +396,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">ReteEngine.IAggregationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#aaeacc023331ca8428bcc4a972a2a010c">ReteEngine.IAggregationBuilder</a>.</p>
 
 </div>
 </div>
@@ -389,7 +430,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">ReteEngine.IAggregationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#a79c21c0908e1806b9450a9866350e2c8">ReteEngine.IAggregationBuilder</a>.</p>
 
 </div>
 </div>
@@ -434,7 +475,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a8969c898c1fa194fbc455b460d448b32">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -456,7 +497,7 @@ Public Member Functions</h2></td></tr>
 <p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.First that marks the rule as first in ordering. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a2cd22dff84453936e8ac790cf8a1ca7d">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -531,7 +572,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html" title="This interface defines the method for building aggregate conditions in a rule. It allows for specifyi...">IAggregationBuilder</a> to define aggregate predicates.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a20fde36cfa7ca64fc3a217bbe6bf24de">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -565,7 +606,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a3aa2b6cd3a9b41087bdd4e7fa6ead958">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -598,7 +639,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#ab08e0c5feca3e4a955a2d3d22feedec1">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -637,7 +678,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> to continue building connections.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a1628f35f580ae17a4dcd93f430bce41c">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -676,7 +717,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#afdc7323ee967ee908eca85ffe576f463">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -698,7 +739,7 @@ Public Member Functions</h2></td></tr>
 <p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Next that advances the rule ordering. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a43df21d39397944b8cdaca1e1ece0cc3">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -726,7 +767,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a1fdc720c724019ddd5d58a80202f3a4a">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -771,7 +812,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a25440cde3f559b557a88c62e3e5f09bb">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -793,7 +834,7 @@ Public Member Functions</h2></td></tr>
 <p>A convenience method that allows for chaining multiple conditions on the same fact type without needing to repeat the fact type in the method signature for similar reasons as with the <a class="el" href="#a60940d589be5cd0435c1efcdfab60563" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">And</a> call above. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> (this instance) to continue building the rule.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a9a444ea5a15152fc3f6860454399fbd7">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -838,7 +879,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> to continue building connections.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a4ab5572305fd81dc1265e517886dbe6d">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -866,7 +907,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a08129760a5655bb33d791d908a7047d2">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -877,7 +918,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.StartWith&lt; T &gt; </td>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.<a class="el" href="_program_8cs.html#a755e5f7c9ab1ced21db424da88369f9d">StartWith</a>&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a></td>          <td class="paramname"><span class="paramname"><em>alpha</em></span>, </td>
         </tr>
@@ -905,7 +946,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#aa47dd7c9948c22caaee6529b4e89a45e">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -944,7 +985,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">ReteEngine.IAggregationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#af921b13e0c5ac004037ca222c879e719">ReteEngine.IAggregationBuilder</a>.</p>
 
 </div>
 </div>
@@ -983,7 +1024,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">ReteEngine.IAggregationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#a0e5dfc11b4ee4f72706a83f4b813ff4f">ReteEngine.IAggregationBuilder</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1056,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">ReteEngine.IEvaluationBuilder</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a271de538e5846c5ebcf4d4380bf7afbf">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1090,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html" title="This interface defines the method for building aggregate conditions in a rule. It allows for specifyi...">IAggregationBuilder</a> to continue building aggregations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a0bdfa92a01b567b885554e0f2a2d28ae">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -1094,12 +1135,12 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#aa3d5e7469c1587161bf5a53d35783704">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteEngine/<b>FluentConverter.cs</b></li>
+<li>ReteEngine/<a class="el" href="_fluent_converter_8cs.html">FluentConverter.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

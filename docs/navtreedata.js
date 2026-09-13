@@ -25,6 +25,8 @@
 var NAVTREE =
 [
   [ "ReteRaven", "index.html", [
+    [ "Project Documentation", "index.html", "index" ],
+    [ "README", "md__r_e_a_d_m_e.html", null ],
     [ "Packages", "namespaces.html", [
       [ "Package List", "namespaces.html", "namespaces_dup" ]
     ] ],
@@ -40,15 +42,26 @@ var NAVTREE =
         [ "Properties", "functions_prop.html", null ],
         [ "Events", "functions_evnt.html", null ]
       ] ]
+    ] ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", "globals_dup" ],
+        [ "Functions", "globals_func.html", null ],
+        [ "Variables", "globals_vars.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"class_rete_core_1_1_fact-1-g.html#a6b3c1ff8126d71d4136368f6bb8c777f",
-"class_rete_engine_1_1_fluent_converter-1-g.html#acd1c4c5aad87980de05018e834194972"
+"_activation_8cs.html",
+"_rete_program_8_global_usings_8g_8cs.html",
+"class_rete_core_1_1_exists_node.html#ac98086aa32ad9eaa53f40e18d532ec85",
+"class_rete_core_1_1_token.html#a26e11352edb3a65fa397a37695bf73e8",
+"class_rete_program_1_1_product.html",
+"functions_t.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

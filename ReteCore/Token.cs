@@ -162,10 +162,10 @@ namespace ReteCore
     /// <summary>
     /// Represents a data cell with an identifier and a value, supporting property change notification.
     /// </summary>
-    /// <remarks>The Cell class implements INotifyPropertyChanged to support data binding scenarios, such as
+    /// <remarks>The Fact class implements INotifyPropertyChanged to support data binding scenarios, such as
     /// those found in UI frameworks. PropertyChanged is raised when the Value property changes, allowing observers to
     /// react to updates. Equality and hash code operations are based on both the Id and Value properties.</remarks>
-    public class Cell : INotifyPropertyChanged
+    public class Fact : INotifyPropertyChanged
     {
         /// <summary>
         /// The value stored in this cell. When the value is set, if it differs from the current value, the PropertyChanged 
@@ -220,13 +220,13 @@ namespace ReteCore
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// The Equals method is overridden to provide a way to compare two Cell instances for equality.
+        /// The Equals method is overridden to provide a way to compare two Fact instances for equality.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         public override bool Equals(object? obj)
         {
-            return obj is Cell other && Id == other.Id && Value == other.Value;
+            return obj is Fact other && Id == other.Id && Value == other.Value;
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The ToString method is overridden to provide a string representation of the Cell instance, which includes the 
+        /// The ToString method is overridden to provide a string representation of the Fact instance, which includes the 
         /// Id and Value for easy identification when debugging or logging.
         /// </summary>
         /// <returns></returns>

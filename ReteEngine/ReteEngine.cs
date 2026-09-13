@@ -266,7 +266,7 @@ namespace ReteEngine
         /// </summary>
         /// <param name="ruleName">The name of the rule to begin defining.</param>
         /// <returns>The fluent interface for defining the start of a rule.</returns>
-        public IRuleSetup Begin(string ruleName) => new FluentConverter<Cell>(this, ruleName);
+        public IRuleSetup Begin(string ruleName) => new FluentConverter<Fact>(this, ruleName);
 
         /// <summary>
         /// Returns an AlphaMemory for the specified type and optional name. This method retrieves an existing AlphaMemory from the alpha registry if it 

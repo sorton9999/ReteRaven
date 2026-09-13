@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['fact_0',['Fact',['../class_rete_core_1_1_token.html#a176e789694d2a69443acf707848f9992',1,'ReteCore::Token']]],
-  ['facts_1',['Facts',['../class_rete_core_1_1_alpha_memory.html#a61d986788bcd2d42e091c532461fe8a3',1,'ReteCore::AlphaMemory']]]
+  ['datatype_0',['DataType',['../interface_rete_core_1_1_i_fact.html#ad80c84a6f41c25bbffdd1d9497b91e0b',1,'ReteCore.IFact.DataType'],['../class_rete_core_1_1_fact-1-g.html#a25424c0c1fe031fdd3cd0a595b667844',1,'ReteCore.Fact-1-g.DataType']]]
 ];

@@ -6,12 +6,13 @@
 //     information.
 // </copyright>
 //-----------------------------------------------------------------------
+using ReteCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using ReteCore;
 
 namespace ReteEngine
 {
@@ -308,16 +309,46 @@ namespace ReteEngine
         private (string cacheKey, string tokenName) GenerateJoinSignature<T>(
             string name, 
             AlphaMemory alpha, 
-            Func<Token, T, bool> joinCondition)
+            Func<Token, T, bool> joinCondition,
+            [CallerMemberName] string methodName = "")
         {
             var methodPointer = joinCondition.Method.MethodHandle.Value;
 
             // Generate a unique cache key that includes all factors affecting join semantics
             // This prevents false cache hits when conditions differ
-            string cacheKey = $"And<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
 
             // The token name is always the simple provided name - this is what late filters look for
             // by calling token.Get<T>(name)
+            string tokenName = name;
+
+            return (cacheKey, tokenName);
+        }
+
+        /// <summary>
+        /// Generate a cache key for a given array of join conditions.  The array of joins is used in
+        /// .Or rules where all conditions are evaluated where any one that is true sets the rule as 
+        /// true.  Each member of the array will be used to generate the key.  The (key-token name) 
+        /// tuple is returned.  The token name is returned to act as a stand-in when late filters are
+        /// used.
+        /// </summary>
+        /// <param name="name">The logical name provided by the rule builder for this join.</param>
+        /// <param name="alpha">The alpha memory instance for this type.</param>
+        /// <param name="joinConditions">The array of join condition predicate functions.</param>
+        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
+        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
+        private (string cacheKey, string tokenName) GenerateJoinArraySignature<T>(
+            string name,
+            AlphaMemory alpha,
+            Func<Token, T, bool>[] joinConditions,
+            [CallerMemberName] string methodName = "")
+        {
+            var methodPointers = joinConditions
+                .Select(cond => cond.Method.MethodHandle.Value.ToString())
+                .OrderBy(p => p);
+            string conditionKey = string.Join("|", methodPointers);
+
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{conditionKey}";
             string tokenName = name;
 
             return (cacheKey, tokenName);
@@ -411,45 +442,51 @@ namespace ReteEngine
         {
             // Save the starting point so all branches begin from the same prefix
             var branchStartNode = _lastNode; // Previous node in the chain
+            var alpha = _engine.GetAlphaMemory<T>();
 
-            // The collector node that merges all paths
-            var orNode = new CompositeBetaMemory();
+            var (joinSignature, tokenName) = GenerateJoinArraySignature(name, alpha, orConditions);
 
-            foreach (var condition in orConditions)
+            JoinNode joinNode;
+            BetaMemory betaMemory;
+
+            if (_engine.BetaNodeRegistry != null)
             {
-                var wrapCondition = (Token token, T fact) =>
+                Func<Token, object, bool> compositeEvaluator = (token, fact) =>
                 {
-                    bool result = condition(token, fact);
-                    if (debugLabel != null)
+                    foreach (var condition in orConditions)
                     {
-                        Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
+                        if (condition(token, (T)fact)) { return true; }
                     }
-                    return result;
+                    return false;
                 };
 
-                var alpha = _engine.GetAlphaMemory<T>();
+                (joinNode, betaMemory) = _engine.BetaNodeRegistry.GetOrCreateJoinPair(
+                    branchStartNode,
+                    joinSignature,
+                    tokenName,
+                    alpha,
+                    compositeEvaluator);
 
-                // Create a JoinNode for this specific condition
-                var join = new JoinNode(branchStartNode, alpha, name,
-                    (token, fact) => wrapCondition(token, (T)fact));
-
-                if (branchStartNode is BetaMemory beta)
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(branchStartNode, joinNode);
+            }
+            else
+            {
+                joinNode = new JoinNode(branchStartNode, alpha, tokenName, (token, fact) =>
                 {
-                    beta.AddSuccessor(join);
-                }
-                else if (branchStartNode is CompositeBetaMemory compositeBeta)
-                {
-                    compositeBeta.AddSuccessor(join);
-                }
+                    foreach (var condition in orConditions)
+                    {
+                        if (condition(token, (T)fact)) { return true; }
+                    }
+                    return false;
+                });
+                if (branchStartNode is BetaMemory beta) { beta.AddSuccessor(joinNode); }
+                else if (branchStartNode is CompositeBetaMemory comp) { comp.AddSuccessor(joinNode); }
 
-                alpha.AddSuccessor(join);
-
-                // Point this branch to the OrNode
-                join.AddSuccessor(orNode);
-                //_lastNode = orNode;
+                betaMemory = new BetaMemory();
+                joinNode.AddSuccessor(betaMemory);
             }
             // Update the builder state: the rest of the rule now follows the orNode
-            _lastNode = orNode;
+            _lastNode = betaMemory;
 
             return this;
         }
@@ -477,17 +514,37 @@ namespace ReteEngine
                 return !result; // Negate the condition for AND NOT semantics
             };
             var alpha = _engine.GetAlphaMemory<T>();
-            JoinNode join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
-            if (_lastNode is BetaMemory beta)
+            // Generate both cache key and token name together to ensure consistency
+            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+            JoinNode join;
+            BetaMemory betaMemory;
+
+            if (_engine.BetaNodeRegistry != null)
             {
-                beta.AddSuccessor(join);
+                (join, betaMemory) = _engine.BetaNodeRegistry.GetOrCreateJoinPair(
+                    _lastNode,
+                    joinSignature,
+                    tokenName,
+                    alpha,
+                    (token, fact) => wrapCondition(token, (T)fact));
+
+                // Ensure the previous node is connected
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(_lastNode, join);
             }
-            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            else
             {
-                compositeBeta.AddSuccessor(join);
+                join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
+                if (_lastNode is BetaMemory beta)
+                {
+                    beta.AddSuccessor(join);
+                }
+                else if (_lastNode is CompositeBetaMemory compositeBeta)
+                {
+                    compositeBeta.AddSuccessor(join);
+                }
+                betaMemory = new BetaMemory();
+                join.AddSuccessor(betaMemory);
             }
-            var betaMemory = new BetaMemory();
-            join.AddSuccessor(betaMemory);
             _lastNode = betaMemory;
             return this;
         }
@@ -515,19 +572,38 @@ namespace ReteEngine
                 return result;
             };
             var alpha = _engine.GetAlphaMemory<T>();
-            var notNode = new NotNode(name, (token, fact) => wrapCondition(token, (T)fact));
-            alpha.AddSuccessor(notNode);
+            // Generate a join signature for caching and lookup
+            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+            IReteNode notNode;
+            BetaMemory betaMemory;
 
-            if (_lastNode is BetaMemory beta)
+            if (_engine.BetaNodeRegistry != null)
             {
-                beta.AddSuccessor(notNode);
+                (notNode, betaMemory) = _engine.BetaNodeRegistry.GetOrCreateNotPair(
+                    _lastNode,
+                    joinSignature,
+                    tokenName,
+                    alpha,
+                    (token, fact) => wrapCondition(token, (T)fact));
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(_lastNode, notNode);
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(alpha, notNode);
             }
-            else if (_lastNode is CompositeBetaMemory compositeBeta)
+            else
             {
-                compositeBeta.AddSuccessor(notNode);
+                notNode = new NotNode(name, (token, fact) => wrapCondition(token, (T)fact));
+                alpha.AddSuccessor(notNode);
+
+                if (_lastNode is BetaMemory beta)
+                {
+                    beta.AddSuccessor(notNode);
+                }
+                else if (_lastNode is CompositeBetaMemory compositeBeta)
+                {
+                    compositeBeta.AddSuccessor(notNode);
+                }
+                betaMemory = new BetaMemory();
+                notNode.AddSuccessor(betaMemory);
             }
-            var betaMemory = new BetaMemory();
-            notNode.AddSuccessor(betaMemory);
             _lastNode = betaMemory;
             return this;
         }

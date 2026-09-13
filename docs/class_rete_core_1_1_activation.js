@@ -1,6 +1,10 @@
 var class_rete_core_1_1_activation =
 [
-    [ "ActivationState", "class_rete_core_1_1_activation.html#ac301cc5e250f94dc0dc509a5ae954d61", null ],
+    [ "ActivationState", "class_rete_core_1_1_activation.html#ac301cc5e250f94dc0dc509a5ae954d61", [
+      [ "Cancelled", "class_rete_core_1_1_activation.html#ac301cc5e250f94dc0dc509a5ae954d61aa149e85a44aeec9140e92733d9ed694e", null ],
+      [ "Pending", "class_rete_core_1_1_activation.html#ac301cc5e250f94dc0dc509a5ae954d61a2d13df6f8b5e4c5af9f87e0dc39df69d", null ],
+      [ "Fired", "class_rete_core_1_1_activation.html#ac301cc5e250f94dc0dc509a5ae954d61a666fee8e2387f4f915bcc76393609dcf", null ]
+    ] ],
     [ "Activation", "class_rete_core_1_1_activation.html#ab414522ad2ba19047e1765b525f8102b", null ],
     [ "CompareTo", "class_rete_core_1_1_activation.html#a0183c8594fcb6fe388e341b31bdd4a8f", null ],
     [ "Fire", "class_rete_core_1_1_activation.html#ad9e022585999eff1c5819acdc5ba7fc4", null ],

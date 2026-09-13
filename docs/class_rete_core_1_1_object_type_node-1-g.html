@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,8 +108,8 @@ Inheritance diagram for ReteCore.ObjectTypeNode&lt; T &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a84ee6f4b0b7838f16604f00620e2c3a4" id="r_a84ee6f4b0b7838f16604f00620e2c3a4"><td class="memItemLeft"><a id="a84ee6f4b0b7838f16604f00620e2c3a4" name="a84ee6f4b0b7838f16604f00620e2c3a4"></a>
-void&#160;</td><td class="memItemRight"><b>AddSuccessor</b> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memitem:a84ee6f4b0b7838f16604f00620e2c3a4" id="r_a84ee6f4b0b7838f16604f00620e2c3a4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a84ee6f4b0b7838f16604f00620e2c3a4">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
+<tr class="memdesc:a84ee6f4b0b7838f16604f00620e2c3a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a successor node to the current Rete node, allowing for the propagation of facts to the new successor.  <br /></td></tr>
 <tr class="memitem:a71b94977d1b47a55826426b6fd0fbd31" id="r_a71b94977d1b47a55826426b6fd0fbd31"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a71b94977d1b47a55826426b6fd0fbd31">Assert</a> (object fact)</td></tr>
 <tr class="memdesc:a71b94977d1b47a55826426b6fd0fbd31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the Rete node, which may trigger the propagation of the fact to successor nodes. The specific behavior of this method depends on the type of node (e.g., <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, etc.) and how it processes incoming facts. For example, an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> might simply store the fact and propagate it to successors, while a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> might combine it with existing tokens to create new matches. The Assert method is a fundamental part of how facts are introduced into the Rete network and how they flow through it to trigger rule activations.  <br /></td></tr>
 <tr class="memitem:a1c0ad918a4fa0078d0a831fcdbe4fffb" id="r_a1c0ad918a4fa0078d0a831fcdbe4fffb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1c0ad918a4fa0078d0a831fcdbe4fffb">Retract</a> (object fact)</td></tr>
@@ -137,6 +137,33 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a84ee6f4b0b7838f16604f00620e2c3a4" name="a84ee6f4b0b7838f16604f00620e2c3a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84ee6f4b0b7838f16604f00620e2c3a4">&#9670;&#160;</a></span>AddSuccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.ObjectTypeNode&lt; T &gt;.AddSuccessor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a></td>          <td class="paramname"><span class="paramname"><em>nodeToConnect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a successor node to the current Rete node, allowing for the propagation of facts to the new successor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nodeToConnect</td><td>The node to add as a successor.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#a69dc49b54ced282def07b19f85d1af09">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
 <a id="a71b94977d1b47a55826426b6fd0fbd31" name="a71b94977d1b47a55826426b6fd0fbd31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a71b94977d1b47a55826426b6fd0fbd31">&#9670;&#160;</a></span>Assert()</h2>
 
@@ -336,7 +363,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>ObjectTypeNode.cs</b></li>
+<li>ReteCore/<a class="el" href="_object_type_node_8cs.html">ObjectTypeNode.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
