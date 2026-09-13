@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -94,7 +94,7 @@ $(function(){initNavTree('class_rete_core_1_1_fact-1-g.html','','class_rete_core
 </div><!--header-->
 <div class="contents">
 
-<p>The container for any types of data. This class implements INotifyPropertyChanged to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each Fact instance can be uniquely identified.  
+<p>The container for any types of data. This class implements INotifyPropertyChanged to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instance can be uniquely identified.  
  <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for ReteCore.Fact&lt; T &gt;:</div>
@@ -109,15 +109,15 @@ Inheritance diagram for ReteCore.Fact&lt; T &gt;:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a69ae23fef4cf76d2ddff8067fd366eff" id="r_a69ae23fef4cf76d2ddff8067fd366eff"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a69ae23fef4cf76d2ddff8067fd366eff">Fact</a> (T data)</td></tr>
-<tr class="memdesc:a69ae23fef4cf76d2ddff8067fd366eff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor initializes a new instance of the Fact class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the PropertyChanged event if necessary.  <br /></td></tr>
+<tr class="memdesc:a69ae23fef4cf76d2ddff8067fd366eff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor initializes a new instance of the <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the PropertyChanged event if necessary.  <br /></td></tr>
 <tr class="memitem:aefd88d33f538c875fcbc7feaac4568b2" id="r_aefd88d33f538c875fcbc7feaac4568b2"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#aefd88d33f538c875fcbc7feaac4568b2">TValue&lt; T &gt;</a> ()</td></tr>
 <tr class="memdesc:aefd88d33f538c875fcbc7feaac4568b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper method that retrieves the underlying fact value as a specific type T.  <br /></td></tr>
 <tr class="memitem:aafadbb80a33ca0358aedff9563ce8101" id="r_aafadbb80a33ca0358aedff9563ce8101"><td class="memItemLeft">override bool&#160;</td><td class="memItemRight"><a class="el" href="#aafadbb80a33ca0358aedff9563ce8101">Equals</a> (object? obj)</td></tr>
-<tr class="memdesc:aafadbb80a33ca0358aedff9563ce8101"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Equals method is overridden to provide a way to compare two Fact instances for equality. Two Fact instances are considered equal if they have the same unique identifier (Id). This means that even if two Fact instances contain the same underlying data, they will be treated as distinct unless they share the same Id.  <br /></td></tr>
+<tr class="memdesc:aafadbb80a33ca0358aedff9563ce8101"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Equals method is overridden to provide a way to compare two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances for equality. Two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances are considered equal if they have the same unique identifier (Id). This means that even if two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances contain the same underlying data, they will be treated as distinct unless they share the same Id.  <br /></td></tr>
 <tr class="memitem:a31eeb76a84bc1cc15253998e012289c5" id="r_a31eeb76a84bc1cc15253998e012289c5"><td class="memItemLeft">override int&#160;</td><td class="memItemRight"><a class="el" href="#a31eeb76a84bc1cc15253998e012289c5">GetHashCode</a> ()</td></tr>
 <tr class="memdesc:a31eeb76a84bc1cc15253998e012289c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a hash code for this instance, which is based on the unique identifier (Id) of the fact.  <br /></td></tr>
 <tr class="memitem:ab885f4d31ce5f41cb414bc592db88b2f" id="r_ab885f4d31ce5f41cb414bc592db88b2f"><td class="memItemLeft">override string&#160;</td><td class="memItemRight"><a class="el" href="#ab885f4d31ce5f41cb414bc592db88b2f">ToString</a> ()</td></tr>
-<tr class="memdesc:ab885f4d31ce5f41cb414bc592db88b2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The override of the ToString method provides a string representation of the Fact instance.  <br /></td></tr>
+<tr class="memdesc:ab885f4d31ce5f41cb414bc592db88b2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The override of the ToString method provides a string representation of the <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instance.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -128,9 +128,8 @@ Protected Member Functions</h2></td></tr>
 Properties</h2></td></tr>
 <tr class="memitem:a3792235ad69a3776441fa21556ab520e" id="r_a3792235ad69a3776441fa21556ab520e"><td class="memItemLeft">Guid&#160;</td><td class="memItemRight"><a class="el" href="#a3792235ad69a3776441fa21556ab520e">Id</a> = Guid.NewGuid()<code> [get]</code></td></tr>
 <tr class="memdesc:a3792235ad69a3776441fa21556ab520e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A unique identifier.  <br /></td></tr>
-<tr class="memitem:a28ed082b2b87a02d53400dbd52975cd4" id="r_a28ed082b2b87a02d53400dbd52975cd4"><td class="memItemLeft"><a id="a28ed082b2b87a02d53400dbd52975cd4" name="a28ed082b2b87a02d53400dbd52975cd4"></a>
-T&#160;</td><td class="memItemRight"><b>Value</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a28ed082b2b87a02d53400dbd52975cd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The templated value of this fact. <br /></td></tr>
+<tr class="memitem:a28ed082b2b87a02d53400dbd52975cd4" id="r_a28ed082b2b87a02d53400dbd52975cd4"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a28ed082b2b87a02d53400dbd52975cd4">Value</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a28ed082b2b87a02d53400dbd52975cd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The templated value of this fact.  <br /></td></tr>
 <tr class="memitem:a75125042b61e0abba2515f6674082d5b" id="r_a75125042b61e0abba2515f6674082d5b"><td class="memItemLeft">object&#160;</td><td class="memItemRight"><a class="el" href="#a75125042b61e0abba2515f6674082d5b">UnderlyingObject</a><code> [get]</code></td></tr>
 <tr class="memdesc:a75125042b61e0abba2515f6674082d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The data stored as an object type.  <br /></td></tr>
 <tr class="memitem:a25424c0c1fe031fdd3cd0a595b667844" id="r_a25424c0c1fe031fdd3cd0a595b667844"><td class="memItemLeft">Type&#160;</td><td class="memItemRight"><a class="el" href="#a25424c0c1fe031fdd3cd0a595b667844">DataType</a><code> [get]</code></td></tr>
@@ -138,12 +137,11 @@ T&#160;</td><td class="memItemRight"><b>Value</b><code> [get, set]</code></td></
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
-<tr class="memitem:aff0a0f8182e4fa6986baac4597bfb6a4" id="r_aff0a0f8182e4fa6986baac4597bfb6a4"><td class="memItemLeft"><a id="aff0a0f8182e4fa6986baac4597bfb6a4" name="aff0a0f8182e4fa6986baac4597bfb6a4"></a>
-PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChanged</b></td></tr>
-<tr class="memdesc:aff0a0f8182e4fa6986baac4597bfb6a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed, enabling observers to react. <br /></td></tr>
+<tr class="memitem:aff0a0f8182e4fa6986baac4597bfb6a4" id="r_aff0a0f8182e4fa6986baac4597bfb6a4"><td class="memItemLeft">PropertyChangedEventHandler&#160;</td><td class="memItemRight"><a class="el" href="#aff0a0f8182e4fa6986baac4597bfb6a4">PropertyChanged</a></td></tr>
+<tr class="memdesc:aff0a0f8182e4fa6986baac4597bfb6a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed, enabling observers to react.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The container for any types of data. This class implements INotifyPropertyChanged to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each Fact instance can be uniquely identified. </p>
+<div class="textblock"><p>The container for any types of data. This class implements INotifyPropertyChanged to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instance can be uniquely identified. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="aafadbb80a33ca0358aedff9563ce8101" name="aafadbb80a33ca0358aedff9563ce8101"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafadbb80a33ca0358aedff9563ce8101">&#9670;&#160;</a></span>Equals()</h2>
@@ -152,7 +150,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">override bool ReteCore.Fact&lt; T &gt;.Equals </td>
+          <td class="memname">override bool <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.Equals </td>
           <td>(</td>
           <td class="paramtype">object?</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
           <td></td>
@@ -160,7 +158,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
       </table>
 </div><div class="memdoc">
 
-<p>The Equals method is overridden to provide a way to compare two Fact instances for equality. Two Fact instances are considered equal if they have the same unique identifier (Id). This means that even if two Fact instances contain the same underlying data, they will be treated as distinct unless they share the same Id. </p>
+<p>The Equals method is overridden to provide a way to compare two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances for equality. Two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances are considered equal if they have the same unique identifier (Id). This means that even if two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances contain the same underlying data, they will be treated as distinct unless they share the same Id. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">obj</td><td></td></tr>
@@ -178,7 +176,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ReteCore.Fact&lt; T &gt;.Fact </td>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.Fact </td>
           <td>(</td>
           <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td></td>
@@ -186,7 +184,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
       </table>
 </div><div class="memdoc">
 
-<p>The constructor initializes a new instance of the Fact class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the PropertyChanged event if necessary. </p>
+<p>The constructor initializes a new instance of the <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the PropertyChanged event if necessary. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">data</td><td></td></tr>
@@ -203,7 +201,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">override int ReteCore.Fact&lt; T &gt;.GetHashCode </td>
+          <td class="memname">override int <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.GetHashCode </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -226,7 +224,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ReteCore.Fact&lt; T &gt;.OnPropertyChanged </td>
+          <td class="memname">void <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.OnPropertyChanged </td>
           <td>(</td>
           <td class="paramtype">[CallerMemberName] string?</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
           <td></td>
@@ -256,7 +254,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">override string ReteCore.Fact&lt; T &gt;.ToString </td>
+          <td class="memname">override string <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.ToString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -264,7 +262,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
       </table>
 </div><div class="memdoc">
 
-<p>The override of the ToString method provides a string representation of the Fact instance. </p>
+<p>The override of the ToString method provides a string representation of the <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instance. </p>
 <dl class="section return"><dt>Returns</dt><dd>The string representation of the contents.</dd></dl>
 
 </div>
@@ -276,7 +274,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">T ReteCore.Fact&lt; T &gt;.TValue&lt; T &gt; </td>
+          <td class="memname">T <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.TValue&lt; T &gt; </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -306,7 +304,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Type ReteCore.Fact&lt; T &gt;.DataType</td>
+          <td class="memname">Type <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.DataType</td>
         </tr>
       </table>
   </td>
@@ -318,7 +316,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 
 <p>The type of the data stored in this fact. This property returns the Type object representing the generic type parameter T, which indicates the actual type of the data contained in this fact. </p>
 
-<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html">ReteCore.IFact</a>.</p>
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#ad80c84a6f41c25bbffdd1d9497b91e0b">ReteCore.IFact</a>.</p>
 
 </div>
 </div>
@@ -332,7 +330,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Guid ReteCore.Fact&lt; T &gt;.Id = Guid.NewGuid()</td>
+          <td class="memname">Guid <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.Id = Guid.NewGuid()</td>
         </tr>
       </table>
   </td>
@@ -344,7 +342,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 
 <p>A unique identifier. </p>
 
-<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html">ReteCore.IFact</a>.</p>
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a67f88403874fc7f46a394fcc1cd12377">ReteCore.IFact</a>.</p>
 
 </div>
 </div>
@@ -358,7 +356,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">object ReteCore.Fact&lt; T &gt;.UnderlyingObject</td>
+          <td class="memname">object <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.UnderlyingObject</td>
         </tr>
       </table>
   </td>
@@ -370,12 +368,53 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight"><b>PropertyChange
 
 <p>The data stored as an object type. </p>
 
-<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html">ReteCore.IFact</a>.</p>
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a7bcb6e9f1746cd9063c698753d770029">ReteCore.IFact</a>.</p>
+
+</div>
+</div>
+<a id="a28ed082b2b87a02d53400dbd52975cd4" name="a28ed082b2b87a02d53400dbd52975cd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28ed082b2b87a02d53400dbd52975cd4">&#9670;&#160;</a></span>Value</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.Value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The templated value of this fact. </p>
+
+</div>
+</div>
+<a name="doc-event-members" id="doc-event-members"></a><h2 id="header-doc-event-members" class="groupheader">Event Documentation</h2>
+<a id="aff0a0f8182e4fa6986baac4597bfb6a4" name="aff0a0f8182e4fa6986baac4597bfb6a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff0a0f8182e4fa6986baac4597bfb6a4">&#9670;&#160;</a></span>PropertyChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PropertyChangedEventHandler <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.PropertyChanged</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The PropertyChanged event is raised whenever a property value changes. Observers can subscribe to this event to be notified of changes to the properties of this class. The event handler receives the name of the property that changed, enabling observers to react. </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>Fact.cs</b></li>
+<li>ReteCore/<a class="el" href="_fact_8cs.html">Fact.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

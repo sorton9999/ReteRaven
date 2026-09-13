@@ -1,12 +1,19 @@
 var hierarchy =
 [
     [ "ReteCore.Agenda", "class_rete_core_1_1_agenda.html", null ],
+    [ "ReteCore.BetaNodeRegistry", "class_rete_core_1_1_beta_node_registry.html", null ],
+    [ "ReteTests.BetaNodeSharingIntegrationTests", "class_rete_tests_1_1_beta_node_sharing_integration_tests.html", null ],
     [ "ReteCore.FactSnapshot", "struct_rete_core_1_1_fact_snapshot.html", null ],
+    [ "ReteTest.Tests.ReteBuilderIntegrationTests.GInventory", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests_1_1_g_inventory.html", null ],
+    [ "ReteTest.Tests.ReteBuilderIntegrationTests.GProduct", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests_1_1_g_product.html", null ],
     [ "ReteEngine.IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", [
       [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
     ] ],
     [ "IComparable", null, [
       [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ]
+    ] ],
+    [ "IDisposable", null, [
+      [ "ReteTests.BetaNodeSharingTests", "class_rete_tests_1_1_beta_node_sharing_tests.html", null ]
     ] ],
     [ "IEquatable", null, [
       [ "ReteCore.Token", "class_rete_core_1_1_token.html", null ]
@@ -26,14 +33,17 @@ var hierarchy =
       [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
     ] ],
     [ "INotifyPropertyChanged", null, [
-      [ "ReteCore.Cell", "class_rete_core_1_1_cell.html", [
+      [ "ReteCore.Fact", "class_rete_core_1_1_fact.html", [
         [ "ReteProgram.CriticalCell", "class_rete_program_1_1_critical_cell.html", null ],
         [ "ReteProgram.DutyStatus", "class_rete_program_1_1_duty_status.html", null ],
         [ "ReteProgram.Inventory", "class_rete_program_1_1_inventory.html", null ],
         [ "ReteProgram.Officer", "class_rete_program_1_1_officer.html", null ],
         [ "ReteProgram.Order", "class_rete_program_1_1_order.html", null ],
         [ "ReteProgram.Product", "class_rete_program_1_1_product.html", null ],
-        [ "ReteProgram.Shipment", "class_rete_program_1_1_shipment.html", null ]
+        [ "ReteProgram.RiskFactor", "class_rete_program_1_1_risk_factor.html", null ],
+        [ "ReteProgram.Sensor", "class_rete_program_1_1_sensor.html", null ],
+        [ "ReteProgram.Shipment", "class_rete_program_1_1_shipment.html", null ],
+        [ "ReteProgram.SystemStatus", "class_rete_program_1_1_system_status.html", null ]
       ] ],
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
     ] ],
@@ -65,8 +75,8 @@ var hierarchy =
     [ "ReteCore.LateFilter", "class_rete_core_1_1_late_filter.html", null ],
     [ "ReteProgram.LineItem", "class_rete_program_1_1_line_item.html", null ],
     [ "ReteEngine.ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", null ],
+    [ "ReteTest.Tests.ReteBuilderIntegrationTests", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html", null ],
+    [ "ReteTest.Tests.ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", null ],
     [ "ReteEngine.ReteEngine", "class_rete_engine_1_1_rete_engine.html", null ],
-    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],
-    [ "ReteProgram.Sensor", "class_rete_program_1_1_sensor.html", null ],
-    [ "ReteProgram.SystemStatus", "class_rete_program_1_1_system_status.html", null ]
+    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ]
 ];

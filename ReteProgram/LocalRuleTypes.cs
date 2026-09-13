@@ -16,14 +16,14 @@ using System.Threading.Tasks;
 namespace ReteProgram
 {
     // Test classes
-    public class SystemStatus : Cell
+    public class SystemStatus : Fact
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
     };
 
-    public class Sensor : Cell
+    public class Sensor : Fact
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
@@ -43,7 +43,7 @@ namespace ReteProgram
         private bool _isTriggered;
     };
 
-    public class CriticalCell : Cell
+    public class CriticalCell : Fact
     {
         string _status = String.Empty;
         public string Status
@@ -70,7 +70,7 @@ namespace ReteProgram
         }
     }
 
-    public class Product : Cell
+    public class Product : Fact
     {
         private string _name;
         private string _category;
@@ -138,7 +138,7 @@ namespace ReteProgram
         }
     }
 
-    public class Inventory : Cell
+    public class Inventory : Fact
     {
         private int _quantity;
         private int _productId;
@@ -204,7 +204,7 @@ namespace ReteProgram
         }
     }
 
-    public class Shipment : Cell
+    public class Shipment : Fact
     {
         private int _productId;
         private string _status;
@@ -242,7 +242,7 @@ namespace ReteProgram
         }
     }
 
-    public class Order : Cell
+    public class Order : Fact
     {
         private string _text;
         private string _targetRank;
@@ -307,7 +307,7 @@ namespace ReteProgram
         }
     }
 
-    public class Officer : Cell
+    public class Officer : Fact
     {
         private string _name;
         private string _rank;
@@ -387,7 +387,7 @@ namespace ReteProgram
         }
     }
 
-    public class DutyStatus : Cell
+    public class DutyStatus : Fact
     {
         private string _name;
         private bool _onDuty;
@@ -423,6 +423,32 @@ namespace ReteProgram
         {
             return HashCode.Combine(Id, Value, OnDuty);
         }
+    }
+
+    public class RiskFactor : Fact
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public int ProductId 
+        { 
+            get { return _productId; } 
+            set { _productId = value; OnPropertyChanged(nameof(ProductId)); }
+        }
+        public string Severity 
+        { 
+            get { return _severity; }
+            set { _severity = value; OnPropertyChanged(nameof(Severity)); }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is RiskFactor rFactor && Id == rFactor.Id && ProductId == rFactor.ProductId && Severity == rFactor.Severity;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, ProductId, Severity);
+        }
+        private int _productId;
+        private string _severity = "";
     }
 
     public class LineItem

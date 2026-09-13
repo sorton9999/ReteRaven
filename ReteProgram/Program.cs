@@ -14,8 +14,8 @@ using System.Diagnostics;
 
 var engine = new ReteEngine.ReteEngine();
 
-var cell1 = new Cell { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
-var cell2 = new Cell { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
+var cell1 = new Fact { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
+var cell2 = new Fact { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
 cell1.PropertyChanged += Cell_PropertyChanged;
 cell2.PropertyChanged += Cell_PropertyChanged;
 
@@ -26,16 +26,16 @@ engine.FireAll();      // Nothing prints because of the retraction
 
 cell1.Value = 300; // Update cell1's value
 cell2.Value = 500; // Update cell2's value to match cell1
-var cell3 = new Cell { Id = Guid.NewGuid(), Name = "Cell3", Value = 1000 };
+var cell3 = new Fact { Id = Guid.NewGuid(), Name = "Cell3", Value = 1000 };
 
 cell3.PropertyChanged += Cell_PropertyChanged;
 
 void Cell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 {
-    Cell cell = sender as Cell;
+    Fact cell = sender as Fact;
     if (cell != null)
     {
-        Console.WriteLine($"Cell \'{cell.Id}\' new Value:[{cell.Value}].");
+        Console.WriteLine($"Fact \'{cell.Id}\' new Value:[{cell.Value}].");
     }
 }
 
@@ -63,21 +63,21 @@ ruleBuilder.StartWith(alphaMemoryA, "A")
 
 engine.FireAll();
 
-// 1. Join Cell A and Cell B
+// 1. Join Fact A and Fact B
 var joinAB = new JoinNode(initialBetaMemory, alphaMemoryB, "B", (t, f) =>
 {
-    var cell1 = t.Get<Cell>("A");
-    var cell2 = (Cell)f;
+    var cell1 = t.Get<Fact>("A");
+    var cell2 = (Fact)f;
     return cell1.Id == cell2.Id;
 });
 var betaMemoryAB = new BetaMemory();
 betaMemoryAB.AddSuccessor(joinAB);
 
-// 2. Join (A+B) and Cell C
+// 2. Join (A+B) and Fact C
 var joinABC = new JoinNode(betaMemoryAB, alphaMemoryC, "C", (t, f) => {
-    var cellA = t.Get<Cell>("A");
-    var cellB = t.Get<Cell>("B");
-    var cellC = (Cell)f;
+    var cellA = t.Get<Fact>("A");
+    var cellB = t.Get<Fact>("B");
+    var cellC = (Fact)f;
     return cellA.Id == cellB.Id && cellB.Id == cellC.Id; // Match if all three have the same ID
 });
 var metaData = new RuleMetadata()
@@ -87,29 +87,29 @@ var metaData = new RuleMetadata()
     Agenda = new Agenda(),
     Action = (t) =>
     {
-        var fact1 = t.Get<Cell>("A");
-        var fact2 = t.Get<Cell>("B");
-        var fact3 = t.Get<Cell>("C");
+        var fact1 = t.Get<Fact>("A");
+        var fact2 = t.Get<Fact>("B");
+        var fact3 = t.Get<Fact>("C");
         Console.WriteLine($"3-way match! [1]:{fact1}; [2]:{fact2}; [3]:{fact3}");
     }};
 var terminal = new TerminalNode(metaData);
 joinABC.AddSuccessor(terminal);
 
 engine.Begin("DetectConflict")
-    .Where<Cell>("FirstCell")
-    .And<Cell>("SecondCell", (token, next) =>
-        token.Get<Cell>("FirstCell").Id == next.Id &&
-        token.Get<Cell>("FirstCell").Value != next.Value,
+    .Where<Fact>("FirstCell")
+    .And<Fact>("SecondCell", (token, next) =>
+        token.Get<Fact>("FirstCell").Id == next.Id &&
+        token.Get<Fact>("FirstCell").Value != next.Value,
         "CheckAdd")
     .Then(token =>
     {
-        var a = token.Get<Cell>("FirstCell");
-        var b = token.Get<Cell>("SecondCell");
+        var a = token.Get<Fact>("FirstCell");
+        var b = token.Get<Fact>("SecondCell");
         Console.WriteLine($"Conflict found on {a.Id}!");
     }, salience: 10);
 
-Cell cell100 = new Cell() { Id = Guid.NewGuid(), Name = "FirstCell", Value = 100 };
-Cell cell500 = new Cell() { Id = Guid.NewGuid(), Name = "SecondCell", Value = 500 };
+Fact cell100 = new Fact() { Id = Guid.NewGuid(), Name = "FirstCell", Value = 100 };
+Fact cell500 = new Fact() { Id = Guid.NewGuid(), Name = "SecondCell", Value = 500 };
 
 engine.Assert(cell100);
 engine.Assert(cell500);
@@ -161,7 +161,7 @@ engine2.FireAll();
 var engine3 = new ReteEngine.ReteEngine();
 CriticalCell critCell = new() { Id=Guid.NewGuid(), Name="C", Value = 100, Status = "Not Critical" };
 
-// Rule 1: If Cell value is 100, set Status to "Critical"
+// Rule 1: If Fact value is 100, set Status to "Critical"
 engine3.Begin("MarkCritical")
     .Where<CriticalCell>("C")
     .And<CriticalCell>("C", (t, c) => c.Value as int? >= 100 && c.Status != "Critical")
@@ -184,19 +184,19 @@ engine3.FireAll();
 
 var engine4 = new ReteEngine.ReteEngine();
 
-// Rule 1: When a Cell value is high, mark it "Urgent"
+// Rule 1: When a Fact value is high, mark it "Urgent"
 engine4.Begin("MarkUrgent")
     .Where<CriticalCell>("M")
     .And<CriticalCell>("M", (t, c) => c.Value as int? > 100 && c.Status != "Urgent")
     .Then(t => {
         var c = t.Get<CriticalCell>("M");
         c.Status = "Urgent";
-        Console.WriteLine("Rule 1: Marked Cell Urgent.");
+        Console.WriteLine("Rule 1: Marked Fact Urgent.");
         // This Refresh triggers Rule 2 in the NEXT iteration of the while loop
         //engine4.Refresh(c, nameof(CriticalCell.Status));
     });
 
-// Rule 2: When a Cell is "Urgent", log an alert
+// Rule 2: When a Fact is "Urgent", log an alert
 engine4.Begin("AlertUrgent")
     .Where<CriticalCell>("A")
     .And<CriticalCell>("A", (t, c) => c.Status == "Urgent")
@@ -240,7 +240,7 @@ criticalCell.Value = 120;
 engine5.FireAll();
 
 var engine6 = new ReteEngine.ReteEngine();
-var criticalCell2 = new CriticalCell { Id = Guid.NewGuid(), Name = "Not Cell", Status = "Normal", Value = 590 };
+var criticalCell2 = new CriticalCell { Id = Guid.NewGuid(), Name = "Not Fact", Status = "Normal", Value = 590 };
 engine6.Begin("MatchStatusNot")
     .Where<CriticalCell>("C")
     .Not<CriticalCell>("C", (t, c) => c.Status == "Urgent")
@@ -711,3 +711,111 @@ engineG.FireAll();
 
 // If Truth Maintenance works, only Rule 1 fired.
 Console.WriteLine($"Fire count G: {fireCountG}");  // Should print 1
+
+
+var engineH = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+int rule1Fires = 0;
+int rule2Fires = 0;
+
+Func<Token, RiskFactor, bool> sharedNotCondition = (t, r) => r.Severity == "Critical";
+
+// Two separate rules testing for the ABSENCE of a Critical RiskFactor matching the active Product
+engineH.Begin("Rule_Not_Missing_1")
+    .Where<Product>("P", p => p.Category == "Electronics")
+    .Not<RiskFactor>("R", sharedNotCondition, "NOT DEBUG 1")
+    .Then(t => rule1Fires++);
+
+engineH.Begin("Rule_Not_Missing_2")
+    .Where<Product>("P", p => p.Category == "Electronics")
+    .Not<RiskFactor>("R", sharedNotCondition, "NOT DEBUG 2")
+    .Then(t => rule2Fires++);
+
+var safeProduct = new Product { ProductId = 99, Category = "Electronics" };
+var lowRisk = new RiskFactor { ProductId = 99, Severity = "Low" }; // Not critical, shouldn't block the rule
+
+// Act Step 1: Assert data with zero matching critical risk factors
+engineH.Assert(safeProduct);
+engineH.Assert(lowRisk);
+engineH.FireAll();
+
+// Assert Phase 1: Both rules execute because zero critical factors exist for Product 99
+Console.WriteLine($"Rule 1 Fires: {rule1Fires}");
+Console.WriteLine($"Rule 2 Fires: {rule2Fires}");
+
+// Act Step 2: Clear state and assert a critical factor that blocks execution
+var engineSecondRun = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+int blockedFires = 0;
+engineSecondRun.Begin("BlockedRule")
+    .Where<Product>("P", p => p.Category == "Electronics")
+    .Not<RiskFactor>("R", sharedNotCondition, "NOT DEBUG BLK")
+    .Then(t => blockedFires++);
+
+var blockedProduct = new Product { ProductId = 100, Category = "Electronics" };
+var criticalRisk = new RiskFactor { ProductId = 100, Severity = "Critical" }; // This must block propagation!
+
+engineSecondRun.Assert(blockedProduct);
+engineSecondRun.Assert(criticalRisk);
+engineSecondRun.FireAll();
+
+// Assert Phase 2: The presence of the critical factor should make this value 0
+Console.WriteLine($"Blocked Fires: {blockedFires}");
+
+// Verify Graph Cache Optimization: Confirm that your registry safely tracks NotNode boundaries inside its cache tables
+var statsH = engineH.GetBetaNodeRegistryStatistics();
+Console.WriteLine($"Total Cached Nodes: {statsH.ToString() ?? ""}");
+
+
+// Arrange
+var engineI = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+int rule1Executions = 0;
+int rule2Executions = 0;
+
+Func<Product, bool> sharedWhereFilter = p => p.Category == "Electronics";
+Func<Token, CriticalCell, bool> orFilter1 = (t, c) => c.Value as int? > 500;
+Func<Token, CriticalCell, bool> orFilter2 = (t, c) => c.Value as int? < 200;
+Func<Token, Inventory, bool> sharedAndNotFilter = (t, inv) => inv.Quantity == 0;
+Func<Token, RiskFactor, bool> sharedNotConditionI = (t, r) => r.Severity == "Critical";
+
+// RULE 1: Highly nested conditional chain
+engineI.Begin("ComplexRule_1")
+    .Where<Product>("P", sharedWhereFilter)
+    .Or<CriticalCell>("Fact", null,
+        orFilter1,
+        orFilter2)
+    .AndNot<Inventory>("I", sharedAndNotFilter)
+    .Not<RiskFactor>("R", sharedNotConditionI)
+    .Then(t => rule1Executions++);
+
+// RULE 2: Structurally identical chain to force total network node sharing across every single layer!
+engineI.Begin("ComplexRule_2")
+    .Where<Product>("P", sharedWhereFilter)
+    .Or<CriticalCell>("Fact", null,
+        orFilter1,
+        orFilter2)
+    .AndNot<Inventory>("I", sharedAndNotFilter)
+    .Not<RiskFactor>("R", sharedNotConditionI)
+    .Then(t => rule2Executions++);
+
+// Setup perfect alignment data
+var targetProduct = new Product { ProductId = 42, Category = "Electronics" };
+var passingCell = new CriticalCell { Id = Guid.NewGuid(), Value = 800 };       // Passes Or (>500)
+var passingInventory = new Inventory { ProductId = 42, Quantity = 55 };       // Passes AndNot (Quantity != 0)
+var minorRisk = new RiskFactor { ProductId = 42, Severity = "Minimal" };       // Passes Not (No Critical factors present)
+
+// Act
+engineI.Assert(targetProduct);
+engineI.Assert(passingCell);
+// Passing this item satisfies the full sequence cascade across our unified shared nodes!
+engineI.Assert(passingInventory);
+engineI.Assert(minorRisk);
+engineI.FireAll();
+
+// Assert Behavioral Outcomes: The full pipeline was verified and executed cleanly across both shared rule lanes
+Console.WriteLine($"Rule 1 Executions: {rule1Executions}");
+Console.WriteLine($"Rule 2 Executions: {rule2Executions}");
+
+// Assert Graph Registry Optimizations: The registry statistics should show multi-layer cache hits
+var statsI = engineI.GetBetaNodeRegistryStatistics();
+
+// Ensure that multiple hits were successfully logged as the compiler reused layers step-by-step
+Console.WriteLine($"Cache Hites: {statsI.ToString() ?? ""}");

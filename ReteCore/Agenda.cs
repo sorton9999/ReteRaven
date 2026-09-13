@@ -198,7 +198,7 @@ namespace ReteCore
         public string GenerateActivationKey(Activation activation)
         {
             // Build a textual representation for each named fact:
-            // - If the fact is a Cell, use its Id.
+            // - If the fact is a Fact, use its Id.
             // - If the fact is a Token, use the token's ToString().
             // - If the fact is an enumerable, join its element representations.
             // - Otherwise fall back to the fact's ToString() (or "null").
@@ -206,7 +206,7 @@ namespace ReteCore
             string FormatValue(object? v)
             {
                 if (v == null) return "null";
-                if (v is Cell c) return c.Id.ToString();
+                if (v is Fact c) return c.Id.ToString();
                 if (v is Token t) return t.ToString();
                 if (v is System.Collections.IEnumerable ie && !(v is string))
                 {

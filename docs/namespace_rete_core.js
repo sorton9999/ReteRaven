@@ -9,9 +9,10 @@ var namespace_rete_core =
     [ "AlphaMemory", "class_rete_core_1_1_alpha_memory.html", "class_rete_core_1_1_alpha_memory" ],
     [ "AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", "class_rete_core_1_1_alpha_to_beta_adapter" ],
     [ "BetaMemory", "class_rete_core_1_1_beta_memory.html", "class_rete_core_1_1_beta_memory" ],
+    [ "BetaNodeRegistry", "class_rete_core_1_1_beta_node_registry.html", "class_rete_core_1_1_beta_node_registry" ],
     [ "CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", "class_rete_core_1_1_composite_beta_memory" ],
     [ "ExistsNode", "class_rete_core_1_1_exists_node.html", "class_rete_core_1_1_exists_node" ],
-    [ "IFact", "interface_rete_core_1_1_i_fact.html", null ],
+    [ "IFact", "interface_rete_core_1_1_i_fact.html", "interface_rete_core_1_1_i_fact" ],
     [ "Fact&lt; T &gt;", "class_rete_core_1_1_fact-1-g.html", "class_rete_core_1_1_fact-1-g" ],
     [ "ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", "interface_rete_core_1_1_i_latent_memory" ],
     [ "IndexedExistsNode", "class_rete_core_1_1_indexed_exists_node.html", "class_rete_core_1_1_indexed_exists_node" ],
@@ -25,5 +26,5 @@ var namespace_rete_core =
     [ "LateFilter", "class_rete_core_1_1_late_filter.html", "class_rete_core_1_1_late_filter" ],
     [ "TerminalNode", "class_rete_core_1_1_terminal_node.html", "class_rete_core_1_1_terminal_node" ],
     [ "Token", "class_rete_core_1_1_token.html", "class_rete_core_1_1_token" ],
-    [ "Cell", "class_rete_core_1_1_cell.html", "class_rete_core_1_1_cell" ]
+    [ "Fact", "class_rete_core_1_1_fact.html", "class_rete_core_1_1_fact" ]
 ];

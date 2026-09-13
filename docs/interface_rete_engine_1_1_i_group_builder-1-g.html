@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,16 +108,11 @@ Inheritance diagram for ReteEngine.IGroupBuilder&lt; TInitial &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50ea7daf18b33b9cf197bc5f2d97499c" id="r_a50ea7daf18b33b9cf197bc5f2d97499c"><td class="memItemLeft"><a id="a50ea7daf18b33b9cf197bc5f2d97499c" name="a50ea7daf18b33b9cf197bc5f2d97499c"></a>
-IGroupBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Where&lt; T &gt;</b> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
-<tr class="memitem:ae2d131daa3cc8d6cce2733da6a35cb29" id="r_ae2d131daa3cc8d6cce2733da6a35cb29"><td class="memItemLeft"><a id="ae2d131daa3cc8d6cce2733da6a35cb29" name="ae2d131daa3cc8d6cce2733da6a35cb29"></a>
-ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Sum&lt; T &gt;</b> (Func&lt; T, int &gt; selector, string asVariableName)</td></tr>
-<tr class="memitem:ad774e971d133824c3f3013e7706e5369" id="r_ad774e971d133824c3f3013e7706e5369"><td class="memItemLeft"><a id="ad774e971d133824c3f3013e7706e5369" name="ad774e971d133824c3f3013e7706e5369"></a>
-ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Sum&lt; T &gt;</b> (Func&lt; T, decimal &gt; selector, string asVariableName)</td></tr>
-<tr class="memitem:a9b64fbd89f5a5c0085f9a6be513c79c4" id="r_a9b64fbd89f5a5c0085f9a6be513c79c4"><td class="memItemLeft"><a id="a9b64fbd89f5a5c0085f9a6be513c79c4" name="a9b64fbd89f5a5c0085f9a6be513c79c4"></a>
-ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Count&lt; T &gt;</b> (string asVariableName)</td></tr>
-<tr class="memitem:a1703ca04a11673421a8e08c16baca57f" id="r_a1703ca04a11673421a8e08c16baca57f"><td class="memItemLeft"><a id="a1703ca04a11673421a8e08c16baca57f" name="a1703ca04a11673421a8e08c16baca57f"></a>
-ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Average&lt; T &gt;</b> (Func&lt; T, decimal &gt; selector, string asVariableName)</td></tr>
+<tr class="memitem:a50ea7daf18b33b9cf197bc5f2d97499c" id="r_a50ea7daf18b33b9cf197bc5f2d97499c"><td class="memItemLeft">IGroupBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a50ea7daf18b33b9cf197bc5f2d97499c">Where&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
+<tr class="memitem:ae2d131daa3cc8d6cce2733da6a35cb29" id="r_ae2d131daa3cc8d6cce2733da6a35cb29"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae2d131daa3cc8d6cce2733da6a35cb29">Sum&lt; T &gt;</a> (Func&lt; T, int &gt; selector, string asVariableName)</td></tr>
+<tr class="memitem:ad774e971d133824c3f3013e7706e5369" id="r_ad774e971d133824c3f3013e7706e5369"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad774e971d133824c3f3013e7706e5369">Sum&lt; T &gt;</a> (Func&lt; T, decimal &gt; selector, string asVariableName)</td></tr>
+<tr class="memitem:a9b64fbd89f5a5c0085f9a6be513c79c4" id="r_a9b64fbd89f5a5c0085f9a6be513c79c4"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9b64fbd89f5a5c0085f9a6be513c79c4">Count&lt; T &gt;</a> (string asVariableName)</td></tr>
+<tr class="memitem:a1703ca04a11673421a8e08c16baca57f" id="r_a1703ca04a11673421a8e08c16baca57f"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1703ca04a11673421a8e08c16baca57f">Average&lt; T &gt;</a> (Func&lt; T, decimal &gt; selector, string asVariableName)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A interface for building group operations in a Rete network. It allows the user to define conditions for grouping facts and specify aggregation operations such as Sum, Count, and Average on the grouped data. The interface is generic and works with an initial fact type TInitial, while the specific type of facts being grouped is determined by the implementation. </p>
@@ -127,8 +122,106 @@ ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><b>Average&lt; 
   </table>
   </dd>
 </dl>
-</div><hr/>The documentation for this interface was generated from the following file:<ul>
-<li>ReteEngine/<b>GroupBuilder.cs</b></li>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a1703ca04a11673421a8e08c16baca57f" name="a1703ca04a11673421a8e08c16baca57f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1703ca04a11673421a8e08c16baca57f">&#9670;&#160;</a></span>Average&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteBuilder&lt; TInitial &gt; ReteEngine.IGroupBuilder&lt; TInitial &gt;.Average&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, decimal &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b64fbd89f5a5c0085f9a6be513c79c4" name="a9b64fbd89f5a5c0085f9a6be513c79c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b64fbd89f5a5c0085f9a6be513c79c4">&#9670;&#160;</a></span>Count&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteBuilder&lt; TInitial &gt; ReteEngine.IGroupBuilder&lt; TInitial &gt;.Count&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad774e971d133824c3f3013e7706e5369" name="ad774e971d133824c3f3013e7706e5369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad774e971d133824c3f3013e7706e5369">&#9670;&#160;</a></span>Sum&lt; T &gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteBuilder&lt; TInitial &gt; ReteEngine.IGroupBuilder&lt; TInitial &gt;.Sum&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, decimal &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae2d131daa3cc8d6cce2733da6a35cb29" name="ae2d131daa3cc8d6cce2733da6a35cb29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2d131daa3cc8d6cce2733da6a35cb29">&#9670;&#160;</a></span>Sum&lt; T &gt;() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReteBuilder&lt; TInitial &gt; ReteEngine.IGroupBuilder&lt; TInitial &gt;.Sum&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, int &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a50ea7daf18b33b9cf197bc5f2d97499c" name="a50ea7daf18b33b9cf197bc5f2d97499c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50ea7daf18b33b9cf197bc5f2d97499c">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IGroupBuilder&lt; TInitial &gt; ReteEngine.IGroupBuilder&lt; TInitial &gt;.Where&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this interface was generated from the following file:<ul>
+<li>ReteEngine/<a class="el" href="_group_builder_8cs.html">GroupBuilder.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

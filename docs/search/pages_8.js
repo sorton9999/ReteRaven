@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['games_20simulations_20or_20personal_20projects_0',['games simulations or personal projects',['../index.html#autotoc_md17',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.'],['../md__r_e_a_d_m_e.html#autotoc_md34',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.']]]
+];

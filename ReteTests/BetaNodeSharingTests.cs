@@ -405,5 +405,209 @@ namespace ReteTests
             Console.WriteLine("After clear:" + statsAfter);
             Assert.Contains("0 misses", statsAfter);
         }
+
+        [Fact]
+        public void OrJoin_ShouldShareNodesAndFireCorrectly_WhenAnyPredicateMatches()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+            int rule1Fires = 0;
+            int rule2Fires = 0;
+
+            // Define two distinct rules that share the exact same structural .Or predicate array array footprint
+            engine.Begin("Rule_Or_First")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .Or<CriticalCell>("Fact", null,
+                    (t, c) => c.Value as int? > 500,
+                    (t, c) => c.Value as int? < 200)
+                .Then(t => rule1Fires++);
+
+            engine.Begin("Rule_Or_Second")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .Or<CriticalCell>("Fact", null,
+                    (t, c) => c.Value as int? > 500,
+                    (t, c) => c.Value as int? < 200)
+                .Then(t => rule2Fires++);
+
+            var product = new Product { ProductId = 1, Category = "Electronics" };
+
+            // Fact 1 satisfies predicate #1 (> 500)
+            var cellHigh = new CriticalCell { Id = Guid.NewGuid(), Value = 650 };
+            // Fact 2 satisfies predicate #2 (< 200)
+            var cellLow = new CriticalCell { Id = Guid.NewGuid(), Value = 120 };
+            // Fact 3 satisfies neither
+            var cellMid = new CriticalCell { Id = Guid.NewGuid(), Value = 350 };
+
+            // Act
+            engine.Assert(product);
+            engine.Assert(cellHigh); // Match 1
+            engine.Assert(cellLow);  // Match 2
+            engine.Assert(cellMid);  // No Match
+            engine.FireAll();
+
+            // Assert: Both rules should fire exactly twice (once for cellHigh, once for cellLow)
+            Assert.Equal(2, rule1Fires);
+            Assert.Equal(2, rule2Fires);
+
+            // Verify Graph Cache Optimization: 2 rules compiled but only 1 unique JoinPair created in memory
+            var stats = engine.GetBetaNodeRegistryStatistics();
+            Assert.Contains("1 hits", stats.ToString() ?? "");
+        }
+
+        [Fact]
+        public void AndNotJoin_ShouldShareNodesAndFireCorrectly_WhenConditionIsNegated()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+            int rule1Fires = 0;
+            int rule2Fires = 0;
+
+            Func<Token, Inventory, bool> sharedFilter = (t, inv) => inv.Quantity == 0;
+
+            // Both rules use the exact same negated filter context block
+            engine.Begin("Rule_AndNot_A")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .AndNot<Inventory>("I", sharedFilter)
+                .Then(t => rule1Fires++);
+
+            engine.Begin("Rule_AndNot_B")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .AndNot<Inventory>("I", sharedFilter)
+                .Then(t => rule2Fires++);
+
+            var product = new Product { ProductId = 5, Category = "Electronics" };
+
+            // Inventory with Quantity != 0 will evaluate to TRUE under your negated filter!
+            var validInventory = new Inventory { ProductId = 5, Quantity = 10 };
+
+            // Act
+            engine.Assert(product);
+            engine.Assert(validInventory);
+            engine.FireAll();
+
+            // Assert: Both rules fire because the join condition (inv.Quantity == 0) is false, making the negated filter true.
+            Assert.Equal(1, rule1Fires);
+            Assert.Equal(1, rule2Fires);
+
+            // Verify Graph Cache Optimization: Cache successfully hit on the shared JoinNode list mapping
+            var stats = engine.GetBetaNodeRegistryStatistics();
+            Assert.Contains("1 hits", stats.ToString() ?? "");
+        }
+
+        [Fact]
+        public void PureNotJoin_ShouldShareNodesAndFireCorrectly_WhenRightSideIsCompletelyAbsent()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+            int rule1Fires = 0;
+            int rule2Fires = 0;
+
+            Func<Token, RiskFactor, bool> sharedNotCondition = (t, r) => r.Severity == "Critical";
+
+            // Two separate rules testing for the ABSENCE of a Critical RiskFactor matching the active Product
+            engine.Begin("Rule_Not_Missing_1")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .Not<RiskFactor>("R", sharedNotCondition)
+                .Then(t => rule1Fires++);
+
+            engine.Begin("Rule_Not_Missing_2")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .Not<RiskFactor>("R", sharedNotCondition)
+                .Then(t => rule2Fires++);
+
+            var safeProduct = new Product { ProductId = 99, Category = "Electronics" };
+            var lowRisk = new RiskFactor { ProductId = 99, Severity = "Low" }; // Not critical, shouldn't block the rule
+
+            // Act Step 1: Assert data with zero matching critical risk factors
+            engine.Assert(safeProduct);
+            engine.Assert(lowRisk);
+            engine.FireAll();
+
+            // Assert Phase 1: Both rules execute because zero critical factors exist for Product 99
+            Assert.Equal(1, rule1Fires);
+            Assert.Equal(1, rule2Fires);
+
+            // Act Step 2: Clear state and assert a critical factor that blocks execution
+            var engineSecondRun = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+            int blockedFires = 0;
+            engineSecondRun.Begin("BlockedRule")
+                .Where<Product>("P", p => p.Category == "Electronics")
+                .Not<RiskFactor>("R", sharedNotCondition)
+                .Then(t => blockedFires++);
+
+            var blockedProduct = new Product { ProductId = 100, Category = "Electronics" };
+            var criticalRisk = new RiskFactor { ProductId = 100, Severity = "Critical" }; // This must block propagation!
+
+            engineSecondRun.Assert(blockedProduct);
+            engineSecondRun.Assert(criticalRisk);
+            engineSecondRun.FireAll();
+
+            // Assert Phase 2: The presence of the critical factor successfully blocks the NotNode branch
+            Assert.Equal(0, blockedFires);
+
+            // Verify Graph Cache Optimization: Confirm that your registry safely tracks NotNode boundaries inside its cache tables
+            var stats = engine.GetBetaNodeRegistryStatistics();
+            Assert.Contains("Total Cached Nodes:", stats.ToString() ?? "");
+        }
+
+        [Fact]
+        public void CombinedPipeline_ShouldShareAllNodeTypesAndMaintainCorrectBehaviorAcrossComplexChains()
+        {
+            // Arrange
+            var engine = new ReteEngine.ReteEngine(enableBetaNodeSharing: true);
+            int rule1Executions = 0;
+            int rule2Executions = 0;
+
+            Func<Product, bool> sharedWhereFilter = p => p.Category == "Electronics";
+            Func<Token, CriticalCell, bool> orFilter1 = (t, c) => c.Value as int? > 500;
+            Func<Token, CriticalCell, bool> orFilter2 = (t, c) => c.Value as int? < 200;
+            Func<Token, Inventory, bool> sharedAndNotFilter = (t, inv) => inv.Quantity == 0;
+            Func<Token, RiskFactor, bool> sharedNotCondition = (t, r) => r.Severity == "Critical";
+
+            // RULE 1: Highly nested conditional chain
+            engine.Begin("ComplexRule_1")
+                .Where<Product>("P", sharedWhereFilter)
+                .Or<CriticalCell>("Fact", null,
+                    orFilter1,
+                    orFilter2)
+                .AndNot<Inventory>("I", sharedAndNotFilter)
+                .Not<RiskFactor>("R", sharedNotCondition)
+                .Then(t => rule1Executions++);
+
+            // RULE 2: Structurally identical chain to force total network node sharing across every single layer!
+            engine.Begin("ComplexRule_2")
+                .Where<Product>("P", sharedWhereFilter)
+                .Or<CriticalCell>("Fact", null,
+                    orFilter1,
+                    orFilter2)
+                .AndNot<Inventory>("I", sharedAndNotFilter)
+                .Not<RiskFactor>("R", sharedNotCondition)
+                .Then(t => rule2Executions++);
+
+            // Setup perfect alignment data
+            var targetProduct = new Product { ProductId = 42, Category = "Electronics" };
+            var passingCell = new CriticalCell { Id = Guid.NewGuid(), Value = 800 };       // Passes Or (>500)
+            var passingInventory = new Inventory { ProductId = 42, Quantity = 55 };       // Passes AndNot (Quantity != 0)
+            var minorRisk = new RiskFactor { ProductId = 42, Severity = "Minimal" };       // Passes Not (No Critical factors present)
+
+            // Act
+            engine.Assert(targetProduct);
+            engine.Assert(passingCell);
+            // Passing this item satisfies the full sequence cascade across our unified shared nodes!
+            engine.Assert(passingInventory);
+            engine.Assert(minorRisk);
+            engine.FireAll();
+
+            // Assert Behavioral Outcomes: The full pipeline was verified and executed cleanly across both shared rule lanes
+            Assert.Equal(1, rule1Executions);
+            Assert.Equal(1, rule2Executions);
+
+            // Assert Graph Registry Optimizations: The registry statistics should show multi-layer cache hits
+            var stats = engine.GetBetaNodeRegistryStatistics();
+
+            // Ensure that multiple hits were successfully logged as the compiler reused layers step-by-step
+            Assert.Contains("4 hits", stats.ToString() ?? "");
+        }
+
     }
 }

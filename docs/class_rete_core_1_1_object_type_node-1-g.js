@@ -1,5 +1,6 @@
 var class_rete_core_1_1_object_type_node_1_g =
 [
+    [ "AddSuccessor", "class_rete_core_1_1_object_type_node-1-g.html#a84ee6f4b0b7838f16604f00620e2c3a4", null ],
     [ "Assert", "class_rete_core_1_1_object_type_node-1-g.html#a71b94977d1b47a55826426b6fd0fbd31", null ],
     [ "DebugPrint", "class_rete_core_1_1_object_type_node-1-g.html#ad1311ffc9e2fce70e82585cc8c4c45c8", null ],
     [ "Refresh", "class_rete_core_1_1_object_type_node-1-g.html#a880eff016eb2f4180625bd0291d0a9e1", null ],

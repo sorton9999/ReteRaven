@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -99,17 +99,64 @@ $(function(){initNavTree('class_rete_core_1_1_late_filter.html','','class_rete_c
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a39fcd90e9ea14c8120434be6cf33fec1" id="r_a39fcd90e9ea14c8120434be6cf33fec1"><td class="memItemLeft"><a id="a39fcd90e9ea14c8120434be6cf33fec1" name="a39fcd90e9ea14c8120434be6cf33fec1"></a>
-string&#160;</td><td class="memItemRight"><b>Alias</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a39fcd90e9ea14c8120434be6cf33fec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The rule alias for the fact to be evaluated by this late filter. This alias corresponds to the name used in the rule definition to refer to a specific fact. <br /></td></tr>
-<tr class="memitem:a81ecae6e5d30f8ab9777c902800436fe" id="r_a81ecae6e5d30f8ab9777c902800436fe"><td class="memItemLeft"><a id="a81ecae6e5d30f8ab9777c902800436fe" name="a81ecae6e5d30f8ab9777c902800436fe"></a>
-Func&lt; object, bool &gt;&#160;</td><td class="memItemRight"><b>Predicate</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a81ecae6e5d30f8ab9777c902800436fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The predicate function that defines the condition to be evaluated for the fact associated with this late filter. <br /></td></tr>
+<tr class="memitem:a39fcd90e9ea14c8120434be6cf33fec1" id="r_a39fcd90e9ea14c8120434be6cf33fec1"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a39fcd90e9ea14c8120434be6cf33fec1">Alias</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a39fcd90e9ea14c8120434be6cf33fec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The rule alias for the fact to be evaluated by this late filter. This alias corresponds to the name used in the rule definition to refer to a specific fact.  <br /></td></tr>
+<tr class="memitem:a81ecae6e5d30f8ab9777c902800436fe" id="r_a81ecae6e5d30f8ab9777c902800436fe"><td class="memItemLeft">Func&lt; object, bool &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a81ecae6e5d30f8ab9777c902800436fe">Predicate</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a81ecae6e5d30f8ab9777c902800436fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The predicate function that defines the condition to be evaluated for the fact associated with this late filter.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_late_filter.html" title="The LateFilter class represents a condition that is evaluated at the time of activation,...">LateFilter</a> class represents a condition that is evaluated at the time of activation, just before adding the activation to the agenda. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>RuleMetadata.cs</b></li>
+</div><a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a39fcd90e9ea14c8120434be6cf33fec1" name="a39fcd90e9ea14c8120434be6cf33fec1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39fcd90e9ea14c8120434be6cf33fec1">&#9670;&#160;</a></span>Alias</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ReteCore.LateFilter.Alias</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The rule alias for the fact to be evaluated by this late filter. This alias corresponds to the name used in the rule definition to refer to a specific fact. </p>
+
+</div>
+</div>
+<a id="a81ecae6e5d30f8ab9777c902800436fe" name="a81ecae6e5d30f8ab9777c902800436fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81ecae6e5d30f8ab9777c902800436fe">&#9670;&#160;</a></span>Predicate</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Func&lt;object, bool&gt; ReteCore.LateFilter.Predicate</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The predicate function that defines the condition to be evaluated for the fact associated with this late filter. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>ReteCore/<a class="el" href="_rule_metadata_8cs.html">RuleMetadata.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,6 +1,7 @@
 var class_rete_core_1_1_agenda =
 [
     [ "Add", "class_rete_core_1_1_agenda.html#a3ccf2720fc3cdc8345fd2f33674b0a8b", null ],
+    [ "CancelActivationsByFact", "class_rete_core_1_1_agenda.html#a9b6f5870eab4efc6702f4bf44fc3ecc9", null ],
     [ "FireAll", "class_rete_core_1_1_agenda.html#a6c19ab804499c8813af25859a2bf8810", null ],
     [ "GenerateActivationKey", "class_rete_core_1_1_agenda.html#a86faf96251b4be8b8310c28a09752fda", null ],
     [ "RemoveActivationsByRule", "class_rete_core_1_1_agenda.html#ac4f2725ceecb7d76d8020e491f9441a7", null ],

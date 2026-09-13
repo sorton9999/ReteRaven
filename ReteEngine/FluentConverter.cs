@@ -66,6 +66,7 @@ namespace ReteEngine
             [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
         IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null, 
             params Func<Token, T, bool>[] orConditions);
+        IConnectionBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition);
         // These are for when you want to chain multiple conditions on the same fact type without needing to repeat
         // the fact type in the method signature
         IConnectionBuilder And();
@@ -206,6 +207,20 @@ namespace ReteEngine
         public IConnectionBuilder If<T>(string name, Func<T, bool> lateCondition)
         {
             _builder.If(name, lateCondition);
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.AndNot that registers an .And join condition,
+        /// but negated to get the Not conditional.
+        /// </summary>
+        /// <typeparam name="T">The fact type the condition evaluates.</typeparam>
+        /// <param name="name">The name to assign to the condition within the rule.</param>
+        /// <param name="joinCondition">A predicate invoked with a token and a fact of type <typeparamref name="T"/>.</param>
+        /// <returns></returns>
+        public IConnectionBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition)
+        {
+            _builder.AndNot(name, joinCondition);
             return this;
         }
 

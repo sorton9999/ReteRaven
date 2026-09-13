@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -99,7 +99,7 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_builder-1-g.html','','class
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6d5b7d1ea2696cc4a6b00e8e4167c0cd" id="r_a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> engine, string name)</td></tr>
+<tr class="memitem:a6d5b7d1ea2696cc4a6b00e8e4167c0cd" id="r_a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> <a class="el" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>, string name)</td></tr>
 <tr class="memdesc:a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.  <br /></td></tr>
 <tr class="memitem:a64132fa5a015e68973596c2bbce2d504" id="r_a64132fa5a015e68973596c2bbce2d504"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a64132fa5a015e68973596c2bbce2d504">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
 <tr class="memdesc:a64132fa5a015e68973596c2bbce2d504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a typed fact with an optional condition to the rule being built. This method creates an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added.  <br /></td></tr>
@@ -146,15 +146,13 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ac2ea6605d5da79b7ac17ea0b098fcb03" id="r_ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="memItemLeft"><a id="ac2ea6605d5da79b7ac17ea0b098fcb03" name="ac2ea6605d5da79b7ac17ea0b098fcb03"></a>
-const int&#160;</td><td class="memItemRight"><b>FIRST_RULE_PRIORITY_VALUE</b> = 10000</td></tr>
-<tr class="memdesc:ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constant value representing the highest priority level for rules. Setting a rule's priority to this value ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire. <br /></td></tr>
+<tr class="memitem:ac2ea6605d5da79b7ac17ea0b098fcb03" id="r_ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="memItemLeft">const int&#160;</td><td class="memItemRight"><a class="el" href="#ac2ea6605d5da79b7ac17ea0b098fcb03">FIRST_RULE_PRIORITY_VALUE</a> = 10000</td></tr>
+<tr class="memdesc:ac2ea6605d5da79b7ac17ea0b098fcb03"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constant value representing the highest priority level for rules. Setting a rule's priority to this value ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a752cbe7669a40e4a7229de0f7e4106a9" id="r_a752cbe7669a40e4a7229de0f7e4106a9"><td class="memItemLeft"><a id="a752cbe7669a40e4a7229de0f7e4106a9" name="a752cbe7669a40e4a7229de0f7e4106a9"></a>
-string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td></tr>
-<tr class="memdesc:a752cbe7669a40e4a7229de0f7e4106a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of the rule associated with this instance. <br /></td></tr>
+<tr class="memitem:a752cbe7669a40e4a7229de0f7e4106a9" id="r_a752cbe7669a40e4a7229de0f7e4106a9"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a752cbe7669a40e4a7229de0f7e4106a9">RuleName</a><code> [get]</code></td></tr>
+<tr class="memdesc:a752cbe7669a40e4a7229de0f7e4106a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of the rule associated with this instance.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine. </p>
@@ -927,8 +925,58 @@ string&#160;</td><td class="memItemRight"><b>RuleName</b><code> [get]</code></td
 
 </div>
 </div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="ac2ea6605d5da79b7ac17ea0b098fcb03" name="ac2ea6605d5da79b7ac17ea0b098fcb03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2ea6605d5da79b7ac17ea0b098fcb03">&#9670;&#160;</a></span>FIRST_RULE_PRIORITY_VALUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int ReteEngine.ReteBuilder&lt; TInitial &gt;.FIRST_RULE_PRIORITY_VALUE = 10000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A constant value representing the highest priority level for rules. Setting a rule's priority to this value ensures that it will be executed before any rules with lower priority when multiple rules are eligible to fire. </p>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a752cbe7669a40e4a7229de0f7e4106a9" name="a752cbe7669a40e4a7229de0f7e4106a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a752cbe7669a40e4a7229de0f7e4106a9">&#9670;&#160;</a></span>RuleName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ReteEngine.ReteBuilder&lt; TInitial &gt;.RuleName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the name of the rule associated with this instance. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteEngine/<b>ReteBuilder.cs</b></li>
+<li>ReteEngine/<a class="el" href="_rete_builder_8cs.html">ReteBuilder.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

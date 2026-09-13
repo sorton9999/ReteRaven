@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -110,34 +110,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a42e3ecfc938754383eb63b664e788315" id="r_a42e3ecfc938754383eb63b664e788315"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a42e3ecfc938754383eb63b664e788315">Token</a> (Token parent, string nextName, object newFact)</td></tr>
 <tr class="memdesc:a42e3ecfc938754383eb63b664e788315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> class by extending the specified parent token with an additional named fact.  <br /></td></tr>
 <tr class="memitem:a9f375ff2582a5b25e056a49613ca590e" id="r_a9f375ff2582a5b25e056a49613ca590e"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a9f375ff2582a5b25e056a49613ca590e">Get&lt; T &gt;</a> (string name)</td></tr>
-<tr class="memdesc:a9f375ff2582a5b25e056a49613ca590e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a fact by name and type from the collection.  <br /></td></tr>
+<tr class="memdesc:a9f375ff2582a5b25e056a49613ca590e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a fact by name and type from the collection, searching through the token chain if not found locally. This method first attempts to find the fact in the current token's NamedFacts dictionary. If not found, it walks up the parent chain to search for the fact in ancestor tokens. This is especially useful when working with reused beta memories where tokens may have been constructed through different paths.  <br /></td></tr>
 <tr class="memitem:ae3e6883f7dd2ba5e1052daf2942b4525" id="r_ae3e6883f7dd2ba5e1052daf2942b4525"><td class="memItemLeft">override string&#160;</td><td class="memItemRight"><a class="el" href="#ae3e6883f7dd2ba5e1052daf2942b4525">ToString</a> ()</td></tr>
 <tr class="memdesc:ae3e6883f7dd2ba5e1052daf2942b4525"><td class="mdescLeft">&#160;</td><td class="mdescRight">The overridden string output method.  <br /></td></tr>
-<tr class="memitem:a074cc2f178ec2212f0ec674abe785ed5" id="r_a074cc2f178ec2212f0ec674abe785ed5"><td class="memItemLeft"><a id="a074cc2f178ec2212f0ec674abe785ed5" name="a074cc2f178ec2212f0ec674abe785ed5"></a>
-bool&#160;</td><td class="memItemRight"><b>Equals</b> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? other)</td></tr>
-<tr class="memitem:a26e11352edb3a65fa397a37695bf73e8" id="r_a26e11352edb3a65fa397a37695bf73e8"><td class="memItemLeft"><a id="a26e11352edb3a65fa397a37695bf73e8" name="a26e11352edb3a65fa397a37695bf73e8"></a>
-override bool&#160;</td><td class="memItemRight"><b>Equals</b> (object? obj)</td></tr>
-<tr class="memitem:a03de6200272530f129866cf1e30c49f1" id="r_a03de6200272530f129866cf1e30c49f1"><td class="memItemLeft"><a id="a03de6200272530f129866cf1e30c49f1" name="a03de6200272530f129866cf1e30c49f1"></a>
-override int&#160;</td><td class="memItemRight"><b>GetHashCode</b> ()</td></tr>
+<tr class="memitem:a074cc2f178ec2212f0ec674abe785ed5" id="r_a074cc2f178ec2212f0ec674abe785ed5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a074cc2f178ec2212f0ec674abe785ed5">Equals</a> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? other)</td></tr>
+<tr class="memitem:a26e11352edb3a65fa397a37695bf73e8" id="r_a26e11352edb3a65fa397a37695bf73e8"><td class="memItemLeft">override bool&#160;</td><td class="memItemRight"><a class="el" href="#a26e11352edb3a65fa397a37695bf73e8">Equals</a> (object? obj)</td></tr>
+<tr class="memitem:a03de6200272530f129866cf1e30c49f1" id="r_a03de6200272530f129866cf1e30c49f1"><td class="memItemLeft">override int&#160;</td><td class="memItemRight"><a class="el" href="#a03de6200272530f129866cf1e30c49f1">GetHashCode</a> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a7501358405d7b01f5f3373c47cd510b9" id="r_a7501358405d7b01f5f3373c47cd510b9"><td class="memItemLeft"><a id="a7501358405d7b01f5f3373c47cd510b9" name="a7501358405d7b01f5f3373c47cd510b9"></a>
-static bool&#160;</td><td class="memItemRight"><b>operator==</b> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? left, <a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? right)</td></tr>
-<tr class="memitem:a99e3685bb565394fca8513c1b6dd3ca8" id="r_a99e3685bb565394fca8513c1b6dd3ca8"><td class="memItemLeft"><a id="a99e3685bb565394fca8513c1b6dd3ca8" name="a99e3685bb565394fca8513c1b6dd3ca8"></a>
-static bool&#160;</td><td class="memItemRight"><b>operator!=</b> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? left, <a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? right)</td></tr>
+<tr class="memitem:a7501358405d7b01f5f3373c47cd510b9" id="r_a7501358405d7b01f5f3373c47cd510b9"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a7501358405d7b01f5f3373c47cd510b9">operator==</a> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? left, <a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? right)</td></tr>
+<tr class="memitem:a99e3685bb565394fca8513c1b6dd3ca8" id="r_a99e3685bb565394fca8513c1b6dd3ca8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a99e3685bb565394fca8513c1b6dd3ca8">operator!=</a> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? left, <a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? right)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:ad361bc510849b289dfea963a81f5199a" id="r_ad361bc510849b289dfea963a81f5199a"><td class="memItemLeft"><a id="ad361bc510849b289dfea963a81f5199a" name="ad361bc510849b289dfea963a81f5199a"></a>
-Dictionary&lt; string, object &gt;&#160;</td><td class="memItemRight"><b>NamedFacts</b> = new Dictionary&lt;string, object&gt;()<code> [get]</code></td></tr>
-<tr class="memdesc:ad361bc510849b289dfea963a81f5199a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection of named facts associated with the current instance. <br /></td></tr>
-<tr class="memitem:ae137839a7a4f0083205e885f94ebeb55" id="r_ae137839a7a4f0083205e885f94ebeb55"><td class="memItemLeft"><a id="ae137839a7a4f0083205e885f94ebeb55" name="ae137839a7a4f0083205e885f94ebeb55"></a>
-<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>&#160;</td><td class="memItemRight"><b>Parent</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:ae137839a7a4f0083205e885f94ebeb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the parent token of this token. <br /></td></tr>
-<tr class="memitem:a176e789694d2a69443acf707848f9992" id="r_a176e789694d2a69443acf707848f9992"><td class="memItemLeft"><a id="a176e789694d2a69443acf707848f9992" name="a176e789694d2a69443acf707848f9992"></a>
-object&#160;</td><td class="memItemRight"><b>Fact</b><code> [get]</code></td></tr>
-<tr class="memdesc:a176e789694d2a69443acf707848f9992"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fact associated with this instance. <br /></td></tr>
+<tr class="memitem:ad361bc510849b289dfea963a81f5199a" id="r_ad361bc510849b289dfea963a81f5199a"><td class="memItemLeft">Dictionary&lt; string, object &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad361bc510849b289dfea963a81f5199a">NamedFacts</a> = new Dictionary&lt;string, object&gt;()<code> [get]</code></td></tr>
+<tr class="memdesc:ad361bc510849b289dfea963a81f5199a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection of named facts associated with the current instance.  <br /></td></tr>
+<tr class="memitem:ae137839a7a4f0083205e885f94ebeb55" id="r_ae137839a7a4f0083205e885f94ebeb55"><td class="memItemLeft"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae137839a7a4f0083205e885f94ebeb55">Parent</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ae137839a7a4f0083205e885f94ebeb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the parent token of this token.  <br /></td></tr>
+<tr class="memitem:a176e789694d2a69443acf707848f9992" id="r_a176e789694d2a69443acf707848f9992"><td class="memItemLeft">object&#160;</td><td class="memItemRight"><a class="el" href="#a176e789694d2a69443acf707848f9992">Fact</a><code> [get]</code></td></tr>
+<tr class="memdesc:a176e789694d2a69443acf707848f9992"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fact associated with this instance.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule engine. <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> identity is stable (GUID-based) so it can be used safely as dictionary/set keys even if underlying facts mutate. </p>
@@ -209,6 +201,40 @@ object&#160;</td><td class="memItemRight"><b>Fact</b><code> [get]</code></td></t
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a26e11352edb3a65fa397a37695bf73e8" name="a26e11352edb3a65fa397a37695bf73e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e11352edb3a65fa397a37695bf73e8">&#9670;&#160;</a></span>Equals() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override bool ReteCore.Token.Equals </td>
+          <td>(</td>
+          <td class="paramtype">object?</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a074cc2f178ec2212f0ec674abe785ed5" name="a074cc2f178ec2212f0ec674abe785ed5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a074cc2f178ec2212f0ec674abe785ed5">&#9670;&#160;</a></span>Equals() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Token.Equals </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>?</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9f375ff2582a5b25e056a49613ca590e" name="a9f375ff2582a5b25e056a49613ca590e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f375ff2582a5b25e056a49613ca590e">&#9670;&#160;</a></span>Get&lt; T &gt;()</h2>
 
@@ -224,7 +250,7 @@ object&#160;</td><td class="memItemRight"><b>Fact</b><code> [get]</code></td></t
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves a fact by name and type from the collection. </p>
+<p>Retrieves a fact by name and type from the collection, searching through the token chain if not found locally. This method first attempts to find the fact in the current token's NamedFacts dictionary. If not found, it walks up the parent chain to search for the fact in ancestor tokens. This is especially useful when working with reused beta memories where tokens may have been constructed through different paths. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the fact to retrieve. Cannot be null.</td></tr>
@@ -234,10 +260,85 @@ object&#160;</td><td class="memItemRight"><b>Fact</b><code> [get]</code></td></t
 <dl class="section return"><dt>Returns</dt><dd>The fact associated with the specified name, cast to type T.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">KeyNotFoundException</td><td>Thrown if a fact with the specified name and type T does not exist in the collection.</td></tr>
+    <tr><td class="paramname">KeyNotFoundException</td><td>Thrown if a fact with the specified name and type T does not exist in the current token or any ancestor in the token chain.</td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a03de6200272530f129866cf1e30c49f1" name="a03de6200272530f129866cf1e30c49f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03de6200272530f129866cf1e30c49f1">&#9670;&#160;</a></span>GetHashCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override int ReteCore.Token.GetHashCode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a99e3685bb565394fca8513c1b6dd3ca8" name="a99e3685bb565394fca8513c1b6dd3ca8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99e3685bb565394fca8513c1b6dd3ca8">&#9670;&#160;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Token.operator!= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>?</td>          <td class="paramname"><span class="paramname"><em>left</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>?</td>          <td class="paramname"><span class="paramname"><em>right</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7501358405d7b01f5f3373c47cd510b9" name="a7501358405d7b01f5f3373c47cd510b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7501358405d7b01f5f3373c47cd510b9">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Token.operator== </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>?</td>          <td class="paramname"><span class="paramname"><em>left</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>?</td>          <td class="paramname"><span class="paramname"><em>right</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -261,8 +362,81 @@ object&#160;</td><td class="memItemRight"><b>Fact</b><code> [get]</code></td></t
 
 </div>
 </div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a176e789694d2a69443acf707848f9992" name="a176e789694d2a69443acf707848f9992"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a176e789694d2a69443acf707848f9992">&#9670;&#160;</a></span>Fact</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">object ReteCore.Token.Fact</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the fact associated with this instance. </p>
+
+</div>
+</div>
+<a id="ad361bc510849b289dfea963a81f5199a" name="ad361bc510849b289dfea963a81f5199a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad361bc510849b289dfea963a81f5199a">&#9670;&#160;</a></span>NamedFacts</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;string, object&gt; ReteCore.Token.NamedFacts = new Dictionary&lt;string, object&gt;()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets a collection of named facts associated with the current instance. </p>
+
+</div>
+</div>
+<a id="ae137839a7a4f0083205e885f94ebeb55" name="ae137839a7a4f0083205e885f94ebeb55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae137839a7a4f0083205e885f94ebeb55">&#9670;&#160;</a></span>Parent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a> ReteCore.Token.Parent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets the parent token of this token. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ReteCore/<b>Token.cs</b></li>
+<li>ReteCore/<a class="el" href="_token_8cs.html">Token.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

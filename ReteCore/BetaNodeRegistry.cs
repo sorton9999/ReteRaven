@@ -8,7 +8,9 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace ReteCore
 {
@@ -24,13 +26,18 @@ namespace ReteCore
     public class BetaNodeRegistry
     {
         /// <summary>
-        /// Maps (previousNode, patternSignature) → BetaMemory instance.
+        /// Maps (previousNode, patternSignature) -> BetaMemory instance.
         /// Used for caching simple beta memory nodes created by Where<T> and other single-node operations.
         /// The key ensures that:
         /// - Same previousNode reference + same signature → reused BetaMemory
         /// - Different previousNode OR different signature → new BetaMemory
         /// </summary>
         private readonly Dictionary<(IReteNode?, string), BetaMemory> _betaMemoryCache = new();
+
+        /// <summary>
+        /// Maps (previousNode, patternSignature) -> BetaMemory instance.
+        /// </summary>
+        private readonly Dictionary<(IReteNode?, string), (IReteNode notNode, BetaMemory memory)> _notNodeCache = new();
 
         /// <summary>
         /// Maps (previousNode, joinSignature) → (JoinNode, BetaMemory) pair.
@@ -46,6 +53,8 @@ namespace ReteCore
         private int _betaMemoryCacheMisses = 0;
         private int _joinNodeCacheHits = 0;
         private int _joinNodeCacheMisses = 0;
+        private int _notNodeCacheHits = 0;
+        private int _notNodeCacheMisses = 0;
 
         /// <summary>
         /// Retrieves or creates a BetaMemory node for a given pattern at a given point in the network.
@@ -120,6 +129,39 @@ namespace ReteCore
             return pair;
         }
 
+        public (IReteNode, BetaMemory) GetOrCreateNotPair(
+            IReteNode previousNode,
+            string joinSignature,
+            string tokenName,
+            AlphaMemory alphaMemory,
+            Func<Token, object, bool> joinCondition)
+        {
+            if (string.IsNullOrEmpty(joinSignature))
+                throw new ArgumentException("Join signature cannot be null or empty.", nameof(joinSignature));
+            if (alphaMemory == null)
+                throw new ArgumentNullException(nameof(alphaMemory));
+            if (joinCondition == null)
+                throw new ArgumentNullException(nameof(joinCondition));
+
+            var key = (previousNode, joinSignature);
+            if (_notNodeCache.TryGetValue(key, out var pair))
+            {
+                _notNodeCacheHits++;
+                Console.WriteLine($"[BetaRegistry] Join HIT: {joinSignature}");
+                return pair;
+            }
+
+            var notNode = new NotNode(tokenName, joinCondition);
+            var betaMemory = new BetaMemory();
+            notNode.AddSuccessor(betaMemory);
+
+            pair = (notNode, betaMemory);
+            _notNodeCache[key] = pair;
+            _notNodeCacheMisses++;
+            Console.WriteLine($"[BetaRegistry] Join MISS (created new): {joinSignature}");
+            return pair;
+        }
+
         /// <summary>
         /// Connects a node to its predecessor if not already connected.
         /// This ensures that when a cached node is reused, its predecessor knows about it.
@@ -175,10 +217,13 @@ namespace ReteCore
         {
             _betaMemoryCache.Clear();
             _joinNodeCache.Clear();
+            _notNodeCache.Clear();
             _betaMemoryCacheHits = 0;
             _betaMemoryCacheMisses = 0;
             _joinNodeCacheHits = 0;
             _joinNodeCacheMisses = 0;
+            _notNodeCacheHits = 0;
+            _notNodeCacheMisses = 0;
             Console.WriteLine("[BetaRegistry] Cleared all cached nodes.");
         }
 
@@ -189,14 +234,18 @@ namespace ReteCore
         {
             int betaTotal = _betaMemoryCacheHits + _betaMemoryCacheMisses;
             int joinTotal = _joinNodeCacheHits + _joinNodeCacheMisses;
+            int notNodeTotal = _notNodeCacheHits + _notNodeCacheMisses;
             double betaHitRate = betaTotal > 0 ? (_betaMemoryCacheHits * 100.0) / betaTotal : 0;
             double joinHitRate = joinTotal > 0 ? (_joinNodeCacheHits * 100.0) / joinTotal : 0;
+            double notNodeHitRate = notNodeTotal > 0 ? (_notNodeCacheHits * 100.0) / notNodeTotal : 0;
+            int totalHits = _betaMemoryCache.Count + _notNodeCache.Count + _joinNodeCache.Count;
 
             return $@"
 BetaNodeRegistry Statistics:
   BetaMemory Cache:  {_betaMemoryCacheHits} hits, {_betaMemoryCacheMisses} misses ({betaHitRate:F1}% hit rate)
+  NotNode Cache: {_notNodeCacheHits} hits, {_notNodeCacheMisses} misses ({notNodeHitRate:F1}% hit rate)  
   JoinNode Cache:    {_joinNodeCacheHits} hits, {_joinNodeCacheMisses} misses ({joinHitRate:F1}% hit rate)
-  Total Cached Nodes: {_betaMemoryCache.Count} BetaMemories + {_joinNodeCache.Count} JoinPairs
+  Total Cached Nodes: {totalHits} hits --  {_betaMemoryCache.Count} BetaMemories + {_notNodeCache.Count} NotNodePairs + {_joinNodeCache.Count} JoinPairs
 ";
         }
 

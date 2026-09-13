@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['under_20the_20lgpl_20license_0',['under the LGPL license',['../index.html#autotoc_md2',1,'This project is open-source and distributed under the LGPL license.'],['../md__r_e_a_d_m_e.html#autotoc_md19',1,'This project is open-source and distributed under the LGPL license.']]],
+  ['under_20the_20lgpl_20v2_201_20license_20—_20feel_20free_20to_20use_20it_20in_20your_20games_20simulations_20or_20personal_20projects_1',['under the LGPL v2 1 License — feel free to use it in your games simulations or personal projects',['../index.html#autotoc_md17',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.'],['../md__r_e_a_d_m_e.html#autotoc_md34',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.']]],
+  ['usage_2',['Usage',['../index.html#autotoc_md14',1,'==&amp;gt; Installation &amp;amp; Usage'],['../md__r_e_a_d_m_e.html#autotoc_md31',1,'==&amp;gt; Installation &amp;amp; Usage']]],
+  ['use_20it_20in_20your_20games_20simulations_20or_20personal_20projects_3',['use it in your games simulations or personal projects',['../index.html#autotoc_md17',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.'],['../md__r_e_a_d_m_e.html#autotoc_md34',1,'This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.']]]
+];

@@ -1,5 +1,6 @@
 var interface_rete_core_1_1_i_rete_node =
 [
+    [ "AddSuccessor", "interface_rete_core_1_1_i_rete_node.html#a69dc49b54ced282def07b19f85d1af09", null ],
     [ "Assert", "interface_rete_core_1_1_i_rete_node.html#a05567f044dd13d4de35da0591191fca2", null ],
     [ "DebugPrint", "interface_rete_core_1_1_i_rete_node.html#aaee4a1eb9365b5d13e8301fc3d1d9730", null ],
     [ "Refresh", "interface_rete_core_1_1_i_rete_node.html#ad9bdb84d1351f3db578f74bd067c09bc", null ],

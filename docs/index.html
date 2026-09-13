@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ReteRaven: Main Page</title>
+<title>ReteRaven: Project Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -89,10 +89,103 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">ReteRaven Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Project Documentation </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md__d_o_x_y___r_e_a_d_m_e"></a></p>
+<pre style="font-family: monospace; white-space: pre; line-height: 1.2;">
+            _______
+        ___/ |    | \___          ____      _       ____
+       /   \        /   \        |  _ \ ___| |_ ___|  _ \ __ ___   _____ _ __
+      |   RETE   RAVEN   |       | |_) / _ \ __/ _ \ |_) / _` \ \ / / _ \ '_ \
+      |      \____/      |       |  _ &lt;  __/ |_  __/  _ &lt; (_| |\ V /  __/ | | |
+       \___          ___/        |_| \_\___|\__\___|_| \_\__,_| \_/ \___|_| |_|
+           \________/
+               ||
+          [AI Decision Engine]
+</pre><h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
+*** ReteRaven ***</h1>
+<p>A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity. It features a modern fluent rule builder that allows you to define complex logic using a type-safe, readable DSL. Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact-matching and pattern-binding with ease. </p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+This project is open-source and distributed under the LGPL license.</h1>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+==&gt; Key Features</h1>
+<ul>
+<li>= O(1) to O(n) Pattern Matching: Avoid massive foreach loops. Rule evaluation cost is relative to the number of changes, not the size of your world.</li>
+<li>= Fluent API: Define complex rules using a readable, LINQ-style syntax.</li>
+<li>= Automatic Retraction: Simplifies memory management. When you Update a fact, the network automatically handles the retraction of the old state and the assertion of the new one.</li>
+<li>= Advanced Logic Nodes: Full support for Negation (Not) and Existential (Exists) patterns, allowing for complex "Wait for all" and "At least one" logic.</li>
+<li>= Command Queue Ready: Designed to work as an inference layer that outputs executable commands, keeping your simulation state-safe.</li>
+</ul>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+==&gt; Quick Start</h1>
+<p>This API was developed in .NET Core 8 and assumes the use of Visual Studio 2022.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+1. Define Your Facts</h1>
+<p>Facts are composed of Cells that implement <span class="tt">INotifyPropertyChanged</span> representing your world state.</p>
+<pre style="font-family: monospace; white-space: pre; line-height: 1.2;">
+public Task : Cell
+{
+    public int ParentId { get; set; } // Throw PropertyChangeEvent
+    public string Status { get; set; } // Throw PropertyChangedEvent
+}
+</pre><h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+2. Configure the Engine</h1>
+<p>Use the Fluent Builder to define your domain logic.</p>
+<pre style="font-family: monospace; white-space: pre; line-height: 1.2;">
+var engine = new <a class="el" href="namespace_rete_engine.html">ReteEngine()</a>;
+
+engine.Begin("BubbleUpCompletion")
+    .Where&lt;Task&gt;("BubbleTask", parent =&gt; parent.Status == "Incomplete")
+    // Ensure the parent has children
+    .Exists&lt;Task&gt;("BubbleTask", (child, parent) =&gt; child.ParentId == parent.Id)
+    // Only fire when NO children are still incomplete (Recursive Return)
+    .Not&lt;Task&gt;("BubbleTask", (child, parent) =&gt; child.ParentId == parent.Id &amp;&amp; child.Status == "Incomplete")
+    .Then(match =&gt; {
+        var parent = match.Get&lt;Task&gt;("BubbleTask");
+        // Automatic Retraction handles the state swap
+        parent.Status = "Complete";
+        engine.Update(parent);
+    });
+</pre><p> You can define multiple rules in the engine with different chains of conditions and assign separate actions for each.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+3. Pulse the Simulation</h1>
+<p>Integrate the engine into your tick loop.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<pre style="font-family: monospace; white-space: pre; line-height: 1.2;"></pre></h1>
+<p>public void OnTick() { // 1. Sync world changes engine.Assert(changedEntity); // 2. Fire rules engine.FireAll(); // 3. Process resulting commands commandQueue.Process(); } </p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+==&gt; Recursive Patterns</h1>
+<p>ReteRaven excels at hierarchical logic. Because it supports Automatic Retraction and Negation, you can implement:</p>
+<ol type="1">
+<li>Top-Down Breakdown: Rules that split "Complex Tasks" into "Sub-Tasks."</li>
+<li>Bottom-Up Bubble: Rules that use .Not() to wait for all children to complete before marking a parent as finished.</li>
+<li>Recursive Chains: Propagating states through deep trees (like chain-of-command or crafting trees) without manual stack management.</li>
+</ol>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+==&gt; Rule Prioritization</h1>
+<p>ReteRaven uses a "Depth-First" conflict resolution strategy. When multiple rules are satisfied, the engine prioritizes:</p><ol type="1">
+<li>Rule Priority: (Highest value first) Rule-level prioritization of firing rules</li>
+<li>Salience: (Highest value first) Condition-level prioritization</li>
+<li>Recency (LIFO): The most recently matched activation fires first, allowing new facts to "short-circuit" older logic.</li>
+</ol>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+==&gt; Installation &amp; Usage</h1>
+<ol type="1">
+<li>Clone the repository.</li>
+<li>Add the ReteRaven project references to your C# solution.</li>
+<li>Implement your CommandQueue and start coding your rules.</li>
+</ol>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+==&gt; License</h1>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.</h1>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 </div><!-- doc-content -->
