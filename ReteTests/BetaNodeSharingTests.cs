@@ -606,7 +606,7 @@ namespace ReteTests
             var stats = engine.GetBetaNodeRegistryStatistics();
 
             // Ensure that multiple hits were successfully logged as the compiler reused layers step-by-step
-            Assert.Contains("4 hits", stats.ToString() ?? "");
+            Assert.Contains("HITS: 4", stats.ToString() ?? "");
         }
 
     }

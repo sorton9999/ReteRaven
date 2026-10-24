@@ -48,7 +48,7 @@ PROJECT_NAME           = ReteRaven
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.4
+PROJECT_NUMBER         = 1.4.1
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewers a
@@ -1027,8 +1027,8 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = . \
-						 DOXY_README.md \
-						 C:/Users/steve/source/repos/ReteRaven/ReteEngine \
+                         DOXY_README.md \
+                         C:/Users/steve/source/repos/ReteRaven/ReteEngine \
                          C:/Users/steve/source/repos/ReteRaven/ReteProgram \
                          "C:\Users\steve\source\repos\ReteRaven\ReteCore"
 

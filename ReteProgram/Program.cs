@@ -819,3 +819,38 @@ var statsI = engineI.GetBetaNodeRegistryStatistics();
 
 // Ensure that multiple hits were successfully logged as the compiler reused layers step-by-step
 Console.WriteLine($"Cache Hites: {statsI.ToString() ?? ""}");
+
+
+// AutoRetraction_WhenConditionFails_DerivedFactIsRemoved
+var engineJ = new ReteEngine.ReteEngine();
+int discountActiveCount = 0;
+
+var orderJ = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
+
+// Rule 1: High Value Order -> Logic Assert a Discount
+engineJ.Begin("HighValueDiscount")
+    .Where<Inventory>("I", o => o.Count >= 1000)
+    .Then(t => {
+        var inv = t.Get<Inventory>("I");
+        Console.WriteLine($"High value order detected (Count: {inv.Count}), applying discount.");
+    });
+
+// Rule 2: Track if Discount is in memory
+engineJ.Begin("TrackDiscount")
+    .Where<Inventory>("I")
+    .Then(t => {
+        discountActiveCount++;
+    });
+
+// Initial Assertion (Order is $1500)
+engineJ.Assert(orderJ);
+engineJ.FireAll();
+Console.WriteLine($"After the initial FireAll, expected one discount activation for order count {orderJ.Count}, but got {discountActiveCount}.");
+// The Auto-Retraction Event
+// We update the order so it no longer meets the >= 1000 criteria
+orderJ.Count = 500;
+engineJ.FireAll();
+// Verify the "TrackDiscount" rule didn't fire again 
+// Discount should have been retracted, so count should not increase
+Console.WriteLine($"After updating the order count, expected one discount activation for order count {orderJ.Count}, but got {discountActiveCount}.");
+

@@ -6,8 +6,9 @@
 //     information.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
 using ReteCore;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace ReteEngine
 {
@@ -37,11 +38,71 @@ namespace ReteEngine
         /// <returns>A unique signature string.</returns>
         public static string WhereSignature<T>(string name, Func<T, bool>? condition)
         {
-            string typeName = typeof(T).Name;
+            string? typeName = typeof(T).FullName;
             string conditionPart = condition != null
-                ? $":{condition.GetHashCode()}"
+                ? $":{condition}"
                 : "";
             return $"Where<{typeName}>({name}){conditionPart}";
+        }
+
+        /// <summary>
+        /// Generates a cache key for join patterns and the token name to use when creating tokens.
+        /// This method ensures synchronization between the cache key (used for beta memory registry)
+        /// and the token name (used for late filter lookups), preventing mismatches when rules have
+        /// late filters that reference facts by name.
+        /// </summary>
+        /// <typeparam name="T">The type of fact being joined.</typeparam>
+        /// <param name="name">The logical name provided by the rule builder for this join.</param>
+        /// <param name="alpha">The alpha memory instance for this type.</param>
+        /// <param name="joinCondition">The join condition predicate function.</param>
+        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
+        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
+        public static (string cacheKey, string tokenName) GenerateJoinSignature<T>(
+           string name,
+           AlphaMemory alpha,
+           Func<Token, T, bool> joinCondition,
+           [CallerMemberName] string methodName = "")
+        {
+            var methodPointer = joinCondition.Method.MethodHandle.Value;
+
+            // Generate a unique cache key that includes all factors affecting join semantics
+            // This prevents false cache hits when conditions differ
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
+
+            // The token name is always the simple provided name - this is what late filters look for
+            // by calling token.Get<T>(name)
+            string tokenName = name;
+
+            return (cacheKey, tokenName);
+        }
+
+        /// <summary>
+        /// Generate a cache key for a given array of join conditions.  The array of joins is used in
+        /// .Or rules where all conditions are evaluated where any one that is true sets the rule as 
+        /// true.  Each member of the array will be used to generate the key.  The (key-token name) 
+        /// tuple is returned.  The token name is returned to act as a stand-in when late filters are
+        /// used.
+        /// </summary>
+        /// <param name="name">The logical name provided by the rule builder for this join.</param>
+        /// <param name="alpha">The alpha memory instance for this type.</param>
+        /// <param name="joinConditions">The array of join condition predicate functions.</param>
+        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
+        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
+        public static (string cacheKey, string tokenName) GenerateJoinArraySignature<T>(
+            string name,
+            AlphaMemory alpha,
+            Func<Token, T, bool>[] joinConditions,
+            [CallerMemberName] string methodName = "")
+        {
+            var methodPointers = joinConditions
+                .Select(cond => cond.Method.MethodHandle.Value.ToString())
+                .OrderBy(p => p);
+            string conditionKey = string.Join("|", methodPointers);
+
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{conditionKey}";
+            string tokenName = name;
+
+            return (cacheKey, tokenName);
         }
 
         /// <summary>

@@ -112,7 +112,7 @@ namespace ReteEngine
         /// <param name="initialCondition">A function that defines an optional initial condition to filter facts of type T as 
         /// they are asserted into the AlphaMemory. The rule stops at this point if this initial condition is not satisfied.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
-        public ReteBuilder<TInitial> Where<T>(string name, string? debugLabel = null, Func<T, bool> initialCondition = null)
+        public ReteBuilder<TInitial> Where<T>(string name, string? debugLabel = null, Func<T, bool>? initialCondition = null)
         {
             if (debugLabel != null)
             {
@@ -121,7 +121,8 @@ namespace ReteEngine
             var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
             
             // Generate a signature for this Where pattern
-            string patternSignature = $"Where<{typeof(T).Name}>({name})";
+            string patternSignature = $"Where<{typeof(T).FullName}>({name})";
+            //string patternSignature = PatternSignatureBuilder.WhereSignature(name, initialCondition);
 
             // This is where BetaMemory Nodes can be reused.  A cache is searched in the Beta Registry for candidate
             // BetaMemory objects to reuse.  If one is not found, a new one is created and registered.
@@ -295,66 +296,6 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Generates a cache key for join patterns and the token name to use when creating tokens.
-        /// This method ensures synchronization between the cache key (used for beta memory registry)
-        /// and the token name (used for late filter lookups), preventing mismatches when rules have
-        /// late filters that reference facts by name.
-        /// </summary>
-        /// <typeparam name="T">The type of fact being joined.</typeparam>
-        /// <param name="name">The logical name provided by the rule builder for this join.</param>
-        /// <param name="alpha">The alpha memory instance for this type.</param>
-        /// <param name="joinCondition">The join condition predicate function.</param>
-        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
-        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
-        private (string cacheKey, string tokenName) GenerateJoinSignature<T>(
-            string name, 
-            AlphaMemory alpha, 
-            Func<Token, T, bool> joinCondition,
-            [CallerMemberName] string methodName = "")
-        {
-            var methodPointer = joinCondition.Method.MethodHandle.Value;
-
-            // Generate a unique cache key that includes all factors affecting join semantics
-            // This prevents false cache hits when conditions differ
-            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
-
-            // The token name is always the simple provided name - this is what late filters look for
-            // by calling token.Get<T>(name)
-            string tokenName = name;
-
-            return (cacheKey, tokenName);
-        }
-
-        /// <summary>
-        /// Generate a cache key for a given array of join conditions.  The array of joins is used in
-        /// .Or rules where all conditions are evaluated where any one that is true sets the rule as 
-        /// true.  Each member of the array will be used to generate the key.  The (key-token name) 
-        /// tuple is returned.  The token name is returned to act as a stand-in when late filters are
-        /// used.
-        /// </summary>
-        /// <param name="name">The logical name provided by the rule builder for this join.</param>
-        /// <param name="alpha">The alpha memory instance for this type.</param>
-        /// <param name="joinConditions">The array of join condition predicate functions.</param>
-        /// <returns>A tuple containing: (cacheKey, tokenName) where cacheKey is used for the beta 
-        /// memory registry and tokenName is what should be stored in token's NamedFacts.</returns>
-        private (string cacheKey, string tokenName) GenerateJoinArraySignature<T>(
-            string name,
-            AlphaMemory alpha,
-            Func<Token, T, bool>[] joinConditions,
-            [CallerMemberName] string methodName = "")
-        {
-            var methodPointers = joinConditions
-                .Select(cond => cond.Method.MethodHandle.Value.ToString())
-                .OrderBy(p => p);
-            string conditionKey = string.Join("|", methodPointers);
-
-            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{conditionKey}";
-            string tokenName = name;
-
-            return (cacheKey, tokenName);
-        }
-
-        /// <summary>
         /// Adds a join condition to the rule, requiring that both the previous conditions and the specified join
         /// condition are satisfied for a fact to match.
         /// </summary>
@@ -385,7 +326,7 @@ namespace ReteEngine
             var alpha = _engine.GetAlphaMemory<T>(name);
 
             // Generate both cache key and token name together to ensure consistency
-            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, joinCondition);
 
             // Use beta node registry for caching if enabled
             JoinNode join;
@@ -444,7 +385,7 @@ namespace ReteEngine
             var branchStartNode = _lastNode; // Previous node in the chain
             var alpha = _engine.GetAlphaMemory<T>();
 
-            var (joinSignature, tokenName) = GenerateJoinArraySignature(name, alpha, orConditions);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinArraySignature(name, alpha, orConditions);
 
             JoinNode joinNode;
             BetaMemory betaMemory;
@@ -515,7 +456,7 @@ namespace ReteEngine
             };
             var alpha = _engine.GetAlphaMemory<T>();
             // Generate both cache key and token name together to ensure consistency
-            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, joinCondition);
             JoinNode join;
             BetaMemory betaMemory;
 
@@ -573,7 +514,8 @@ namespace ReteEngine
             };
             var alpha = _engine.GetAlphaMemory<T>();
             // Generate a join signature for caching and lookup
-            var (joinSignature, tokenName) = GenerateJoinSignature(name, alpha, joinCondition);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, joinCondition);
+
             IReteNode notNode;
             BetaMemory betaMemory;
 

@@ -282,7 +282,7 @@ namespace ReteEngine
         /// <param name="initialCondition">An optional initial condition to be applied to the AlphaMemory, represented as a function that takes a fact of 
         /// type T and returns a boolean.</param>
         /// <returns>The AlphaMemory associated with the specified type and name.</returns>
-        public AlphaMemory GetAlphaMemory<T>(string name = null, Func<T, bool> initialCondition = null)
+        public AlphaMemory GetAlphaMemory<T>(string? name = null, Func<T, bool>? initialCondition = null)
         {
             var type = typeof(T);
 
@@ -300,11 +300,11 @@ namespace ReteEngine
             var registryKey = (type, name ?? "default");
             if (!_alphaRegistry.ContainsKey(registryKey))
             {
-                AlphaConditionNode<T> alphaConditionNode = null;
+                AlphaConditionNode<T>? alphaConditionNode = null;
                 var alpha = new AlphaMemory();
                 if (initialCondition != null)
                 {
-                    alphaConditionNode = new AlphaConditionNode<T>(name, initialCondition, alpha);
+                    alphaConditionNode = new AlphaConditionNode<T>(name ?? "", initialCondition, alpha);
                 }
                 typeNode.AddSuccessor(alphaConditionNode != null ? alphaConditionNode : alpha);
 
