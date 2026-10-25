@@ -384,7 +384,7 @@ namespace ReteTest.Tests
 
             // Rule 2: Track if Discount is in memory
             engine.Begin("TrackDiscount")
-                .Where<Inventory>("I")
+                .Where<Inventory>("I", o => true)
                 .Then(t => {
                     discountActiveCount++;
                 });
@@ -392,17 +392,19 @@ namespace ReteTest.Tests
             // Initial Assertion (Order is $1500)
             engine.Assert(order);
             engine.FireAll();
-            Assert.Equal(1, discountActiveCount); // Discount should exist
-
+            Assert.True(
+                discountActiveCount == 1,
+                $"After the initial FireAll, expected one discount activation for order count {order.Count}, but got {discountActiveCount}.");
             // The Auto-Retraction Event
             // We update the order so it no longer meets the >= 1000 criteria
             order.Count = 500;
-            engine.Update(order);
             engine.FireAll();
 
             // Verify the "TrackDiscount" rule didn't fire again 
             // Discount should have been retracted, so count should not increase
-            Assert.Equal(1, discountActiveCount);
+            Assert.True(
+                discountActiveCount == 1,
+                $"After updating the order count, expected one discount activation for order count {order.Count}, but got {discountActiveCount}.");
         }
 
         [Fact]

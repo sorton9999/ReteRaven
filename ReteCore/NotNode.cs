@@ -139,34 +139,26 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Handles incoming partial matches from the Left (Beta side). It checks the new token against all 
-        /// facts in the right memory using the join constraint.
+        /// Recounts right-side blockers and propagates only a zero/nonzero Not-state transition.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
         public void AssertLeft(Token token)
         {
-            int count = 0;
-            foreach (var fact in rightMemory)
-            {
-                if (joinConstraint(token, fact)) count++;
-            }
-
+            bool wasSatisfied = leftMatches.TryGetValue(token, out int oldCount) && oldCount == 0;
+            int count = CountMatches(token);
             leftMatches[token] = count;
 
-            // If count is 0, the NOT condition is satisfied. Pass it down.
-            if (count == 0)
-            {
-                PropagateAssert(token);
-            }
+            if (count == 0 && !wasSatisfied) PropagateAssert(token);
+            else if (count > 0 && wasSatisfied) PropagateRetract(token);
         }
 
         /// <summary>
-        /// Handles incoming single facts from the Right (Alpha side). It checks the new fact against all
-        /// existing left tokens to see if it blocks any of them.
+        /// Adds a right fact once and retracts left tokens only when their first blocker appears.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void AssertRight(object fact)
         {
+            if (rightMemory.Any(existing => ReferenceEquals(existing, fact))) return;
             rightMemory.Add(fact);
 
             // Check if this new fact "kills" any currently active left tokens
@@ -175,18 +167,14 @@ namespace ReteCore
                 if (joinConstraint(token, fact))
                 {
                     int oldCount = leftMatches[token];
-                    leftMatches[token] = oldCount + 1;
+                    int newCount = oldCount + 1;
+                    leftMatches[token] = newCount;
 
-                    Console.WriteLine($"[NOT] Blocking Fact Found for {token}. Count: {oldCount} -> {leftMatches[token]}");
-
-                    // Transition from 0 to 1 means the NOT is no longer true
                     if (oldCount == 0)
                     {
-                        Console.WriteLine("[NOT] Condition just became FALSE. Sending RETRACT downstream.");
                         PropagateRetract(token);
                     }
                 }
-                //else { Retract(fact); }
             }
         }
 
@@ -228,43 +216,20 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Handles retractions of right facts. It removes the fact from the right memory and checks if 
-        /// this retraction "resurrects" any left tokens that were previously blocked by this fact. If a 
-        /// left token's block count transitions from 1 to 0, it means the NOT condition is now satisfied
-        /// for that token, and it propagates an assertion downstream to indicate that the token is now 
-        /// valid again. This ensures that the Rete network correctly reflects the change in state caused
-        /// by the retraction of the right fact and allows any successor nodes to update their state 
-        /// accordingly based on the new valid tokens.
+        /// Removes the right fact and recomputes blocker counts before propagating Not-state transitions.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void RetractRight(object fact)
         {
-            rightMemory.Remove(fact);
+            int index = rightMemory.FindIndex(existing => ReferenceEquals(existing, fact));
+            if (index < 0) return;
+            rightMemory.RemoveAt(index);
 
-            // Check if removing this fact "resurrects" any left tokens
-            foreach (var token in new List<Token>(leftMatches.Keys))
-            {
-                if (joinConstraint(token, fact))
-                {
-                    int oldCount = leftMatches[token];
-                    leftMatches[token] = oldCount - 1;
-
-                    // Transition from 1 to 0 means the NOT is true again
-                    if (oldCount == 1)
-                    {
-                        Assert(token);
-                    }
-                }
-            }
+            foreach (var token in leftMatches.Keys.ToList()) ReconcileLeft(token);
         }
 
         /// <summary>
-        /// Forces a downstream node to sync with this node's current valid tokens. This is used when a 
-        /// new successor node is added to ensure it receives the correct state of matches from this NOT
-        /// node. It checks if the input is a left token or a right fact and delegates to the appropriate
-        /// refresh method to update the state of matches and propagate any necessary assertions or 
-        /// retractions downstream. This allows for dynamic updates to the Rete network while maintaining
-        /// correct propagation of matches to successor nodes.
+        /// Reconciles a refreshed left token or right fact against the current blocker counts.
         /// </summary>
         /// <param name="factOrToken">The fact or token this operation is acting upon.</param>
         /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
@@ -272,7 +237,7 @@ namespace ReteCore
         {
             if (factOrToken is Token token)
             {
-                RefreshLeft(token);
+                RefreshLeft(token, propertyName);
             }
             else
             {
@@ -281,62 +246,66 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Handles refreshes of left tokens. It checks if the token is currently blocked by any right 
-        /// facts and, if not, it propagates an assertion downstream to ensure that successor nodes are 
-        /// updated with the current valid state of this token. This is important for maintaining correct
-        /// state in the Rete network, especially when new successor nodes are added or when existing 
-        /// nodes need to be refreshed due to changes in the network. By checking the block count for the
-        /// token and only propagating if it is currently valid (not blocked), we ensure that the NOT 
-        /// condition is correctly maintained and that successor nodes receive accurate information about
-        /// the state of matches in this NOT node.
+        /// Reconciles a left token and forwards refreshes while it remains unblocked.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
-        public void RefreshLeft(Token token)
+        public void RefreshLeft(Token token, string propertyName = "")
         {
-            if (leftMatches.TryGetValue(token, out int count) && count == 0)
+            if (!leftMatches.ContainsKey(token))
             {
-                PropagateAssert(token);
+                AssertLeft(token);
+                return;
+            }
+            int oldCount = leftMatches[token];
+            ReconcileLeft(token);
+            if (oldCount == 0 && leftMatches[token] == 0)
+            {
+                foreach (var successor in _successors) successor.Refresh(token, propertyName);
             }
         }
 
         /// <summary>
-        /// Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and 
-        /// updates their block counts accordingly. If a token transitions from blocked to unblocked
-        /// or vice versa, it propagates the necessary assertions or retractions downstream to ensure 
-        /// that successor nodes are updated with the current valid state of matches in this NOT node. 
-        /// This is important for maintaining correct state in the Rete network, especially when new 
-        /// successor nodes are added or when existing nodes need to be refreshed due to changes in the 
-        /// network. By checking the join constraint for each token against the refreshed fact and 
-        /// updating their block counts, we ensure that the NOT condition is correctly maintained and 
-        /// that successor nodes receive accurate information about the state of matches in this NOT node.
+        /// Recomputes all blocker counts from current right memory to keep repeated refreshes idempotent.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
         public void RefreshRight(object fact, string propertyName)
         {
-            // For simplicity, we will just re-evaluate all left tokens against this fact
-            foreach (var token in new List<Token>(leftMatches.Keys))
-            {
-                if (joinConstraint(token, fact))
-                {
-                    // This is a bit brute-force, but it ensures correctness
-                    int oldCount = leftMatches[token];
-                    leftMatches[token] = oldCount + 1;
-                    if (oldCount == 0)
-                    {
-                        PropagateRetract(token);
-                    }
-                }
-            }
+            if (!rightMemory.Any(existing => ReferenceEquals(existing, fact))) return;
+            foreach (var token in leftMatches.Keys.ToList()) ReconcileLeft(token);
+        }
+
+        /// <summary>
+        /// Counts the current right-memory blockers for a left token. This method iterates through all right facts stored
+        /// in the rightMemory list and applies the joinConstraint function to determine how many of those facts block the
+        /// given left token. The result is an integer count of blocking facts, which is used to update the leftMatches
+        /// dictionary and determine whether the NOT condition is satisfied for that token. This count is essential for
+        /// managing the state of left tokens and ensuring that assertions and retractions are propagated correctly based on
+        /// the current state of matches in the NOT node.
+        /// </summary>
+        /// <param name="token">The left token to count blockers for.</param>
+        /// <returns>The number of right-memory blockers for the given left token.</returns>
+        private int CountMatches(Token token) => rightMemory.Count(fact => joinConstraint(token, fact));
+
+        /// <summary>
+        /// Stores the recomputed blocker count and propagates only zero/nonzero transitions.
+        /// </summary>
+        /// <param name="token">The left token to reconcile.</param>
+        private void ReconcileLeft(Token token)
+        {
+            int oldCount = leftMatches[token];
+            int newCount = CountMatches(token);
+            leftMatches[token] = newCount;
+
+            if (oldCount == 0 && newCount > 0) PropagateRetract(token);
+            else if (oldCount > 0 && newCount == 0) PropagateAssert(token);
         }
 
         /// <summary>
         /// Removes a successor node from this NotNode. This method is used when a successor node is no longer needed or when the 
         /// structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, 
         /// retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, 
-        /// ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network 
-        /// as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of 
-        /// the system.
+        /// ensuring that it is no longer part of the propagation path for tokens.
         /// </summary>
         /// <param name="successor">The successor node to remove. Cannot be null.</param>
         public void RemoveSuccessor(IReteNode successor)

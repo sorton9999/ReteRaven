@@ -238,14 +238,17 @@ namespace ReteCore
             double betaHitRate = betaTotal > 0 ? (_betaMemoryCacheHits * 100.0) / betaTotal : 0;
             double joinHitRate = joinTotal > 0 ? (_joinNodeCacheHits * 100.0) / joinTotal : 0;
             double notNodeHitRate = notNodeTotal > 0 ? (_notNodeCacheHits * 100.0) / notNodeTotal : 0;
-            int totalHits = _betaMemoryCache.Count + _notNodeCache.Count + _joinNodeCache.Count;
+            int totalNodes = GetTotalCachedNodeCount();
+            int totalHits = _betaMemoryCacheHits + _notNodeCacheHits + _joinNodeCacheHits;
+            int totalMisses = _betaMemoryCacheMisses + _notNodeCacheMisses + _joinNodeCacheMisses;
 
             return $@"
 BetaNodeRegistry Statistics:
   BetaMemory Cache:  {_betaMemoryCacheHits} hits, {_betaMemoryCacheMisses} misses ({betaHitRate:F1}% hit rate)
   NotNode Cache: {_notNodeCacheHits} hits, {_notNodeCacheMisses} misses ({notNodeHitRate:F1}% hit rate)  
   JoinNode Cache:    {_joinNodeCacheHits} hits, {_joinNodeCacheMisses} misses ({joinHitRate:F1}% hit rate)
-  Total Cached Nodes: {totalHits} hits --  {_betaMemoryCache.Count} BetaMemories + {_notNodeCache.Count} NotNodePairs + {_joinNodeCache.Count} JoinPairs
+  Total HITS: {totalHits}, MISSES: {totalMisses}
+  Total Cached Nodes: {totalNodes} Nodes --  {_betaMemoryCache.Count} BetaMemories + {_notNodeCache.Count} NotNodePairs + {_joinNodeCache.Count} JoinPairs
 ";
         }
 
@@ -253,7 +256,8 @@ BetaNodeRegistry Statistics:
         /// Counts how many nodes are currently cached.
         /// </summary>
         public int GetCachedBetaNodeCount() => _betaMemoryCache.Count;
+        public int GetCachedNotNodeCount() => _notNodeCache.Count;
         public int GetCachedJoinPairCount() => _joinNodeCache.Count;
-        public int GetTotalCachedNodeCount() => _betaMemoryCache.Count + (_joinNodeCache.Count * 2); // *2 for join + beta pair
+        public int GetTotalCachedNodeCount() => _betaMemoryCache.Count + _notNodeCache.Count + (_joinNodeCache.Count * 2); // *2 for join + beta pair
     }
 }

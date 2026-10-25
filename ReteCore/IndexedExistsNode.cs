@@ -53,6 +53,18 @@ namespace ReteCore
         /// </summary>
         private readonly Dictionary<Token, int> matchCounts = new Dictionary<Token, int>();
         /// <summary>
+        /// The list of tokens that have been asserted on the left side of the node.  This list is used to
+        /// keep track of all tokens that are currently being processed by the node, allowing for efficient
+        /// management of assertions, retractions, and refreshes.
+        /// </summary>
+        private readonly List<Token> leftTokens = new();
+        /// <summary>
+        /// The list of facts that have been asserted on the right side of the node.  This list is used to 
+        /// keep track of all facts that are currently being processed by the node, allowing for efficient
+        /// management of assertions, retractions, and refreshes.
+        /// </summary>
+        private readonly List<object> rightFacts = new();
+        /// <summary>
         /// Stores the successor nodes that will receive propagated assertions and retractions when 
         /// matches are found or lost.  Each successor is an IReteNode that will be affected by 
         /// 
@@ -127,20 +139,20 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Asserts a token on the left side of the node.  It updates the left index and checks for 
-        /// matches on the right side using the extracted key.  If matches are found, it propagates 
-        /// assertions to successors.
+        /// Tracks a left token once, indexes its key, and asserts it when a right-side match exists.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
         public void AssertLeft(Token token)
         {
+            if (leftTokens.Any(existing => existing.Equals(token))) return;
+            leftTokens.Add(token);
             var key = leftKeySelector(token);
 
-            // 1. Store in index
+            // Store in index
             if (!leftIndex.ContainsKey(key)) leftIndex[key] = new List<Token>();
             leftIndex[key].Add(token);
 
-            // 2. Lookup matches on the Right using the key (O(1) lookup!)
+            // Lookup matches on the Right using the key (O(1) lookup!)
             int count = 0;
             if (rightIndex.TryGetValue(key, out var matchingFacts))
             {
@@ -152,20 +164,20 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Asserts a fact on the right side of the node.  It updates the right index and checks for 
-        /// matches on the left side using the extracted key.  If matches are found, it propagates 
-        /// assertions to successors.
+        /// Tracks a right fact once and asserts tokens whose match count changes from zero to nonzero.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void AssertRight(object fact)
         {
+            if (rightFacts.Any(existing => ReferenceEquals(existing, fact))) return;
+            rightFacts.Add(fact);
             var key = rightKeySelector(fact);
 
-            // 1. Store in index
+            // Store in index
             if (!rightIndex.ContainsKey(key)) rightIndex[key] = new List<object>();
             rightIndex[key].Add(fact);
 
-            // 2. Find only the tokens that care about this specific key
+            // Find only the tokens that care about this specific key
             if (leftIndex.TryGetValue(key, out var matchingTokens))
             {
                 foreach (var token in matchingTokens)
@@ -197,57 +209,124 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Retracts a token from the left side of the node.  It updates the left index and checks for 
-        /// matches on the right side using the extracted key.  If matches are lost, it propagates 
-        /// retractions to successors.
+        /// Removes a tracked token from its index buckets and retracts it only if it was active. This method ensures that the internal state
+        /// of the node remains consistent after a left token has been retracted.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
         public void RetractLeft(Token token)
         {
-            var key = leftKeySelector(token);
-            if (leftIndex.TryGetValue(key, out var list)) list.Remove(token);
+            var storedToken = leftTokens.FirstOrDefault(existing => ReferenceEquals(existing, token));
+            if (storedToken == null) return;
+            leftTokens.Remove(storedToken);
+            foreach (var list in leftIndex.Values) list.RemoveAll(existing => ReferenceEquals(existing, storedToken));
+            RemoveEmptyBuckets(leftIndex);
             if (matchCounts.TryGetValue(token, out var count) && count > 0)
             {
                 matchCounts.Remove(token);
                 PropagateRetract(token);
             }
+            else
+            {
+                matchCounts.Remove(token);
+            }
         }
 
         /// <summary>
-        /// Retracts a fact from the right side of the node.  It updates the right index and checks for 
-        /// matches on the left side using the extracted key.  If matches are lost, it propagates 
-        /// retractions to successors.
+        /// Removes a tracked right fact and reconciles left-side match counts against remaining facts. This method ensures that the internal state
+        /// of the node remains consistent after a right fact has been retracted.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void RetractRight(object fact)
         {
-            var key = rightKeySelector(fact);
-            if (rightIndex.TryGetValue(key, out var list)) list.Remove(fact);
+            var storedFact = rightFacts.FirstOrDefault(existing => ReferenceEquals(existing, fact));
+            if (storedFact == null) return;
+            rightFacts.Remove(storedFact);
+            foreach (var list in rightIndex.Values) list.RemoveAll(existing => ReferenceEquals(existing, storedFact));
+            RemoveEmptyBuckets(rightIndex);
+            RebuildIndexesAndReconcile();
+        }
 
-            if (leftIndex.TryGetValue(key, out var matchingTokens))
+        /// <summary>
+        /// Rebuilds the indexes from current keys and propagates only changed existence states. This method is called when a
+        /// fact or token has been updated, and it ensures that the internal state of the node remains consistent with the
+        /// current data. It checks for changes in match counts and propagates assertions or retractions to successor nodes as
+        /// needed.
+        /// </summary>
+        /// <param name="fact">The refreshed fact or left token.</param>
+        /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
+        public void Refresh(object fact, string propertyName)
+        {
+            if (fact is Token token)
             {
-                foreach (var token in matchingTokens)
+                if (!leftTokens.Any(existing => ReferenceEquals(existing, token)))
                 {
-                    int oldCount = matchCounts[token];
-                    matchCounts[token] = oldCount - 1;
-                    if (oldCount == 1) { PropagateRetract(token); }
+                    AssertLeft(token);
+                    return;
+                }
+            }
+            else if (!rightFacts.Any(existing => ReferenceEquals(existing, fact)))
+            {
+                return;
+            }
+
+            RebuildIndexesAndReconcile(propertyName);
+        }
+
+        /// <summary>
+        /// Rebuilds both key indexes and reconciles each token's current match count. This method ensures that the internal state
+        /// of the node remains consistent after changes to the left or right input.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that triggered the refresh, if any.</param>
+        private void RebuildIndexesAndReconcile(string? propertyName = null)
+        {
+            var previousCounts = leftTokens.ToDictionary(token => token, token => matchCounts.TryGetValue(token, out var count) ? count : 0);
+            leftIndex.Clear();
+            rightIndex.Clear();
+
+            foreach (var token in leftTokens)
+            {
+                var key = leftKeySelector(token);
+                if (!leftIndex.TryGetValue(key, out var tokens)) leftIndex[key] = tokens = new List<Token>();
+                tokens.Add(token);
+            }
+
+            foreach (var fact in rightFacts)
+            {
+                var key = rightKeySelector(fact);
+                if (!rightIndex.TryGetValue(key, out var facts)) rightIndex[key] = facts = new List<object>();
+                facts.Add(fact);
+            }
+
+            foreach (var token in leftTokens)
+            {
+                var key = leftKeySelector(token);
+                int oldCount = previousCounts[token];
+                int newCount = rightIndex.TryGetValue(key, out var facts) ? facts.Count : 0;
+                matchCounts[token] = newCount;
+
+                if (oldCount == 0 && newCount > 0) PropagateAssert(token);
+                else if (oldCount > 0 && newCount == 0) PropagateRetract(token);
+                else if (propertyName != null && oldCount > 0 && newCount > 0)
+                {
+                    foreach (var successor in _successors) successor.Refresh(token, propertyName);
                 }
             }
         }
 
         /// <summary>
-        /// The Refresh method is used to update the state of a fact or token in the node without 
-        /// changing its presence.  For simplicity, we will treat Refresh as a Retract followed by an 
-        /// Assert, which will trigger the necessary updates to successor nodes based on the current 
-        /// state of matches.
+        /// Removes index buckets that became empty after a retraction. This is important to keep the index dictionaries clean and efficient,
+        /// preventing unnecessary memory usage and ensuring that lookups remain fast. The method iterates through the index dictionary,
+        /// identifies keys whose associated lists are empty, and removes those keys from the dictionary.
         /// </summary>
-        /// <param name="factOrToken">The fact or token this operation is acting upon.</param>
-        /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
-        public void Refresh(object fact, string propertyName)
+        /// <typeparam name="TKey">The type of the keys in the index.</typeparam>
+        /// <typeparam name="TValue">The type of the values in the index.</typeparam>
+        /// <param name="index">The dictionary representing the index from which empty buckets should be removed.</param>
+        private static void RemoveEmptyBuckets<TKey, TValue>(Dictionary<TKey, List<TValue>> index) where TKey : notnull
         {
-            // For simplicity, we will treat Refresh as a Retract followed by an Assert
-            Retract(fact);
-            Assert(fact);
+            foreach (var key in index.Where(entry => entry.Value.Count == 0).Select(entry => entry.Key).ToList())
+            {
+                index.Remove(key);
+            }
         }
 
         /// <summary>

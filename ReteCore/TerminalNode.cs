@@ -66,11 +66,11 @@ namespace ReteCore
         /// </summary>
         private readonly List<LateFilter> _lateFilters;
         /// <summary>
-        /// A set of hash codes for tokens that have already triggered activations from this terminal node. This is used to prevent duplicate activations for the 
+        /// A list of tokens that have already triggered activations from this terminal node. This is used to prevent duplicate activations for the 
         /// same token, ensuring that each unique combination of facts only results in one activation being added to the agenda. When a token is retracted, 
-        /// its hash code is removed from this set, allowing for new activations if the same facts are asserted again in the future.
+        /// it is removed from this list, allowing for new activations if the same facts are asserted again in the future.
         /// </summary>
-        private readonly HashSet<int> _firedTokens = new();
+        private readonly List<Token> _firedTokens = new();
         /// <summary>
         /// The metadata for the rule associated with this terminal node. This includes the rule name, action, agenda, global guards, late filters, priority, 
         /// and salience.
@@ -134,7 +134,7 @@ namespace ReteCore
             {
                 // Check if this Token has already been triggered.  If not, continue with checks
                 // before adding the activation.
-                if (!_firedTokens.Contains(finalMatch.GetHashCode()))
+                if (!_firedTokens.Any(token => token.Equals(finalMatch)))
                 {
                     // Check any global state guards first (if any)
                     if (!_globalGuards.All(guard => guard())) return;
@@ -151,17 +151,14 @@ namespace ReteCore
                     {
                         _agenda.Add(new Activation(_ruleName, _action, finalMatch, _priority, _salience));
                         Console.WriteLine($"[ASSERT] Activation for rule '{_ruleName}' added to agenda.");
-                        _firedTokens.Add(finalMatch.GetHashCode());
+                        _firedTokens.Add(finalMatch);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Retracts the specified fact from the rule engine, removing any associated activations or tokens.  If the 
-        /// specified fact is currently part of any pending activations or has previouslyfired tokens, those will be 
-        /// removed from the agenda and internal state. This operation cancels any pending rule activations related 
-        /// to the fact.
+        /// Cancels activations for a retracted match and clears its fired/refraction tracking for later re-entry.
         /// </summary>
         /// <param name="fact">The fact object to retract. Cannot be null.</param>
         public void Retract(object fact)
@@ -172,7 +169,8 @@ namespace ReteCore
                 {
                     _ruleMetadata.Agenda.CancelActivationsByFact(domainFact);
                 }
-                _firedTokens.Remove(token.GetHashCode());
+                _firedTokens.RemoveAll(firedToken => firedToken.Equals(token));
+                _ruleMetadata.Agenda.ForgetActivation(_ruleName, token);
             }
             else
             {
@@ -186,18 +184,39 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Updates the specified fact in the working memory, re-evaluating any rules that depend on the given property.
+        /// Keeps an eligible active activation stable on refresh, or reconciles it when terminal filters change.
         /// </summary>
-        /// <remarks>Call this method after modifying a property of a fact to ensure that the rule engine
-        /// reconsiders any rules affected by the change. This method removes and re-inserts the fact, triggering rule
-        /// re-evaluation as appropriate.</remarks>
         /// <param name="fact">The fact object to refresh in the working memory. Cannot be null.</param>
         /// <param name="propertyName">The name of the property on the fact that has changed. Cannot be null or empty.</param>
         public void Refresh(object fact, string propertyName)
         {
-            // Remove existing activations for this fact from the Agenda
-            Retract(fact);
-            Assert(fact);
+            if (fact is not Token token) return;
+
+            bool alreadyActivated = _firedTokens.Any(existing => existing.Equals(token));
+            if (alreadyActivated)
+            {
+                if (!ActivationConditionsPass(token)) Retract(token);
+                return;
+            }
+
+            Assert(token);
+        }
+
+        /// <summary>
+        /// Detects whether the activation conditions for this terminal node pass for the given token.
+        /// This includes checking all global guards and late filters.
+        /// </summary>
+        /// <param name="match">The token to evaluate against the activation conditions.</param>
+        /// <returns>True if all activation conditions pass; otherwise, false.</returns>
+        private bool ActivationConditionsPass(Token match)
+        {
+            if (!_globalGuards.All(guard => guard())) return false;
+
+            return _lateFilters.All(filter =>
+            {
+                var factToCheck = match.Get<object>(filter.Alias);
+                return factToCheck != null && filter.Predicate(factToCheck);
+            });
         }
 
         /// <summary>

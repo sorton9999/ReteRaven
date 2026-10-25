@@ -163,45 +163,26 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Handles incoming partial matches from the Left (Beta side) by evaluating them against the 
-        /// current facts in the right memory. For each token asserted from the left, the node checks 
-        /// how many facts in the right memory match it according to the join constraint. The count of 
-        /// matching facts is stored in the leftMatches dictionary. If at least one match exists 
-        /// (count > 0), the token is immediately propagated to successor nodes. This ensures that only 
-        /// tokens that satisfy the "exists" condition are allowed to propagate, while those that do not 
-        /// have any matching facts on the right are effectively blocked and not sent downstream.
+        /// Recounts a left token's current matches and propagates only when its existence state changes.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
         public void AssertLeft(Token token)
         {
-            int count = 0;
-            foreach (var fact in rightMemory)
-            {
-                if (joinConstraint(token, fact)) count++;
-            }
-
+            bool wasSatisfied = leftMatches.TryGetValue(token, out int oldCount) && oldCount > 0;
+            int count = CountMatches(token);
             leftMatches[token] = count;
 
-            // If at least one match exists, propagate immediately
-            if (count > 0)
-            {
-                PropagateAssert(token);
-            }
+            if (count > 0 && !wasSatisfied) PropagateAssert(token);
+            else if (count == 0 && wasSatisfied) PropagateRetract(token);
         }
 
         /// <summary>
-        /// Handles incoming single facts from the Right (Alpha side) by adding them to the right memory
-        /// and checking if they match any currently active left tokens. For each fact asserted from the 
-        /// right, the node iterates through all tokens in the leftMatches dictionary and evaluates the 
-        /// join constraint against the new fact. If a match is found, the count for that token is 
-        /// incremented. If this is the first matching fact for that token (count changes from 0 to 1), 
-        /// the token is propagated to successor nodes. This ensures that when a new fact is added that 
-        /// satisfies the "exists" condition for any token, those tokens are activated and sent 
-        /// downstream, while tokens that do not have any matching facts remain blocked.
+        /// Adds a right fact once and propagates tokens whose match count changes from zero to nonzero.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void AssertRight(object fact)
         {
+            if (rightMemory.Any(existing => ReferenceEquals(existing, fact))) return;
             rightMemory.Add(fact);
 
             // Check if this new fact "kills" any currently active left tokens
@@ -280,35 +261,15 @@ namespace ReteCore
         /// <param name="fact">The fact this operation is acting upon.</param>
         public void RetractRight(object fact)
         {
-            rightMemory.Remove(fact);
+            int index = rightMemory.FindIndex(existing => ReferenceEquals(existing, fact));
+            if (index < 0) return;
+            rightMemory.RemoveAt(index);
 
-            // Check if removing this fact "resurrects" any left tokens
-            foreach (var token in new List<Token>(leftMatches.Keys))
-            {
-                if (joinConstraint(token, fact))
-                {
-                    int oldCount = leftMatches[token];
-                    leftMatches[token] = oldCount - 1;
-
-                    // Only retract when the LAST matching fact is removed
-                    if (oldCount == 1)
-                    {
-                        PropagateRetract(token);
-                    }
-                }
-            }
+            foreach (var token in leftMatches.Keys.ToList()) ReconcileLeft(token);
         }
 
         /// <summary>
-        /// Forces a downstream node to sync with this node's current valid tokens. This is used when a 
-        /// new successor node is added, or when an existing successor node needs to be refreshed due 
-        /// to changes in the network. The method takes either a Token or a fact and a property name 
-        /// (for fact refreshes) and determines which type of refresh to perform. For token refreshes, 
-        /// it checks if the token is currently blocked or not and propagates an assert if it is valid. 
-        /// For fact refreshes, it checks all tokens against the refreshed fact and updates their counts 
-        /// accordingly, propagating asserts or retracts as needed based on the new state of matches. 
-        /// This method ensures that successor nodes are always in sync with the current state of this 
-        /// ExistsNode, allowing for correct propagation of tokens based on the latest information.
+        /// Reconciles either a refreshed left token or right fact against current existence counts.
         /// </summary>
         /// <param name="factOrToken">The fact or token this operation is acting upon.</param>
         /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
@@ -316,7 +277,7 @@ namespace ReteCore
         {
             if (factOrToken is Token token)
             {
-                RefreshLeft(token);
+                RefreshLeft(token, propertyName);
             }
             else
             {
@@ -325,52 +286,47 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Refreshes a token from the left side by checking if it is currently blocked or not and 
-        /// propagating an assert if it is valid. This method is used when a new successor node is added
-        /// or when an existing successor node needs to be refreshed due to changes in the network. If 
-        /// the token is not currently in the leftMatches dictionary, it means it has not been processed
-        /// yet, so we call AssertLeft to evaluate it against the current right memory and update its 
-        /// state accordingly. This ensures that any new or updated tokens are properly evaluated and 
-        /// propagated to successor nodes based on their current validity.
+        /// Reconciles a left token and forwards a refresh only while its Exists condition remains satisfied.
         /// </summary>
         /// <param name="token">The token this operation is acting upon.</param>
-        public void RefreshLeft(Token token)
+        public void RefreshLeft(Token token, string propertyName = "")
         {
             if (!leftMatches.ContainsKey(token))
             {
                 AssertLeft(token);
+                return;
+            }
+            int oldCount = leftMatches[token];
+            ReconcileLeft(token);
+            if (oldCount > 0 && leftMatches[token] > 0)
+            {
+                foreach (var successor in _successors) successor.Refresh(token, propertyName);
             }
         }
 
         /// <summary>
-        /// Refreshes a fact from the right side by checking all tokens against the refreshed fact and 
-        /// updating their counts accordingly. This method is used when a new successor node is added 
-        /// or when an existing successor node needs to be refreshed due to changes in the network. For 
-        /// each token in the leftMatches dictionary, if the refreshed fact matches the token according 
-        /// to the join constraint, we check if it was previously blocked (count == 0) and if so, we 
-        /// increment the count and propagate an assert to successor nodes. If it was previously active 
-        /// (count > 0), we simply update the count without propagating since it is already valid. This 
-        /// ensures that any changes to facts on the right side are properly reflected in the state of 
-        /// tokens and that successor nodes are kept up-to-date with the current valid tokens based on 
-        /// the latest information.
+        /// Recomputes each left token's count from right memory so repeated right refreshes cannot drift state.
         /// </summary>
         /// <param name="fact">The fact this operation is acting upon.</param>
         /// <param name="propertyName">The name of the property in the fact cell that is being updated.</param>
         public void RefreshRight(object fact, string propertyName)
         {
-            foreach (var entry in leftMatches)
-            {
-                if (joinConstraint(entry.Key, fact))
-                {
-                    // This is a bit brute-force, but it ensures correctness
-                    int oldCount = entry.Value;
-                    leftMatches[entry.Key] = oldCount + 1;
-                    if (oldCount == 0)
-                    {
-                        PropagateAssert(entry.Key);
-                    }
-                }
-            }
+            if (!rightMemory.Any(existing => ReferenceEquals(existing, fact))) return;
+            foreach (var token in leftMatches.Keys.ToList()) ReconcileLeft(token);
+        }
+
+        /// <summary>Counts the right-memory facts that currently match a left token.</summary>
+        private int CountMatches(Token token) => rightMemory.Count(fact => joinConstraint(token, fact));
+
+        /// <summary>Stores a recomputed count and propagates only a zero/nonzero transition.</summary>
+        private void ReconcileLeft(Token token)
+        {
+            int oldCount = leftMatches[token];
+            int newCount = CountMatches(token);
+            leftMatches[token] = newCount;
+
+            if (oldCount == 0 && newCount > 0) PropagateAssert(token);
+            else if (oldCount > 0 && newCount == 0) PropagateRetract(token);
         }
 
         /// <summary>
