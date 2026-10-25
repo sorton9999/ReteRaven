@@ -47,6 +47,11 @@ namespace ReteCore
         /// </summary>
         private readonly Func<Token, object, bool> _condition;
         /// <summary>
+        /// The list of join matches that have been found by this node. Each JoinMatch represents a successful 
+        /// combination of a token from the left input and a fact from the right input that satisfy the join condition.
+        /// </summary>
+        private readonly List<JoinMatch> _matches = new();
+        /// <summary>
         /// The list of successor nodes that will receive new tokens when a successful join occurs. Each 
         /// successor is an IReteNode that will be affected by operations performed on this JoinNode. 
         /// The collection is initialized as an empty list and can be modified by adding new successor nodes.
@@ -108,44 +113,55 @@ namespace ReteCore
         /// If the condition is satisfied for any combination of token and fact, a new token is created that combines the left 
         /// token and the right fact, and this new token is propagated to all successor nodes. This method ensures that the 
         /// JoinNode correctly evaluates the join condition and maintains the flow of tokens through the Rete network as new 
-        /// facts are introduced. It also handles the case where the left input is a BetaMemory or a CompositeBetaMemory, 
-        /// allowing for proper integration with the rest of the network.
+        /// facts are introduced.
         /// </summary>
         /// <param name="fact">The fact object to be asserted and passed to successor nodes. Cannot be null.</param>
         public void Assert(object fact)
         {
             if (fact is Token leftToken)
             {
-                foreach (var rightFact in _rightInput.Facts)
+                if (_rightInput == null) return;
+                foreach (var rightFact in _rightInput.Facts.ToList())
                 {
-                    EvaluateAndPropagate(leftToken, _nextName, rightFact);
+                    ReconcileMatch(leftToken, rightFact);
                 }
             }
             else
             {
-                foreach (var token in ((ILatentMemory)_leftInput).Tokens)
+                if (_leftInput is not ILatentMemory leftMemory) return;
+                foreach (var token in leftMemory.Tokens.ToList())
                 {
-                    EvaluateAndPropagate(token, _nextName, fact);
+                    ReconcileMatch(token, fact);
                 }
             }
         }
 
         /// <summary>
-        /// The Retract method for left activations is responsible for handling the retraction of tokens that arrive from the left 
-        /// input. When a token is retracted, any matches that were previously established based on that token must be invalidated 
-        /// and retracted from successor nodes. This method iterates through all successor nodes and calls their Retract method with 
-        /// the specified token, ensuring that any tokens that were created as a result of the join condition involving the retracted 
-        /// token are also retracted from the network. This helps maintain the integrity of the Rete network as facts change over time.
+        /// Removes all recorded pairs containing the retracted input and retracts their derived tokens downstream.
         /// </summary>
         /// <param name="fact">The fact object to retract. Cannot be null.</param>
-        public void Retract(object fact) => _successors.ForEach(s => s.Retract(fact));
+        public void Retract(object fact)
+        {
+            // Identify all matches that involve the retracted fact or token.
+            // Depending on whether the retracted input is a Token or a fact,
+            // we filter the matches accordingly.
+            var matchesToRemove = fact is Token token
+                ? _matches.Where(match => ReferenceEquals(match.Left, token)).ToList()
+                : _matches.Where(match => ReferenceEquals(match.Right, fact)).ToList();
+
+            foreach (var match in matchesToRemove)
+            {
+                _matches.Remove(match);
+                foreach (var successor in _successors)
+                {
+                    successor.Retract(match.Output);
+                }
+            }
+        }
 
         /// <summary>
-        /// The Refresh method is responsible for re-evaluating existing tokens or facts when a relevant change occurs. If a token or 
-        /// fact that is part of the join condition changes, this method will be called to ensure that all matches are re-evaluated and 
-        /// updated accordingly. For example, if a fact that was previously joined with a token changes, the Refresh method will 
-        /// re-evaluate the join condition for all tokens that were joined with that fact and propagate any necessary updates to 
-        /// successor nodes. This helps maintain the accuracy and consistency of the Rete network as facts and tokens evolve over time.
+        /// Re-evaluates affected pairs, retracting stale outputs and refreshing outputs whose match remains valid. This method ensures that the internal state
+        /// of the node remains consistent after a match has been refreshed.
         /// </summary>
         /// <param name="factOrToken">The fact from the right side or Token from the left to update.</param>
         /// <param name="propertyName">The name of the property being updated</param>
@@ -154,17 +170,17 @@ namespace ReteCore
             if (factOrToken is Token token)
             {
                 if (_rightInput == null) { return; }
-                foreach (var rightFact in _rightInput.Facts)
+                foreach (var rightFact in _rightInput.Facts.ToList())
                 {
-                    this.EvaluateAndPropagate(token, propertyName, rightFact);
+                    ReconcileMatch(token, rightFact, propertyName);
                 }
             }
             else
             {
-                if (_leftInput == null) { return; }
-                foreach (var leftToken in ((ILatentMemory)_leftInput).Tokens)
+                if (_leftInput is not ILatentMemory leftMemory) { return; }
+                foreach (var leftToken in leftMemory.Tokens.ToList())
                 {
-                    this.EvaluateAndPropagate(leftToken, propertyName, factOrToken);
+                    ReconcileMatch(leftToken, factOrToken, propertyName);
                 }
             }
         }
@@ -172,10 +188,7 @@ namespace ReteCore
         /// <summary>
         /// Removes a successor node from this JoinNode. This method is used when a successor node is no longer needed or when the 
         /// structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, 
-        /// retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, 
-        /// ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network 
-        /// as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of 
-        /// the system.
+        /// retracted, or refreshed through this node.
         /// </summary>
         /// <param name="successor">The successor node to remove. Cannot be null.</param>
         public void RemoveSuccessor(IReteNode successor)
@@ -184,21 +197,51 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The EvaluateAndPropagate method is a helper function that evaluates the join condition for a given token and fact, and if 
-        /// the condition is satisfied, it creates a new token that combines the left token and the right fact, and propagates this new 
-        /// token to all successor nodes.
+        /// Reconciles one pair and propagates only new, removed, or refreshed join outputs. This method ensures that the internal state
+        /// of the node remains consistent after a match has been evaluated.
         /// </summary>
         /// <param name="left">The left side token</param>
-        /// <param name="newName">The name associated with the update. A new Token is created with this name if the stored condition is met.</param>
         /// <param name="right">The right side fact object</param>
-        private void EvaluateAndPropagate(Token left, string newName, object right)
+        private void ReconcileMatch(Token left, object right, string? propertyName = null)
         {
-            if (_condition(left, right))
+            var existingMatch = _matches.FirstOrDefault(match =>
+                ReferenceEquals(match.Left, left) && ReferenceEquals(match.Right, right));
+            bool isMatch = _condition(left, right);
+
+            if (isMatch && existingMatch == null)
             {
-                var newToken = new Token(left, newName, right);
-                foreach (var s in _successors) { s.Assert(newToken); }
+                var output = new Token(left, _nextName, right);
+                _matches.Add(new JoinMatch(left, right, output));
+                foreach (var successor in _successors)
+                {
+                    successor.Assert(output);
+                }
+            }
+            else if (!isMatch && existingMatch != null)
+            {
+                _matches.Remove(existingMatch);
+                foreach (var successor in _successors)
+                {
+                    successor.Retract(existingMatch.Output);
+                }
+            }
+            else if (isMatch && existingMatch != null && propertyName != null)
+            {
+                foreach (var successor in _successors)
+                {
+                    successor.Refresh(existingMatch.Output, propertyName);
+                }
             }
         }
+
+        /// <summary>
+        /// The JoinMatch record represents a successful combination of a token from the left input and a fact from the right
+        /// input that satisfy the join condition.
+        /// </summary>
+        /// <param name="Left">The token from the left input.</param>
+        /// <param name="Right">The fact from the right input.</param>
+        /// <param name="Output">The resulting token that represents the join of the left and right inputs.</param>
+        private sealed record JoinMatch(Token Left, object Right, Token Output);
 
         /// <summary>
         /// The DebugPrint method is a utility function that outputs the current state of the JoinNode for debugging purposes. It prints the 

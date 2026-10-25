@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ReteCore
@@ -45,8 +47,20 @@ namespace ReteCore
         /// times, ensuring that once an activation has been executed, it will not be triggered again based on the same set of 
         /// facts.
         /// </summary>
-        private readonly List<string> _firedActivationsRegistry = new();
-
+        private readonly HashSet<string> _firedActivationsRegistry = new();
+        /// <summary>
+        /// This is a list that allows the agenda to generate stable keys for activations that involve reference types, ensuring
+        /// that even if the same object instance is used in multiple activations, it can be uniquely identified and tracked. The
+        /// table automatically cleans up entries when the associated objects are no longer referenced elsewhere, preventing memory
+        /// leaks.
+        /// </summary>
+        private readonly ConditionalWeakTable<object, ActivationIdentity> _objectIdentities = new();
+        /// <summary>
+        /// Holds the next unique identity value to assign to an object when generating activation keys. This counter is incremented
+        /// each time a new reference type is encountered, ensuring that each object can be uniquely identified in the activation key
+        /// generation process.
+        /// </summary>
+        private long _nextObjectIdentity;
         /// <summary>
         /// An accessor for the list of pending activations in the agenda. This property returns a read-only enumerable collection 
         /// of Activation objects.
@@ -97,6 +111,16 @@ namespace ReteCore
                 Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
             }
             return removedCount;
+        }
+
+        /// <summary>
+        /// Allows a rule match to activate again after it has left the network and later re-entered.
+        /// </summary>
+        /// <param name="ruleName">The rule associated with the match.</param>
+        /// <param name="match">The match whose fired marker should be cleared.</param>
+        public void ForgetActivation(string ruleName, Token match)
+        {
+            _firedActivationsRegistry.Remove(GenerateActivationKey(ruleName, match));
         }
 
         /// <summary>
@@ -189,9 +213,7 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Generates a unique key for an activation based on its rule name and the facts involved in the activation. 
-        /// Activations are saved , so this key is used to track which activations have already been fired, preventing 
-        /// duplicates from executing multiple times.
+        /// Generates a stable key from the rule and match fact identities for activation deduplication.
         /// </summary>
         /// <param name="activation">The activation for which to generate a key.</param>
         /// <returns>A unique key representing the activation.</returns>
@@ -203,30 +225,61 @@ namespace ReteCore
             // - If the fact is an enumerable, join its element representations.
             // - Otherwise fall back to the fact's ToString() (or "null").
             
-            string FormatValue(object? v)
+            return GenerateActivationKey(activation.RuleName, activation.Match);
+        }
+
+        /// <summary>
+        /// Builds a deduplication key using stable identities for reference-type facts. 
+        /// </summary>
+        /// <param name="ruleName">The name of the rule.</param>
+        /// <param name="match">The token containing named facts.</param>
+        /// <returns>A unique key representing the activation.</returns>
+        private string GenerateActivationKey(string ruleName, Token match)
+        {
+            string FormatValue(object? value)
             {
-                if (v == null) return "null";
-                if (v is Fact c) return c.Id.ToString();
-                if (v is Token t) return t.ToString();
-                if (v is System.Collections.IEnumerable ie && !(v is string))
+                if (value == null) return "null";
+                if (value is Token token)
+                {
+                    return FormatNamedFacts(token.NamedFacts);
+                }
+                if (value is IFact fact)
+                {
+                    return $"{value.GetType().FullName}#fact:{fact.Id}";
+                }
+                if (value is System.Collections.IEnumerable enumerable && value is not string)
                 {
                     var parts = new List<string>();
-                    foreach (var item in ie)
-                    {
-                        parts.Add(FormatValue(item));
-                    }
+                    foreach (var item in enumerable) parts.Add(FormatValue(item));
                     return $"[{string.Join(";", parts)}]";
                 }
-                return v.ToString() ?? "null";
+                if (value is string || value.GetType().IsValueType)
+                {
+                    string formatted = value is IFormattable formattable
+                        ? formattable.ToString(null, CultureInfo.InvariantCulture) ?? string.Empty
+                        : value.ToString() ?? string.Empty;
+                    return $"{value.GetType().FullName}:{formatted}";
+                }
+
+                var identity = _objectIdentities.GetValue(value,
+                    _ => new ActivationIdentity(Interlocked.Increment(ref _nextObjectIdentity)));
+                return $"{value.GetType().FullName}#ref:{identity.Value}";
             }
 
-            var identityParts = activation.Match.NamedFacts
-                .Select(kv => FormatValue(kv.Value))
-                .OrderBy(id => id);
+            string FormatNamedFacts(IEnumerable<KeyValuePair<string, object>> namedFacts) => string.Join(",",
+                namedFacts.OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => $"{pair.Key}={FormatValue(pair.Value)}"));
 
-            string factIdentity = string.Join(", ", identityParts);
-
-            return $"{activation.RuleName}_{factIdentity}";
+            return $"{ruleName}_{FormatNamedFacts(match.NamedFacts)}";
         }
+
+        /// <summary>
+        /// The ActivationIdentity record is used to assign a unique identity to reference-type objects for the purpose
+        /// of generating stable activation keys. Each time a new reference type is encountered, it is assigned a unique
+        /// long value that can be used to identify it in the activation key generation process. This ensures that even
+        /// if the same object instance is used in multiple activations, it can be uniquely identified and tracked.
+        /// </summary>
+        /// <param name="Value">The value of the unique identity.</param>
+        private sealed record ActivationIdentity(long Value);
     }
 }

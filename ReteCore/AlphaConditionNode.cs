@@ -38,6 +38,10 @@ namespace ReteCore
         /// Rete network.
         /// </summary>
         private readonly IReteNode _successor;
+        /// <summary>
+        /// This HashSet is used to keep track of facts that have already matched the condition defined by the predicate.
+        /// </summary>
+        private readonly HashSet<object> _matchedFacts = new(ReferenceEqualityComparer.Instance);
 
         /// <summary>
         /// This constructor initializes a new instance of the AlphaConditionNode class with the specified property 
@@ -92,63 +96,64 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Assert a fact into the AlphaConditionNode. The node checks if the fact is of type T and if it satisfies the predicate. 
-        /// If both conditions are met, the fact is passed to the successor node. This method is called when a new fact is 
-        /// introduced into the Rete network or when an existing fact is updated and needs to be re-evaluated.
+        /// Asserts a fact only when it passes the predicate and is not already tracked as a match.
         /// </summary>
         /// <param name="fact">The fact object to be asserted and passed to successor nodes. Cannot be null.</param>
         public void Assert(object fact)
         {
-            if (fact is T typedFact && _predicate(typedFact))
+            if (fact is T typedFact && _predicate(typedFact) && _matchedFacts.Add(fact))
             {
                 _successor.Assert(typedFact);
             }
         }
 
         /// <summary>
-        /// Retract a fact from the AlphaConditionNode. Similar to Assert, it checks if the fact is of type T and satisfies the 
-        /// predicate. If it does, it tells the successor node to retract this fact. This method is called when a fact is 
-        /// removed from the Rete network or when an existing fact is updated and no longer satisfies the condition, 
-        /// necessitating its removal from downstream nodes.
+        /// Retracts a fact from the successor only if this node previously tracked it as a match.
         /// </summary>
         /// <param name="fact">The fact object to retract. Cannot be null.</param>
         public void Retract(object fact)
         {
-            if (fact is T typedFact)
+            if (fact is T typedFact && _matchedFacts.Remove(fact))
             {
                 _successor.Retract(typedFact);
             }
         }
 
         /// <summary>
-        /// Refresh a fact in the AlphaConditionNode. This method is called when a property of a fact changes, and it allows 
-        /// the node to re-evaluate the condition for that fact. If the changed property matches TargetProperty 
-        /// (or if TargetProperty is null/empty), the node will first retract the old fact from the successor and then assert 
-        /// the updated fact, ensuring that downstream nodes have the correct state based on the new information.
+        /// Re-evaluates the predicate and propagates only a match transition; unchanged matches are refreshed downstream.
         /// </summary>
         /// <param name="fact">The fact object whose property is being refreshed. Cannot be null.</param>
         /// <param name="changedProperty">The name of the property to refresh. Cannot be null or empty.</param>
         public void Refresh(object fact, string changedProperty)
         {
-            // Only re-run the filter if the changed property matches
-            // or is unknown
-            if (string.IsNullOrEmpty(changedProperty) || changedProperty == TargetProperty)
+            // Until conditions expose explicit property dependencies, conservatively re-evaluate
+            // every change. TargetProperty is a diagnostic label, not a dependency declaration.
+            if (fact is T typedFact)
             {
-                // Remove the old state to avoid duplicates
-                _successor.Retract(fact);
-                // Check new state
-                this.Assert(fact);
+                bool wasMatch = _matchedFacts.Contains(fact);
+                bool isMatch = _predicate(typedFact);
+
+                if (wasMatch && !isMatch)
+                {
+                    _matchedFacts.Remove(fact);
+                    _successor.Retract(fact);
+                }
+                else if (!wasMatch && isMatch)
+                {
+                    _matchedFacts.Add(fact);
+                    _successor.Assert(typedFact);
+                }
+                else if (wasMatch)
+                {
+                    _successor.Refresh(fact, changedProperty);
+                }
             }
         }
 
         /// <summary>
-        /// Removes a successor node from this AlphaConditionNode. Since this implementation assumes a single successor set at 
-        /// construction, this method does not actually remove the successor but is provided for completeness. If you want to 
-        /// support dynamic changes to the successor, you would need to modify this class to allow for multiple successors and 
-        /// implement the logic to remove the specified child node from the collection of successors. In its current form, this 
-        /// method simply prints a message indicating that it is not implemented, as the design of this node does not accommodate 
-        /// multiple successors or dynamic changes to the successor. This is a placeholder for potential future enhancements to 
-        /// the class to support more complex network structures.
+        /// Not implemented. This node does not support dynamic removal of successors. If you need to support
+        /// this functionality, you should implement it in a subclass or modify this class to handle multiple
+        /// successors.
         /// </summary>
         /// <param name="successor">The successor node to remove. Cannot be null.</param>
         public void RemoveSuccessor(IReteNode successor)

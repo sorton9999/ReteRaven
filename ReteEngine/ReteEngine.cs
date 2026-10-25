@@ -25,7 +25,7 @@ namespace ReteEngine
     /// rules. The ReteEngine serves as the main interface for interacting with the Rete-based rule engine, enabling users to define rules,
     /// manage facts, and execute the inference process effectively.
     /// </summary>
-    public class ReteEngine
+    public class ReteEngine : IDisposable
     {
         /// <summary>
         /// The root node of the Rete network. This node serves as the entry point for all facts asserted into the network. It is responsible 
@@ -53,6 +53,11 @@ namespace ReteEngine
         /// </summary>
         private readonly List<object> _workingMemory = new();
         /// <summary>
+        /// Retains property-change handlers so they can be detached when facts leave working memory or when the engine is disposed.
+        /// </summary>
+        private readonly Dictionary<object, (INotifyPropertyChanged Observable, PropertyChangedEventHandler Handler)> _propertyChangedHandlers =
+            new(ReferenceEqualityComparer.Instance);
+        /// <summary>
         /// The list of terminal nodes in the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations 
         /// when their conditions are met. These activations are then managed by the agenda, which determines the order of rule execution based on salience.
         /// Terminal nodes are stored in this list to allow for easy management and potential removal of rules from the network.
@@ -74,6 +79,10 @@ namespace ReteEngine
         /// Default is true (sharing enabled).
         /// </summary>
         private bool _enableBetaNodeSharing = true;
+        /// <summary>
+        /// A private flag to track whether the ReteEngine has been disposed.
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>
         /// The accessor for the root node of the Rete network. This property allows external code to access the root node, which serves as the entry point 
@@ -145,10 +154,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Adds a fact to the working memory and asserts it into the Rete network. If the fact is not already present in the working memory, it is added 
-        /// to the list. The PropertyChanged event is subscribed to if the fact implements INotifyPropertyChanged, allowing the engine to automatically 
-        /// refresh the fact in the network when its properties change. The fact is asserted into the root node of the Rete network to propagate it through 
-        /// the network and potentially trigger rule activations based on the conditions defined in the terminal nodes.
+        /// Adds a fact once, retains its property-change handler, and asserts it into the network.
         /// </summary>
         /// <param name="fact">The fact to assert into the Rete network.</param>
         private void Assert(object fact)
@@ -157,9 +163,17 @@ namespace ReteEngine
             if (!alreadyExists)
             {
                 _workingMemory.Add(fact);
-                if (fact is INotifyPropertyChanged observable)
+                if (!_disposed && fact is INotifyPropertyChanged observable)
                 {
-                    observable.PropertyChanged += (s, e) => { _root.Refresh(s, e.PropertyName); };
+                    PropertyChangedEventHandler handler = (sender, args) =>
+                    {
+                        if (sender != null)
+                        {
+                            _root.Refresh(sender, args.PropertyName ?? string.Empty);
+                        }
+                    };
+                    _propertyChangedHandlers[fact] = (observable, handler);
+                    observable.PropertyChanged += handler;
                 }
                 _root.Assert(fact);
             }
@@ -193,19 +207,37 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// A private method that removes a fact from the working memory and retracts it from the Rete network. If the fact is present in the working memory, 
-        /// it is removed from the list, and the fact is retracted from the root node of the Rete network to propagate the retraction through the network. 
-        /// This may trigger the removal of the fact from successor nodes and the cancellation of any pending activations that were triggered by that fact, 
-        /// ensuring that the Rete network remains consistent with the current state of knowledge. The Retract method is essential for maintaining the integrity 
-        /// of the Rete network as facts change over time, allowing it to correctly reflect the current state of knowledge and trigger or deactivate rules as needed.
+        /// Removes the exact fact instance, detaches its change handler, and retracts it from the network.
         /// </summary>
         /// <param name="fact">The fact to retract from the Rete network.</param>
         private void Retract(object fact)
         {
-            if (_workingMemory.Remove(fact))
+            int index = _workingMemory.FindIndex(item => ReferenceEquals(item, fact));
+            if (index >= 0)
             {
+                _workingMemory.RemoveAt(index);
+                if (_propertyChangedHandlers.Remove(fact, out var subscription))
+                {
+                    subscription.Observable.PropertyChanged -= subscription.Handler;
+                }
                 _root.Retract(fact);
             }
+        }
+
+        /// <summary>
+        /// Detaches all retained property-change handlers; repeated disposal is harmless.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            foreach (var subscription in _propertyChangedHandlers.Values)
+            {
+                subscription.Observable.PropertyChanged -= subscription.Handler;
+            }
+
+            _propertyChangedHandlers.Clear();
+            _disposed = true;
         }
 
         /// <summary>

@@ -119,15 +119,17 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The Refresh method is responsible for updating tokens in the BetaMemory when a fact changes. It identifies tokens that contain the 
-        /// changed fact and propagates the refresh to all successor nodes, allowing them to re-evaluate their conditions based on the updated 
-        /// information. This ensures that the Rete network remains consistent and up-to-date as facts evolve over time.
+        /// Refreshes tokens containing the changed fact, or the specified stored token, without retracting the match.
         /// </summary>
         /// <param name="fact">The fact object whose property is being refreshed. Cannot be null.</param>
         /// <param name="propertyName">The name of the property to refresh. Cannot be null or empty.</param>
         public void Refresh(object fact, string propertyName)
         {
-            var affectedTokens = Tokens.Where(t => t.NamedFacts.Values.Contains(fact)).ToList();
+            // Identify tokens that are affected by the refreshed fact. Find tokens that either directly match
+            // the updated token or contain the fact in their named facts.
+            var affectedTokens = fact is Token updatedToken
+                ? Tokens.Where(token => ReferenceEquals(token, updatedToken) || token.Equals(updatedToken)).ToList()
+                : Tokens.Where(token => token.NamedFacts.Values.Any(value => ReferenceEquals(value, fact))).ToList();
 
             foreach (var token in affectedTokens)
             {
