@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -169,6 +170,7 @@ namespace ReteEngine
                     {
                         if (sender != null)
                         {
+                            _agenda.AdvanceFactRevision(sender);
                             _root.Refresh(sender, args.PropertyName ?? string.Empty);
                         }
                     };
@@ -221,6 +223,7 @@ namespace ReteEngine
                     subscription.Observable.PropertyChanged -= subscription.Handler;
                 }
                 _root.Retract(fact);
+                _agenda.ReleaseFactRevision(fact);
             }
         }
 
@@ -259,33 +262,59 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// The pubic fact update method that updates facts as a batch Update.  The private working Update method is called for each fact in the array.
+        /// Updates each fact independently and returns this engine for fluent chaining.
+        /// A still-valid match may fire again once for a new fact revision; updates coalesce while its activation is pending.
         /// </summary>
-        /// <param name="facts"></param>
-        /// <returns></returns>
+        /// <remarks>A rule action may therefore run more than once during a fact's lifetime, once per fired revision.</remarks>
+        /// <param name="facts">Facts to update; null entries are ignored.</param>
+        /// <returns>The current engine.</returns>
         public ReteEngine Update(params object[] facts)
         {
+            if (facts == null) return this;
+
             foreach (var fact in facts)
             {
-                Update(fact);
+                UpdateFact(fact, null);
             }
             return this;
         }
 
         /// <summary>
-        /// A private method that updates a fact in the Rete network by first retracting it and then asserting it again. This method is useful when a fact 
-        /// has changed and needs to be re-evaluated against the conditions in the network. By retracting the fact, it is removed from the network, and by 
-        /// asserting it again, it is re-introduced and re-evaluated against all conditions, potentially triggering new activations based on the updated 
-        /// state of the fact. The Update method ensures that the network remains accurate and responsive to changes in facts over time, allowing it to 
-        /// correctly reflect the current state of knowledge and trigger or deactivate rules as needed.
+        /// Updates one fact, optionally providing the changed property name for dependency-aware reevaluation.
+        /// A still-valid match may fire again once for this new revision; repeated updates while pending keep one activation.
         /// </summary>
-        /// <param name="fact">The fact to update in the Rete network.</param>
-        private void Update(object fact)
+        /// <remarks>A rule action may run again for a still-valid tuple after this update, even when the fact identity is unchanged.</remarks>
+        /// <param name="fact">The fact to update; null is ignored.</param>
+        /// <param name="propertyName">The changed property name, if known.</param>
+        /// <returns>The current engine.</returns>
+        public ReteEngine Update(object fact, string? propertyName)
         {
-            // Remove the stale state
-            this.Retract(fact);
-            // Re-evaluate it against all conditions
-            this.Assert(fact);
+            UpdateFact(fact, propertyName);
+            return this;
+        }
+
+        /// <summary>
+        /// Update the fact in the network, asserting it if it is not already present. If the fact is already in working memory,
+        /// it will be refreshed with the provided property name (or an empty string if none is provided). If the fact is not in
+        /// working memory, it will be asserted into the network. This method ensures that the Rete network remains up to date
+        /// with the latest information and can trigger rules based on changes to facts over time.
+        /// </summary>
+        /// <param name="fact">The fact to update; null is ignored.</param>
+        /// <param name="propertyName">The changed property name, if known.</param>
+        private void UpdateFact(object fact, string? propertyName)
+        {
+            if (fact == null) return;
+
+            bool isInWorkingMemory = _workingMemory.Any(existing => ReferenceEquals(existing, fact));
+            if (isInWorkingMemory)
+            {
+                _agenda.AdvanceFactRevision(fact);
+                _root.Refresh(fact, propertyName ?? string.Empty);
+            }
+            else
+            {
+                Assert(fact);
+            }
         }
 
         /// <summary>
@@ -422,10 +451,7 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// The TraceNode class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the 
-        /// network. It implements the IReteNode interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put 
-        /// into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the 
-        /// TraceNode for context.
+        /// A transparent tracing node that records active tokens, reports propagation events, and forwards them to successors.
         /// </summary>
         public class TraceNode : IReteNode, ILatentMemory
         {
@@ -434,7 +460,6 @@ namespace ReteEngine
             /// messages printed when facts are asserted, retracted, or refreshed through this node.
             /// </summary>
             private readonly string _label;
-
             /// <summary>
             /// Keeps track of successor nodes that will receive facts asserted, retracted, or refreshed through this TraceNode. Each successor is 
             /// an IReteNode that will be affected by operations performed on this node. The collection is initialized as an empty list and can be 
@@ -442,31 +467,33 @@ namespace ReteEngine
             /// which facts are propagated to them, but does not affect the logic of the network.
             /// </summary>
             private readonly List<IReteNode> _successors = new();
+            /// <summary>
+            /// Tracks the tokens currently passing through this transparent node.
+            /// </summary>
+            private readonly List<Token> _tokens = new();
+            /// <summary>
+            /// A TextWriter used for outputting trace information. This writer can be set when the TraceNode is created, allowing for flexibility in where
+            /// trace information is written. By default, it writes to the console.
+            /// </summary>
+            private readonly TextWriter _output;
 
             /// <summary>
-            /// A dummy token is used to satisfy the requirement of the ILatentMemory interface, which expects a collection of tokens. In this case, 
-            /// the TraceNode does not actually manage any tokens, so a single dummy token is created to fulfill this requirement. The token is 
-            /// initialized with a name ("Dummy Token") and a null value, indicating that it does not represent any meaningful state or fact in the 
-            /// network. This allows the TraceNode to implement the ILatentMemory interface without needing to manage actual tokens, while still 
-            /// providing the necessary structure for tracing and debugging the flow of facts through the network. The presence of this dummy token 
-            /// allows the TraceNode to be used in the Rete network for tracing purposes without affecting the logic of the network or the flow of 
-            /// facts.
+            /// Initializes a labeled trace checkpoint with an optional output writer.
             /// </summary>
-            private Token token = new Token("Dummy Token", null);
+            /// <param name="label">The label included in trace reports.</param>
+            /// <param name="output">Optional destination for reports; defaults to the current console writer.</param>
+            public TraceNode(string label, TextWriter? output = null)
+            {
+                _label = string.IsNullOrWhiteSpace(label)
+                    ? throw new ArgumentException("A trace label is required.", nameof(label))
+                    : label;
+                _output = output ?? Console.Out;
+            }
 
             /// <summary>
-            /// The constructor for the TraceNode class takes a label as a parameter, which is used to identify the node in debug output.
+            /// Returns the live token memory used by downstream joins.
             /// </summary>
-            /// <param name="label"></param>
-            public TraceNode(string label) => _label = label;
-
-            /// <summary>
-            /// This object keeps track of the current token state for this TraceNode. It is initialized with a dummy token and can be updated as 
-            /// facts are processed through the network. The token can be used to store information about the current state of the node, such as 
-            /// the fact being processed or any relevant metadata. This allows for more detailed tracing and debugging of the flow of facts through 
-            /// the network, as the token can provide context about what is happening at this node when a fact is asserted, retracted, or refreshed.
-            /// </summary>
-            public IEnumerable<Token> Tokens { get { return new List<Token>() { token }; } }
+            public IEnumerable<Token> Tokens => _tokens.AsReadOnly();
 
             /// <summary>
             /// Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives 
@@ -480,38 +507,117 @@ namespace ReteEngine
             public IReteNode? Parent { get; set; }
 
             /// <summary>
-            /// Adds a successor node to this TraceNode. This method is used to build the structure of the Rete network by connecting nodes together.
+            /// Connects a successor and seeds it with tokens already held by this trace node.
             /// </summary>
             /// <param name="node">The node to add as a successor</param>
-            public void AddSuccessor(IReteNode node) { node.Parent = this; _successors.Add(node); }
+            public void AddSuccessor(IReteNode node)
+            {
+                if (_successors.Contains(node)) return;
+                node.Parent = this;
+                _successors.Add(node);
+                foreach (var token in _tokens.ToList()) node.Assert(token);
+            }
 
             /// <summary>
-            /// Asserts a fact into the TraceNode and passes it downstream in the network. A message will print out indicating that the fact has 
-            /// been asserted along with the label of the TraceNode.
+            /// Initializes the trace node with a set of tokens, ensuring that each token is unique and forwarding them to successors.
+            /// </summary>
+            /// <param name="tokens">The set of tokens to initialize the trace node with.</param>
+            internal void InitializeTokens(IEnumerable<Token> tokens)
+            {
+                foreach (var token in tokens)
+                {
+                    if (_tokens.Any(existing => existing.Equals(token))) continue;
+                    _tokens.Add(token);
+                    WriteTrace("SNAPSHOT", token);
+                }
+            }
+
+            /// <summary>
+            /// Tracks and reports an assertion, then forwards a new token to successors once.
             /// </summary>
             /// <param name="fact">The fact to pass on through the network</param>
             public void Assert(object fact)
             {
-                Console.WriteLine($"[TRACE:{_label}] Fact Asserted: {fact}");
-                _successors.ForEach(s => s.Assert(fact));
+                bool isNewToken = true;
+                if (fact is Token token)
+                {
+                    int existingIndex = _tokens.FindIndex(existing => existing.Equals(token));
+                    if (existingIndex >= 0)
+                    {
+                        _tokens[existingIndex] = token;
+                        isNewToken = false;
+                    }
+                    else
+                    {
+                        _tokens.Add(token);
+                    }
+                }
+
+                WriteTrace("ASSERT", fact);
+                if (isNewToken)
+                {
+                    foreach (var successor in _successors.ToList()) successor.Assert(fact);
+                }
             }
 
             /// <summary>
-            /// Retracts a fact from the TraceNode, which may trigger the removal of the fact from successor nodes.
+            /// Removes and forwards the retracted token, or tokens containing a retracted fact.
             /// </summary>
             /// <param name="fact">The fact to retract</param>
             public void Retract(object fact)
             {
-                Console.WriteLine($"[TRACE:{_label}] Fact Retracted: {fact}");
-                _successors.ForEach(s => s.Retract(fact));
+                WriteTrace("RETRACT", fact);
+                if (fact is Token token)
+                {
+                    _tokens.RemoveAll(existing => existing.Equals(token));
+                    foreach (var successor in _successors.ToList()) successor.Retract(token);
+                    return;
+                }
+
+                var affectedTokens = _tokens
+                    .Where(existing => existing.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)))
+                    .ToList();
+                foreach (var affectedToken in affectedTokens)
+                {
+                    _tokens.Remove(affectedToken);
+                    foreach (var successor in _successors.ToList()) successor.Retract(affectedToken);
+                }
+                if (affectedTokens.Count == 0)
+                {
+                    foreach (var successor in _successors.ToList()) successor.Retract(fact);
+                }
             }
 
             /// <summary>
-            /// Refreshes a fact in the TraceNode, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary.
+            /// Reports a refresh and forwards it with the property name to affected successors.
             /// </summary>
             /// <param name="fact">The fact to refresh</param>
             /// <param name="prop">The property of the fact that has changed</param>
-            public void Refresh(object fact, string prop) => _successors.ForEach(s => s.Refresh(fact, prop));
+            public void Refresh(object fact, string propertyName)
+            {
+                WriteTrace("REFRESH", fact, propertyName);
+                if (fact is Token token)
+                {
+                    int tokenIndex = _tokens.FindIndex(existing => existing.Equals(token));
+                    if (tokenIndex >= 0) _tokens[tokenIndex] = token;
+                    foreach (var successor in _successors.ToList()) successor.Refresh(token, propertyName);
+                    return;
+                }
+
+                var affectedTokens = _tokens
+                    .Where(existing => existing.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)))
+                    .ToList();
+                if (affectedTokens.Count == 0)
+                {
+                    foreach (var successor in _successors.ToList()) successor.Refresh(fact, propertyName);
+                    return;
+                }
+
+                foreach (var affectedToken in affectedTokens)
+                {
+                    foreach (var successor in _successors.ToList()) successor.Refresh(affectedToken, propertyName);
+                }
+            }
 
             /// <summary>
             /// Removes a successor node from this RootNode. This method is used when a successor node is no longer needed or when the 
@@ -525,11 +631,11 @@ namespace ReteEngine
             public void RemoveSuccessor(IReteNode successor)
             {
                 _successors.Remove(successor);
+                if (ReferenceEquals(successor.Parent, this)) successor.Parent = null;
             }
 
             /// <summary>
-            /// Writes a formatted debug message to the console that includes the specified fact and the current number of
-            /// successors.
+            /// Reports the current token memory and recursively prints downstream node diagnostics.
             /// </summary>
             /// <param name="fact">The fact object to include in the debug output. Can be any object; its string representation will be
             /// printed.</param>
@@ -538,7 +644,49 @@ namespace ReteEngine
             public void DebugPrint(object fact, int level = 0)
             {
                 string indent = new string(' ', level * 2);
-                Console.WriteLine($"{indent}[TraceNode:{_label} -- {fact}");
+                _output.WriteLine($"{indent}[TraceNode:{_label}] {_tokens.Count} active token(s)");
+                foreach (var token in _tokens)
+                {
+                    _output.WriteLine($"{indent}  {FormatTraceValue(token)}");
+                }
+                foreach (var successor in _successors)
+                {
+                    successor.DebugPrint(fact, level + 1);
+                }
+            }
+
+            /// <summary>
+            /// Outputs a trace message to the configured output, including the operation type, fact information, and optional property name.
+            /// </summary>
+            /// <param name="operation">The type of operation being traced (e.g., "ASSERT", "RETRACT").</param>
+            /// <param name="fact">The fact object involved in the operation.</param>
+            /// <param name="propertyName">An optional property name associated with the fact.</param>
+            private void WriteTrace(string operation, object fact, string? propertyName = null)
+            {
+                string propertySuffix = propertyName == null ? string.Empty : $" Property='{propertyName}'";
+                _output.WriteLine($"[TRACE:{_label}] {operation}{propertySuffix}: {FormatTraceValue(fact)}");
+            }
+
+            /// <summary>
+            /// Formats a fact or token for trace output. This method generates a string representation of the provided value, which can be a fact,\
+            /// token, or any other object.
+            /// </summary>
+            /// <param name="value">The value to format for trace output.</param>
+            /// <returns>A string representation of the value suitable for trace output.</returns>
+            private static string FormatTraceValue(object? value)
+            {
+                if (value == null) return "null";
+                if (value is Token token)
+                {
+                    var namedFacts = token.NamedFacts.OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                        .Select(pair => $"{pair.Key}={FormatTraceValue(pair.Value)}");
+                    return $"Token({string.Join(", ", namedFacts)})";
+                }
+                if (value is IFact fact)
+                {
+                    return $"{value.GetType().Name}#{fact.Id}:{fact.UnderlyingObject}";
+                }
+                return $"{value.GetType().Name}:{value}";
             }
         }
 

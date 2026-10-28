@@ -78,15 +78,11 @@ namespace ReteCore
             _leftInput = left;
             _rightInput = right;
             _condition = cond;
-            if (_leftInput is BetaMemory beta)
+            if (_leftInput != null && !_leftInput.Successors.Contains(this))
             {
-                beta.AddSuccessor(this);
+                _leftInput.AddSuccessor(this);
             }
-            else if (_leftInput is CompositeBetaMemory composite)
-            {
-                composite.AddSuccessor(this);
-            }
-            right?.AddSuccessor(this);
+            if (right != null && !right.Successors.Contains(this)) right.AddSuccessor(this);
         }
 
         /// <summary>
