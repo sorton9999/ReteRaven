@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using ReteCore;
 using ReteEngine;
+using ReteProgram;
 using Xunit;
 
 namespace ReteTest.Tests;
@@ -57,6 +58,78 @@ public class UpdatePreparationTests
         rightMemory.Refresh(right, nameof(MutableFact.Value));
         Assert.Equal(2, capture.Assertions.Count);
         Assert.Single(capture.ActiveTokens);
+        Assert.Single(capture.Refreshes);
+
+        right.Name = "refreshed-right";
+        rightMemory.Refresh(right, nameof(MutableFact.Name));
+        var refreshedOutput = Assert.IsType<Token>(capture.Refreshes.Last().Fact);
+        Assert.Equal("refreshed-right", refreshedOutput.Get<MutableFact>("right").Name);
+    }
+
+    [Fact]
+    public void Join_RefreshReconcilesChangesFromTheLeftInput()
+    {
+        var leftMemory = new BetaMemory();
+        var rightMemory = new AlphaMemory();
+        var capture = new RecordingNode();
+        var join = new JoinNode(leftMemory, rightMemory, "right",
+            (token, right) => token.Get<MutableFact>("left").Value == ((MutableFact)right).Value);
+        join.AddSuccessor(capture);
+
+        var left = new MutableFact { Value = 3 };
+        var right = new MutableFact { Value = 3 };
+        leftMemory.Assert(new Token("left", left));
+        rightMemory.Assert(right);
+        Assert.Single(capture.Assertions);
+
+        left.Value = 4;
+        leftMemory.Refresh(left, nameof(MutableFact.Value));
+        Assert.Single(capture.Retractions);
+        Assert.Empty(capture.ActiveTokens);
+
+        left.Value = 3;
+        leftMemory.Refresh(left, nameof(MutableFact.Value));
+        leftMemory.Refresh(left, nameof(MutableFact.Name));
+        Assert.Equal(2, capture.Assertions.Count);
+        Assert.Single(capture.ActiveTokens);
+        Assert.Single(capture.Refreshes);
+        var refreshedOutput = Assert.IsType<Token>(capture.Refreshes[0].Fact);
+        Assert.Equal(3, refreshedOutput.Get<MutableFact>("left").Value);
+    }
+
+    [Fact]
+    public void JoinMatchTransitionsCancelAndRecreatePendingActivationsForEitherInput()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var fireCount = 0;
+        engine.Begin("ProductInventory")
+            .Where<Product>("product", _ => true)
+            .And<Inventory>("inventory", (token, inventory) =>
+                inventory.ProductId == token.Get<Product>("product").ProductId)
+            .Then(_ => fireCount++);
+
+        var product = new Product { ProductId = 10 };
+        var inventory = new Inventory { ProductId = 10 };
+        engine.Assert(product, inventory);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        inventory.ProductId = 11;
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(0, fireCount);
+
+        inventory.ProductId = 10;
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        product.ProductId = 11;
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(0, fireCount);
+
+        product.ProductId = 10;
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(1, fireCount);
     }
 
     [Fact]
@@ -95,6 +168,44 @@ public class UpdatePreparationTests
         Assert.Empty(existsCapture.Retractions);
         firstBlocker.Value = 4;
         existsNode.Refresh(firstBlocker, nameof(MutableFact.Value));
+        Assert.Single(existsCapture.Retractions);
+    }
+
+    [Fact]
+    public void NotAndExists_ReconcileTransitionsWhenTheLeftFactChanges()
+    {
+        var left = new MutableFact { Value = 1 };
+        var token = new Token("left", left);
+        var right = new MutableFact { Value = 2 };
+
+        var notNode = new NotNode("not-left-change", (match, fact) =>
+            match.Get<MutableFact>("left").Value == ((MutableFact)fact).Value);
+        var notCapture = new RecordingNode();
+        notNode.AddSuccessor(notCapture);
+        notNode.Assert(token);
+        notNode.Assert(right);
+        Assert.Single(notCapture.Assertions);
+
+        left.Value = 2;
+        notNode.Refresh(token, nameof(MutableFact.Value));
+        Assert.Single(notCapture.Retractions);
+        left.Value = 1;
+        notNode.Refresh(token, nameof(MutableFact.Value));
+        Assert.Equal(2, notCapture.Assertions.Count);
+
+        var existsNode = new ExistsNode("exists-left-change", (match, fact) =>
+            match.Get<MutableFact>("left").Value == ((MutableFact)fact).Value);
+        var existsCapture = new RecordingNode();
+        existsNode.AddSuccessor(existsCapture);
+        existsNode.Assert(token);
+        existsNode.Assert(right);
+        Assert.Empty(existsCapture.Assertions);
+
+        left.Value = 2;
+        existsNode.Refresh(token, nameof(MutableFact.Value));
+        Assert.Single(existsCapture.Assertions);
+        left.Value = 1;
+        existsNode.Refresh(token, nameof(MutableFact.Value));
         Assert.Single(existsCapture.Retractions);
     }
 
@@ -236,6 +347,148 @@ public class UpdatePreparationTests
     }
 
     [Fact]
+    public void PropertyChangedPassesPropertyNameAndMaintainsOneHandlerPerWorkingMemoryFact()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var observer = new RecordingNode();
+        engine.Root.AddSuccessor(observer);
+        var fact = new ObservableFact { IsActive = true };
+        engine.Assert(fact);
+
+        fact.Name = "first-change";
+        Assert.Single(observer.Refreshes);
+        Assert.Same(fact, observer.Refreshes[0].Fact);
+        Assert.Equal(nameof(ObservableFact.Name), observer.Refreshes[0].PropertyName);
+
+        engine.Update(fact, nameof(ObservableFact.Name));
+        Assert.Equal(2, observer.Refreshes.Count);
+        Assert.Equal(nameof(ObservableFact.Name), observer.Refreshes[1].PropertyName);
+
+        engine.Retract(fact);
+        fact.Name = "after-retract";
+        Assert.Equal(2, observer.Refreshes.Count);
+
+        engine.Assert(fact);
+        fact.Name = "after-reassert";
+        Assert.Equal(3, observer.Refreshes.Count);
+    }
+
+    [Fact]
+    public void Update_ExistingFactRefreshesInPlaceWithoutAddingAnotherSubscription()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var evaluations = 0;
+        engine.Begin("InPlaceUpdate")
+            .Where<ObservableFact>("fact", fact =>
+            {
+                evaluations++;
+                return fact.IsActive;
+            })
+            .Then(_ => { });
+
+        var fact = new ObservableFact { IsActive = true };
+        engine.Assert(fact);
+        Assert.Same(engine, engine.Update(fact, "UnspecifiedDependency"));
+        Assert.Equal(2, evaluations);
+
+        fact.IsActive = false;
+        Assert.Equal(3, evaluations);
+    }
+
+    [Fact]
+    public void Update_ProductCategoryReconcilesMatchesWithoutDuplicateFactsOrSubscriptions()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var categoryEvaluations = 0;
+
+        engine.Begin("AllProducts")
+            .Where<Product>("all-products", _ => true)
+            .Then(_ => { });
+        engine.Begin("HardwareProducts")
+            .Where<Product>("hardware-products", product =>
+            {
+                categoryEvaluations++;
+                return product.Category == "Hardware";
+            })
+            .Then(_ => { });
+
+        var allProducts = engine.GetAlphaMemory<Product>("all-products");
+        var hardwareProducts = engine.GetAlphaMemory<Product>("hardware-products");
+        var product = new Product { Category = "Hardware" };
+        engine.Assert(product);
+
+        Assert.Single(allProducts.Facts);
+        Assert.Single(hardwareProducts.Facts);
+        Assert.Equal(1, categoryEvaluations);
+
+        product.Category = "Books";
+        Assert.Empty(hardwareProducts.Facts);
+        Assert.Equal(2, categoryEvaluations);
+
+        engine.Update(product);
+        engine.Update(product);
+        Assert.Single(allProducts.Facts);
+        Assert.Empty(hardwareProducts.Facts);
+        Assert.Equal(4, categoryEvaluations);
+
+        product.Category = "Hardware";
+        Assert.Single(allProducts.Facts);
+        Assert.Single(hardwareProducts.Facts);
+        Assert.Equal(5, categoryEvaluations);
+
+        product.Category = "Books";
+        Assert.Single(allProducts.Facts);
+        Assert.Empty(hardwareProducts.Facts);
+        Assert.Equal(6, categoryEvaluations);
+    }
+
+    [Fact]
+    public void Update_UnknownFactAssertsItAndNullFactsAreNoOps()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var evaluations = 0;
+        engine.Begin("UnknownUpdate")
+            .Where<ObservableFact>("fact", fact =>
+            {
+                evaluations++;
+                return fact.IsActive;
+            })
+            .Then(_ => { });
+
+        var fact = new ObservableFact { IsActive = true };
+        Assert.Same(engine, engine.Update(fact, nameof(ObservableFact.IsActive)));
+        Assert.Equal(1, evaluations);
+
+        fact.IsActive = false;
+        Assert.Equal(2, evaluations);
+
+        Assert.Same(engine, engine.Update((object)null!));
+        Assert.Same(engine, engine.Update((object[]?)null!));
+        Assert.Equal(2, evaluations);
+    }
+
+    [Fact]
+    public void Update_BatchProcessesEachFactAndReturnsTheEngine()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var fireCount = 0;
+        engine.Begin("BatchUpdate")
+            .Where<MutableFact>("fact", fact => fact.Value > 0)
+            .Then(_ => fireCount++);
+
+        var first = new MutableFact { Value = 1 };
+        var second = new MutableFact { Value = 2 };
+        engine.Assert(first, second);
+        first.Value = 0;
+        second.Value = 0;
+
+        Assert.Same(engine, engine.Update(first, second));
+        engine.FireAll();
+
+        Assert.Equal(0, fireCount);
+    }
+
+    [Fact]
     public void UpdatingMatchAcrossFalseAndTrueTransitionsCancelsThenReactivatesRule()
     {
         var engine = new ReteEngine.ReteEngine();
@@ -281,14 +534,64 @@ public class UpdatePreparationTests
         Assert.Equal(1, fireCount);
     }
 
+    [Fact]
+    public void UpdatingAFiredStillValidMatchSchedulesOneActivationForTheLatestRevision()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var observedValues = new List<int>();
+        engine.Begin("RevisionActivation")
+            .Where<MutableFact>("fact", fact => fact.Value > 0)
+            .Then(token => observedValues.Add(token.Get<MutableFact>("fact").Value));
+
+        var fact = new MutableFact { Value = 1 };
+        engine.Assert(fact);
+        engine.FireAll();
+        Assert.Equal(new[] { 1 }, observedValues);
+
+        fact.Value = 2;
+        engine.Update(fact);
+        fact.Value = 3;
+        engine.Update(fact);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        engine.FireAll();
+        Assert.Equal(new[] { 1, 3 }, observedValues);
+
+        fact.Value = 4;
+        engine.Update(fact);
+        engine.FireAll();
+        Assert.Equal(new[] { 1, 3, 4 }, observedValues);
+    }
+
+    [Fact]
+    public void PropertyChangeOnAFiredStillValidMatchCreatesANewRevisionActivation()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var fireCount = 0;
+        engine.Begin("NotifiedRevision")
+            .Where<ObservableFact>("fact", fact => fact.IsActive)
+            .Then(_ => fireCount++);
+
+        var fact = new ObservableFact { IsActive = true };
+        engine.Assert(fact);
+        engine.FireAll();
+        Assert.Equal(1, fireCount);
+
+        fact.Name = "revision-2";
+        engine.FireAll();
+        Assert.Equal(2, fireCount);
+    }
+
     private sealed class MutableFact
     {
         public int Value { get; set; }
+        public string? Name { get; set; }
     }
 
     private sealed class ObservableFact : INotifyPropertyChanged
     {
         private bool _isActive;
+        private string? _name;
 
         public bool IsActive
         {
@@ -298,6 +601,17 @@ public class UpdatePreparationTests
                 if (_isActive == value) return;
                 _isActive = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsActive)));
+            }
+        }
+
+        public string? Name
+        {
+            get => _name;
+            set
+            {
+                if (_name == value) return;
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
             }
         }
 
@@ -311,6 +625,7 @@ public class UpdatePreparationTests
         public List<Token> Assertions { get; } = new();
         public List<Token> Retractions { get; } = new();
         public List<Token> ActiveTokens { get; } = new();
+        public List<(object Fact, string PropertyName)> Refreshes { get; } = new();
 
         public void Assert(object fact)
         {
@@ -326,7 +641,7 @@ public class UpdatePreparationTests
             ActiveTokens.RemoveAll(active => active.Equals(token));
         }
 
-        public void Refresh(object fact, string propertyName) { }
+        public void Refresh(object fact, string propertyName) => Refreshes.Add((fact, propertyName));
         public void AddSuccessor(IReteNode node) { }
         public void RemoveSuccessor(IReteNode node) { }
         public void DebugPrint(object fact, int level = 0) { }

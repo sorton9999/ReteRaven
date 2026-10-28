@@ -66,12 +66,6 @@ namespace ReteCore
         /// </summary>
         private readonly List<LateFilter> _lateFilters;
         /// <summary>
-        /// A list of tokens that have already triggered activations from this terminal node. This is used to prevent duplicate activations for the 
-        /// same token, ensuring that each unique combination of facts only results in one activation being added to the agenda. When a token is retracted, 
-        /// it is removed from this list, allowing for new activations if the same facts are asserted again in the future.
-        /// </summary>
-        private readonly List<Token> _firedTokens = new();
-        /// <summary>
         /// The metadata for the rule associated with this terminal node. This includes the rule name, action, agenda, global guards, late filters, priority, 
         /// and salience.
         /// </summary>
@@ -119,41 +113,15 @@ namespace ReteCore
         public void AddSuccessor(IReteNode node) { node.Parent = this; Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
 
         /// <summary>
-        /// Asserts a fact into the rule engine, creating an activation if the fact has not already been processed.  Two other
-        /// checks are performed before adding the activation to the agenda:  First, any global guard conditions are evaluated.
-        /// If any global guard returns false, the activation is not loaded.  Second, any late filters are evaulated.  If any
-        /// late filter returns false, the activation is not loaded.  If both checks pass and the fact has not previously
-        /// triggered, a new activation is created and added to the agenda.  If the specified fact is a Token that has not 
-        /// previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the
-        /// same Token are ignored.        
-        /// /// </summary>
+        /// Adds an eligible activation; the agenda deduplicates pending tuples and applies conditional firing rules. Checks for activation
+        /// conditions, including global guards and late filters are made, before adding an activation to the agenda.
+        /// </summary>
         /// <param name="fact">The fact to assert. Must be a non-null object of type Token to be considered for activation.</param>
         public void Assert(object fact)
         {
-            if (fact is Token finalMatch)
+            if (fact is Token finalMatch && ActivationConditionsPass(finalMatch))
             {
-                // Check if this Token has already been triggered.  If not, continue with checks
-                // before adding the activation.
-                if (!_firedTokens.Any(token => token.Equals(finalMatch)))
-                {
-                    // Check any global state guards first (if any)
-                    if (!_globalGuards.All(guard => guard())) return;
-
-                    // Check the late filters before adding the activation to the agenda
-                    bool lateFiltersPass = _lateFilters.All(filter =>
-                    {
-                        var factToCheck = finalMatch.Get<object>(filter.Alias);
-                        if (factToCheck == null) return false;
-                        return filter.Predicate(factToCheck);
-                    });
-                    // All checks pass. Add the activation to the Agenda and mark as triggered.
-                    if (lateFiltersPass)
-                    {
-                        _agenda.Add(new Activation(_ruleName, _action, finalMatch, _priority, _salience));
-                        Console.WriteLine($"[ASSERT] Activation for rule '{_ruleName}' added to agenda.");
-                        _firedTokens.Add(finalMatch);
-                    }
-                }
+                _agenda.Add(new Activation(_ruleName, _action, finalMatch, _priority, _salience));
             }
         }
 
@@ -169,7 +137,6 @@ namespace ReteCore
                 {
                     _ruleMetadata.Agenda.CancelActivationsByFact(domainFact);
                 }
-                _firedTokens.RemoveAll(firedToken => firedToken.Equals(token));
                 _ruleMetadata.Agenda.ForgetActivation(_ruleName, token);
             }
             else
@@ -184,7 +151,7 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Keeps an eligible active activation stable on refresh, or reconciles it when terminal filters change.
+        /// Rechecks terminal filters and offers an eligible tuple to the agenda for the current fact revision.
         /// </summary>
         /// <param name="fact">The fact object to refresh in the working memory. Cannot be null.</param>
         /// <param name="propertyName">The name of the property on the fact that has changed. Cannot be null or empty.</param>
@@ -192,10 +159,9 @@ namespace ReteCore
         {
             if (fact is not Token token) return;
 
-            bool alreadyActivated = _firedTokens.Any(existing => existing.Equals(token));
-            if (alreadyActivated)
+            if (!ActivationConditionsPass(token))
             {
-                if (!ActivationConditionsPass(token)) Retract(token);
+                Retract(token);
                 return;
             }
 

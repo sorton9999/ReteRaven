@@ -42,12 +42,11 @@ namespace ReteCore
                     _activations.Any((a) => a.State == Activation.ActivationState.Pending); }
         }
         /// <summary>
-        /// Stores a registry of activations that have already been fired, using a unique key generated from the rule name and 
-        /// the facts involved in the activation. This registry is used to prevent duplicate activations from firing multiple 
-        /// times, ensuring that once an activation has been executed, it will not be triggered again based on the same set of 
-        /// facts.
+        /// Stores fired activation keys per fact revision, preventing repeats within one revision while permitting reactivation after updates.
         /// </summary>
         private readonly HashSet<string> _firedActivationsRegistry = new();
+        /// <summary>Tracks update revisions by fact instance for revision-aware activation refraction.</summary>
+        private readonly Dictionary<object, long> _factRevisions = new(ReferenceEqualityComparer.Instance);
         /// <summary>
         /// This is a list that allows the agenda to generate stable keys for activations that involve reference types, ensuring
         /// that even if the same object instance is used in multiple activations, it can be uniquely identified and tracked. The
@@ -68,13 +67,18 @@ namespace ReteCore
         public IEnumerable<Activation> Activations => _activations.AsReadOnly();
 
         /// <summary>
-        /// Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, 
-        /// creating an activation that represents the pending execution of that rule. The activation is added to the 
-        /// list of pending activations, which will be processed later during the firing phase.
+        /// Adds an activation unless the tuple is already pending or has fired at its current fact revision.
         /// </summary>
         /// <param name="activation">The Activation object to add to the list of activations.</param>
         public void Add(Activation activation)
         {
+            string tupleKey = GenerateTupleKey(activation.RuleName, activation.Match);
+            if (_activations.Any(existing => existing.State == Activation.ActivationState.Pending &&
+                GenerateTupleKey(existing.RuleName, existing.Match) == tupleKey))
+            {
+                return;
+            }
+
             string keyFacts = GenerateActivationKey(activation);
             if (_firedActivationsRegistry.Contains(keyFacts))
             {
@@ -114,13 +118,42 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Allows a rule match to activate again after it has left the network and later re-entered.
+        /// Clears fired-revision markers when a match leaves the network so a later match can activate again.
         /// </summary>
         /// <param name="ruleName">The rule associated with the match.</param>
         /// <param name="match">The match whose fired marker should be cleared.</param>
         public void ForgetActivation(string ruleName, Token match)
         {
-            _firedActivationsRegistry.Remove(GenerateActivationKey(ruleName, match));
+            string keyPrefix = $"{GenerateTupleKey(ruleName, match)}|revision:";
+            _firedActivationsRegistry.RemoveWhere(key => key.StartsWith(keyPrefix, StringComparison.Ordinal));
+        }
+
+        /// <summary>
+        /// Advances the revision used to distinguish activations after a fact update. This method is called when a fact
+        /// is updated in the working memory, indicating that any previous activations associated with the old state of
+        /// the fact should be considered outdated. By incrementing the revision number for the fact, it ensures that
+        /// future activations will be treated as new and can be fired again, even if they were previously executed with
+        /// an older revision of the fact.
+        /// </summary>
+        /// <param name="fact">The fact whose revision should be advanced.</param>
+        public void AdvanceFactRevision(object fact)
+        {
+            if (fact == null) return;
+            _factRevisions.TryGetValue(fact, out long currentRevision);
+            _factRevisions[fact] = currentRevision + 1;
+        }
+
+        /// <summary>
+        /// Releases revision state after a fact leaves working memory. This method is called when a fact is retracted from
+        /// the working memory, indicating that any revision tracking associated with that fact is no longer needed. By
+        /// removing the fact from the revision tracking dictionary, it ensures that future activations will not be
+        /// influenced by any previous revisions of the fact, allowing for a clean slate if the fact is later reintroduced
+        /// or replaced.
+        /// </summary>
+        /// <param name="fact">The fact whose revision state should be released.</param>
+        public void ReleaseFactRevision(object fact)
+        {
+            if (fact != null) _factRevisions.Remove(fact);
         }
 
         /// <summary>
@@ -213,7 +246,7 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Generates a stable key from the rule and match fact identities for activation deduplication.
+        /// Generates a key from rule, match identity, and the current revisions of its facts.
         /// </summary>
         /// <param name="activation">The activation for which to generate a key.</param>
         /// <returns>A unique key representing the activation.</returns>
@@ -235,6 +268,20 @@ namespace ReteCore
         /// <param name="match">The token containing named facts.</param>
         /// <returns>A unique key representing the activation.</returns>
         private string GenerateActivationKey(string ruleName, Token match)
+        {
+            string revisionParts = string.Join(",", match.NamedFacts
+                .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                .Select(pair => $"{pair.Key}={GetRevisionKey(pair.Value)}"));
+            return $"{GenerateTupleKey(ruleName, match)}|revision:{revisionParts}";
+        }
+
+        /// <summary>
+        /// Generates a stable tuple key for an activation based on the rule name and the named facts in the match token.
+        /// </summary>
+        /// <param name="ruleName">The name of the rule.</param>
+        /// <param name="match">The token containing named facts.</param>
+        /// <returns>A unique key representing the activation.</returns>
+        private string GenerateTupleKey(string ruleName, Token match)
         {
             string FormatValue(object? value)
             {
@@ -271,6 +318,33 @@ namespace ReteCore
                     .Select(pair => $"{pair.Key}={FormatValue(pair.Value)}"));
 
             return $"{ruleName}_{FormatNamedFacts(match.NamedFacts)}";
+        }
+
+        /// <summary>
+        /// Gets a stable revision key for a given value, which can be a fact, token, enumerable, or reference type.
+        /// This key is used to track the revision state of facts in the agenda, ensuring that activations are only
+        /// fired for the current revision of each fact. For reference types, a unique identity is generated and
+        /// stored in a ConditionalWeakTable to maintain stability across activations.
+        /// </summary>
+        /// <param name="value">The value for which to get the revision key.</param>
+        /// <returns>A stable revision key representing the current revision of the value.</returns>
+        private string GetRevisionKey(object? value)
+        {
+            if (value == null || value is string || value.GetType().IsValueType) return "0";
+            if (value is Token token)
+            {
+                return string.Join(",", token.NamedFacts
+                    .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => $"{pair.Key}={GetRevisionKey(pair.Value)}"));
+            }
+            if (value is System.Collections.IEnumerable enumerable)
+            {
+                return $"[{string.Join(";", enumerable.Cast<object?>().Select(GetRevisionKey))}]";
+            }
+
+            return _factRevisions.TryGetValue(value, out long revision)
+                ? revision.ToString(CultureInfo.InvariantCulture)
+                : "0";
         }
 
         /// <summary>

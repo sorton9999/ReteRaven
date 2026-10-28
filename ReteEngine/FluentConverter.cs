@@ -9,6 +9,7 @@
 using ReteCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -41,6 +42,7 @@ namespace ReteEngine
 
         IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
             [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
+        IEvaluationBuilder Trace(string label, TextWriter? output = null);
         IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition);
         IEvaluationBuilder Group<T>(string name);
         IEvaluationBuilder StartWith<T>(AlphaMemory alpha, string factName);
@@ -81,6 +83,7 @@ namespace ReteEngine
     /// </summary>
     public interface IEvaluationBuilder
     {
+        IEvaluationBuilder Trace(string label, TextWriter? output = null);
         IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
             [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
         IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition);
@@ -277,6 +280,16 @@ namespace ReteEngine
         public IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null ,[CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null)
         {
             _builder.Where(name, debugLabel, initialCondition);
+            return this;
+        }
+
+        /// <summary>Adds a labeled pass-through trace checkpoint after the current rule condition.</summary>
+        /// <param name="label">The trace label.</param>
+        /// <param name="output">Optional writer for trace and node-state output.</param>
+        /// <returns>This builder for continued rule construction.</returns>
+        public IEvaluationBuilder Trace(string label, TextWriter? output = null)
+        {
+            _builder.Trace(label, output);
             return this;
         }
 

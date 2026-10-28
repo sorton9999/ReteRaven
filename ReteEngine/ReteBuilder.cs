@@ -9,6 +9,7 @@
 using ReteCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -347,13 +348,9 @@ namespace ReteEngine
             else
             {
                 join = new JoinNode(_lastNode, alpha, tokenName, (token, fact) => wrapCondition(token, (T)fact));
-                if (_lastNode is BetaMemory beta)
+                if (_lastNode != null && !_lastNode.Successors.Contains(join))
                 {
-                    beta.AddSuccessor(join);
-                }
-                else if (_lastNode is CompositeBetaMemory compositeBeta)
-                {
-                    compositeBeta.AddSuccessor(join);
+                    _lastNode.AddSuccessor(join);
                 }
 
                 betaMemory = new BetaMemory();
@@ -420,8 +417,10 @@ namespace ReteEngine
                     }
                     return false;
                 });
-                if (branchStartNode is BetaMemory beta) { beta.AddSuccessor(joinNode); }
-                else if (branchStartNode is CompositeBetaMemory comp) { comp.AddSuccessor(joinNode); }
+                if (branchStartNode != null && !branchStartNode.Successors.Contains(joinNode))
+                {
+                    branchStartNode.AddSuccessor(joinNode);
+                }
 
                 betaMemory = new BetaMemory();
                 joinNode.AddSuccessor(betaMemory);
@@ -475,13 +474,9 @@ namespace ReteEngine
             else
             {
                 join = new JoinNode(_lastNode, alpha, name, (token, fact) => wrapCondition(token, (T)fact));
-                if (_lastNode is BetaMemory beta)
+                if (_lastNode != null && !_lastNode.Successors.Contains(join))
                 {
-                    beta.AddSuccessor(join);
-                }
-                else if (_lastNode is CompositeBetaMemory compositeBeta)
-                {
-                    compositeBeta.AddSuccessor(join);
+                    _lastNode.AddSuccessor(join);
                 }
                 betaMemory = new BetaMemory();
                 join.AddSuccessor(betaMemory);
@@ -765,33 +760,31 @@ namespace ReteEngine
 
             // Add and tie in
             _engine.AddTerminalNode(terminal);
-            if (_lastNode is BetaMemory beta)
+            if (_lastNode != null && !_lastNode.Successors.Contains(terminal))
             {
-                beta.AddSuccessor(terminal);
-            }
-            else if (_lastNode is CompositeBetaMemory compositeBeta)
-            {
-                compositeBeta.AddSuccessor(terminal);
+                _lastNode.AddSuccessor(terminal);
             }
             return this;
         }
 
         /// <summary>
-        /// Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule
-        /// evaluation at this point.
+        /// Adds a transparent trace checkpoint after the current rule condition.
         /// </summary>
-        /// <remarks>Use trace nodes to monitor or debug the flow of facts through the rule network.
-        /// Tracing can help diagnose rule behavior or performance issues by providing labeled checkpoints in the
-        /// evaluation process.</remarks>
+        /// <remarks>The checkpoint preserves token memory for subsequent joins and reports assertions, retractions, and refreshes.</remarks>
         /// <param name="label">The label to associate with the trace node. Used to identify the trace point during rule evaluation.</param>
+        /// <param name="output">Optional writer for trace and debug reports.</param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
-        public ReteBuilder<TInitial> Trace(string label)
+        public ReteBuilder<TInitial> Trace(string label, TextWriter? output = null)
         {
-            var tracer = new ReteEngine.TraceNode(label);
-            if (_lastNode is BetaMemory beta)
+            if (_lastNode == null)
             {
-                beta.AddSuccessor(tracer);
+                throw new InvalidOperationException("Trace must be added after a rule condition has established an input node.");
             }
+
+            var previousNode = _lastNode;
+            var tracer = new ReteEngine.TraceNode(label, output);
+            if (!previousNode.Successors.Contains(tracer)) previousNode.AddSuccessor(tracer);
+            if (previousNode is ILatentMemory memory) tracer.InitializeTokens(memory.Tokens);
             _lastNode = tracer;
             return this;
         }
