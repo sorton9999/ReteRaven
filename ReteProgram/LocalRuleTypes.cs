@@ -144,6 +144,11 @@ namespace ReteProgram
         private int _productId;
         private string _location;
         private int _count;
+        
+        public bool InStock
+        {
+            get { return _quantity > 0; }
+        }
         public int Quantity
         {
             get { return _quantity; }

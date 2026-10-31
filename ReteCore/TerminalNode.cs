@@ -133,18 +133,13 @@ namespace ReteCore
         {
             if (fact is Token token)
             {
-                foreach (var domainFact in token.NamedFacts.Values)
+                if (_agenda.RemoveByRuleAndMatch(_ruleName, token) > 0)
                 {
-                    _ruleMetadata.Agenda.CancelActivationsByFact(domainFact);
+                    Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
                 }
                 _ruleMetadata.Agenda.ForgetActivation(_ruleName, token);
             }
-            else
-            {
-                _ruleMetadata.Agenda.CancelActivationsByFact(fact);
-            }
-            // Find and remove any activations in the agenda that contain this fact
-            if (_agenda.RemoveByFact(fact) > 0)
+            else if (_agenda.RemoveByRuleAndFact(_ruleName, fact) > 0)
             {
                 Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
             }

@@ -118,6 +118,47 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Removes pending activations for the specified rule and match.
+        /// </summary>
+        /// <param name="ruleName">The rule whose activation should be removed.</param>
+        /// <param name="match">The match that was retracted.</param>
+        /// <returns>The number of activations removed from the agenda.</returns>
+        public int RemoveByRuleAndMatch(string ruleName, Token match)
+        {
+            string tupleKey = GenerateTupleKey(ruleName, match);
+            int removedCount = _activations.RemoveAll(activation =>
+                activation.State == Activation.ActivationState.Pending &&
+                activation.RuleName == ruleName &&
+                GenerateTupleKey(activation.RuleName, activation.Match) == tupleKey);
+
+            if (removedCount > 0)
+            {
+                Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations for rule '{ruleName}'.");
+            }
+            return removedCount;
+        }
+
+        /// <summary>
+        /// Removes pending activations for the specified rule that contain the specified fact instance.
+        /// </summary>
+        /// <param name="ruleName">The rule whose activations should be removed.</param>
+        /// <param name="fact">The fact instance associated with the activations.</param>
+        /// <returns>The number of activations removed from the agenda.</returns>
+        public int RemoveByRuleAndFact(string ruleName, object fact)
+        {
+            int removedCount = _activations.RemoveAll(activation =>
+                activation.State == Activation.ActivationState.Pending &&
+                activation.RuleName == ruleName &&
+                activation.Match.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)));
+
+            if (removedCount > 0)
+            {
+                Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations for rule '{ruleName}'.");
+            }
+            return removedCount;
+        }
+
+        /// <summary>
         /// Clears fired-revision markers when a match leaves the network so a later match can activate again.
         /// </summary>
         /// <param name="ruleName">The rule associated with the match.</param>

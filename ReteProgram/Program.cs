@@ -854,3 +854,32 @@ engineJ.FireAll();
 // Discount should have been retracted, so count should not increase
 Console.WriteLine($"After updating the order count, expected one discount activation for order count {orderJ.Count}, but got {discountActiveCount}.");
 
+var engineK = new ReteEngine.ReteEngine();
+engineK.Begin("InStock")
+    .First()
+    .Where<Inventory>("I", i => i.Quantity > 0)
+    .Then(t => {
+        var inv = t.Get<Inventory>("I");
+        Console.WriteLine($"Inventory {inv.ProductId} is in stock with quantity {inv.Quantity}.");
+        inv.WarehouseLocation = "Updated Location"; // Update a property to test auto-refresh
+    });
+engineK.Begin("TrackInStock")
+    .Where<Inventory>("I", i => i.InStock)
+    .Then(t => {
+        var inv = t.Get<Inventory>("I");
+        Console.WriteLine($"Tracking in-stock inventory {inv.ProductId} at location {inv.WarehouseLocation}.");
+    });
+engineK.Begin("TrackOutOfStock")
+    .Where<Inventory>("J", i => !i.InStock)
+    .Then(t => {
+        var inv = t.Get<Inventory>("J");
+        Console.WriteLine($"Tracking out-of-stock inventory {inv.ProductId}.");
+    });
+
+var inventoryK1 = new Inventory { Id = Guid.NewGuid(), ProductId = 200, Quantity = 0, WarehouseLocation = "" };
+var inventoryK2 = new Inventory { Id = Guid.NewGuid(), ProductId = 201, Quantity = 0, WarehouseLocation = "" };
+engineK.Assert(inventoryK1, inventoryK2);
+engineK.FireAll();
+inventoryK1.Quantity = 10; // This should trigger the "InStock" rule and update the location
+engineK.FireAll();
+
