@@ -22,7 +22,7 @@ var searchData=
   ['compositebetamemory_2ecs_19',['CompositeBetaMemory.cs',['../_composite_beta_memory_8cs.html',1,'']]],
   ['configure_20the_20engine_20',['Configure the Engine',['../index.html#autotoc_md7',1,'2. Configure the Engine'],['../md__r_e_a_d_m_e.html#autotoc_md24',1,'2. Configure the Engine']]],
   ['connectnodeifneeded_21',['ConnectNodeIfNeeded',['../class_rete_core_1_1_beta_node_registry.html#aa54584c05060ed68901608a9c2b10f32',1,'ReteCore::BetaNodeRegistry']]],
-  ['count_22',['Count',['../class_rete_program_1_1_inventory.html#a2dc297ea7df2deca2b9930591fd7e515',1,'ReteProgram::Inventory']]],
+  ['count_22',['Count',['../class_rete_program_1_1_inventory.html#a2dc297ea7df2deca2b9930591fd7e515',1,'ReteProgram.Inventory.Count'],['../_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12',1,'Count:&#160;Program.cs']]],
   ['count_3c_20t_20_3e_23',['Count&lt; T &gt;',['../interface_rete_engine_1_1_i_aggregation_builder.html#a79c21c0908e1806b9450a9866350e2c8',1,'ReteEngine.IAggregationBuilder.Count&lt; T &gt;()'],['../class_rete_engine_1_1_fluent_converter-1-g.html#ab183bb2ca4c49c866e4a59bd0acc1513',1,'ReteEngine.FluentConverter-1-g.Count&lt; T &gt;()'],['../interface_rete_engine_1_1_i_group_builder-1-g.html#a9b64fbd89f5a5c0085f9a6be513c79c4',1,'ReteEngine.IGroupBuilder-1-g.Count&lt; T &gt;()']]],
   ['critcell_24',['critCell',['../_program_8cs.html#a0528847884ca8ced26da9da82947f5ee',1,'Program.cs']]],
   ['criticalcell_25',['CriticalCell',['../class_rete_program_1_1_critical_cell.html',1,'ReteProgram']]],

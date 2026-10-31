@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -116,7 +116,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aac78c091a14f0dac0af2428321f82138" id="r_aac78c091a14f0dac0af2428321f82138"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aac78c091a14f0dac0af2428321f82138">Retract</a> (object factOrToken)</td></tr>
 <tr class="memdesc:aac78c091a14f0dac0af2428321f82138"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Retract method removes tokens containing the specified fact from the <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> and notifies all successor nodes of the retraction. It identifies tokens that include the retracted fact and ensures that they are removed from the memory, allowing successor nodes to update their state accordingly. If a fact is provided directly, it will search for tokens that contain that fact and remove them.  <br /></td></tr>
 <tr class="memitem:a58a08aabeec0a86d1d5ad3f761274fde" id="r_a58a08aabeec0a86d1d5ad3f761274fde"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a58a08aabeec0a86d1d5ad3f761274fde">Refresh</a> (object fact, string propertyName)</td></tr>
-<tr class="memdesc:a58a08aabeec0a86d1d5ad3f761274fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Refresh method is responsible for updating tokens in the <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> when a fact changes. It identifies tokens that contain the changed fact and propagates the refresh to all successor nodes, allowing them to re-evaluate their conditions based on the updated information. This ensures that the Rete network remains consistent and up-to-date as facts evolve over time.  <br /></td></tr>
+<tr class="memdesc:a58a08aabeec0a86d1d5ad3f761274fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes tokens containing the changed fact, or the specified stored token, without retracting the match.  <br /></td></tr>
 <tr class="memitem:adb9d608f5e405cb51307bf986bbc2f0a" id="r_adb9d608f5e405cb51307bf986bbc2f0a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adb9d608f5e405cb51307bf986bbc2f0a">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
 <tr class="memdesc:adb9d608f5e405cb51307bf986bbc2f0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a child node from the list of successors. This method allows for dynamic modification of the Rete network by disconnecting nodes from the <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>. When a child node is removed, it will no longer receive tokens from this <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, effectively isolating it from the flow of information through the network. This method allows for dynamic modification of the network structure by removing connections between nodes as needed.  <br /></td></tr>
 <tr class="memitem:a767831479eb726c40a59f120cce0cee2" id="r_a767831479eb726c40a59f120cce0cee2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a767831479eb726c40a59f120cce0cee2">DebugPrint</a> (object fact, int level=0)</td></tr>
@@ -244,7 +244,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The Refresh method is responsible for updating tokens in the <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> when a fact changes. It identifies tokens that contain the changed fact and propagates the refresh to all successor nodes, allowing them to re-evaluate their conditions based on the updated information. This ensures that the Rete network remains consistent and up-to-date as facts evolve over time. </p>
+<p>Refreshes tokens containing the changed fact, or the specified stored token, without retracting the match. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object whose property is being refreshed. Cannot be null.</td></tr>

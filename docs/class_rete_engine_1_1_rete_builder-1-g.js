@@ -20,7 +20,7 @@ var class_rete_engine_1_1_rete_builder_1_g =
     [ "StartWith", "class_rete_engine_1_1_rete_builder-1-g.html#ab3a75a471153c28eebd45b16769ea111", null ],
     [ "Then", "class_rete_engine_1_1_rete_builder-1-g.html#a189b596a98d88d4f0e6c6f8e5dfad756", null ],
     [ "Then", "class_rete_engine_1_1_rete_builder-1-g.html#a90ae3342fee9a3df31a88b707ec2e627", null ],
-    [ "Trace", "class_rete_engine_1_1_rete_builder-1-g.html#ae3963d94678b6b291afb06f21d7e0342", null ],
-    [ "Where< T >", "class_rete_engine_1_1_rete_builder-1-g.html#a64132fa5a015e68973596c2bbce2d504", null ],
+    [ "Trace", "class_rete_engine_1_1_rete_builder-1-g.html#a32282ebe0df576e46a643a6f6084e348", null ],
+    [ "Where< T >", "class_rete_engine_1_1_rete_builder-1-g.html#a1b05a648e5ebbdf0ce9374b706ba5dda", null ],
     [ "RuleName", "class_rete_engine_1_1_rete_builder-1-g.html#a752cbe7669a40e4a7229de0f7e4106a9", null ]
 ];

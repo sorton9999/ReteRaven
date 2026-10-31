@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -134,6 +134,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad8be3b709f66eaf92547c9507e7d44e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Next that advances the rule ordering using a seed.  <br /></td></tr>
 <tr class="memitem:a5eca80cc2e3dcbbb91f37486bf31ae4d" id="r_a5eca80cc2e3dcbbb91f37486bf31ae4d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a5eca80cc2e3dcbbb91f37486bf31ae4d">Where&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; initialCondition=null, [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel=null)</td></tr>
 <tr class="memdesc:a5eca80cc2e3dcbbb91f37486bf31ae4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add an initial evaluation condition on a fact type.  <br /></td></tr>
+<tr class="memitem:ae5bffa3882077d91fbc28c2653cf809b" id="r_ae5bffa3882077d91fbc28c2653cf809b"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae5bffa3882077d91fbc28c2653cf809b">Trace</a> (string label, TextWriter? output=null)</td></tr>
+<tr class="memdesc:ae5bffa3882077d91fbc28c2653cf809b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a labeled pass-through trace checkpoint after the current rule condition.  <br /></td></tr>
 <tr class="memitem:ab9c2f1ea7457486e7a1d834b39c6ce61" id="r_ab9c2f1ea7457486e7a1d834b39c6ce61"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab9c2f1ea7457486e7a1d834b39c6ce61">Where&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
 <tr class="memdesc:ab9c2f1ea7457486e7a1d834b39c6ce61"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add a join condition on a fact type.  <br /></td></tr>
 <tr class="memitem:abcbe5b163a969113177d41c62a7bd0d7" id="r_abcbe5b163a969113177d41c62a7bd0d7"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#abcbe5b163a969113177d41c62a7bd0d7">Group&lt; T &gt;</a> (string name)</td></tr>
@@ -407,7 +409,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Count&lt; T &gt; </td>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.<a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a>&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span></td><td>)</td>
           <td></td>
@@ -1057,6 +1059,39 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a271de538e5846c5ebcf4d4380bf7afbf">ReteEngine.IEvaluationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="ae5bffa3882077d91fbc28c2653cf809b" name="ae5bffa3882077d91fbc28c2653cf809b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5bffa3882077d91fbc28c2653cf809b">&#9670;&#160;</a></span>Trace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Trace </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TextWriter?</td>          <td class="paramname"><span class="paramname"><em>output</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a labeled pass-through trace checkpoint after the current rule condition. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The trace label.</td></tr>
+    <tr><td class="paramname">output</td><td>Optional writer for trace and node-state output.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>This builder for continued rule construction.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#ad254c40e80ae2b8733e33280fa7644a7">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>

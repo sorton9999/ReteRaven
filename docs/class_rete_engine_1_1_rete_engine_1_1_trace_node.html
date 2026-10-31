@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -94,7 +94,7 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_engine_1_1_trace_node.html'
 </div><!--header-->
 <div class="contents">
 
-<p>The <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> for context.  
+<p>A transparent tracing node that records active tokens, reports propagation events, and forwards them to successors.  
  <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for ReteEngine.ReteEngine.TraceNode:</div>
@@ -109,35 +109,35 @@ Inheritance diagram for ReteEngine.ReteEngine.TraceNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5ceb7937f37cd8ccf647aa74d1cf576e" id="r_a5ceb7937f37cd8ccf647aa74d1cf576e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5ceb7937f37cd8ccf647aa74d1cf576e">TraceNode</a> (string label)</td></tr>
-<tr class="memdesc:a5ceb7937f37cd8ccf647aa74d1cf576e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor for the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class takes a label as a parameter, which is used to identify the node in debug output.  <br /></td></tr>
+<tr class="memitem:ae884aeb51e32f4f9f5d8e0294af4125e" id="r_ae884aeb51e32f4f9f5d8e0294af4125e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae884aeb51e32f4f9f5d8e0294af4125e">TraceNode</a> (string label, TextWriter? output=null)</td></tr>
+<tr class="memdesc:ae884aeb51e32f4f9f5d8e0294af4125e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a labeled trace checkpoint with an optional output writer.  <br /></td></tr>
 <tr class="memitem:ab06ef8d1bc8aa7fed7fe812bcac63795" id="r_ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab06ef8d1bc8aa7fed7fe812bcac63795">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
-<tr class="memdesc:ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a successor node to this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. This method is used to build the structure of the Rete network by connecting nodes together.  <br /></td></tr>
+<tr class="memdesc:ab06ef8d1bc8aa7fed7fe812bcac63795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects a successor and seeds it with tokens already held by this trace node.  <br /></td></tr>
 <tr class="memitem:a690f3fa8a839cd577b4bb40aab57478f" id="r_a690f3fa8a839cd577b4bb40aab57478f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a690f3fa8a839cd577b4bb40aab57478f">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:a690f3fa8a839cd577b4bb40aab57478f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> and passes it downstream in the network. A message will print out indicating that the fact has been asserted along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>.  <br /></td></tr>
+<tr class="memdesc:a690f3fa8a839cd577b4bb40aab57478f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks and reports an assertion, then forwards a new token to successors once.  <br /></td></tr>
 <tr class="memitem:abe3660692f2b9915c0cd5678316a4b4a" id="r_abe3660692f2b9915c0cd5678316a4b4a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abe3660692f2b9915c0cd5678316a4b4a">Retract</a> (object fact)</td></tr>
-<tr class="memdesc:abe3660692f2b9915c0cd5678316a4b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger the removal of the fact from successor nodes.  <br /></td></tr>
-<tr class="memitem:aa762b68da6e3eeab26f0e41643a80441" id="r_aa762b68da6e3eeab26f0e41643a80441"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa762b68da6e3eeab26f0e41643a80441">Refresh</a> (object fact, string prop)</td></tr>
-<tr class="memdesc:aa762b68da6e3eeab26f0e41643a80441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary.  <br /></td></tr>
+<tr class="memdesc:abe3660692f2b9915c0cd5678316a4b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes and forwards the retracted token, or tokens containing a retracted fact.  <br /></td></tr>
+<tr class="memitem:a1c881c7ba96384e2a8770d2e62d08f3b" id="r_a1c881c7ba96384e2a8770d2e62d08f3b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1c881c7ba96384e2a8770d2e62d08f3b">Refresh</a> (object fact, string propertyName)</td></tr>
+<tr class="memdesc:a1c881c7ba96384e2a8770d2e62d08f3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports a refresh and forwards it with the property name to affected successors.  <br /></td></tr>
 <tr class="memitem:af3c8139f8db4e200a2f7a429bef39e02" id="r_af3c8139f8db4e200a2f7a429bef39e02"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af3c8139f8db4e200a2f7a429bef39e02">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
 <tr class="memdesc:af3c8139f8db4e200a2f7a429bef39e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_root_node.html" title="The RootNode class represents the root of the Rete network. It serves as the entry point for all fact...">RootNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:a6b1f4378bd067995780835725416e796" id="r_a6b1f4378bd067995780835725416e796"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6b1f4378bd067995780835725416e796">DebugPrint</a> (object fact, int level=0)</td></tr>
-<tr class="memdesc:a6b1f4378bd067995780835725416e796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a formatted debug message to the console that includes the specified fact and the current number of successors.  <br /></td></tr>
+<tr class="memdesc:a6b1f4378bd067995780835725416e796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports the current token memory and recursively prints downstream node diagnostics.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:ad07f66ce8140e23f6ac3931e88a425ea" id="r_ad07f66ce8140e23f6ac3931e88a425ea"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad07f66ce8140e23f6ac3931e88a425ea">Tokens</a><code> [get]</code></td></tr>
-<tr class="memdesc:ad07f66ce8140e23f6ac3931e88a425ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This object keeps track of the current token state for this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. It is initialized with a dummy token and can be updated as facts are processed through the network. The token can be used to store information about the current state of the node, such as the fact being processed or any relevant metadata. This allows for more detailed tracing and debugging of the flow of facts through the network, as the token can provide context about what is happening at this node when a fact is asserted, retracted, or refreshed.  <br /></td></tr>
+<tr class="memdesc:ad07f66ce8140e23f6ac3931e88a425ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the live token memory used by downstream joins.  <br /></td></tr>
 <tr class="memitem:ac8fdf94eca1a1ec0b7af4df7aa555fcf" id="r_ac8fdf94eca1a1ec0b7af4df7aa555fcf"><td class="memItemLeft">IEnumerable&lt; <a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac8fdf94eca1a1ec0b7af4df7aa555fcf">Successors</a><code> [get]</code></td></tr>
 <tr class="memdesc:ac8fdf94eca1a1ec0b7af4df7aa555fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerable of successor nodes. In this implementation, there is typically one successor node that receives facts that satisfy the condition defined by the predicate.  <br /></td></tr>
 <tr class="memitem:abb987b130d38de0c1500193dcce37ba6" id="r_abb987b130d38de0c1500193dcce37ba6"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#abb987b130d38de0c1500193dcce37ba6">Parent</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:abb987b130d38de0c1500193dcce37ba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class is a special type of node in the Rete network that is used for debugging and tracing the flow of facts through the network. It implements the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface and provides methods for asserting, retracting, and refreshing facts. When a fact is put into the network, it prints out a message indicating the operation being performed and the fact involved, along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> for context. </p>
+<div class="textblock"><p>A transparent tracing node that records active tokens, reports propagation events, and forwards them to successors. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5ceb7937f37cd8ccf647aa74d1cf576e" name="a5ceb7937f37cd8ccf647aa74d1cf576e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ceb7937f37cd8ccf647aa74d1cf576e">&#9670;&#160;</a></span>TraceNode()</h2>
+<a id="ae884aeb51e32f4f9f5d8e0294af4125e" name="ae884aeb51e32f4f9f5d8e0294af4125e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae884aeb51e32f4f9f5d8e0294af4125e">&#9670;&#160;</a></span>TraceNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -145,16 +145,21 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">ReteEngine.ReteEngine.TraceNode.TraceNode </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">TextWriter?</td>          <td class="paramname"><span class="paramname"><em>output</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>The constructor for the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> class takes a label as a parameter, which is used to identify the node in debug output. </p>
+<p>Initializes a labeled trace checkpoint with an optional output writer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">label</td><td></td></tr>
+    <tr><td class="paramname">label</td><td>The label included in trace reports.</td></tr>
+    <tr><td class="paramname">output</td><td>Optional destination for reports; defaults to the current console writer.</td></tr>
   </table>
   </dd>
 </dl>
@@ -177,7 +182,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Adds a successor node to this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. This method is used to build the structure of the Rete network by connecting nodes together. </p>
+<p>Connects a successor and seeds it with tokens already held by this trace node. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td>The node to add as a successor</td></tr>
@@ -204,7 +209,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact into the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a> and passes it downstream in the network. A message will print out indicating that the fact has been asserted along with the label of the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. </p>
+<p>Tracks and reports an assertion, then forwards a new token to successors once. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to pass on through the network</td></tr>
@@ -235,7 +240,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Writes a formatted debug message to the console that includes the specified fact and the current number of successors. </p>
+<p>Reports the current token memory and recursively prints downstream node diagnostics. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object to include in the debug output. Can be any object; its string representation will be printed.</td></tr>
@@ -248,8 +253,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="aa762b68da6e3eeab26f0e41643a80441" name="aa762b68da6e3eeab26f0e41643a80441"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa762b68da6e3eeab26f0e41643a80441">&#9670;&#160;</a></span>Refresh()</h2>
+<a id="a1c881c7ba96384e2a8770d2e62d08f3b" name="a1c881c7ba96384e2a8770d2e62d08f3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c881c7ba96384e2a8770d2e62d08f3b">&#9670;&#160;</a></span>Refresh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,12 +267,12 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>prop</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Refreshes a fact in the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. </p>
+<p>Reports a refresh and forwards it with the property name to affected successors. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to refresh</td></tr>
@@ -322,7 +327,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts a fact from the <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>, which may trigger the removal of the fact from successor nodes. </p>
+<p>Removes and forwards the retracted token, or tokens containing a retracted fact. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to retract</td></tr>
@@ -407,7 +412,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>This object keeps track of the current token state for this <a class="el" href="class_rete_engine_1_1_rete_engine_1_1_trace_node.html" title="The TraceNode class is a special type of node in the Rete network that is used for debugging and trac...">TraceNode</a>. It is initialized with a dummy token and can be updated as facts are processed through the network. The token can be used to store information about the current state of the node, such as the fact being processed or any relevant metadata. This allows for more detailed tracing and debugging of the flow of facts through the network, as the token can provide context about what is happening at this node when a fact is asserted, retracted, or refreshed. </p>
+<p>Returns the live token memory used by downstream joins. </p>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_latent_memory.html#ad9776d1fb39ea10e40625b1c124596b0">ReteCore.ILatentMemory</a>.</p>
 

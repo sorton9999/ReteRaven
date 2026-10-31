@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -113,12 +113,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a20eaf16cea219318645e06e278f46ee0" id="r_a20eaf16cea219318645e06e278f46ee0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a20eaf16cea219318645e06e278f46ee0">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
 <tr class="memdesc:a20eaf16cea219318645e06e278f46ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prevents adding a successor node to this terminal node.  <br /></td></tr>
 <tr class="memitem:adca40726f6b783b65ebd08486d756422" id="r_adca40726f6b783b65ebd08486d756422"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adca40726f6b783b65ebd08486d756422">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:adca40726f6b783b65ebd08486d756422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda: First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> are ignored. <br  />
- ///.  <br /></td></tr>
+<tr class="memdesc:adca40726f6b783b65ebd08486d756422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an eligible activation; the agenda deduplicates pending tuples and applies conditional firing rules. Checks for activation conditions, including global guards and late filters are made, before adding an activation to the agenda.  <br /></td></tr>
 <tr class="memitem:a9e2e20cf83f802d84591c6782dd13e3d" id="r_a9e2e20cf83f802d84591c6782dd13e3d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9e2e20cf83f802d84591c6782dd13e3d">Retract</a> (object fact)</td></tr>
-<tr class="memdesc:a9e2e20cf83f802d84591c6782dd13e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts the specified fact from the rule engine, removing any associated activations or tokens. If the specified fact is currently part of any pending activations or has previouslyfired tokens, those will be removed from the agenda and internal state. This operation cancels any pending rule activations related to the fact.  <br /></td></tr>
+<tr class="memdesc:a9e2e20cf83f802d84591c6782dd13e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancels activations for a retracted match and clears its fired/refraction tracking for later re-entry.  <br /></td></tr>
 <tr class="memitem:a06635491c40a3a5d508248845217a5bc" id="r_a06635491c40a3a5d508248845217a5bc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a06635491c40a3a5d508248845217a5bc">Refresh</a> (object fact, string propertyName)</td></tr>
-<tr class="memdesc:a06635491c40a3a5d508248845217a5bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the specified fact in the working memory, re-evaluating any rules that depend on the given property.  <br /></td></tr>
+<tr class="memdesc:a06635491c40a3a5d508248845217a5bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rechecks terminal filters and offers an eligible tuple to the agenda for the current fact revision.  <br /></td></tr>
 <tr class="memitem:a18a25f0b14d9cb17987f93c01defa252" id="r_a18a25f0b14d9cb17987f93c01defa252"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a18a25f0b14d9cb17987f93c01defa252">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
 <tr class="memdesc:a18a25f0b14d9cb17987f93c01defa252"><td class="mdescLeft">&#160;</td><td class="mdescRight">This would remove a successor node from this terminal node, but since terminal nodes do not have successors, this method has no effect. It is included to satisfy the <a class="el" href="interface_rete_core_1_1_i_rete_node.html" title="An interface representing a node in a Rete network, which is responsible for processing facts and pro...">IReteNode</a> interface contract, but it does not perform any operations on the internal state of the terminal node. Calling this method will simply do nothing, as there are no successors to remove.  <br /></td></tr>
 <tr class="memitem:a0e4a2d47fe2ed85240ffb65babbd9ed7" id="r_a0e4a2d47fe2ed85240ffb65babbd9ed7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0e4a2d47fe2ed85240ffb65babbd9ed7">RemoveFromParentNode</a> ()</td></tr>
@@ -208,8 +207,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact into the rule engine, creating an activation if the fact has not already been processed. Two other checks are performed before adding the activation to the agenda: First, any global guard conditions are evaluated. If any global guard returns false, the activation is not loaded. Second, any late filters are evaulated. If any late filter returns false, the activation is not loaded. If both checks pass and the fact has not previously triggered, a new activation is created and added to the agenda. If the specified fact is a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> that has not previously triggered an activation for this rule, an activation is added to the agenda. Duplicate assertions of the same <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> are ignored. <br  />
- ///. </p>
+<p>Adds an eligible activation; the agenda deduplicates pending tuples and applies conditional firing rules. Checks for activation conditions, including global guards and late filters are made, before adding an activation to the agenda. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to assert. Must be a non-null object of type <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> to be considered for activation.</td></tr>
@@ -272,8 +270,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Updates the specified fact in the working memory, re-evaluating any rules that depend on the given property. </p>
-<p>Call this method after modifying a property of a fact to ensure that the rule engine reconsiders any rules affected by the change. This method removes and re-inserts the fact, triggering rule re-evaluation as appropriate.</p>
+<p>Rechecks terminal filters and offers an eligible tuple to the agenda for the current fact revision. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object to refresh in the working memory. Cannot be null.</td></tr>
@@ -347,7 +344,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts the specified fact from the rule engine, removing any associated activations or tokens. If the specified fact is currently part of any pending activations or has previouslyfired tokens, those will be removed from the agenda and internal state. This operation cancels any pending rule activations related to the fact. </p>
+<p>Cancels activations for a retracted match and clears its fired/refraction tracking for later re-entry. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object to retract. Cannot be null.</td></tr>

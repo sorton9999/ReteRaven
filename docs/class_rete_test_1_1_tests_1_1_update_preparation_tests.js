@@ -1,0 +1,28 @@
+var class_rete_test_1_1_tests_1_1_update_preparation_tests =
+[
+    [ "AlphaCondition_RefreshTracksBothMatchTransitionsWithoutDuplicates", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a6d5dacfc5bc5982f3024f89ef81e6829", null ],
+    [ "Exists_RefreshReconcilesCountsAndOnlyPropagatesExistenceTransitions", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a1495f85cf101f04e4deb5fe24e6a35e5", null ],
+    [ "ExplicitUpdate_ExistsPropagatesOnlyWhenTheRightMatchCountCrossesZero", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a75184c1d86062460b84ab93d4d9d0129", null ],
+    [ "ExplicitUpdate_NotCancelsAndRestoresActivationAsCriticalRiskChanges", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a45e412a3573d73f382202a3aecdeeb80", null ],
+    [ "ExplicitUpdate_RemovesAndRestoresAJoinMatchWhenProductIdChanges", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a4bfc1dd424ff6435914582ed9f121911", null ],
+    [ "ExplicitUpdate_RemovesAndRestoresAnAlphaMatch", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a79604abfeb07a9373ee268f02fe92b83", null ],
+    [ "IndexedExists_RefreshReindexesMutableJoinKeysWithoutDuplicateTransitions", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a577ae390ff2310ff1f5c17a8b6412694", null ],
+    [ "Join_RefreshReconcilesChangesFromTheLeftInput", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a96ee683de0a22189e8eee673bd86a6f5", null ],
+    [ "Join_RefreshRetractsStaleMatchAndDoesNotDuplicateRepeatedMatches", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a9ac052a1e4312dcd60bfdc804bc3ef50", null ],
+    [ "JoinMatchTransitionsCancelAndRecreatePendingActivationsForEitherInput", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a72ac24421046d41369a5848ad172bb91", null ],
+    [ "Not_RefreshReconcilesCountsAndOnlyPropagatesZeroTransitions", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#ab1403592ba8f8ab3bd68abfeacc6514f", null ],
+    [ "NotAndExists_OnlyPropagateWhenMatchCountCrossesZero", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a98b73178e060db2a7d65372bc41f590b", null ],
+    [ "NotAndExists_ReconcileTransitionsWhenTheLeftFactChanges", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a67a606b7e2c70b42dceb6d0ac1eccc8c", null ],
+    [ "PendingUpdateUsesLatestValuesAndPostFireUpdateCreatesOneNewRevisionActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a138b3215043a56d7aa283b923eaa789a", null ],
+    [ "PropertyChangedPassesPropertyNameAndMaintainsOneHandlerPerWorkingMemoryFact", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a26ef8ed191fb5ea6d5870227f12450cc", null ],
+    [ "PropertyChangedSubscription_IsRemovedOnRetractAndNotDuplicatedOnReassert", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#aa6054aa3b6c9d81a0d44d0bcff8f2336", null ],
+    [ "PropertyChangedSubscription_IsRemovedWhenEngineIsDisposed", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a41aa4e495adcda188c1b0d078e6d8b72", null ],
+    [ "PropertyChangeOnAFiredStillValidMatchCreatesANewRevisionActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#afbe4f2397d743737ac6ba93eecaabb8f", null ],
+    [ "RefreshingAnUnchangedMatchDoesNotDuplicateItsActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a4b3a95f769091359cf2858b7f3fb06bc", null ],
+    [ "Update_BatchProcessesEachFactAndReturnsTheEngine", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a36893232ae699946eb6598d800cc8efb", null ],
+    [ "Update_ExistingFactRefreshesInPlaceWithoutAddingAnotherSubscription", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a15f222a6ad673da7b383fa42cbd2725b", null ],
+    [ "Update_ProductCategoryReconcilesMatchesWithoutDuplicateFactsOrSubscriptions", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a7eed0b313f4b756c6d4f05fa57610052", null ],
+    [ "Update_UnknownFactAssertsItAndNullFactsAreNoOps", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#ada8d7c07c044561c9459bd8921ba7327", null ],
+    [ "UpdatingAFiredStillValidMatchSchedulesOneActivationForTheLatestRevision", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a75a0ad5360c19c38451f5b5c21d3c6d8", null ],
+    [ "UpdatingMatchAcrossFalseAndTrueTransitionsCancelsThenReactivatesRule", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a1ebbe3693a9e1bc5d30fa520ed0e9700", null ]
+];

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -115,23 +115,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a991bc0231c5c8c584166a9dd26d0ab74" id="r_a991bc0231c5c8c584166a9dd26d0ab74"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a991bc0231c5c8c584166a9dd26d0ab74">Assert</a> (object factOrToken)</td></tr>
 <tr class="memdesc:a991bc0231c5c8c584166a9dd26d0ab74"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Assert method is the main entry point for incoming facts or tokens. It determines whether the input is a left token or a right fact and delegates to the appropriate method (AssertLeft or AssertRight) to handle the logic specific to that side of the NOT node. This design allows for a clean separation of concerns and ensures that the correct processing logic is applied based on the type of input received.  <br /></td></tr>
 <tr class="memitem:abdee9bdb5e65f7516a1a2959d0e97df7" id="r_abdee9bdb5e65f7516a1a2959d0e97df7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abdee9bdb5e65f7516a1a2959d0e97df7">AssertLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>)</td></tr>
-<tr class="memdesc:abdee9bdb5e65f7516a1a2959d0e97df7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles incoming partial matches from the Left (Beta side). It checks the new token against all facts in the right memory using the join constraint.  <br /></td></tr>
+<tr class="memdesc:abdee9bdb5e65f7516a1a2959d0e97df7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recounts right-side blockers and propagates only a zero/nonzero Not-state transition.  <br /></td></tr>
 <tr class="memitem:ad10b2e13e1a0c4c995579c1f274a8008" id="r_ad10b2e13e1a0c4c995579c1f274a8008"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad10b2e13e1a0c4c995579c1f274a8008">AssertRight</a> (object fact)</td></tr>
-<tr class="memdesc:ad10b2e13e1a0c4c995579c1f274a8008"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles incoming single facts from the Right (Alpha side). It checks the new fact against all existing left tokens to see if it blocks any of them.  <br /></td></tr>
+<tr class="memdesc:ad10b2e13e1a0c4c995579c1f274a8008"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a right fact once and retracts left tokens only when their first blocker appears.  <br /></td></tr>
 <tr class="memitem:ae6d2def5c6d12a73b87778c24aeab5f0" id="r_ae6d2def5c6d12a73b87778c24aeab5f0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae6d2def5c6d12a73b87778c24aeab5f0">Retract</a> (object factOrToken)</td></tr>
 <tr class="memdesc:ae6d2def5c6d12a73b87778c24aeab5f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Retract method is the main entry point for retractions of facts or tokens. Similar to Assert, it determines whether the input is a left token or a right fact and delegates to the appropriate method (Retract or RetractRight) to handle the logic specific to that side of the NOT node. This allows for proper handling of retractions and ensures that the state of the NOT node is correctly updated when facts or tokens are removed from the network.  <br /></td></tr>
 <tr class="memitem:aa82805bfae8938ef960d5ab1186fd46c" id="r_aa82805bfae8938ef960d5ab1186fd46c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa82805bfae8938ef960d5ab1186fd46c">RetractLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>)</td></tr>
 <tr class="memdesc:aa82805bfae8938ef960d5ab1186fd46c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles retractions of left tokens. It removes the token from the left matches and, if it was not blocked by any right facts, it propagates a retract downstream to indicate that the NOT condition is now satisfied again. This ensures that any successor nodes that were previously blocked by this token will now receive an assertion for it, allowing the Rete network to correctly reflect the change in state caused by the retraction of the token.  <br /></td></tr>
 <tr class="memitem:a71ccc5a24b7f3b90e5bd0ba88b63f2f7" id="r_a71ccc5a24b7f3b90e5bd0ba88b63f2f7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a71ccc5a24b7f3b90e5bd0ba88b63f2f7">RetractRight</a> (object fact)</td></tr>
-<tr class="memdesc:a71ccc5a24b7f3b90e5bd0ba88b63f2f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles retractions of right facts. It removes the fact from the right memory and checks if this retraction "resurrects" any left tokens that were previously blocked by this fact. If a left token's block count transitions from 1 to 0, it means the NOT condition is now satisfied for that token, and it propagates an assertion downstream to indicate that the token is now valid again. This ensures that the Rete network correctly reflects the change in state caused by the retraction of the right fact and allows any successor nodes to update their state accordingly based on the new valid tokens.  <br /></td></tr>
+<tr class="memdesc:a71ccc5a24b7f3b90e5bd0ba88b63f2f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the right fact and recomputes blocker counts before propagating Not-state transitions.  <br /></td></tr>
 <tr class="memitem:aa6b888e02450e8ac5acb782b3499afd7" id="r_aa6b888e02450e8ac5acb782b3499afd7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa6b888e02450e8ac5acb782b3499afd7">Refresh</a> (object factOrToken, string propertyName)</td></tr>
-<tr class="memdesc:aa6b888e02450e8ac5acb782b3499afd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces a downstream node to sync with this node's current valid tokens. This is used when a new successor node is added to ensure it receives the correct state of matches from this NOT node. It checks if the input is a left token or a right fact and delegates to the appropriate refresh method to update the state of matches and propagate any necessary assertions or retractions downstream. This allows for dynamic updates to the Rete network while maintaining correct propagation of matches to successor nodes.  <br /></td></tr>
-<tr class="memitem:a473deacc584249863bd439e7465a0579" id="r_a473deacc584249863bd439e7465a0579"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a473deacc584249863bd439e7465a0579">RefreshLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>)</td></tr>
-<tr class="memdesc:a473deacc584249863bd439e7465a0579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node.  <br /></td></tr>
+<tr class="memdesc:aa6b888e02450e8ac5acb782b3499afd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconciles a refreshed left token or right fact against the current blocker counts.  <br /></td></tr>
+<tr class="memitem:add86e37aa85bd17763e6b828eaf0d448" id="r_add86e37aa85bd17763e6b828eaf0d448"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#add86e37aa85bd17763e6b828eaf0d448">RefreshLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>, string propertyName=&quot;&quot;)</td></tr>
+<tr class="memdesc:add86e37aa85bd17763e6b828eaf0d448"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconciles a left token and forwards refreshes while it remains unblocked.  <br /></td></tr>
 <tr class="memitem:a0fdeb9fd36db8d2d4dab7966aa132921" id="r_a0fdeb9fd36db8d2d4dab7966aa132921"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0fdeb9fd36db8d2d4dab7966aa132921">RefreshRight</a> (object fact, string propertyName)</td></tr>
-<tr class="memdesc:a0fdeb9fd36db8d2d4dab7966aa132921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node.  <br /></td></tr>
+<tr class="memdesc:a0fdeb9fd36db8d2d4dab7966aa132921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recomputes all blocker counts from current right memory to keep repeated refreshes idempotent.  <br /></td></tr>
 <tr class="memitem:a457b268979c99a525134d96750c3a26a" id="r_a457b268979c99a525134d96750c3a26a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a457b268979c99a525134d96750c3a26a">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
-<tr class="memdesc:a457b268979c99a525134d96750c3a26a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
+<tr class="memdesc:a457b268979c99a525134d96750c3a26a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens.  <br /></td></tr>
 <tr class="memitem:a4a2ec1c8183aa91a2a3ee8e060d52908" id="r_a4a2ec1c8183aa91a2a3ee8e060d52908"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4a2ec1c8183aa91a2a3ee8e060d52908">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a4a2ec1c8183aa91a2a3ee8e060d52908"><td class="mdescLeft">&#160;</td><td class="mdescRight">A debug method to print the current state of the NOT node, including the number of left tokens, right facts, and the block counts for each left token. This can be useful for understanding how the NOT node is processing matches and how it is affected by incoming facts and tokens. The method takes an optional level parameter to control indentation for better readability when printing nested nodes in the Rete network. By providing insight into the internal state of the NOT node, this debug method can help developers diagnose issues and understand the behavior of the Rete network during development and testing.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -245,7 +245,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handles incoming partial matches from the Left (Beta side). It checks the new token against all facts in the right memory using the join constraint. </p>
+<p>Recounts right-side blockers and propagates only a zero/nonzero Not-state transition. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>The token this operation is acting upon.</td></tr>
@@ -270,7 +270,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handles incoming single facts from the Right (Alpha side). It checks the new fact against all existing left tokens to see if it blocks any of them. </p>
+<p>Adds a right fact once and retracts left tokens only when their first blocker appears. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact this operation is acting upon.</td></tr>
@@ -331,7 +331,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Forces a downstream node to sync with this node's current valid tokens. This is used when a new successor node is added to ensure it receives the correct state of matches from this NOT node. It checks if the input is a left token or a right fact and delegates to the appropriate refresh method to update the state of matches and propagate any necessary assertions or retractions downstream. This allows for dynamic updates to the Rete network while maintaining correct propagation of matches to successor nodes. </p>
+<p>Reconciles a refreshed left token or right fact against the current blocker counts. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">factOrToken</td><td>The fact or token this operation is acting upon.</td></tr>
@@ -344,8 +344,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a473deacc584249863bd439e7465a0579" name="a473deacc584249863bd439e7465a0579"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a473deacc584249863bd439e7465a0579">&#9670;&#160;</a></span>RefreshLeft()</h2>
+<a id="add86e37aa85bd17763e6b828eaf0d448" name="add86e37aa85bd17763e6b828eaf0d448"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add86e37aa85bd17763e6b828eaf0d448">&#9670;&#160;</a></span>RefreshLeft()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -353,13 +353,17 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void ReteCore.NotNode.RefreshLeft </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_rete_core_1_1_token.html">Token</a></td>          <td class="paramname"><span class="paramname"><em>token</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_token.html">Token</a></td>          <td class="paramname"><span class="paramname"><em>token</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handles refreshes of left tokens. It checks if the token is currently blocked by any right facts and, if not, it propagates an assertion downstream to ensure that successor nodes are updated with the current valid state of this token. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the block count for the token and only propagating if it is currently valid (not blocked), we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. </p>
+<p>Reconciles a left token and forwards refreshes while it remains unblocked. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>The token this operation is acting upon.</td></tr>
@@ -388,7 +392,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handles refreshes of right facts. It checks if the fact blocks any existing left tokens and updates their block counts accordingly. If a token transitions from blocked to unblocked or vice versa, it propagates the necessary assertions or retractions downstream to ensure that successor nodes are updated with the current valid state of matches in this NOT node. This is important for maintaining correct state in the Rete network, especially when new successor nodes are added or when existing nodes need to be refreshed due to changes in the network. By checking the join constraint for each token against the refreshed fact and updating their block counts, we ensure that the NOT condition is correctly maintained and that successor nodes receive accurate information about the state of matches in this NOT node. </p>
+<p>Recomputes all blocker counts from current right memory to keep repeated refreshes idempotent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact this operation is acting upon.</td></tr>
@@ -414,7 +418,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system. </p>
+<p>Removes a successor node from this <a class="el" href="class_rete_core_1_1_not_node.html" title="This class represents a NOT node in a Rete network, which implements the logical negation....">NotNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
@@ -493,7 +497,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handles retractions of right facts. It removes the fact from the right memory and checks if this retraction "resurrects" any left tokens that were previously blocked by this fact. If a left token's block count transitions from 1 to 0, it means the NOT condition is now satisfied for that token, and it propagates an assertion downstream to indicate that the token is now valid again. This ensures that the Rete network correctly reflects the change in state caused by the retraction of the right fact and allows any successor nodes to update their state accordingly based on the new valid tokens. </p>
+<p>Removes the right fact and recomputes blocker counts before propagating Not-state transitions. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact this operation is acting upon.</td></tr>

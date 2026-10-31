@@ -25,6 +25,7 @@ var class_rete_engine_1_1_fluent_converter_1_g =
     [ "Sum< T >", "class_rete_engine_1_1_fluent_converter-1-g.html#a274c152ef37e05ba63e574011af103ac", null ],
     [ "Sum< T >", "class_rete_engine_1_1_fluent_converter-1-g.html#ab2438196e27a1867b5357510704ac36d", null ],
     [ "Then", "class_rete_engine_1_1_fluent_converter-1-g.html#ab5310deedc0c70da2568a9d6215dcfc7", null ],
+    [ "Trace", "class_rete_engine_1_1_fluent_converter-1-g.html#ae5bffa3882077d91fbc28c2653cf809b", null ],
     [ "Where< T >", "class_rete_engine_1_1_fluent_converter-1-g.html#ab9c2f1ea7457486e7a1d834b39c6ce61", null ],
     [ "Where< T >", "class_rete_engine_1_1_fluent_converter-1-g.html#a5eca80cc2e3dcbbb91f37486bf31ae4d", null ]
 ];

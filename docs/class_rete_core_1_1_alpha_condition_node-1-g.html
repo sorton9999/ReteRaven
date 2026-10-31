@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -113,13 +113,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ada8108189231224500c9371683fdc068" id="r_ada8108189231224500c9371683fdc068"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ada8108189231224500c9371683fdc068">AddSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> node)</td></tr>
 <tr class="memdesc:ada8108189231224500c9371683fdc068"><td class="mdescLeft">&#160;</td><td class="mdescRight">An AlphaConditionNode typically has one successor, which is often an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node that stores facts that pass the condition. The AddSuccessor method is provided for completeness, but in a typical Rete implementation, the successor is set at construction and does not change dynamically. If you want to support multiple successors, you would need to modify this class to maintain.  <br /></td></tr>
 <tr class="memitem:a62e7c7df2def6f3225a5a699d8aa4047" id="r_a62e7c7df2def6f3225a5a699d8aa4047"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a62e7c7df2def6f3225a5a699d8aa4047">Assert</a> (object fact)</td></tr>
-<tr class="memdesc:a62e7c7df2def6f3225a5a699d8aa4047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assert a fact into the AlphaConditionNode. The node checks if the fact is of type T and if it satisfies the predicate. If both conditions are met, the fact is passed to the successor node. This method is called when a new fact is introduced into the Rete network or when an existing fact is updated and needs to be re-evaluated.  <br /></td></tr>
+<tr class="memdesc:a62e7c7df2def6f3225a5a699d8aa4047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact only when it passes the predicate and is not already tracked as a match.  <br /></td></tr>
 <tr class="memitem:a99fdb5250e298873d8cf371d6380f11b" id="r_a99fdb5250e298873d8cf371d6380f11b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a99fdb5250e298873d8cf371d6380f11b">Retract</a> (object fact)</td></tr>
-<tr class="memdesc:a99fdb5250e298873d8cf371d6380f11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retract a fact from the AlphaConditionNode. Similar to Assert, it checks if the fact is of type T and satisfies the predicate. If it does, it tells the successor node to retract this fact. This method is called when a fact is removed from the Rete network or when an existing fact is updated and no longer satisfies the condition, necessitating its removal from downstream nodes.  <br /></td></tr>
+<tr class="memdesc:a99fdb5250e298873d8cf371d6380f11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the successor only if this node previously tracked it as a match.  <br /></td></tr>
 <tr class="memitem:a9747b7bd0b9971ee46991cd10ed23291" id="r_a9747b7bd0b9971ee46991cd10ed23291"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9747b7bd0b9971ee46991cd10ed23291">Refresh</a> (object fact, string changedProperty)</td></tr>
-<tr class="memdesc:a9747b7bd0b9971ee46991cd10ed23291"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refresh a fact in the AlphaConditionNode. This method is called when a property of a fact changes, and it allows the node to re-evaluate the condition for that fact. If the changed property matches TargetProperty (or if TargetProperty is null/empty), the node will first retract the old fact from the successor and then assert the updated fact, ensuring that downstream nodes have the correct state based on the new information.  <br /></td></tr>
+<tr class="memdesc:a9747b7bd0b9971ee46991cd10ed23291"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-evaluates the predicate and propagates only a match transition; unchanged matches are refreshed downstream.  <br /></td></tr>
 <tr class="memitem:ab3cd03e1e577272283f9f6bb575c0dd3" id="r_ab3cd03e1e577272283f9f6bb575c0dd3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab3cd03e1e577272283f9f6bb575c0dd3">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
-<tr class="memdesc:ab3cd03e1e577272283f9f6bb575c0dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this AlphaConditionNode. Since this implementation assumes a single successor set at construction, this method does not actually remove the successor but is provided for completeness. If you want to support dynamic changes to the successor, you would need to modify this class to allow for multiple successors and implement the logic to remove the specified child node from the collection of successors. In its current form, this method simply prints a message indicating that it is not implemented, as the design of this node does not accommodate multiple successors or dynamic changes to the successor. This is a placeholder for potential future enhancements to the class to support more complex network structures.  <br /></td></tr>
+<tr class="memdesc:ab3cd03e1e577272283f9f6bb575c0dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not implemented. This node does not support dynamic removal of successors. If you need to support this functionality, you should implement it in a subclass or modify this class to handle multiple successors.  <br /></td></tr>
 <tr class="memitem:a8c0b94c46577fbb932bf7d5f32768506" id="r_a8c0b94c46577fbb932bf7d5f32768506"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8c0b94c46577fbb932bf7d5f32768506">DebugPrint</a> (object fact, int level=0)</td></tr>
 <tr class="memdesc:a8c0b94c46577fbb932bf7d5f32768506"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method is used for debugging purposes to print the structure of the Rete network and the evaluation results of facts at this node.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -219,7 +219,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Assert a fact into the AlphaConditionNode. The node checks if the fact is of type T and if it satisfies the predicate. If both conditions are met, the fact is passed to the successor node. This method is called when a new fact is introduced into the Rete network or when an existing fact is updated and needs to be re-evaluated. </p>
+<p>Asserts a fact only when it passes the predicate and is not already tracked as a match. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object to be asserted and passed to successor nodes. Cannot be null.</td></tr>
@@ -282,7 +282,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Refresh a fact in the AlphaConditionNode. This method is called when a property of a fact changes, and it allows the node to re-evaluate the condition for that fact. If the changed property matches TargetProperty (or if TargetProperty is null/empty), the node will first retract the old fact from the successor and then assert the updated fact, ensuring that downstream nodes have the correct state based on the new information. </p>
+<p>Re-evaluates the predicate and propagates only a match transition; unchanged matches are refreshed downstream. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object whose property is being refreshed. Cannot be null.</td></tr>
@@ -310,7 +310,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removes a successor node from this AlphaConditionNode. Since this implementation assumes a single successor set at construction, this method does not actually remove the successor but is provided for completeness. If you want to support dynamic changes to the successor, you would need to modify this class to allow for multiple successors and implement the logic to remove the specified child node from the collection of successors. In its current form, this method simply prints a message indicating that it is not implemented, as the design of this node does not accommodate multiple successors or dynamic changes to the successor. This is a placeholder for potential future enhancements to the class to support more complex network structures. </p>
+<p>Not implemented. This node does not support dynamic removal of successors. If you need to support this functionality, you should implement it in a subclass or modify this class to handle multiple successors. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">successor</td><td>The successor node to remove. Cannot be null.</td></tr>
@@ -337,7 +337,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retract a fact from the AlphaConditionNode. Similar to Assert, it checks if the fact is of type T and satisfies the predicate. If it does, it tells the successor node to retract this fact. This method is called when a fact is removed from the Rete network or when an existing fact is updated and no longer satisfies the condition, necessitating its removal from downstream nodes. </p>
+<p>Retracts a fact from the successor only if this node previously tracked it as a match. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact object to retract. Cannot be null.</td></tr>

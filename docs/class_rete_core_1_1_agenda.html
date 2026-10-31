@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -100,9 +100,15 @@ $(function(){initNavTree('class_rete_core_1_1_agenda.html','','class_rete_core_1
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3ccf2720fc3cdc8345fd2f33674b0a8b" id="r_a3ccf2720fc3cdc8345fd2f33674b0a8b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3ccf2720fc3cdc8345fd2f33674b0a8b">Add</a> (<a class="el" href="class_rete_core_1_1_activation.html">Activation</a> activation)</td></tr>
-<tr class="memdesc:a3ccf2720fc3cdc8345fd2f33674b0a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase.  <br /></td></tr>
+<tr class="memdesc:a3ccf2720fc3cdc8345fd2f33674b0a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an activation unless the tuple is already pending or has fired at its current fact revision.  <br /></td></tr>
 <tr class="memitem:a84333162d9672cb561525a0db44e54a3" id="r_a84333162d9672cb561525a0db44e54a3"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a84333162d9672cb561525a0db44e54a3">RemoveByFact</a> (object factOrToken)</td></tr>
 <tr class="memdesc:a84333162d9672cb561525a0db44e54a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any pending activations from the agenda that are associated with the specified fact. This is typically called when a fact is retracted from the working memory, ensuring that any rules that were triggered by that fact but have not yet fired are cancelled and will not execute based on outdated information. If a token is provided, it will remove activations where the token's fact matches the retracted fact.  <br /></td></tr>
+<tr class="memitem:afeb173c6040bc1e9ab04346aeed98662" id="r_afeb173c6040bc1e9ab04346aeed98662"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afeb173c6040bc1e9ab04346aeed98662">ForgetActivation</a> (string ruleName, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match)</td></tr>
+<tr class="memdesc:afeb173c6040bc1e9ab04346aeed98662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears fired-revision markers when a match leaves the network so a later match can activate again.  <br /></td></tr>
+<tr class="memitem:a3f263febaad2055474db875caf54c7e0" id="r_a3f263febaad2055474db875caf54c7e0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3f263febaad2055474db875caf54c7e0">AdvanceFactRevision</a> (object fact)</td></tr>
+<tr class="memdesc:a3f263febaad2055474db875caf54c7e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advances the revision used to distinguish activations after a fact update. This method is called when a fact is updated in the working memory, indicating that any previous activations associated with the old state of the fact should be considered outdated. By incrementing the revision number for the fact, it ensures that future activations will be treated as new and can be fired again, even if they were previously executed with an older revision of the fact.  <br /></td></tr>
+<tr class="memitem:a61a485fc92612724c804ec6e501f3ef3" id="r_a61a485fc92612724c804ec6e501f3ef3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a61a485fc92612724c804ec6e501f3ef3">ReleaseFactRevision</a> (object fact)</td></tr>
+<tr class="memdesc:a61a485fc92612724c804ec6e501f3ef3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases revision state after a fact leaves working memory. This method is called when a fact is retracted from the working memory, indicating that any revision tracking associated with that fact is no longer needed. By removing the fact from the revision tracking dictionary, it ensures that future activations will not be influenced by any previous revisions of the fact, allowing for a clean slate if the fact is later reintroduced or replaced.  <br /></td></tr>
 <tr class="memitem:a6c19ab804499c8813af25859a2bf8810" id="r_a6c19ab804499c8813af25859a2bf8810"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6c19ab804499c8813af25859a2bf8810">FireAll</a> ()</td></tr>
 <tr class="memdesc:a6c19ab804499c8813af25859a2bf8810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda, executing their associated actions in order of descending salience (priority). The method continues to process activations until there are no more pending activations left in the agenda.  <br /></td></tr>
 <tr class="memitem:a9b6f5870eab4efc6702f4bf44fc3ecc9" id="r_a9b6f5870eab4efc6702f4bf44fc3ecc9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9b6f5870eab4efc6702f4bf44fc3ecc9">CancelActivationsByFact</a> (object retractedFact)</td></tr>
@@ -110,7 +116,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac4f2725ceecb7d76d8020e491f9441a7" id="r_ac4f2725ceecb7d76d8020e491f9441a7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ac4f2725ceecb7d76d8020e491f9441a7">RemoveActivationsByRule</a> (string ruleName)</td></tr>
 <tr class="memdesc:ac4f2725ceecb7d76d8020e491f9441a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all pending activations from the agenda that are associated with the specified rule name.  <br /></td></tr>
 <tr class="memitem:a86faf96251b4be8b8310c28a09752fda" id="r_a86faf96251b4be8b8310c28a09752fda"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a86faf96251b4be8b8310c28a09752fda">GenerateActivationKey</a> (<a class="el" href="class_rete_core_1_1_activation.html">Activation</a> activation)</td></tr>
-<tr class="memdesc:a86faf96251b4be8b8310c28a09752fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a unique key for an activation based on its rule name and the facts involved in the activation. Activations are saved , so this key is used to track which activations have already been fired, preventing duplicates from executing multiple times.  <br /></td></tr>
+<tr class="memdesc:a86faf96251b4be8b8310c28a09752fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a key from rule, match identity, and the current revisions of its facts.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -137,10 +143,35 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Adds a new activation to the agenda. This method is typically called when a rule's conditions are satisfied, creating an activation that represents the pending execution of that rule. The activation is added to the list of pending activations, which will be processed later during the firing phase. </p>
+<p>Adds an activation unless the tuple is already pending or has fired at its current fact revision. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">activation</td><td>The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> object to add to the list of activations.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3f263febaad2055474db875caf54c7e0" name="a3f263febaad2055474db875caf54c7e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f263febaad2055474db875caf54c7e0">&#9670;&#160;</a></span>AdvanceFactRevision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.Agenda.AdvanceFactRevision </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Advances the revision used to distinguish activations after a fact update. This method is called when a fact is updated in the working memory, indicating that any previous activations associated with the old state of the fact should be considered outdated. By incrementing the revision number for the fact, it ensures that future activations will be treated as new and can be fired again, even if they were previously executed with an older revision of the fact. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td>The fact whose revision should be advanced.</td></tr>
   </table>
   </dd>
 </dl>
@@ -191,6 +222,36 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="afeb173c6040bc1e9ab04346aeed98662" name="afeb173c6040bc1e9ab04346aeed98662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afeb173c6040bc1e9ab04346aeed98662">&#9670;&#160;</a></span>ForgetActivation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.Agenda.ForgetActivation </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>ruleName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_token.html">Token</a></td>          <td class="paramname"><span class="paramname"><em>match</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clears fired-revision markers when a match leaves the network so a later match can activate again. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ruleName</td><td>The rule associated with the match.</td></tr>
+    <tr><td class="paramname">match</td><td>The match whose fired marker should be cleared.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a86faf96251b4be8b8310c28a09752fda" name="a86faf96251b4be8b8310c28a09752fda"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a86faf96251b4be8b8310c28a09752fda">&#9670;&#160;</a></span>GenerateActivationKey()</h2>
 
@@ -206,7 +267,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a unique key for an activation based on its rule name and the facts involved in the activation. Activations are saved , so this key is used to track which activations have already been fired, preventing duplicates from executing multiple times. </p>
+<p>Generates a key from rule, match identity, and the current revisions of its facts. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">activation</td><td>The activation for which to generate a key.</td></tr>
@@ -214,6 +275,31 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A unique key representing the activation.</dd></dl>
+
+</div>
+</div>
+<a id="a61a485fc92612724c804ec6e501f3ef3" name="a61a485fc92612724c804ec6e501f3ef3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61a485fc92612724c804ec6e501f3ef3">&#9670;&#160;</a></span>ReleaseFactRevision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.Agenda.ReleaseFactRevision </td>
+          <td>(</td>
+          <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Releases revision state after a fact leaves working memory. This method is called when a fact is retracted from the working memory, indicating that any revision tracking associated with that fact is no longer needed. By removing the fact from the revision tracking dictionary, it ensures that future activations will not be influenced by any previous revisions of the fact, allowing for a clean slate if the fact is later reintroduced or replaced. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td>The fact whose revision state should be released.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

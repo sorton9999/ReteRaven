@@ -57,7 +57,9 @@ var annotated_dup =
     [ "ReteTest", "namespace_rete_test.html", [
       [ "Tests", "namespace_rete_test_1_1_tests.html", [
         [ "ReteBuilderIntegrationTests", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests" ],
-        [ "ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", "class_rete_test_1_1_tests_1_1_rete_builder_tests" ]
+        [ "ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", "class_rete_test_1_1_tests_1_1_rete_builder_tests" ],
+        [ "TraceNodeTests", "class_rete_test_1_1_tests_1_1_trace_node_tests.html", "class_rete_test_1_1_tests_1_1_trace_node_tests" ],
+        [ "UpdatePreparationTests", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html", "class_rete_test_1_1_tests_1_1_update_preparation_tests" ]
       ] ]
     ] ],
     [ "ReteTests", "namespace_rete_tests.html", [
