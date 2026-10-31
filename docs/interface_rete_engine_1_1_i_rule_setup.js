@@ -11,6 +11,7 @@ var interface_rete_engine_1_1_i_rule_setup =
     [ "Not< T >", "interface_rete_engine_1_1_i_rule_setup.html#a25440cde3f559b557a88c62e3e5f09bb", null ],
     [ "Priority", "interface_rete_engine_1_1_i_rule_setup.html#a08129760a5655bb33d791d908a7047d2", null ],
     [ "StartWith< T >", "interface_rete_engine_1_1_i_rule_setup.html#aa47dd7c9948c22caaee6529b4e89a45e", null ],
+    [ "Trace", "interface_rete_engine_1_1_i_rule_setup.html#ad254c40e80ae2b8733e33280fa7644a7", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_rule_setup.html#a0bdfa92a01b567b885554e0f2a2d28ae", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_rule_setup.html#aa3d5e7469c1587161bf5a53d35783704", null ]
 ];

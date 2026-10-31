@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -101,8 +101,8 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_builder-1-g.html','','class
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d5b7d1ea2696cc4a6b00e8e4167c0cd" id="r_a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> <a class="el" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>, string name)</td></tr>
 <tr class="memdesc:a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.  <br /></td></tr>
-<tr class="memitem:a64132fa5a015e68973596c2bbce2d504" id="r_a64132fa5a015e68973596c2bbce2d504"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a64132fa5a015e68973596c2bbce2d504">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt; initialCondition=null)</td></tr>
-<tr class="memdesc:a64132fa5a015e68973596c2bbce2d504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a typed fact with an optional condition to the rule being built. This method creates an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added.  <br /></td></tr>
+<tr class="memitem:a1b05a648e5ebbdf0ce9374b706ba5dda" id="r_a1b05a648e5ebbdf0ce9374b706ba5dda"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1b05a648e5ebbdf0ce9374b706ba5dda">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt;? initialCondition=null)</td></tr>
+<tr class="memdesc:a1b05a648e5ebbdf0ce9374b706ba5dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a typed fact with an optional condition to the rule being built. This method creates an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added.  <br /></td></tr>
 <tr class="memitem:a60591b8639aeb68c3482f14e94e6770c" id="r_a60591b8639aeb68c3482f14e94e6770c"><td class="memItemLeft">IGroupBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a60591b8639aeb68c3482f14e94e6770c">Group&lt; TRightFact &gt;</a> (string alphaMemoryName)</td></tr>
 <tr class="memdesc:a60591b8639aeb68c3482f14e94e6770c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Groups facts of type TRightFact into the token under the specified alias. This method creates a GroupBuilder that allows for further configuration of the grouping operation.  <br /></td></tr>
 <tr class="memitem:a71f3e2d52a5afcf8caf9ed9549970d1f" id="r_a71f3e2d52a5afcf8caf9ed9549970d1f"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a71f3e2d52a5afcf8caf9ed9549970d1f">Priority</a> (int level)</td></tr>
@@ -133,8 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5eb8f017ae1e04ef08519f835c16b21a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows you to define an aggregate condition on a collection of facts of type T that have been aggregated into the token given the specified alias. The provided predicate will be evaluated against the collection of facts at the time the rule fires, allowing you to specify conditions that depend on the aggregated data. You could use this method to check if all facts in the collection satisfy a certain condition, if any fact meets a criterion, or if the collection contains a specific number of items.  <br /></td></tr>
 <tr class="memitem:a189b596a98d88d4f0e6c6f8e5dfad756" id="r_a189b596a98d88d4f0e6c6f8e5dfad756"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189b596a98d88d4f0e6c6f8e5dfad756">Then</a> (Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
 <tr class="memdesc:a189b596a98d88d4f0e6c6f8e5dfad756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others.  <br /></td></tr>
-<tr class="memitem:ae3963d94678b6b291afb06f21d7e0342" id="r_ae3963d94678b6b291afb06f21d7e0342"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae3963d94678b6b291afb06f21d7e0342">Trace</a> (string label)</td></tr>
-<tr class="memdesc:ae3963d94678b6b291afb06f21d7e0342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point.  <br /></td></tr>
+<tr class="memitem:a32282ebe0df576e46a643a6f6084e348" id="r_a32282ebe0df576e46a643a6f6084e348"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a32282ebe0df576e46a643a6f6084e348">Trace</a> (string label, TextWriter? output=null)</td></tr>
+<tr class="memdesc:a32282ebe0df576e46a643a6f6084e348"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a transparent trace checkpoint after the current rule condition.  <br /></td></tr>
 <tr class="memitem:a2c54326eb39af9bb6759ec6a8bdaaf3e" id="r_a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2c54326eb39af9bb6759ec6a8bdaaf3e">Assert</a> (object fact)</td></tr>
 <tr class="memdesc:a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts the specified fact into the current context or knowledge base. This call will add the fact to the last node in the rule builder's chain, allowing it to be processed according to the defined rule conditions. The fact must be non-null and will be evaluated against the conditions of the rule as it propagates through the network. Use this method to introduce new facts into the rule evaluation process, which can trigger rules that match those facts based on their conditions.  <br /></td></tr>
 <tr class="memitem:ab3a75a471153c28eebd45b16769ea111" id="r_ab3a75a471153c28eebd45b16769ea111"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab3a75a471153c28eebd45b16769ea111">StartWith</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alpha, string factName)</td></tr>
@@ -854,8 +854,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3963d94678b6b291afb06f21d7e0342" name="ae3963d94678b6b291afb06f21d7e0342"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3963d94678b6b291afb06f21d7e0342">&#9670;&#160;</a></span>Trace()</h2>
+<a id="a32282ebe0df576e46a643a6f6084e348" name="a32282ebe0df576e46a643a6f6084e348"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32282ebe0df576e46a643a6f6084e348">&#9670;&#160;</a></span>Trace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -863,17 +863,22 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.Trace </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">TextWriter?</td>          <td class="paramname"><span class="paramname"><em>output</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Adds a trace node to the rule builder pipeline with the specified label, enabling inspection of rule evaluation at this point. </p>
-<p>Use trace nodes to monitor or debug the flow of facts through the rule network. Tracing can help diagnose rule behavior or performance issues by providing labeled checkpoints in the evaluation process.</p>
+<p>Adds a transparent trace checkpoint after the current rule condition. </p>
+<p>The checkpoint preserves token memory for subsequent joins and reports assertions, retractions, and refreshes.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">label</td><td>The label to associate with the trace node. Used to identify the trace point during rule evaluation.</td></tr>
+    <tr><td class="paramname">output</td><td>Optional writer for trace and debug reports.</td></tr>
   </table>
   </dd>
 </dl>
@@ -881,8 +886,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a64132fa5a015e68973596c2bbce2d504" name="a64132fa5a015e68973596c2bbce2d504"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64132fa5a015e68973596c2bbce2d504">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
+<a id="a1b05a648e5ebbdf0ce9374b706ba5dda" name="a1b05a648e5ebbdf0ce9374b706ba5dda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b05a648e5ebbdf0ce9374b706ba5dda">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -900,7 +905,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>initialCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+          <td class="paramtype">Func&lt; T, bool &gt;?</td>          <td class="paramname"><span class="paramname"><em>initialCondition</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

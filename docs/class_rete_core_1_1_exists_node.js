@@ -7,7 +7,7 @@ var class_rete_core_1_1_exists_node =
     [ "AssertRight", "class_rete_core_1_1_exists_node.html#ac98086aa32ad9eaa53f40e18d532ec85", null ],
     [ "DebugPrint", "class_rete_core_1_1_exists_node.html#a6fc57f94dccc42d4a7158efb10586cb3", null ],
     [ "Refresh", "class_rete_core_1_1_exists_node.html#aebeb99527c314fd9cb2c9550080179a5", null ],
-    [ "RefreshLeft", "class_rete_core_1_1_exists_node.html#a7718f4c18062f08100adbe5a12eea0f7", null ],
+    [ "RefreshLeft", "class_rete_core_1_1_exists_node.html#a3afc807c69e2ca32fab44fcc86a1cc99", null ],
     [ "RefreshRight", "class_rete_core_1_1_exists_node.html#acfdaa7944340e226dc60aa6889eabb2e", null ],
     [ "RemoveSuccessor", "class_rete_core_1_1_exists_node.html#acd706b3a9333c7544a9a7118108c5d67", null ],
     [ "Retract", "class_rete_core_1_1_exists_node.html#af766708a2997732c3a8508fc24358359", null ],

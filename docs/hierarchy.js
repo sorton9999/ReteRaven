@@ -13,6 +13,7 @@ var hierarchy =
       [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ]
     ] ],
     [ "IDisposable", null, [
+      [ "ReteEngine.ReteEngine", "class_rete_engine_1_1_rete_engine.html", null ],
       [ "ReteTests.BetaNodeSharingTests", "class_rete_tests_1_1_beta_node_sharing_tests.html", null ]
     ] ],
     [ "IEquatable", null, [
@@ -77,6 +78,7 @@ var hierarchy =
     [ "ReteEngine.ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", null ],
     [ "ReteTest.Tests.ReteBuilderIntegrationTests", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html", null ],
     [ "ReteTest.Tests.ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", null ],
-    [ "ReteEngine.ReteEngine", "class_rete_engine_1_1_rete_engine.html", null ],
-    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ]
+    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],
+    [ "ReteTest.Tests.TraceNodeTests", "class_rete_test_1_1_tests_1_1_trace_node_tests.html", null ],
+    [ "ReteTest.Tests.UpdatePreparationTests", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html", null ]
 ];

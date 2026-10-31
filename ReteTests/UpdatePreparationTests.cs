@@ -443,6 +443,133 @@ public class UpdatePreparationTests
     }
 
     [Fact]
+    public void ExplicitUpdate_RemovesAndRestoresAnAlphaMatch()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var fireCount = 0;
+        engine.Begin("ElectronicsOnly")
+            .Where<PlainProduct>("product", product => product.Category == "Electronics")
+            .Then(_ => fireCount++);
+
+        var product = new PlainProduct { Category = "Electronics" };
+        engine.Assert(product);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        product.Category = "Food";
+        engine.Update(product);
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(0, fireCount);
+
+        product.Category = "Electronics";
+        engine.Update(product);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(1, fireCount);
+    }
+
+    [Fact]
+    public void ExplicitUpdate_RemovesAndRestoresAJoinMatchWhenProductIdChanges()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var matchedProductIds = new List<int>();
+        engine.Begin("ProductInventoryJoin")
+            .Where<PlainProduct>("product", _ => true)
+            .And<PlainInventory>("inventory", (token, inventory) =>
+                inventory.ProductId == token.Get<PlainProduct>("product").ProductId)
+            .Then(token => matchedProductIds.Add(token.Get<PlainProduct>("product").ProductId));
+
+        var product = new PlainProduct { ProductId = 42 };
+        var inventory = new PlainInventory { ProductId = 42 };
+        engine.Assert(product, inventory);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        product.ProductId = 43;
+        engine.Update(product);
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Empty(matchedProductIds);
+
+        product.ProductId = 42;
+        engine.Update(product);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 42 }, matchedProductIds);
+    }
+
+    [Fact]
+    public void ExplicitUpdate_NotCancelsAndRestoresActivationAsCriticalRiskChanges()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var processedProductIds = new List<int>();
+        engine.Begin("NoCriticalRisk")
+            .Where<PlainProduct>("product", _ => true)
+            .Not<PlainRiskFactor>("risk", (token, risk) =>
+                risk.ProductId == token.Get<PlainProduct>("product").ProductId && risk.Severity == "Critical")
+            .Then(token => processedProductIds.Add(token.Get<PlainProduct>("product").ProductId));
+
+        var product = new PlainProduct { ProductId = 73, Category = "Electronics" };
+        var risk = new PlainRiskFactor { ProductId = 73, Severity = "Low" };
+        engine.Assert(product, risk);
+
+        // A/B: The product initially passes while its related risk is non-critical.
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        // B/C: Making the risk critical blocks Not and cancels the pending activation.
+        risk.Severity = "Critical";
+        engine.Update(risk);
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Empty(processedProductIds);
+
+        // B/C: Removing the blocker restores Not and allows one new activation.
+        risk.Severity = "Low";
+        engine.Update(risk);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 73 }, processedProductIds);
+    }
+
+    [Fact]
+    public void ExplicitUpdate_ExistsPropagatesOnlyWhenTheRightMatchCountCrossesZero()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var matchedProductIds = new List<int>();
+        engine.Begin("ProductHasInventory")
+            .Where<PlainProduct>("product", _ => true)
+            .Exists<PlainInventory>("inventory", (token, inventory) =>
+                inventory.ProductId == token.Get<PlainProduct>("product").ProductId)
+            .Then(token => matchedProductIds.Add(token.Get<PlainProduct>("product").ProductId));
+
+        var product = new PlainProduct { ProductId = 42 };
+        var firstInventory = new PlainInventory { ProductId = 42 };
+        var secondInventory = new PlainInventory { ProductId = 42 };
+        engine.Assert(product, firstInventory, secondInventory);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+
+        // One matching right fact leaves Exists true; it must not duplicate the pending activation.
+        firstInventory.ProductId = 99;
+        engine.Update(firstInventory);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 42 }, matchedProductIds);
+
+        // Losing the last matching right fact makes Exists false and retracts the downstream match.
+        secondInventory.ProductId = 99;
+        engine.Update(secondInventory);
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 42 }, matchedProductIds);
+
+        // Restoring one matching right fact makes Exists true and creates a new activation.
+        firstInventory.ProductId = 42;
+        engine.Update(firstInventory);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 42, 42 }, matchedProductIds);
+    }
+
+    [Fact]
     public void Update_UnknownFactAssertsItAndNullFactsAreNoOps()
     {
         var engine = new ReteEngine.ReteEngine();
@@ -465,6 +592,23 @@ public class UpdatePreparationTests
         Assert.Same(engine, engine.Update((object)null!));
         Assert.Same(engine, engine.Update((object[]?)null!));
         Assert.Equal(2, evaluations);
+    }
+
+    private sealed class PlainProduct
+    {
+        public int ProductId { get; set; }
+        public string Category { get; set; } = string.Empty;
+    }
+
+    private sealed class PlainInventory
+    {
+        public int ProductId { get; set; }
+    }
+
+    private sealed class PlainRiskFactor
+    {
+        public int ProductId { get; set; }
+        public string Severity { get; set; } = string.Empty;
     }
 
     [Fact]
@@ -561,6 +705,33 @@ public class UpdatePreparationTests
         engine.Update(fact);
         engine.FireAll();
         Assert.Equal(new[] { 1, 3, 4 }, observedValues);
+    }
+
+    [Fact]
+    public void PendingUpdateUsesLatestValuesAndPostFireUpdateCreatesOneNewRevisionActivation()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var observedValues = new List<int>();
+        engine.Begin("PendingAndFiredRevision")
+            .Where<MutableFact>("fact", fact => fact.Value > 0)
+            .Then(token => observedValues.Add(token.Get<MutableFact>("fact").Value));
+
+        var fact = new MutableFact { Value = 1 };
+        engine.Assert(fact);
+        fact.Value = 2;
+        engine.Update(fact);
+        fact.Value = 3;
+        engine.Update(fact);
+
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 3 }, observedValues);
+
+        fact.Value = 4;
+        engine.Update(fact);
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        engine.FireAll();
+        Assert.Equal(new[] { 3, 4 }, observedValues);
     }
 
     [Fact]

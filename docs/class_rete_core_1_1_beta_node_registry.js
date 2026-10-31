@@ -4,6 +4,7 @@ var class_rete_core_1_1_beta_node_registry =
     [ "ConnectNodeIfNeeded", "class_rete_core_1_1_beta_node_registry.html#aa54584c05060ed68901608a9c2b10f32", null ],
     [ "GetCachedBetaNodeCount", "class_rete_core_1_1_beta_node_registry.html#a30b17b37b2fad4dc6bbe68d4fc20477f", null ],
     [ "GetCachedJoinPairCount", "class_rete_core_1_1_beta_node_registry.html#a45b9c0c7b7bd079b34b52b7c75567d19", null ],
+    [ "GetCachedNotNodeCount", "class_rete_core_1_1_beta_node_registry.html#a3811b37d9ae4522a4723b294a5c69773", null ],
     [ "GetOrCreateBetaMemory", "class_rete_core_1_1_beta_node_registry.html#a3cc9ba1263d2d402eb7e06b16dd6c187", null ],
     [ "GetOrCreateJoinPair", "class_rete_core_1_1_beta_node_registry.html#a0416e3fc76dd15d1b05d9f68dceedc9b", null ],
     [ "GetOrCreateNotPair", "class_rete_core_1_1_beta_node_registry.html#a75bee4d44a82a52f7b8cba5667c33e7f", null ],

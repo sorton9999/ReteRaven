@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -117,6 +117,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a43df21d39397944b8cdaca1e1ece0cc3" id="r_a43df21d39397944b8cdaca1e1ece0cc3"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a43df21d39397944b8cdaca1e1ece0cc3">Next</a> ()</td></tr>
 <tr class="memitem:a1fdc720c724019ddd5d58a80202f3a4a" id="r_a1fdc720c724019ddd5d58a80202f3a4a"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1fdc720c724019ddd5d58a80202f3a4a">Next</a> (int seed)</td></tr>
 <tr class="memitem:aa3d5e7469c1587161bf5a53d35783704" id="r_aa3d5e7469c1587161bf5a53d35783704"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa3d5e7469c1587161bf5a53d35783704">Where&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; initialCondition=null, [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel=null)</td></tr>
+<tr class="memitem:ad254c40e80ae2b8733e33280fa7644a7" id="r_ad254c40e80ae2b8733e33280fa7644a7"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad254c40e80ae2b8733e33280fa7644a7">Trace</a> (string label, TextWriter? output=null)</td></tr>
 <tr class="memitem:a0bdfa92a01b567b885554e0f2a2d28ae" id="r_a0bdfa92a01b567b885554e0f2a2d28ae"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0bdfa92a01b567b885554e0f2a2d28ae">Where&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
 <tr class="memitem:a3aa2b6cd3a9b41087bdd4e7fa6ead958" id="r_a3aa2b6cd3a9b41087bdd4e7fa6ead958"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3aa2b6cd3a9b41087bdd4e7fa6ead958">Group&lt; T &gt;</a> (string name)</td></tr>
 <tr class="memitem:aa47dd7c9948c22caaee6529b4e89a45e" id="r_aa47dd7c9948c22caaee6529b4e89a45e"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa47dd7c9948c22caaee6529b4e89a45e">StartWith&lt; T &gt;</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alpha, string factName)</td></tr>
@@ -372,6 +373,29 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a75e8af42e68e6be433f763e940abe8d7">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ad254c40e80ae2b8733e33280fa7644a7" name="ad254c40e80ae2b8733e33280fa7644a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad254c40e80ae2b8733e33280fa7644a7">&#9670;&#160;</a></span>Trace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.IRuleSetup.Trace </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TextWriter?</td>          <td class="paramname"><span class="paramname"><em>output</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#ae5bffa3882077d91fbc28c2653cf809b">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
 
 </div>
 </div>

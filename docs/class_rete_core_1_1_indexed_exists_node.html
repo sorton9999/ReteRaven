@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -115,17 +115,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac11b61e5e1adfd55d2b6881310124c82" id="r_ac11b61e5e1adfd55d2b6881310124c82"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac11b61e5e1adfd55d2b6881310124c82">Assert</a> (object factOrToken)</td></tr>
 <tr class="memdesc:ac11b61e5e1adfd55d2b6881310124c82"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Assert method takes either a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> (from the left side) or a fact (from the right side) and updates the internal indexes accordingly. It then propagates assertions to successors if matches are found.  <br /></td></tr>
 <tr class="memitem:a97eb5590f5d27fea807393518731bddb" id="r_a97eb5590f5d27fea807393518731bddb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a97eb5590f5d27fea807393518731bddb">AssertLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>)</td></tr>
-<tr class="memdesc:a97eb5590f5d27fea807393518731bddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a token on the left side of the node. It updates the left index and checks for matches on the right side using the extracted key. If matches are found, it propagates assertions to successors.  <br /></td></tr>
+<tr class="memdesc:a97eb5590f5d27fea807393518731bddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks a left token once, indexes its key, and asserts it when a right-side match exists.  <br /></td></tr>
 <tr class="memitem:a7cd28201425d4b6e08e8e5b46703ab4b" id="r_a7cd28201425d4b6e08e8e5b46703ab4b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7cd28201425d4b6e08e8e5b46703ab4b">AssertRight</a> (object fact)</td></tr>
-<tr class="memdesc:a7cd28201425d4b6e08e8e5b46703ab4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a fact on the right side of the node. It updates the right index and checks for matches on the left side using the extracted key. If matches are found, it propagates assertions to successors.  <br /></td></tr>
+<tr class="memdesc:a7cd28201425d4b6e08e8e5b46703ab4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks a right fact once and asserts tokens whose match count changes from zero to nonzero.  <br /></td></tr>
 <tr class="memitem:ad3c5b419e653bc30a0893e86e22a445e" id="r_ad3c5b419e653bc30a0893e86e22a445e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad3c5b419e653bc30a0893e86e22a445e">Retract</a> (object factOrToken)</td></tr>
 <tr class="memdesc:ad3c5b419e653bc30a0893e86e22a445e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Retract method takes either a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> (from the left side) or a fact (from the right side) and updates the internal indexes accordingly. It then propagates retractions to successors if matches are lost.  <br /></td></tr>
 <tr class="memitem:a15097630e419c02b782139575b4646e1" id="r_a15097630e419c02b782139575b4646e1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a15097630e419c02b782139575b4646e1">RetractLeft</a> (<a class="el" href="class_rete_core_1_1_token.html">Token</a> <a class="el" href="_program_8cs.html#ad2bdf1b2dffbb7f95ccf0cdb4809591e">token</a>)</td></tr>
-<tr class="memdesc:a15097630e419c02b782139575b4646e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a token from the left side of the node. It updates the left index and checks for matches on the right side using the extracted key. If matches are lost, it propagates retractions to successors.  <br /></td></tr>
+<tr class="memdesc:a15097630e419c02b782139575b4646e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a tracked token from its index buckets and retracts it only if it was active. This method ensures that the internal state of the node remains consistent after a left token has been retracted.  <br /></td></tr>
 <tr class="memitem:aa28f37728bce27cd0c50aad888dfe7cb" id="r_aa28f37728bce27cd0c50aad888dfe7cb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa28f37728bce27cd0c50aad888dfe7cb">RetractRight</a> (object fact)</td></tr>
-<tr class="memdesc:aa28f37728bce27cd0c50aad888dfe7cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts a fact from the right side of the node. It updates the right index and checks for matches on the left side using the extracted key. If matches are lost, it propagates retractions to successors.  <br /></td></tr>
+<tr class="memdesc:aa28f37728bce27cd0c50aad888dfe7cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a tracked right fact and reconciles left-side match counts against remaining facts. This method ensures that the internal state of the node remains consistent after a right fact has been retracted.  <br /></td></tr>
 <tr class="memitem:a798f6b6b04d92794fce35b3b72240406" id="r_a798f6b6b04d92794fce35b3b72240406"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a798f6b6b04d92794fce35b3b72240406">Refresh</a> (object fact, string propertyName)</td></tr>
-<tr class="memdesc:a798f6b6b04d92794fce35b3b72240406"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Refresh method is used to update the state of a fact or token in the node without changing its presence. For simplicity, we will treat Refresh as a Retract followed by an Assert, which will trigger the necessary updates to successor nodes based on the current state of matches.  <br /></td></tr>
+<tr class="memdesc:a798f6b6b04d92794fce35b3b72240406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuilds the indexes from current keys and propagates only changed existence states. This method is called when a fact or token has been updated, and it ensures that the internal state of the node remains consistent with the current data. It checks for changes in match counts and propagates assertions or retractions to successor nodes as needed.  <br /></td></tr>
 <tr class="memitem:a3ceb1861564a581adf5597bf223684f7" id="r_a3ceb1861564a581adf5597bf223684f7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3ceb1861564a581adf5597bf223684f7">RemoveSuccessor</a> (<a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a> successor)</td></tr>
 <tr class="memdesc:a3ceb1861564a581adf5597bf223684f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a successor node from this <a class="el" href="class_rete_core_1_1_or_node.html" title="Represents a node in a Rete network that forwards facts to multiple successor nodes,...">OrNode</a>. This method is used when a successor node is no longer needed or when the structure of the Rete network changes. When a successor is removed, it will no longer receive any tokens asserted, retracted, or refreshed through this node. The method simply removes the specified child node from the list of successors, ensuring that it is no longer part of the propagation path for tokens. This allows for dynamic modification of the Rete network as it evolves over time and ensures that nodes can be added or removed as needed without affecting the overall functionality of the system.  <br /></td></tr>
 <tr class="memitem:a922af95650280db482c1e9ec96c1de1e" id="r_a922af95650280db482c1e9ec96c1de1e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a922af95650280db482c1e9ec96c1de1e">DebugPrint</a> (object fact, int level=0)</td></tr>
@@ -247,7 +247,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a token on the left side of the node. It updates the left index and checks for matches on the right side using the extracted key. If matches are found, it propagates assertions to successors. </p>
+<p>Tracks a left token once, indexes its key, and asserts it when a right-side match exists. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>The token this operation is acting upon.</td></tr>
@@ -272,7 +272,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Asserts a fact on the right side of the node. It updates the right index and checks for matches on the left side using the extracted key. If matches are found, it propagates assertions to successors. </p>
+<p>Tracks a right fact once and asserts tokens whose match count changes from zero to nonzero. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact this operation is acting upon.</td></tr>
@@ -333,10 +333,10 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The Refresh method is used to update the state of a fact or token in the node without changing its presence. For simplicity, we will treat Refresh as a Retract followed by an Assert, which will trigger the necessary updates to successor nodes based on the current state of matches. </p>
+<p>Rebuilds the indexes from current keys and propagates only changed existence states. This method is called when a fact or token has been updated, and it ensures that the internal state of the node remains consistent with the current data. It checks for changes in match counts and propagates assertions or retractions to successor nodes as needed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">factOrToken</td><td>The fact or token this operation is acting upon.</td></tr>
+    <tr><td class="paramname">fact</td><td>The refreshed fact or left token.</td></tr>
     <tr><td class="paramname">propertyName</td><td>The name of the property in the fact cell that is being updated.</td></tr>
   </table>
   </dd>
@@ -415,7 +415,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts a token from the left side of the node. It updates the left index and checks for matches on the right side using the extracted key. If matches are lost, it propagates retractions to successors. </p>
+<p>Removes a tracked token from its index buckets and retracts it only if it was active. This method ensures that the internal state of the node remains consistent after a left token has been retracted. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>The token this operation is acting upon.</td></tr>
@@ -440,7 +440,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retracts a fact from the right side of the node. It updates the right index and checks for matches on the left side using the extracted key. If matches are lost, it propagates retractions to successors. </p>
+<p>Removes a tracked right fact and reconciles left-side match counts against remaining facts. This method ensures that the internal state of the node remains consistent after a right fact has been retracted. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact this operation is acting upon.</td></tr>

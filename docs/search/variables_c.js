@@ -12,6 +12,7 @@ var searchData=
   ['order2_9',['order2',['../_program_8cs.html#aab97e84c315edc4aad39cb29409ba0f8',1,'Program.cs']]],
   ['order3_10',['order3',['../_program_8cs.html#a9c84f8e7addaef6982fa1690a1296915',1,'Program.cs']]],
   ['orderg_11',['orderG',['../_program_8cs.html#ab84961c0671fd65766a8260ccea55522',1,'Program.cs']]],
-  ['orfilter1_12',['orFilter1',['../_program_8cs.html#a2c6d199e327fe7a3f7d99d1bc7aaebfa',1,'Program.cs']]],
-  ['orfilter2_13',['orFilter2',['../_program_8cs.html#a7995972ada1dce6c96362aa849e0803d',1,'Program.cs']]]
+  ['orderj_12',['orderJ',['../_program_8cs.html#a9af923a425ad49a7788170af66f5a800',1,'Program.cs']]],
+  ['orfilter1_13',['orFilter1',['../_program_8cs.html#a2c6d199e327fe7a3f7d99d1bc7aaebfa',1,'Program.cs']]],
+  ['orfilter2_14',['orFilter2',['../_program_8cs.html#a7995972ada1dce6c96362aa849e0803d',1,'Program.cs']]]
 ];

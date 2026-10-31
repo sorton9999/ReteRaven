@@ -10,6 +10,7 @@ var interface_rete_engine_1_1_i_evaluation_builder =
     [ "Or", "interface_rete_engine_1_1_i_evaluation_builder.html#a9a444ea5a15152fc3f6860454399fbd7", null ],
     [ "Or< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a4ab5572305fd81dc1265e517886dbe6d", null ],
     [ "Then", "interface_rete_engine_1_1_i_evaluation_builder.html#a271de538e5846c5ebcf4d4380bf7afbf", null ],
+    [ "Trace", "interface_rete_engine_1_1_i_evaluation_builder.html#ac7fb793f964c3b5ed49ac37e77ac7ccb", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#abccacab4c576e3af6d4c57afc256bc8c", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a7477e89f31fdee5fb0aed8c1b3b845d1", null ]
 ];
