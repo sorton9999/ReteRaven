@@ -222,6 +222,8 @@ namespace ReteEngine
                 {
                     subscription.Observable.PropertyChanged -= subscription.Handler;
                 }
+                _agenda.CancelActivationsByFact(fact);
+                _agenda.RemoveByFact(fact);
                 _root.Retract(fact);
                 _agenda.ReleaseFactRevision(fact);
             }

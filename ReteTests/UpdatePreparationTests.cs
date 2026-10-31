@@ -753,6 +753,40 @@ public class UpdatePreparationTests
         Assert.Equal(2, fireCount);
     }
 
+    [Fact]
+    public void PropertyChangeRetractionOnlyCancelsTheRetractedRuleActivation()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var inStockFirings = 0;
+        var trackingInStockFirings = 0;
+        var trackingOutOfStockFirings = 0;
+
+        engine.Begin("InStock")
+            .First()
+            .Where<Inventory>("I", inventory => inventory.Quantity > 0)
+            .Then(_ => inStockFirings++);
+        engine.Begin("TrackInStock")
+            .Where<Inventory>("I", inventory => inventory.InStock)
+            .Then(_ => trackingInStockFirings++);
+        engine.Begin("TrackOutOfStock")
+            .Where<Inventory>("J", inventory => !inventory.InStock)
+            .Then(_ => trackingOutOfStockFirings++);
+
+        var inventory1 = new Inventory { Id = Guid.NewGuid(), Quantity = 0 };
+        var inventory2 = new Inventory { Id = Guid.NewGuid(), Quantity = 0 };
+        engine.Assert(inventory1, inventory2);
+        engine.FireAll();
+
+        Assert.Equal(2, trackingOutOfStockFirings);
+
+        inventory1.Quantity = 10;
+        engine.FireAll();
+
+        Assert.Equal(1, inStockFirings);
+        Assert.Equal(1, trackingInStockFirings);
+        Assert.Equal(2, trackingOutOfStockFirings);
+    }
+
     private sealed class MutableFact
     {
         public int Value { get; set; }
