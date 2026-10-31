@@ -119,10 +119,19 @@ ReteRaven uses a depth-first conflict-resolution strategy. When multiple rules a
 ------------------------------
 ## ==> Future Features
 
-The following capabilities are planned and are not part of the current released functionality. Target versions are tentative.
+The following capabilities are planned and are not part of the current released functionality.
 
-* = Publish-and-Resume Agenda Coordination (planned for v1.5): Agenda groups will be able to publish fact changes through the engine and resume dependent groups once their prerequisites are satisfied.
-* = Parallel Agenda Processing (planned for v1.5.1): Independent agenda groups may process concurrently. Shared working-memory and Rete-network mutations will require explicit coordination and are expected to remain serialized initially.
+### Performance & Scaling
+* = `Publish-and-Resume Agenda Coordination`: Agenda groups will be able to publish fact changes through the engine and resume dependent groups once their prerequisites are satisfied.
+* = `Parallel Agenda Processing`: Independent agenda groups may process concurrently. Shared working-memory and Rete-network mutations will require explicit coordination and are expected to remain serialized initially.
+### Developer Tooling
+* = `Rule Templates`: Allow users to define a rule "shape" once and instantiate it with different parameters at runtime.
+* = `Visualizer`: A tool that exports the Rete Graph to a DOT file or Mermaid diagram so developers can "see" their logic tree.
+* = `Serialization`: Save and load RuleMetadata to JSON/XML so rules can be managed in a database instead of just C# code.
+### Far Future v2.0
+* = `The "Self-Optimizing" Rete`
+* = `Temporal Logic (Time-Aware Rules)`
+* = `Explanatory AI (The "Why" Feature)`
 
 ------------------------------
 ## ==> License
