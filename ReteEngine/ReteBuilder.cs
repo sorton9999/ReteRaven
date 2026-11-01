@@ -738,6 +738,36 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
         public ReteBuilder<TInitial> Then(Action<Token> action, int salience = 0)
         {
+            ArgumentNullException.ThrowIfNull(action);
+            return AddTerminalNode(action, null, salience);
+        }
+
+        /// <summary>
+        /// Adds a rule action that stages fact changes and explicitly publishes them after the action succeeds.  The fact is introduced into the
+        /// rule network and evaluated against the conditions of the rule. If the rule's conditions are satisfied, the action is executed, and any
+        /// changes to facts are staged. After the action completes successfully, the changes are published to the working memory, allowing other
+        /// rules to react to the updated state. This method is useful for scenarios where you want to ensure that fact changes are only made
+        /// visible to other rules after a successful action execution, providing a controlled way to manage state changes in the rule engine.
+        /// </summary>
+        public ReteBuilder<TInitial> CtxThen(Action<RuleExecutionContext> action, int salience = 0)
+        {
+            ArgumentNullException.ThrowIfNull(action);
+            return AddTerminalNode(null, action, salience);
+        }
+
+        /// <summary>
+        /// A private helper method that adds a terminal node to the rule network with the specified action, context action, and salience. This method
+        /// captures the current state of global metadata and creates a terminal node that is added to the rule network.
+        /// </summary>
+        /// <param name="action">The action to execute when the rule fires. Can be null if a context action is provided.</param>
+        /// <param name="contextAction">The context action to execute when the rule fires. Can be null if a standard action is provided.</param>
+        /// <param name="salience">The priority of the rule when multiple rules are eligible to fire. Higher values indicate higher priority.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further rule configuration.</returns>
+        private ReteBuilder<TInitial> AddTerminalNode(
+            Action<Token>? action,
+            Action<RuleExecutionContext>? contextAction,
+            int salience)
+        {
             // Capture the state of global metadata before this action so data remains unchanged
             string ruleName = _ruleName;
             int priority = _priority;
@@ -751,6 +781,8 @@ namespace ReteEngine
             {
                 Name = ruleName,
                 Action = action,
+                ContextAction = contextAction,
+                PublishChanges = contextAction == null ? null : _engine.PublishChanges,
                 Agenda = _engine.Agenda,
                 GlobalGuards = globalConditionsCopy,
                 LateFilters = lateFiltersCopy,

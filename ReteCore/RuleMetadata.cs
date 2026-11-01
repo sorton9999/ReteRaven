@@ -34,11 +34,19 @@ namespace ReteCore
         /// </summary>
         public required string Name { get; init; }
         /// <summary>
-        /// The action delegate that defines the operation to be performed when this rule is activated.
-        /// The action takes a Token as a parameter, which contains the facts that triggered the activation.
-        /// This is a required field. 
+        /// The legacy action delegate that receives the token which triggered the activation.
         /// </summary>
-        public required Action<Token> Action { get; init; }
+        public Action<Token>? Action { get; init; }
+        /// <summary>
+        /// The context action delegate that receives the RuleExecutionContext, providing access to the token, agenda,
+        /// and other relevant information when the rule is activated.
+        /// </summary>
+        public Action<RuleExecutionContext>? ContextAction { get; init; }
+        /// <summary>
+        /// The optional delegate that is called when a batch of fact changes is published by a successful staged rule action.
+        /// This allows for custom handling or processing of the fact changes after the rule has been executed.
+        /// </summary>
+        public Action<IReadOnlyList<FactChange>>? PublishChanges { get; init; }
         /// <summary>
         /// The agenda to which activations of this rule should be added when the rule is activated. This allows for 
         /// flexibility in managing activations, as different rules can be directed to different agendas if needed. 

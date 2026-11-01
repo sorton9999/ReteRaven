@@ -205,6 +205,13 @@ namespace ReteCore
             snapshot.PropertyChanged = null;
             return snapshot;
         }
+
+        /// <summary>
+        /// Implements the IFact.Snapshot method, which creates a shallow snapshot of this fact.
+        /// </summary>
+        /// <returns>The copied snapshot of this fact.</returns>
+        IFact IFact.Snapshot() => Snapshot();
+
         /// <summary>
         /// When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName 
         /// attribute allows the caller to omit the property name when calling this method, as it will automatically use the 

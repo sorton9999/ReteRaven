@@ -381,10 +381,10 @@ namespace ReteTest.Tests
             var cell2 = new Fact { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
 
             engine.Assert(cell1, cell2);
-            Assert.Equal(2, engine.Agenda.Activations.Count(activation => activation.State == ActivationState.Pending));
+            Assert.Equal(2, engine.Agenda.Activations.Count(activation => activation.State == ActivationStateEnum.Pending));
 
             engine.Retract(cell2);
-            Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == ActivationState.Pending));
+            Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == ActivationStateEnum.Pending));
 
             engine.FireAll();
 
@@ -704,7 +704,7 @@ namespace ReteTest.Tests
             // The activation should have been changed to Fired, but not removed from the list.
             var loggedActivation = historicalActivations.First();
             Assert.Equal("SimpleVerificationRule", loggedActivation.RuleName);
-            Assert.Equal(ActivationState.Fired, loggedActivation.State);
+            Assert.Equal(ActivationStateEnum.Fired, loggedActivation.State);
         }
 
 

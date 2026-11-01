@@ -111,23 +111,23 @@ public class UpdatePreparationTests
         var product = new Product { ProductId = 10 };
         var inventory = new Inventory { ProductId = 10 };
         engine.Assert(product, inventory);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         inventory.ProductId = 11;
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(0, fireCount);
 
         inventory.ProductId = 10;
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         product.ProductId = 11;
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(0, fireCount);
 
         product.ProductId = 10;
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(1, fireCount);
     }
@@ -453,17 +453,17 @@ public class UpdatePreparationTests
 
         var product = new PlainProduct { Category = "Electronics" };
         engine.Assert(product);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         product.Category = "Food";
         engine.Update(product);
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(0, fireCount);
 
         product.Category = "Electronics";
         engine.Update(product);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(1, fireCount);
     }
@@ -482,17 +482,17 @@ public class UpdatePreparationTests
         var product = new PlainProduct { ProductId = 42 };
         var inventory = new PlainInventory { ProductId = 42 };
         engine.Assert(product, inventory);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         product.ProductId = 43;
         engine.Update(product);
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Empty(matchedProductIds);
 
         product.ProductId = 42;
         engine.Update(product);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 42 }, matchedProductIds);
     }
@@ -513,19 +513,19 @@ public class UpdatePreparationTests
         engine.Assert(product, risk);
 
         // A/B: The product initially passes while its related risk is non-critical.
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         // B/C: Making the risk critical blocks Not and cancels the pending activation.
         risk.Severity = "Critical";
         engine.Update(risk);
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Empty(processedProductIds);
 
         // B/C: Removing the blocker restores Not and allows one new activation.
         risk.Severity = "Low";
         engine.Update(risk);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 73 }, processedProductIds);
     }
@@ -545,26 +545,26 @@ public class UpdatePreparationTests
         var firstInventory = new PlainInventory { ProductId = 42 };
         var secondInventory = new PlainInventory { ProductId = 42 };
         engine.Assert(product, firstInventory, secondInventory);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         // One matching right fact leaves Exists true; it must not duplicate the pending activation.
         firstInventory.ProductId = 99;
         engine.Update(firstInventory);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 42 }, matchedProductIds);
 
         // Losing the last matching right fact makes Exists false and retracts the downstream match.
         secondInventory.ProductId = 99;
         engine.Update(secondInventory);
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 42 }, matchedProductIds);
 
         // Restoring one matching right fact makes Exists true and creates a new activation.
         firstInventory.ProductId = 42;
         engine.Update(firstInventory);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 42, 42 }, matchedProductIds);
     }
@@ -670,7 +670,7 @@ public class UpdatePreparationTests
         engine.Assert(fact);
         engine.Refresh(fact, nameof(ObservableFact.IsActive));
         engine.Refresh(fact, nameof(ObservableFact.IsActive));
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         engine.FireAll();
         engine.Refresh(fact, nameof(ObservableFact.IsActive));
@@ -696,7 +696,7 @@ public class UpdatePreparationTests
         engine.Update(fact);
         fact.Value = 3;
         engine.Update(fact);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
 
         engine.FireAll();
         Assert.Equal(new[] { 1, 3 }, observedValues);
@@ -723,13 +723,13 @@ public class UpdatePreparationTests
         fact.Value = 3;
         engine.Update(fact);
 
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 3 }, observedValues);
 
         fact.Value = 4;
         engine.Update(fact);
-        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationState.Pending));
+        Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 3, 4 }, observedValues);
     }

@@ -29,7 +29,7 @@ namespace ReteCore
         /// An enumeration representing the processing state of an activation. This indicates whether the activation is pending, has been 
         /// fired, or has been cancelled. The state of an activation can be used to manage the lifecycle of the activation within the agenda.
         /// </summary>
-        public enum ActivationState
+        public enum ActivationStateEnum
         {
             Cancelled,
             Pending,
@@ -55,6 +55,22 @@ namespace ReteCore
         /// </summary>
         public Action<Token> Action { get; }
         /// <summary>
+        /// The action delegate that defines the operation to be performed when this activation is fired. The action takes a
+        /// RuleExecutionContext as a parameter, which contains the facts that triggered the activation and provides additional
+        /// context for executing the rule's action. When the Fire method is called, this action will be executed with the
+        /// associated context, allowing it to perform the necessary operations defined by the rule, such as modifying facts,
+        /// asserting new facts, or interacting with external systems based on the matched conditions.
+        /// </summary>
+        public Action<RuleExecutionContext>? ContextAction { get; }
+        /// <summary>
+        /// The action delegate that defines the operation to be performed when this activation is fired. The action takes a 
+        /// IReadOnlyList<FactChange> as a parameter, which contains the fact changes that were published by the rule execution.
+        /// When the Fire method is called, this action will be executed with the associated fact changes, allowing it to perform
+        /// the necessary operations defined by the rule, such as updating external systems or triggering additional rules based
+        /// on the changes.
+        /// </summary>
+        public Action<IReadOnlyList<FactChange>>? PublishChanges { get; }
+        /// <summary>
         /// The token that triggered this activation. This token contains the facts that matched the conditions of the rule 
         /// associated with this activation. When the activation is fired, this token will be passed to the action delegate, 
         /// allowing it to access the relevant facts and perform the necessary operations defined by the rule. The token 
@@ -79,7 +95,7 @@ namespace ReteCore
         /// <summary>
         /// The current processing state of this activation.
         /// </summary>
-        public ActivationState State { get; set; } = ActivationState.Pending;
+        public ActivationStateEnum State { get; set; } = ActivationStateEnum.Pending;
         /// <summary>
         /// A timestamp indicating when this activation was created. This can be used to break ties when multiple activations 
         /// have the same salience and priority, ensuring a consistent and predictable firing order based on the order of 
@@ -116,13 +132,63 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Fires this activation by executing its associated action with the token that triggered it. This method is 
-        /// typically called by the agenda when processing pending activations, allowing the rule's action to be 
-        /// executed based on the matched facts contained in the token. The action can perform any operations defined 
-        /// by the rule, such as modifying facts, asserting new facts, or interacting with external systems, using the 
-        /// information available in the token.
+        /// An alternate constructor for creating an Activation instance that includes a context-aware action and a publish changes action.
         /// </summary>
-        public void Fire() => Action(Match);
+        /// <param name="name">The name of the activation.  Usually the rule name.</param>
+        /// <param name="action">The context-aware action that executes when this activation fires.</param>
+        /// <param name="publishChanges">The action that publishes the fact changes produced by the context-aware action.</param>
+        /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
+        /// <param name="priority">A priority value relative to other activations.</param>
+        /// <param name="salience">A priority value relative to other activations.</param>
+        public Activation(
+            string name,
+            Action<RuleExecutionContext> action,
+            Action<IReadOnlyList<FactChange>> publishChanges,
+            Token match,
+            int priority,
+            int salience)
+            : this(name, _ => { }, match, priority, salience)
+        {
+            ContextAction = action;
+            PublishChanges = publishChanges;
+        }
+
+        /// <summary>
+        /// Fires the activation by executing its associated action. If a context-aware action is defined, it creates a
+        /// RuleExecutionContext and invokes the context action. After execution, it completes the context and publishes
+        /// any fact changes if applicable. If no context action is defined, it simply invokes the standard action with
+        /// the triggering token. This method encapsulates the logic for executing the rule's behavior when its conditions
+        /// are met.
+        /// </summary>
+        public void Fire()
+        {
+            // If no context action is defined, execute the standard action with the triggering token.
+            if (ContextAction == null)
+            {
+                Action(Match);
+                return;
+            }
+
+            // If a context action is defined, create a RuleExecutionContext and invoke the context action.
+            var context = new RuleExecutionContext(Match, RuleName, Id);
+            try
+            {
+                ContextAction(context);
+            }
+            catch
+            {
+                // If an exception occurs during the execution of the context action, discard any staged changes and rethrow the exception.
+                context.Discard();
+                throw;
+            }
+
+            // Complete the context and retrieve any fact changes that were staged during the execution of the context action.
+            IReadOnlyList<FactChange>? changes = context.Complete();
+            if (changes != null)
+            {
+                PublishChanges?.Invoke(changes);
+            }
+        }
 
         /// <summary>
         /// A comparison method that allows activations to be ordered based on their priority, salience, and timestamp. 

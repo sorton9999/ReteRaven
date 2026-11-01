@@ -27,6 +27,7 @@ namespace ReteCore
         Guid Id { get; }
         object UnderlyingObject { get; }
         Type DataType { get; }
+        IFact Snapshot();
     }
 
     /// <summary>
@@ -73,6 +74,26 @@ namespace ReteCore
         /// fact.
         /// </summary>
         public Type DataType => typeof(T);
+
+        /// <summary>
+        /// Creates a shallow snapshot of this fact, preserving its runtime type and current state.
+        /// Derived facts with mutable reference-type members should override this method to copy those members.
+        /// </summary>
+        /// <returns>A detached snapshot of this fact.</returns>
+        public virtual Fact<T> Snapshot()
+        {
+            var snapshot = (Fact<T>)MemberwiseClone();
+            snapshot.PropertyChanged = null;
+            return snapshot;
+        }
+
+        /// <summary>
+        /// Implements the IFact.Snapshot method, which creates a shallow snapshot of this fact. This method is
+        /// part of the IFact interface and allows for polymorphic behavior when working with facts of different
+        /// types. It returns a detached snapshot of the fact, preserving its runtime type and current state.
+        /// </summary>
+        /// <returns>A detached snapshot of this fact.</returns>
+        IFact IFact.Snapshot() => Snapshot();
 
         /// <summary>
         /// The constructor initializes a new instance of the Fact class with the specified data. It assigns

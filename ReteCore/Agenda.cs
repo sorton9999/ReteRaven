@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="Agenda.cs">
 //     Copyright (c) Steven Orton. All rights reserved.
 //     Licensed under the GNU Lesser General Public License v2.1.
@@ -39,7 +39,7 @@ namespace ReteCore
         public bool HasActivations
         {
             get { return _activations.Count > 0 && 
-                    _activations.Any((a) => a.State == Activation.ActivationState.Pending); }
+                    _activations.Any((a) => a.State == Activation.ActivationStateEnum.Pending); }
         }
         /// <summary>
         /// Stores fired activation keys per fact revision, preventing repeats within one revision while permitting reactivation after updates.
@@ -73,7 +73,7 @@ namespace ReteCore
         public void Add(Activation activation)
         {
             string tupleKey = GenerateTupleKey(activation.RuleName, activation.Match);
-            if (_activations.Any(existing => existing.State == Activation.ActivationState.Pending &&
+            if (_activations.Any(existing => existing.State == Activation.ActivationStateEnum.Pending &&
                 GenerateTupleKey(existing.RuleName, existing.Match) == tupleKey))
             {
                 return;
@@ -127,7 +127,7 @@ namespace ReteCore
         {
             string tupleKey = GenerateTupleKey(ruleName, match);
             int removedCount = _activations.RemoveAll(activation =>
-                activation.State == Activation.ActivationState.Pending &&
+                activation.State == Activation.ActivationStateEnum.Pending &&
                 activation.RuleName == ruleName &&
                 GenerateTupleKey(activation.RuleName, activation.Match) == tupleKey);
 
@@ -147,7 +147,7 @@ namespace ReteCore
         public int RemoveByRuleAndFact(string ruleName, object fact)
         {
             int removedCount = _activations.RemoveAll(activation =>
-                activation.State == Activation.ActivationState.Pending &&
+                activation.State == Activation.ActivationStateEnum.Pending &&
                 activation.RuleName == ruleName &&
                 activation.Match.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)));
 
@@ -210,12 +210,12 @@ namespace ReteCore
             while (HasActivations)
             {
                 var snapshotToFire = _activations
-                    .Where(a => a.State == Activation.ActivationState.Pending)
+                    .Where(a => a.State == Activation.ActivationStateEnum.Pending)
                     .ToList();
 
                 foreach (var activation in snapshotToFire)
                 {
-                    if (activation.State != Activation.ActivationState.Pending)
+                    if (activation.State != Activation.ActivationStateEnum.Pending)
                     {
                         continue;
                     }
@@ -226,14 +226,14 @@ namespace ReteCore
                     if (_firedActivationsRegistry.Contains(keyFacts))
                     {
                         Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
-                        activation.State = Activation.ActivationState.Cancelled;
+                        activation.State = Activation.ActivationStateEnum.Cancelled;
                         continue;
                     }
 
                     Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' with facts [{keyFacts}] and salience {activation.Salience}.");
 
                     // Lock the state immediately
-                    activation.State = Activation.ActivationState.Fired;
+                    activation.State = Activation.ActivationStateEnum.Fired;
                     _firedActivationsRegistry.Add(keyFacts);
 
                     // This will safely append to the end of the collection
@@ -243,7 +243,7 @@ namespace ReteCore
                 // If executing rule actions appended any brand-new cascading pending work 
                 // into the master queue, recursively drain the next execution wave step
                 // automatically.
-                if (_activations.Any(a => a.State == Activation.ActivationState.Pending))
+                if (_activations.Any(a => a.State == Activation.ActivationStateEnum.Pending))
                 {
                     FireAll();
                 }
@@ -262,14 +262,14 @@ namespace ReteCore
             foreach (var activation in _activations)
             {
                 // Only care about activations that haven't fired yet
-                if (activation.State == Activation.ActivationState.Pending)
+                if (activation.State == Activation.ActivationStateEnum.Pending)
                 {
                     // Inspect the Token's wrapped collection of domain facts.
                     // If this activation contains a reference to the fact being deleted, kill it!
                     if (activation.Match.NamedFacts.Values.Any(f => ReferenceEquals(f, retractedFact) ||
                         f.Equals(retractedFact)))
                     {
-                        activation.State = Activation.ActivationState.Cancelled;
+                        activation.State = Activation.ActivationStateEnum.Cancelled;
                         Console.WriteLine($"[TM_RETRACT] Automatically cancelled pending activation for rule '{activation.RuleName}' due to fact retraction.");
                     }
                 }

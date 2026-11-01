@@ -22,7 +22,7 @@ public class TestPublishAndResume
         inventory.Quantity = 5;
 
         Assert.Single(engine.Agenda.Activations
-            .Where(activation => activation.State == Activation.ActivationState.Pending));
+            .Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(1, fireCount);
     }
@@ -44,13 +44,13 @@ public class TestPublishAndResume
 
         inventory.Quantity = 5;
         Assert.Empty(engine.Agenda.Activations
-            .Where(activation => activation.State == Activation.ActivationState.Pending));
+            .Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(0, fireCount);
 
         engine.Update(inventory);
         Assert.Single(engine.Agenda.Activations
-            .Where(activation => activation.State == Activation.ActivationState.Pending));
+            .Where(activation => activation.State == Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(1, fireCount);
     }
@@ -93,6 +93,122 @@ public class TestPublishAndResume
         Assert.Equal(original.Value, snapshot.Value);
         Assert.Equal(0, originalNotifications);
         Assert.Equal(1, snapshotNotifications);
+    }
+
+    [Fact]
+    public void FactChange_AssertCapturesFactSnapshotAndOrigin()
+    {
+        var inventory = new Inventory { Id = Guid.NewGuid(), Quantity = 12 };
+        var origin = new FactChangeOrigin("Inventory", "AssertStock", Guid.NewGuid());
+
+        var change = FactChange.Assert(inventory, origin);
+        inventory.Quantity = 0;
+
+        var snapshot = Assert.IsType<Inventory>(change.Fact);
+        Assert.Equal(FactChangeTypeEnum.Assert, change.Kind);
+        Assert.Equal(inventory.Id, change.FactId);
+        Assert.Equal(12, snapshot.Quantity);
+        Assert.Equal(origin, change.Origin);
+        Assert.Null(change.ExpectedRevision);
+    }
+
+    [Fact]
+    public void FactChange_UpdateCapturesReplacementAndExpectedRevision()
+    {
+        var replacement = new Inventory { Id = Guid.NewGuid(), Quantity = 25 };
+
+        var change = FactChange.Update(replacement, expectedRevision: 4);
+        replacement.Quantity = 0;
+
+        var snapshot = Assert.IsType<Inventory>(change.Fact);
+        Assert.Equal(FactChangeTypeEnum.Update, change.Kind);
+        Assert.Equal(replacement.Id, change.FactId);
+        Assert.Equal(25, snapshot.Quantity);
+        Assert.Equal(4, change.ExpectedRevision);
+    }
+
+    [Fact]
+    public void FactChange_AssertCapturesGenericFactSnapshot()
+    {
+        var fact = new Fact<int>(11);
+        var change = FactChange.Assert(fact);
+
+        fact.Value = 18;
+
+        var snapshot = Assert.IsType<Fact<int>>(change.Fact);
+        Assert.Equal(11, snapshot.Value);
+        Assert.Equal(fact.Id, change.FactId);
+    }
+
+    [Fact]
+    public void FactChange_RetractContainsIdentityAndNoFactSnapshot()
+    {
+        var factId = Guid.NewGuid();
+        var change = FactChange.Retract(factId, expectedRevision: 2);
+
+        Assert.Equal(FactChangeTypeEnum.Retract, change.Kind);
+        Assert.Equal(factId, change.FactId);
+        Assert.Null(change.Fact);
+        Assert.Equal(2, change.ExpectedRevision);
+    }
+
+    [Fact]
+    public void ThenWithChanges_PublishesBatchAfterSuccessfulAction()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        var secondInput = new Inventory { Id = Guid.NewGuid(), Quantity = 2 };
+        var actionCount = 0;
+        engine.Begin("StageChange")
+            .Where<Inventory>("inventory")
+            .CtxThen(context =>
+            {
+                Assert.Equal(actionCount, engine.PublishedChangeBatches.Count);
+                actionCount++;
+                context.Assert(new Fact<int>(42));
+                context.Publish();
+            });
+        IReadOnlyList<FactChange>? deliveredBatch = null;
+        engine.FactChangesPublished += batch => deliveredBatch = batch;
+
+        engine.Assert(input, secondInput);
+        Assert.Empty(engine.PublishedChangeBatches);
+
+        engine.FireAll();
+
+        Assert.Equal(2, engine.PublishedChangeBatches.Count);
+        Assert.Same(engine.PublishedChangeBatches[^1], deliveredBatch);
+        var changes = engine.PublishedChangeBatches.Select(batch => Assert.Single(batch)).ToArray();
+        Assert.All(changes, change =>
+        {
+            Assert.Equal(FactChangeTypeEnum.Assert, change.Kind);
+            Assert.Equal("StageChange", change.Origin?.RuleName);
+            Assert.NotNull(change.Origin?.ActivationId);
+        });
+        Assert.NotEqual(changes[0].Origin?.ActivationId, changes[1].Origin?.ActivationId);
+    }
+
+    [Fact]
+    public void ThenWithChanges_DiscardsBatchWhenActionThrows()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        engine.Begin("FailingStage")
+            .Where<Inventory>("inventory")
+            .CtxThen(context =>
+            {
+                context.Assert(new Fact<int>(42));
+                context.Publish();
+                throw new InvalidOperationException("Rule action failed.");
+            });
+        var publishedEvents = 0;
+        engine.FactChangesPublished += _ => publishedEvents++;
+        engine.Assert(input);
+
+        Assert.Throws<InvalidOperationException>(() => engine.FireAll());
+
+        Assert.Empty(engine.PublishedChangeBatches);
+        Assert.Equal(0, publishedEvents);
     }
 
     private sealed class DerivedFact : Fact

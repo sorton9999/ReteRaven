@@ -34,7 +34,7 @@ namespace ReteCore
         /// allowing it to access the matched facts and perform the desired operations when the rule fires.
         /// This is part of the rule metadata.
         /// </summary>
-        private readonly Action<Token> _action;
+        private readonly Action<Token>? _action;
         /// <summary>
         /// The agenda to which activations created by this terminal node will be added. The agenda is responsible for managing the execution of activations 
         /// based on their salience and other factors.
@@ -113,15 +113,32 @@ namespace ReteCore
         public void AddSuccessor(IReteNode node) { node.Parent = this; Console.WriteLine("[TerminalNode]: Nothing should come after this node."); }
 
         /// <summary>
-        /// Adds an eligible activation; the agenda deduplicates pending tuples and applies conditional firing rules. Checks for activation
-        /// conditions, including global guards and late filters are made, before adding an activation to the agenda.
+        /// Adds a fact to the Rete network and, if it matches the rule conditions, creates an activation and adds it to the agenda.
         /// </summary>
         /// <param name="fact">The fact to assert. Must be a non-null object of type Token to be considered for activation.</param>
         public void Assert(object fact)
         {
             if (fact is Token finalMatch && ActivationConditionsPass(finalMatch))
             {
-                _agenda.Add(new Activation(_ruleName, _action, finalMatch, _priority, _salience));
+                // If a context action is defined, create a RuleExecutionContext and invoke the context action.
+                if (_ruleMetadata.ContextAction is Action<RuleExecutionContext> contextAction)
+                {
+                    if (_ruleMetadata.PublishChanges == null)
+                    {
+                        throw new InvalidOperationException("A staged rule action requires a publication callback.");
+                    }
+                    _agenda.Add(new Activation(_ruleName, contextAction, _ruleMetadata.PublishChanges, finalMatch, _priority, _salience));
+                }
+                // If a standard action is defined, create an activation with the action and add it to the agenda.
+                else if (_action is Action<Token> action)
+                {
+                    _agenda.Add(new Activation(_ruleName, action, finalMatch, _priority, _salience));
+                }
+                // If neither action is defined, throw an exception indicating that the rule metadata must define an action.
+                else
+                {
+                    throw new InvalidOperationException("Rule metadata must define an action.");
+                }
             }
         }
 

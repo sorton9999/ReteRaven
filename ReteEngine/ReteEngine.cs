@@ -65,6 +65,11 @@ namespace ReteEngine
         /// </summary>
         private readonly List<TerminalNode> _terminalNodes = new();
         /// <summary>
+        /// A list of fact change batches that have been published by successful staged rule actions. Each batch represents a set of changes to facts that
+        /// were made during the execution of a rule action and were published to the working memory after the action completed successfully.
+        /// </summary>
+        private readonly List<IReadOnlyList<FactChange>> _publishedChangeBatches = new();
+        /// <summary>
         /// The alpha registry is a dictionary that maps a tuple of type and name to an AlphaMemory instance. This allows for efficient retrieval of 
         /// alpha memories based on the type and name of the facts they are associated with.
         /// </summary>
@@ -80,7 +85,14 @@ namespace ReteEngine
         /// Default is true (sharing enabled).
         /// </summary>
         private bool _enableBetaNodeSharing = true;
+        /// <summary>
+        /// The flag to control whether the engine automatically subscribes to INotifyPropertyChanged facts and refreshes the network when those facts change.
+        /// </summary>
         private bool _autoRefreshOnPropertyChanged = true;
+        /// <summary>
+        /// The flag to track whether the working memory needs to be replayed through the network. This is set to true when a terminal node is added after
+        /// facts have already been asserted, ensuring that all facts are properly evaluated against the new rule conditions.
+        /// </summary>
         private bool _needsWorkingMemoryReplay;
         /// <summary>
         /// A private flag to track whether the ReteEngine has been disposed.
@@ -100,6 +112,27 @@ namespace ReteEngine
         public Agenda Agenda
         {
             get { return _agenda; }
+        }
+
+        /// <summary>
+        /// Gets the change batches published by successful staged rule actions.
+        /// </summary>
+        public IReadOnlyList<IReadOnlyList<FactChange>> PublishedChangeBatches => _publishedChangeBatches.AsReadOnly();
+
+        /// <summary>
+        /// Raised when a staged rule action successfully publishes a change batch.
+        /// </summary>
+        public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
+
+        /// <summary>
+        /// Publishes a batch of fact changes to the working memory and raises the FactChangesPublished event. This method is called after a staged
+        /// rule action successfully completes.
+        /// </summary>
+        /// <param name="changes">The batch of fact changes to publish.</param>
+        internal void PublishChanges(IReadOnlyList<FactChange> changes)
+        {
+            _publishedChangeBatches.Add(changes);
+            FactChangesPublished?.Invoke(changes);
         }
 
         /// <summary>
