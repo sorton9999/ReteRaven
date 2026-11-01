@@ -168,40 +168,43 @@ namespace ReteCore
     public class Fact : IFact, INotifyPropertyChanged
     {
         /// <summary>
-        /// The value stored in this cell. When the value is set, if it differs from the current value, the PropertyChanged 
-        /// event is raised to notify observers of the change. 
-        /// </summary>
-        private object? _value;
-        /// <summary>
         /// The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain 
         /// constant for the lifetime of the cell to ensure consistent behavior.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; init; } = Guid.NewGuid();
         /// <summary>
         /// A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific 
         /// role or meaning in the context of its use.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
-
+        public string Name { get; init; } = string.Empty;
         /// <summary>
         /// The accessor for the value stored in this cell. When setting the Value, if the new value is different from the 
         /// current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value 
         /// property can hold any object.
         /// </summary>
-        public object? Value
-        {
-            get { return _value; }
-            set
-            {
-                if (_value != value)
-                {
-                    _value = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                }
-            }
-        }
+        public object? Value { get; init; }
+        /// <summary>
+        /// The underlying object of this fact, which is the same as the Value property. This property provides a way to access 
+        /// the value without needing to cast it.
+        /// </summary>
         public object UnderlyingObject => Value!;
+        /// <summary>
+        /// The type of the underlying object stored in this fact. This property is useful for reflection or when the type of
+        /// the value needs to be known at runtime. If the Value is null, this property returns typeof(object).
+        /// </summary>
         public Type DataType => Value?.GetType() ?? typeof(object);
+
+        /// <summary>
+        /// Creates a shallow snapshot of this fact, preserving its runtime type and current property state.
+        /// Derived facts with mutable reference-type members should override this method to copy those members.
+        /// </summary>
+        /// <returns>A detached snapshot of this fact.</returns>
+        public virtual Fact Snapshot()
+        {
+            var snapshot = (Fact)MemberwiseClone();
+            snapshot.PropertyChanged = null;
+            return snapshot;
+        }
         /// <summary>
         /// When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName 
         /// attribute allows the caller to omit the property name when calling this method, as it will automatically use the 

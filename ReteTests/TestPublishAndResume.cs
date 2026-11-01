@@ -69,7 +69,34 @@ public class TestPublishAndResume
         Assert.Same(payload, fact.UnderlyingObject);
     }
 
+    [Fact]
+    public void FactSnapshot_PreservesStateAndDetachesPropertyChangedSubscribers()
+    {
+        var original = new DerivedFact
+        {
+            Id = Guid.NewGuid(),
+            Name = "original",
+            Value = 42
+        };
+        var originalNotifications = 0;
+        original.PropertyChanged += (_, _) => originalNotifications++;
+
+        var snapshot = Assert.IsType<DerivedFact>(original.Snapshot());
+        var snapshotNotifications = 0;
+        snapshot.PropertyChanged += (_, _) => snapshotNotifications++;
+
+        snapshot.NotifyChanged();
+
+        Assert.NotSame(original, snapshot);
+        Assert.Equal(original.Id, snapshot.Id);
+        Assert.Equal(original.Name, snapshot.Name);
+        Assert.Equal(original.Value, snapshot.Value);
+        Assert.Equal(0, originalNotifications);
+        Assert.Equal(1, snapshotNotifications);
+    }
+
     private sealed class DerivedFact : Fact
     {
+        public void NotifyChanged() => OnPropertyChanged(nameof(Name));
     }
 }

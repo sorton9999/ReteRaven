@@ -16,28 +16,22 @@ var engine = new ReteEngine.ReteEngine();
 
 var cell1 = new Fact { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
 var cell2 = new Fact { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
-cell1.PropertyChanged += Cell_PropertyChanged;
-cell2.PropertyChanged += Cell_PropertyChanged;
 
 engine.Assert(cell1);
 engine.Assert(cell2); // Activates the rule
 engine.Retract(cell2); // Retracts the rule before it fires
 engine.FireAll();      // Nothing prints because of the retraction
 
-cell1.Value = 300; // Update cell1's value
-cell2.Value = 500; // Update cell2's value to match cell1
+var previousCell1 = cell1;
+cell1 = new Fact { Id = previousCell1.Id, Name = previousCell1.Name, Value = 300 };
+engine.Retract(previousCell1);
+engine.Assert(cell1);
+
+var previousCell2 = cell2;
+cell2 = new Fact { Id = previousCell2.Id, Name = previousCell2.Name, Value = 500 };
+engine.Retract(previousCell2);
+engine.Assert(cell2);
 var cell3 = new Fact { Id = Guid.NewGuid(), Name = "Cell3", Value = 1000 };
-
-cell3.PropertyChanged += Cell_PropertyChanged;
-
-void Cell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-{
-    Fact cell = sender as Fact;
-    if (cell != null)
-    {
-        Console.WriteLine($"Fact \'{cell.Id}\' new Value:[{cell.Value}].");
-    }
-}
 
 BetaMemory initialBetaMemory = new BetaMemory();
 initialBetaMemory.AddSuccessor(new JoinNode(initialBetaMemory, new AlphaMemory(), "B", (t, f) => true)); // Dummy join to start the chain
@@ -233,10 +227,19 @@ engine5.Assert(criticalCell);
 
 engine5.FireAll();
 
-// This value change should trigger the rule to mark it Normal and print the alert
-criticalCell.Value = 120;
+// Replace the immutable fact state to trigger the rule again.
+var previousCriticalCell = criticalCell;
+criticalCell = new CriticalCell
+{
+    Id = previousCriticalCell.Id,
+    Name = previousCriticalCell.Name,
+    Status = previousCriticalCell.Status,
+    Value = 120
+};
+engine5.Retract(previousCriticalCell);
+engine5.Assert(criticalCell);
 
-// Fire the rule again to see the affect of the value change
+// Fire the rule again to see the effect of the replacement
 engine5.FireAll();
 
 var engine6 = new ReteEngine.ReteEngine();
