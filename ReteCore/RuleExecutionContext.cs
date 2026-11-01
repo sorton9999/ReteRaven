@@ -37,12 +37,14 @@ namespace ReteCore
         /// <param name="match">The token that triggered the rule activation.</param>
         /// <param name="ruleName">The name of the rule being executed.</param>
         /// <param name="activationId">The unique identifier for this rule activation.</param>
-        internal RuleExecutionContext(Token match, string ruleName, Guid activationId)
+        /// <param name="agendaGroupName">The agenda group that scheduled this rule activation.</param>
+        internal RuleExecutionContext(Token match, string ruleName, Guid activationId, string agendaGroupName)
         {
             Match = match;
             RuleName = ruleName;
             ActivationId = activationId;
-            _origin = new FactChangeOrigin(null, ruleName, activationId);
+            AgendaGroupName = agendaGroupName;
+            _origin = new FactChangeOrigin(agendaGroupName, ruleName, activationId);
         }
 
         /// <summary>
@@ -59,6 +61,11 @@ namespace ReteCore
         /// The unique identifier for this rule activation.  This is used to identify the origin of any fact changes produced by this context.
         /// </summary>
         public Guid ActivationId { get; }
+
+        /// <summary>
+        /// The agenda group that scheduled the rule activation.
+        /// </summary>
+        public string AgendaGroupName { get; }
 
         /// <summary>
         /// The origin of the fact changes produced by this context, which identifies the rule execution that produced them.

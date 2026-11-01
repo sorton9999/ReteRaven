@@ -34,6 +34,10 @@ namespace ReteCore
         /// </summary>
         public required string Name { get; init; }
         /// <summary>
+        /// The agenda group that receives activations for this rule.
+        /// </summary>
+        public string AgendaGroupName { get; init; } = Agenda.MainAgendaGroup;
+        /// <summary>
         /// The legacy action delegate that receives the token which triggered the activation.
         /// </summary>
         public Action<Token>? Action { get; init; }

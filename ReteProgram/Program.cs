@@ -92,7 +92,7 @@ joinABC.AddSuccessor(terminal);
 engine.Begin("DetectConflict")
     .Where<Fact>("FirstCell")
     .And<Fact>("SecondCell", (token, next) =>
-        token.Get<Fact>("FirstCell").Id == next.Id &&
+        token.Get<Fact>("FirstCell").Id != next.Id &&
         token.Get<Fact>("FirstCell").Value != next.Value,
         "CheckAdd")
     .Then(token =>
@@ -233,7 +233,7 @@ criticalCell = new CriticalCell
 {
     Id = previousCriticalCell.Id,
     Name = previousCriticalCell.Name,
-    Status = previousCriticalCell.Status,
+    Status = "Normal",
     Value = 120
 };
 engine5.Retract(previousCriticalCell);

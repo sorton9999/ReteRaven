@@ -35,6 +35,7 @@ namespace ReteEngine
     {
         IRuleSetup If(string name, Func<bool> globalCondition);
         IConnectionBuilder If<T>(string name, Func<T, bool> lateCondition);
+        IRuleSetup AgendaGroup(string groupName);
         IRuleSetup Priority(int priority);
         IRuleSetup First();
         IRuleSetup Next();
@@ -177,6 +178,15 @@ namespace ReteEngine
         /// <returns>The current <see cref="IConnectionBuilder"/> (this instance) to continue building the rule.</returns>
         public IConnectionBuilder And()
         {
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder{TInitial}.AgendaGroup"/> that assigns this rule to an agenda group.
+        /// </summary>
+        public IRuleSetup AgendaGroup(string groupName)
+        {
+            _builder.AgendaGroup(groupName);
             return this;
         }
 

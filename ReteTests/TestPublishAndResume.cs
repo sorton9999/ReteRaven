@@ -283,6 +283,122 @@ public class TestPublishAndResume
         Assert.Equal(0, publishedEvents);
     }
 
+    [Fact]
+    public void AgendaGroups_DefaultToMainAndFireGroupLeavesOtherGroupsPending()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("OTHER");
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        var firedRules = new List<string>();
+
+        engine.Begin("MainRule")
+            .Where<Inventory>("inventory")
+            .Then(_ => firedRules.Add("MAIN"));
+        engine.Begin("OtherRule")
+            .AgendaGroup("OTHER")
+            .Where<Inventory>("inventory")
+            .Then(_ => firedRules.Add("OTHER"));
+        engine.Assert(input);
+
+        Assert.All(engine.Agenda.Activations, activation =>
+        {
+            Assert.Equal(activation.RuleName == "MainRule" ? "MAIN" : "OTHER", activation.AgendaGroupName);
+        });
+
+        engine.FireGroup("OTHER");
+
+        Assert.Equal(new[] { "OTHER" }, firedRules);
+        Assert.True(engine.Agenda.HasActivationsInGroup("MAIN"));
+
+        engine.FireAll();
+
+        Assert.Equal(new[] { "OTHER", "MAIN" }, firedRules);
+    }
+
+    [Fact]
+    public void AgendaGroups_FocusPrioritizesGroupAndPreservesPriorityWithinGroup()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("URGENT");
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        var firedRules = new List<string>();
+        var publishedOrigin = default(FactChangeOrigin?);
+
+        engine.Begin("MainRule")
+            .Priority(100)
+            .Where<Inventory>("inventory")
+            .Then(_ => firedRules.Add("MAIN"));
+        engine.Begin("UrgentLowPriority")
+            .AgendaGroup("URGENT")
+            .Priority(1)
+            .Where<Inventory>("inventory")
+            .Then(_ => firedRules.Add("URGENT-LOW"));
+        engine.Begin("UrgentHighPriority")
+            .AgendaGroup("URGENT")
+            .Priority(10)
+            .Where<Inventory>("inventory")
+            .CtxThen(context =>
+            {
+                firedRules.Add("URGENT-HIGH");
+                context.Assert(new Fact<int>(7));
+                context.Publish();
+            });
+        engine.FactChangesPublished += batch => publishedOrigin = Assert.Single(batch).Origin;
+        engine.Assert(input);
+
+        engine.FocusAgendaGroup("URGENT").FireAll();
+
+        Assert.Equal(new[] { "URGENT-HIGH", "URGENT-LOW", "MAIN" }, firedRules);
+        Assert.Equal("URGENT", publishedOrigin?.AgendaGroup);
+        Assert.Equal("MAIN", engine.Agenda.FocusedAgendaGroup);
+    }
+
+    [Fact]
+    public void AgendaGroups_RejectDuplicateDefinitionsAndUnknownReferences()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("Review");
+
+        Assert.Equal("Review", engine.Agenda.ResolveAgendaGroupName("review"));
+        Assert.Throws<InvalidOperationException>(() => engine.DefineAgendaGroup("review"));
+        Assert.Throws<InvalidOperationException>(() => engine.FocusAgendaGroup("Unknown"));
+        Assert.Throws<InvalidOperationException>(() => engine.FireGroup("Unknown"));
+        Assert.Throws<InvalidOperationException>(() => engine.RegisterWaitForHook("Unknown", () => true));
+        Assert.Throws<InvalidOperationException>(() => engine.Begin("UnknownGroupRule").AgendaGroup("Unknown"));
+    }
+
+    [Fact]
+    public void WaitForHook_PausesGroupAndResumesWhenReady()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("EXTERNAL");
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        var ready = false;
+        var fireCount = 0;
+        using IDisposable waitHook = engine.RegisterWaitForHook("EXTERNAL", () => ready);
+
+        engine.Begin("WaitForExternal")
+            .AgendaGroup("EXTERNAL")
+            .Where<Inventory>("inventory")
+            .Then(_ => fireCount++);
+        engine.Assert(input);
+
+        engine.FireGroup("EXTERNAL");
+        Assert.Equal(0, fireCount);
+        Assert.True(engine.Agenda.HasActivationsInGroup("EXTERNAL"));
+
+        engine.FocusAgendaGroup("EXTERNAL").FireAll();
+        Assert.Equal(0, fireCount);
+        Assert.Equal("EXTERNAL", engine.Agenda.FocusedAgendaGroup);
+
+        ready = true;
+        engine.FireAll();
+
+        Assert.Equal(1, fireCount);
+        Assert.Equal("MAIN", engine.Agenda.FocusedAgendaGroup);
+        Assert.False(engine.Agenda.HasActivationsInGroup("EXTERNAL"));
+    }
+
     private sealed class DerivedFact : Fact
     {
         public void NotifyChanged() => OnPropertyChanged(nameof(Name));

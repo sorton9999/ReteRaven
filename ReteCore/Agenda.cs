@@ -24,12 +24,33 @@ namespace ReteCore
     public class Agenda
     {
         /// <summary>
+        /// The default group.  All rules without a group assignment belong to this.
+        /// </summary>
+        public const string MainAgendaGroup = "MAIN";
+
+        /// <summary>
         /// The list of pending activations in the agenda. Each activation represents a rule that has been triggered and 
         /// is waiting to be fired. The agenda processes these activations based on their salience (priority) when the 
         /// FireAll method is called, ensuring that higher priority rules are executed before lower priority ones when 
         /// multiple activations are present.
         /// </summary>
         private readonly List<Activation> _activations = new();
+        /// <summary>
+        /// The list of all registered groups. With no other groups registered, the MAIN group is the only active group.
+        /// </summary>
+        private readonly Dictionary<string, string> _agendaGroups = new(StringComparer.OrdinalIgnoreCase)
+        {
+            [MainAgendaGroup] = MainAgendaGroup
+        };
+        /// <summary>
+        /// These are the registered readiness hooks. Each of these provide a hook to create a wait situation for groups
+        /// when needed.
+        /// </summary>
+        private readonly Dictionary<string, List<Func<bool>>> _waitForHooks = new(StringComparer.Ordinal);
+        /// <summary>
+        /// The list of active groups whose rules are firing first.
+        /// </summary>
+        private readonly List<string> _agendaGroupFocusStack = new() { MainAgendaGroup };
         /// <summary>
         /// Does the agenda currently have any pending activations? This property returns true if there are one or more 
         /// activations in the agenda, indicating that there are rules that have been triggered and are waiting to be 
@@ -67,13 +88,139 @@ namespace ReteCore
         public IEnumerable<Activation> Activations => _activations.AsReadOnly();
 
         /// <summary>
+        /// Gets the agenda group currently receiving firing priority.
+        /// </summary>
+        public string FocusedAgendaGroup => _agendaGroupFocusStack[^1];
+
+        /// <summary>
+        /// Gets the current agenda-group focus stack, from the base group to the focused group.
+        /// </summary>
+        public IReadOnlyList<string> AgendaGroupFocusStack => _agendaGroupFocusStack.AsReadOnly();
+
+        /// <summary>
+        /// Gets the registered agenda-group names.
+        /// </summary>
+        public IReadOnlyCollection<string> AgendaGroups => _agendaGroups.Values.ToArray();
+
+        /// <summary>
+        /// Registers a new agenda group. Names are unique without regard to case; `MAIN` is registered by default.
+        /// </summary>
+        public string DefineAgendaGroup(string groupName)
+        {
+            string normalizedName = NormalizeAgendaGroupName(groupName);
+            if (_agendaGroups.ContainsKey(normalizedName))
+            {
+                throw new InvalidOperationException($"Agenda group '{normalizedName}' is already defined.");
+            }
+
+            _agendaGroups.Add(normalizedName, normalizedName);
+            return normalizedName;
+        }
+
+        /// <summary>
+        /// Resolves a registered group name to its canonical spelling, or throws if it is unknown.
+        /// </summary>
+        public string ResolveAgendaGroupName(string groupName)
+        {
+            string normalizedName = NormalizeAgendaGroupName(groupName);
+            if (!_agendaGroups.TryGetValue(normalizedName, out string? registeredName))
+            {
+                throw new InvalidOperationException($"Agenda group '{normalizedName}' has not been defined.");
+            }
+            return registeredName;
+        }
+
+        /// <summary>
+        /// Places an agenda group on top of the focus stack. The focused group fires before groups below it.
+        /// </summary>
+        public void FocusAgendaGroup(string groupName)
+        {
+            groupName = ResolveAgendaGroupName(groupName);
+            if (!string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal))
+            {
+                _agendaGroupFocusStack.Add(groupName);
+            }
+        }
+
+        /// <summary>
+        /// Removes the currently focused group, returning focus to the previous group. The base `MAIN` group cannot be removed.
+        /// </summary>
+        /// <returns>True when a focused group was removed; otherwise false.</returns>
+        public bool PopAgendaGroupFocus()
+        {
+            if (_agendaGroupFocusStack.Count <= 1) return false;
+            _agendaGroupFocusStack.RemoveAt(_agendaGroupFocusStack.Count - 1);
+            return true;
+        }
+
+        /// <summary>
+        /// Determines whether the named group contains pending activations.
+        /// </summary>
+        public bool HasActivationsInGroup(string groupName)
+        {
+            groupName = ResolveAgendaGroupName(groupName);
+            return _activations.Any(activation =>
+                activation.State == Activation.ActivationStateEnum.Pending &&
+                string.Equals(activation.AgendaGroupName, groupName, StringComparison.Ordinal));
+        }
+
+        /// <summary>
+        /// Registers a readiness hook for a group. All registered hooks must return true before its pending activations can fire.
+        /// </summary>
+        /// <param name="groupName">A previously registered agenda group.</param>
+        /// <param name="canResume">Returns true when the group is ready to fire.</param>
+        /// <returns>A registration that removes the hook when disposed.</returns>
+        public IDisposable RegisterWaitForHook(string groupName, Func<bool> canResume)
+        {
+            ArgumentNullException.ThrowIfNull(canResume);
+            groupName = ResolveAgendaGroupName(groupName);
+            if (!_waitForHooks.TryGetValue(groupName, out List<Func<bool>>? hooks))
+            {
+                hooks = new List<Func<bool>>();
+                _waitForHooks.Add(groupName, hooks);
+            }
+            hooks.Add(canResume);
+            return new WaitForHookRegistration(this, groupName, canResume);
+        }
+
+        /// <summary>
+        /// Removes the registered group readiness hook.
+        /// </summary>
+        /// <param name="groupName">The name associated with the group readiness hook</param>
+        /// <param name="canResume">Search and remove hooks matching this state</param>
+        private void RemoveWaitForHook(string groupName, Func<bool> canResume)
+        {
+            if (!_waitForHooks.TryGetValue(groupName, out List<Func<bool>>? hooks)) return;
+            hooks.Remove(canResume);
+            if (hooks.Count == 0) _waitForHooks.Remove(groupName);
+        }
+
+        /// <summary>
+        /// Detect whether or not the group can resume.  The hooks associated with the group are obtained
+        /// and if it can resume, it return TRUE, otherwise FALSE is returned.
+        /// </summary>
+        /// <param name="groupName">The group name</param>
+        /// <returns>Whether or not the group can resume</returns>
+        private bool CanResumeGroup(string groupName)
+        {
+            if (!_waitForHooks.TryGetValue(groupName, out List<Func<bool>>? hooks)) return true;
+            foreach (Func<bool> canResume in hooks.ToArray())
+            {
+                if (!canResume()) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Adds an activation unless the tuple is already pending or has fired at its current fact revision.
         /// </summary>
         /// <param name="activation">The Activation object to add to the list of activations.</param>
         public void Add(Activation activation)
         {
+            activation.AgendaGroupName = ResolveAgendaGroupName(activation.AgendaGroupName);
             string tupleKey = GenerateTupleKey(activation.RuleName, activation.Match);
             if (_activations.Any(existing => existing.State == Activation.ActivationStateEnum.Pending &&
+                existing.AgendaGroupName == activation.AgendaGroupName &&
                 GenerateTupleKey(existing.RuleName, existing.Match) == tupleKey))
             {
                 return;
@@ -123,12 +270,14 @@ namespace ReteCore
         /// <param name="ruleName">The rule whose activation should be removed.</param>
         /// <param name="match">The match that was retracted.</param>
         /// <returns>The number of activations removed from the agenda.</returns>
-        public int RemoveByRuleAndMatch(string ruleName, Token match)
+        public int RemoveByRuleAndMatch(string ruleName, Token match, string? agendaGroupName = null)
         {
+            if (agendaGroupName != null) agendaGroupName = ResolveAgendaGroupName(agendaGroupName);
             string tupleKey = GenerateTupleKey(ruleName, match);
             int removedCount = _activations.RemoveAll(activation =>
                 activation.State == Activation.ActivationStateEnum.Pending &&
                 activation.RuleName == ruleName &&
+                (agendaGroupName == null || activation.AgendaGroupName == agendaGroupName) &&
                 GenerateTupleKey(activation.RuleName, activation.Match) == tupleKey);
 
             if (removedCount > 0)
@@ -144,11 +293,13 @@ namespace ReteCore
         /// <param name="ruleName">The rule whose activations should be removed.</param>
         /// <param name="fact">The fact instance associated with the activations.</param>
         /// <returns>The number of activations removed from the agenda.</returns>
-        public int RemoveByRuleAndFact(string ruleName, object fact)
+        public int RemoveByRuleAndFact(string ruleName, object fact, string? agendaGroupName = null)
         {
+            if (agendaGroupName != null) agendaGroupName = ResolveAgendaGroupName(agendaGroupName);
             int removedCount = _activations.RemoveAll(activation =>
                 activation.State == Activation.ActivationStateEnum.Pending &&
                 activation.RuleName == ruleName &&
+                (agendaGroupName == null || activation.AgendaGroupName == agendaGroupName) &&
                 activation.Match.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)));
 
             if (removedCount > 0)
@@ -159,14 +310,30 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Clears fired-revision markers when a match leaves the network so a later match can activate again.
+        /// Clears fired-revision markers when a match leaves the network so a later match can activate again.  These are
+        /// all detected and removed by group name.
         /// </summary>
         /// <param name="ruleName">The rule associated with the match.</param>
         /// <param name="match">The match whose fired marker should be cleared.</param>
-        public void ForgetActivation(string ruleName, Token match)
+        public void ForgetActivation(string ruleName, Token match, string? agendaGroupName = null)
         {
+            if (agendaGroupName != null) agendaGroupName = ResolveAgendaGroupName(agendaGroupName);
             string keyPrefix = $"{GenerateTupleKey(ruleName, match)}|revision:";
-            _firedActivationsRegistry.RemoveWhere(key => key.StartsWith(keyPrefix, StringComparison.Ordinal));
+            if (agendaGroupName == null)
+            {
+                _firedActivationsRegistry.RemoveWhere(key =>
+                    key.StartsWith(keyPrefix, StringComparison.Ordinal) ||
+                    key.StartsWith($"{GenerateTupleKey(ruleName, match)}|group:", StringComparison.Ordinal));
+            }
+            else if (agendaGroupName == MainAgendaGroup)
+            {
+                _firedActivationsRegistry.RemoveWhere(key => key.StartsWith(keyPrefix, StringComparison.Ordinal));
+            }
+            else
+            {
+                string groupPrefix = $"{GenerateTupleKey(ruleName, match)}|group:{agendaGroupName}|revision:";
+                _firedActivationsRegistry.RemoveWhere(key => key.StartsWith(groupPrefix, StringComparison.Ordinal));
+            }
         }
 
         /// <summary>
@@ -223,25 +390,44 @@ namespace ReteCore
         /// </summary>
         public void FireAll()
         {
-            // As long as we have activations, look for the next pending one.
-            // Remember, activations are pre-sorted by salience and time when added, so the first pending
-            // found will always be the highest priority.
-            while (HasActivations)
+            string groupName;
+            do
             {
-                var snapshotToFire = _activations
-                    .Where(a => a.State == Activation.ActivationStateEnum.Pending)
-                    .ToList();
+                groupName = FocusedAgendaGroup;
+                bool groupDrained = FireGroupActivations(groupName, honorFocus: true);
+                if (!groupDrained) return;
+            }
+            while (!string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal) ||
+                HasActivationsInGroup(groupName) ||
+                PopAgendaGroupFocus());
+        }
 
-                foreach (var activation in snapshotToFire)
+        /// <summary>
+        /// Fires pending activations from only the specified group without changing the focus stack.
+        /// </summary>
+        public void FireGroup(string groupName)
+        {
+            groupName = ResolveAgendaGroupName(groupName);
+            FireGroupActivations(groupName, honorFocus: false);
+        }
+
+        private bool FireGroupActivations(string groupName, bool honorFocus)
+        {
+            while (true)
+            {
+                List<Activation> snapshotToFire = _activations
+                    .Where(activation => activation.State == Activation.ActivationStateEnum.Pending &&
+                        activation.AgendaGroupName == groupName)
+                    .ToList();
+                if (snapshotToFire.Count == 0) return true;
+                if (!CanResumeGroup(groupName)) return false;
+
+                foreach (Activation activation in snapshotToFire)
                 {
-                    if (activation.State != Activation.ActivationStateEnum.Pending)
-                    {
-                        continue;
-                    }
+                    if (honorFocus && !string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal)) return true;
+                    if (activation.State != Activation.ActivationStateEnum.Pending) continue;
 
                     string keyFacts = GenerateActivationKey(activation);
-
-                    // Check duplication registry
                     if (_firedActivationsRegistry.Contains(keyFacts))
                     {
                         Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
@@ -249,22 +435,10 @@ namespace ReteCore
                         continue;
                     }
 
-                    Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' with facts [{keyFacts}] and salience {activation.Salience}.");
-
-                    // Lock the state immediately
+                    Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' in group '{groupName}' with facts [{keyFacts}] and salience {activation.Salience}.");
                     activation.State = Activation.ActivationStateEnum.Fired;
                     _firedActivationsRegistry.Add(keyFacts);
-
-                    // This will safely append to the end of the collection
                     activation.Fire();
-                }
-
-                // If executing rule actions appended any brand-new cascading pending work 
-                // into the master queue, recursively drain the next execution wave step
-                // automatically.
-                if (_activations.Any(a => a.State == Activation.ActivationStateEnum.Pending))
-                {
-                    FireAll();
                 }
             }
         }
@@ -318,7 +492,7 @@ namespace ReteCore
             // - If the fact is an enumerable, join its element representations.
             // - Otherwise fall back to the fact's ToString() (or "null").
             
-            return GenerateActivationKey(activation.RuleName, activation.Match);
+            return GenerateActivationKey(activation.RuleName, activation.Match, activation.AgendaGroupName);
         }
 
         /// <summary>
@@ -327,12 +501,13 @@ namespace ReteCore
         /// <param name="ruleName">The name of the rule.</param>
         /// <param name="match">The token containing named facts.</param>
         /// <returns>A unique key representing the activation.</returns>
-        private string GenerateActivationKey(string ruleName, Token match)
+        private string GenerateActivationKey(string ruleName, Token match, string agendaGroupName)
         {
             string revisionParts = string.Join(",", match.NamedFacts
                 .OrderBy(pair => pair.Key, StringComparer.Ordinal)
                 .Select(pair => $"{pair.Key}={GetRevisionKey(pair.Value)}"));
-            return $"{GenerateTupleKey(ruleName, match)}|revision:{revisionParts}";
+            string groupPart = agendaGroupName == MainAgendaGroup ? string.Empty : $"|group:{agendaGroupName}";
+            return $"{GenerateTupleKey(ruleName, match)}{groupPart}|revision:{revisionParts}";
         }
 
         /// <summary>
@@ -405,6 +580,64 @@ namespace ReteCore
             return _factRevisions.TryGetValue(value, out long revision)
                 ? revision.ToString(CultureInfo.InvariantCulture)
                 : "0";
+        }
+
+        /// <summary>
+        /// Readys the specified agenda group name for use.
+        /// </summary>
+        /// <param name="groupName">The agenda group name to normalize.</param>
+        /// <returns>The trimmed agenda group name.</returns>
+        /// <exception cref="ArgumentException">Thrown when groupName is null or consists only of white-space characters.</exception>
+        private static string NormalizeAgendaGroupName(string groupName)
+        {
+            if (string.IsNullOrWhiteSpace(groupName))
+            {
+                throw new ArgumentException("An agenda group name cannot be null or whitespace.", nameof(groupName));
+            }
+            return groupName.Trim();
+        }
+
+        /// <summary>
+        /// Represents a registration for a wait-for hook in an agenda, ensuring the hook is properly removed when
+        /// disposed.
+        /// </summary>
+        private sealed class WaitForHookRegistration : IDisposable
+        {
+            /// <summary>
+            /// The registered Agenda for this hook
+            /// </summary>
+            private Agenda? _agenda;
+            /// <summary>
+            /// The name of the group for this registration
+            /// </summary>
+            private readonly string _groupName;
+            /// <summary>
+            /// The registered state of the registered hook
+            /// </summary>
+            private readonly Func<bool> _canResume;
+
+            /// <summary>
+            /// Constructor. Registers the named group with the corresponding Agenda and state
+            /// </summary>
+            /// <param name="agenda">The Agenda to register</param>
+            /// <param name="groupName">The name of the group being registered</param>
+            /// <param name="canResume">The state of the registered hook</param>
+            public WaitForHookRegistration(Agenda agenda, string groupName, Func<bool> canResume)
+            {
+                _agenda = agenda;
+                _groupName = groupName;
+                _canResume = canResume;
+            }
+
+            /// <summary>
+            /// The dispose method for references to this class.
+            /// </summary>
+            public void Dispose()
+            {
+                Agenda? agenda = _agenda;
+                _agenda = null;
+                agenda?.RemoveWaitForHook(_groupName, _canResume);
+            }
         }
 
         /// <summary>

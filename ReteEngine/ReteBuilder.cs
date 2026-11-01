@@ -54,6 +54,10 @@ namespace ReteEngine
         /// </summary>
         private int _priority = 0;
         /// <summary>
+        /// The Agenda group name.  The Main group is assigned by default.
+        /// </summary>
+        private string _agendaGroupName = Agenda.MainAgendaGroup;
+        /// <summary>
         /// This list holds any global conditions that should be evaluated at the time the rule fires. 
         /// These conditions are not associated with any specific fact or token but are general predicates 
         /// that must be satisfied for the rule to execute. They are evaluated in the terminal node before 
@@ -202,6 +206,15 @@ namespace ReteEngine
         public ReteBuilder<TInitial> Priority(int level)
         {
             _priority = level;
+            return this;
+        }
+
+        /// <summary>
+        /// Assigns the rule to an agenda group. Rules default to `MAIN`.
+        /// </summary>
+        public ReteBuilder<TInitial> AgendaGroup(string groupName)
+        {
+            _agendaGroupName = _engine.Agenda.ResolveAgendaGroupName(groupName);
             return this;
         }
 
@@ -780,6 +793,7 @@ namespace ReteEngine
             var terminal = new TerminalNode(new RuleMetadata
             {
                 Name = ruleName,
+                AgendaGroupName = _agendaGroupName,
                 Action = action,
                 ContextAction = contextAction,
                 PublishChanges = contextAction == null ? null : _engine.PublishChanges,

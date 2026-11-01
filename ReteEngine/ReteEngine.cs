@@ -126,6 +126,23 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Registers an agenda group for later use by rules and firing operations. `MAIN` is registered by default.
+        /// </summary>
+        public ReteEngine DefineAgendaGroup(string groupName)
+        {
+            _agenda.DefineAgendaGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Registers a readiness hook for a defined agenda group. Returning false pauses that group's firing until the hook allows it to resume.
+        /// </summary>
+        public IDisposable RegisterWaitForHook(string groupName, Func<bool> canResume)
+        {
+            return _agenda.RegisterWaitForHook(groupName, canResume);
+        }
+
+        /// <summary>
         /// Gets the change batches published by successful staged rule actions.
         /// </summary>
         public IReadOnlyList<IReadOnlyList<FactChange>> PublishedChangeBatches => _publishedChangeBatches.AsReadOnly();
@@ -305,19 +322,52 @@ namespace ReteEngine
         /// <returns>The current instance of the ReteEngine.</returns>
         public ReteEngine FireAll()
         {
+            EnsureRulesCanFire();
+            ReplayWorkingMemoryIfNeeded();
+            _agenda.FireAll();
+            return this;
+        }
+
+        /// <summary>
+        /// Places an agenda group on top of the focus stack so it fires before previously focused groups.
+        /// </summary>
+        public ReteEngine FocusAgendaGroup(string groupName)
+        {
+            _agenda.FocusAgendaGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Fires pending activations from only the specified agenda group, leaving other groups pending.
+        /// </summary>
+        public ReteEngine FireGroup(string groupName)
+        {
+            EnsureRulesCanFire();
+            ReplayWorkingMemoryIfNeeded();
+            _agenda.FireGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Make sure the rule is ready before trying to fire.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if not ready</exception>
+        private void EnsureRulesCanFire()
+        {
             if (_isApplyingChangeBatches)
             {
                 throw new InvalidOperationException("Rules cannot be fired while a fact-change batch is being applied.");
             }
+        }
 
-            if (_needsWorkingMemoryReplay)
-            {
-                // Replay facts asserted before the current rule network was built.
-                _workingMemory.ForEach(f => _root.Assert(f));
-                _needsWorkingMemoryReplay = false;
-            }
-            _agenda.FireAll();
-            return this;
+        /// <summary>
+        /// Detects whether or not the facts need to be worked through the network before rules are asserted.
+        /// </summary>
+        private void ReplayWorkingMemoryIfNeeded()
+        {
+            if (!_needsWorkingMemoryReplay) return;
+            _workingMemory.ForEach(f => _root.Assert(f));
+            _needsWorkingMemoryReplay = false;
         }
 
         /// <summary>

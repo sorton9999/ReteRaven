@@ -47,6 +47,10 @@ namespace ReteCore
         /// </summary>
         public string RuleName { get; }
         /// <summary>
+        /// The group this agenda is assigned to.
+        /// </summary>
+        public string AgendaGroupName { get; internal set; }
+        /// <summary>
         /// An action delegate that defines the operation to be performed when this activation is fired. The action takes 
         /// a Token as a parameter, which contains the facts that triggered the activation. When the Fire method is called, 
         /// this action will be executed with the associated token, allowing it to perform the necessary operations defined 
@@ -119,12 +123,19 @@ namespace ReteCore
         /// <param name="action">The action that executes when this activation fires.</param>
         /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
         /// <param name="salience">A priority value relative to other activations.</param>
-        public Activation(string name, Action<Token> action, Token match, int priority, int salience)
+        public Activation(
+            string name,
+            Action<Token> action,
+            Token match,
+            int priority,
+            int salience,
+            string agendaGroupName = Agenda.MainAgendaGroup)
         {
             // Mark the timestamp on this object's instantiation which will be used for tie-breaking when mutiple
             // activations have the same Priority and Salience.
             _timestamp = Timestamp;
             RuleName = name;
+            AgendaGroupName = ValidateAgendaGroupName(agendaGroupName);
             Action = action;
             Match = match;
             Salience = salience;
@@ -146,8 +157,9 @@ namespace ReteCore
             Action<IReadOnlyList<FactChange>> publishChanges,
             Token match,
             int priority,
-            int salience)
-            : this(name, _ => { }, match, priority, salience)
+            int salience,
+            string agendaGroupName = Agenda.MainAgendaGroup)
+            : this(name, _ => { }, match, priority, salience, agendaGroupName)
         {
             ContextAction = action;
             PublishChanges = publishChanges;
@@ -170,7 +182,7 @@ namespace ReteCore
             }
 
             // If a context action is defined, create a RuleExecutionContext and invoke the context action.
-            var context = new RuleExecutionContext(Match, RuleName, Id);
+            var context = new RuleExecutionContext(Match, RuleName, Id, AgendaGroupName);
             try
             {
                 ContextAction(context);
@@ -188,6 +200,21 @@ namespace ReteCore
             {
                 PublishChanges?.Invoke(changes);
             }
+        }
+
+        /// <summary>
+        /// Validate the group name.  Throws an ArgumentException if invalid.
+        /// </summary>
+        /// <param name="agendaGroupName">The name to validate</param>
+        /// <returns>The validated group name</returns>
+        /// <exception cref="ArgumentException">Thown when invalid</exception>
+        private static string ValidateAgendaGroupName(string agendaGroupName)
+        {
+            if (string.IsNullOrWhiteSpace(agendaGroupName))
+            {
+                throw new ArgumentException("An agenda group name cannot be null or whitespace.", nameof(agendaGroupName));
+            }
+            return agendaGroupName;
         }
 
         /// <summary>

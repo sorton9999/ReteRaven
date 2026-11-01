@@ -127,12 +127,25 @@ namespace ReteCore
                     {
                         throw new InvalidOperationException("A staged rule action requires a publication callback.");
                     }
-                    _agenda.Add(new Activation(_ruleName, contextAction, _ruleMetadata.PublishChanges, finalMatch, _priority, _salience));
+                    _agenda.Add(new Activation(
+                        _ruleName,
+                        contextAction,
+                        _ruleMetadata.PublishChanges,
+                        finalMatch,
+                        _priority,
+                        _salience,
+                        _ruleMetadata.AgendaGroupName));
                 }
                 // If a standard action is defined, create an activation with the action and add it to the agenda.
                 else if (_action is Action<Token> action)
                 {
-                    _agenda.Add(new Activation(_ruleName, action, finalMatch, _priority, _salience));
+                    _agenda.Add(new Activation(
+                        _ruleName,
+                        action,
+                        finalMatch,
+                        _priority,
+                        _salience,
+                        _ruleMetadata.AgendaGroupName));
                 }
                 // If neither action is defined, throw an exception indicating that the rule metadata must define an action.
                 else
@@ -150,13 +163,13 @@ namespace ReteCore
         {
             if (fact is Token token)
             {
-                if (_agenda.RemoveByRuleAndMatch(_ruleName, token) > 0)
+                if (_agenda.RemoveByRuleAndMatch(_ruleName, token, _ruleMetadata.AgendaGroupName) > 0)
                 {
                     Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
                 }
-                _ruleMetadata.Agenda.ForgetActivation(_ruleName, token);
+                _ruleMetadata.Agenda.ForgetActivation(_ruleName, token, _ruleMetadata.AgendaGroupName);
             }
-            else if (_agenda.RemoveByRuleAndFact(_ruleName, fact) > 0)
+            else if (_agenda.RemoveByRuleAndFact(_ruleName, fact, _ruleMetadata.AgendaGroupName) > 0)
             {
                 Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
             }
