@@ -165,7 +165,7 @@ namespace ReteCore
     /// <remarks>The Fact class implements INotifyPropertyChanged to support data binding scenarios, such as
     /// those found in UI frameworks. PropertyChanged is raised when the Value property changes, allowing observers to
     /// react to updates. Equality and hash code operations are based on both the Id and Value properties.</remarks>
-    public class Fact : INotifyPropertyChanged
+    public class Fact : IFact, INotifyPropertyChanged
     {
         /// <summary>
         /// The value stored in this cell. When the value is set, if it differs from the current value, the PropertyChanged 
@@ -200,6 +200,8 @@ namespace ReteCore
                 }
             }
         }
+        public object UnderlyingObject => Value!;
+        public Type DataType => Value?.GetType() ?? typeof(object);
         /// <summary>
         /// When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName 
         /// attribute allows the caller to omit the property name when calling this method, as it will automatically use the 

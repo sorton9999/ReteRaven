@@ -80,6 +80,8 @@ namespace ReteEngine
         /// Default is true (sharing enabled).
         /// </summary>
         private bool _enableBetaNodeSharing = true;
+        private bool _autoRefreshOnPropertyChanged = true;
+        private bool _needsWorkingMemoryReplay;
         /// <summary>
         /// A private flag to track whether the ReteEngine has been disposed.
         /// </summary>
@@ -105,8 +107,19 @@ namespace ReteEngine
         /// </summary>
         /// <param name="enableBetaNodeSharing">If true (default), rules with identical prefixes share nodes.</param>
         public ReteEngine(bool enableBetaNodeSharing = true)
+            : this(new ReteEngineOptions { EnableBetaNodeSharing = enableBetaNodeSharing })
         {
-            _enableBetaNodeSharing = enableBetaNodeSharing;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ReteEngine with the specified options.
+        /// </summary>
+        /// <param name="options">Options controlling engine behavior.</param>
+        public ReteEngine(ReteEngineOptions options)
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            _enableBetaNodeSharing = options.EnableBetaNodeSharing;
+            _autoRefreshOnPropertyChanged = options.AutoRefreshOnPropertyChanged;
         }
 
         /// <summary>
@@ -138,6 +151,10 @@ namespace ReteEngine
         public void AddTerminalNode(TerminalNode node)
         {
             _terminalNodes.Add(node);
+            if (_workingMemory.Count > 0)
+            {
+                _needsWorkingMemoryReplay = true;
+            }
         }
 
         /// <summary>
@@ -164,7 +181,7 @@ namespace ReteEngine
             if (!alreadyExists)
             {
                 _workingMemory.Add(fact);
-                if (!_disposed && fact is INotifyPropertyChanged observable)
+                if (!_disposed && _autoRefreshOnPropertyChanged && fact is INotifyPropertyChanged observable)
                 {
                     PropertyChangedEventHandler handler = (sender, args) =>
                     {
@@ -255,10 +272,12 @@ namespace ReteEngine
         /// <returns>The current instance of the ReteEngine.</returns>
         public ReteEngine FireAll()
         {
-            // Work any pre-loaded facts through the network.
-            // This takes care of any facts that were asserted
-            // before the network was fully built.
-            _workingMemory.ForEach(f => _root.Assert(f));
+            if (_needsWorkingMemoryReplay)
+            {
+                // Replay facts asserted before the current rule network was built.
+                _workingMemory.ForEach(f => _root.Assert(f));
+                _needsWorkingMemoryReplay = false;
+            }
             _agenda.FireAll();
             return this;
         }
