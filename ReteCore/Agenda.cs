@@ -185,6 +185,25 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Gets the current revision for a fact instance, returning zero when it has not been advanced.
+        /// </summary>
+        public long GetFactRevision(object fact)
+        {
+            if (fact == null) return 0;
+            return _factRevisions.TryGetValue(fact, out long revision) ? revision : 0;
+        }
+
+        /// <summary>
+        /// Sets the revision for a fact instance when a logical fact is replaced by a detached snapshot.
+        /// </summary>
+        public void SetFactRevision(object fact, long revision)
+        {
+            if (fact == null) return;
+            if (revision < 0) throw new ArgumentOutOfRangeException(nameof(revision));
+            _factRevisions[fact] = revision;
+        }
+
+        /// <summary>
         /// Releases revision state after a fact leaves working memory. This method is called when a fact is retracted from
         /// the working memory, indicating that any revision tracking associated with that fact is no longer needed. By
         /// removing the fact from the revision tracking dictionary, it ensures that future activations will not be

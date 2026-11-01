@@ -159,6 +159,7 @@ public class TestPublishAndResume
         var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
         var secondInput = new Inventory { Id = Guid.NewGuid(), Quantity = 2 };
         var actionCount = 0;
+        var observedFacts = 0;
         engine.Begin("StageChange")
             .Where<Inventory>("inventory")
             .CtxThen(context =>
@@ -168,6 +169,9 @@ public class TestPublishAndResume
                 context.Assert(new Fact<int>(42));
                 context.Publish();
             });
+        engine.Begin("ObserveChange")
+            .Where<Fact<int>>("fact", fact => fact.Value == 42)
+            .Then(_ => observedFacts++);
         IReadOnlyList<FactChange>? deliveredBatch = null;
         engine.FactChangesPublished += batch => deliveredBatch = batch;
 
@@ -186,6 +190,74 @@ public class TestPublishAndResume
             Assert.NotNull(change.Origin?.ActivationId);
         });
         Assert.NotEqual(changes[0].Origin?.ActivationId, changes[1].Origin?.ActivationId);
+        Assert.Equal(2, observedFacts);
+    }
+
+    [Fact]
+    public void PublishedBatch_AppliesAssertUpdateAndRetractInOrder()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+        var original = new Fact<int>(1);
+        var replacement = original.Snapshot();
+        replacement.Value = 2;
+        var secondReplacement = replacement.Snapshot();
+        secondReplacement.Value = 3;
+        var observedValues = new List<int>();
+
+        engine.Begin("ApplySequence")
+            .Where<Inventory>("inventory")
+            .CtxThen(context =>
+            {
+                context.Assert(original);
+                context.Update(replacement, expectedRevision: 0);
+                context.Update(secondReplacement, expectedRevision: 1);
+                context.Retract(original.Id, expectedRevision: 2);
+                context.Publish();
+            });
+        engine.Begin("ObserveFirstState")
+            .Where<Fact<int>>("fact", fact => fact.Value == 1)
+            .Then(token => observedValues.Add(token.Get<Fact<int>>("fact").Value));
+        engine.Begin("ObserveUpdatedState")
+            .Where<Fact<int>>("fact", fact => fact.Value == 2)
+            .Then(token => observedValues.Add(token.Get<Fact<int>>("fact").Value));
+        engine.Begin("ObserveSecondUpdatedState")
+            .Where<Fact<int>>("fact", fact => fact.Value == 3)
+            .Then(token => observedValues.Add(token.Get<Fact<int>>("fact").Value));
+
+        engine.Assert(input);
+        engine.FireAll();
+
+        Assert.Empty(observedValues);
+        var batch = Assert.Single(engine.PublishedChangeBatches);
+        Assert.Collection(batch,
+            change => Assert.Equal(FactChangeTypeEnum.Assert, change.Kind),
+            change => Assert.Equal(FactChangeTypeEnum.Update, change.Kind),
+            change => Assert.Equal(FactChangeTypeEnum.Update, change.Kind),
+            change => Assert.Equal(FactChangeTypeEnum.Retract, change.Kind));
+    }
+
+    [Fact]
+    public void PublishedBatch_RejectsStaleRevisionBeforeApplyingChanges()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var current = new Fact<int>(1);
+        var replacement = current.Snapshot();
+        replacement.Value = 2;
+        var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
+
+        engine.Begin("RejectStaleChange")
+            .Where<Inventory>("inventory")
+            .CtxThen(context =>
+            {
+                context.Update(replacement, expectedRevision: 4);
+                context.Publish();
+            });
+        engine.Assert(current, input);
+
+        Assert.Throws<InvalidOperationException>(() => engine.FireAll());
+
+        Assert.Empty(engine.PublishedChangeBatches);
     }
 
     [Fact]
