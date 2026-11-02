@@ -53,7 +53,13 @@ namespace ReteCore
         /// generation process.
         /// </summary>
         private long _nextObjectIdentity;
+        /// <summary>
+        /// Controls whether agenda groups collect runtime counters and timing information.
+        /// </summary>
         private bool _collectStatistics = true;
+        /// <summary>
+        /// Controls whether agenda groups retain activity records.
+        /// </summary>
         private bool _recordGroupActivityLog = true;
 
         /// <summary>
@@ -275,6 +281,9 @@ namespace ReteCore
         /// <summary>
         /// Registers a readiness strategy directly with a group.
         /// </summary>
+        /// <param name="groupName">A previously registered agenda group.</param>
+        /// <param name="strategy">The strategy that determines whether the group can resume firing.</param>
+        /// <returns>A registration that removes the strategy when disposed.</returns>
         public IDisposable RegisterReadinessStrategy(string groupName, IAgendaGroupReadinessStrategy strategy)
         {
             groupName = ResolveAgendaGroupName(groupName);
@@ -481,12 +490,12 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// The group activation fire method. All pending activations under the given group name will be fired.
-        /// The honorFocus flag signifies the group is currently the active group and will fire first.
+        /// Fires pending activations in the specified group while coordinating with the group's readiness policy.
+        /// When focus is honored, firing pauses if another group becomes focused.
         /// </summary>
-        /// <param name="groupName">The group to fire</param>
-        /// <param name="honorFocus">The flag indicating the active group</param>
-        /// <returns></returns>
+        /// <param name="groupName">The agenda group whose activations should be fired.</param>
+        /// <param name="honorFocus">Whether firing should stop when this group loses focus.</param>
+        /// <returns>False if a readiness strategy pauses the group; otherwise true.</returns>
         private bool FireGroupActivations(string groupName, bool honorFocus)
         {
             AgendaGroup group = _groups[groupName];
@@ -677,14 +686,13 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Records statistics of the activity of the given group by name.
+        /// Records an activity entry in the specified group's activity log.
         /// </summary>
-        /// <param name="groupName">The name of the group</param>
-        /// <param name="activity">The activity string</param>
-        /// <param name="ruleName">The name of the rule this activity is attached to</param>
-        /// <param name="duration">The duration of the activity</param>
-        /// <param name="timestamp">The start time of the activity</param>
-        /// <returns></returns>
+        /// <param name="groupName">The name of the agenda group.</param>
+        /// <param name="activity">The activity description.</param>
+        /// <param name="ruleName">The rule associated with the activity, if any.</param>
+        /// <param name="duration">The elapsed time associated with the activity, if any.</param>
+        /// <param name="timestamp">The activity timestamp, or the current time when omitted.</param>
         private void RecordActivity(
             string groupName,
             string activity,
@@ -720,6 +728,11 @@ namespace ReteCore
             return groupName.Trim();
         }
 
+        /// <summary>
+        /// Removes activations matching the predicate from every registered group.
+        /// </summary>
+        /// <param name="predicate">The condition an activation must satisfy to be removed.</param>
+        /// <returns>The total number of activations removed.</returns>
         private int RemoveFromGroups(Predicate<Activation> predicate)
         {
             return _groups.Values.Sum(group => group.RemoveActivations(predicate));
