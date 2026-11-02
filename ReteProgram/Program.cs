@@ -886,3 +886,121 @@ engineK.FireAll();
 inventoryK1.Quantity = 10; // This should trigger the "InStock" rule and update the location
 engineK.FireAll();
 
+
+Console.WriteLine("\n--- Testing Agenda Groups and Readiness Hooks ---");
+
+var waitDemoEngine = new ReteEngine.ReteEngine();
+waitDemoEngine.DefineAgendaGroup("PREPARE");
+waitDemoEngine.DefineAgendaGroup("DISPATCH");
+
+var carrierReady = false;
+var waitDemoFiringOrder = new List<string>();
+waitDemoEngine.RuleFired += (_, e) =>
+    waitDemoFiringOrder.Add($"{e.AgendaGroup}: {e.RuleName}");
+var waitHookRegistration = waitDemoEngine.RegisterWaitForHook(
+    "DISPATCH",
+    () => carrierReady);
+
+// PREPARE priority 20: create a staged shipment.
+// Publishing makes it visible to the Rete network, but does not fire
+// activations in other agenda groups.
+waitDemoEngine.Begin("PrepareShipment")
+    .AgendaGroup("PREPARE")
+    .Priority(20)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .CtxThen(context =>
+    {
+        Order order = context.Match.Get<Order>("order");
+        waitDemoFiringOrder.Add("PREPARE: create shipment");
+        Console.WriteLine($"PREPARE: validating {order.Text}");
+
+        context.Assert(new Shipment
+        {
+            Id = Guid.NewGuid(),
+            ProductId = 64001,
+            Status = "ReadyToShip"
+        });
+        context.Publish();
+    });
+
+// PREPARE priority 10: this should run after PrepareShipment.
+waitDemoEngine.Begin("RecordPreparation")
+    .AgendaGroup("PREPARE")
+    .Priority(10)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .Then(context =>
+    {
+        Console.WriteLine("PREPARE: audit recorded");
+    });
+
+// DISPATCH is gated by the readiness hook.
+// Updating by snapshot preserves the shipment's identity.
+waitDemoEngine.Begin("DispatchShipment")
+    .AgendaGroup("DISPATCH")
+    .Priority(5)
+    .Where<Shipment>("shipment", shipment => shipment.Status == "ReadyToShip")
+    .CtxThen(context =>
+    {
+        Shipment shipment = context.Match.Get<Shipment>("shipment");
+        Shipment shippedSnapshot = (Shipment)shipment.Snapshot();
+        shippedSnapshot.Status = "Shipped";
+
+        Console.WriteLine($"DISPATCH: shipping product {shipment.ProductId}");
+
+        context.Update(shippedSnapshot, expectedRevision: 0);
+        context.Publish();
+    });
+
+// These rules belong to MAIN. The high-priority order rule demonstrates
+// that group focus takes precedence over rule priority across groups.
+waitDemoEngine.Begin("MainOrderMonitor")
+    .Priority(10000)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .Then(context =>
+    {
+        Console.WriteLine("MAIN: order monitor ran");
+    });
+
+waitDemoEngine.Begin("MainShipmentMonitor")
+    .Where<Shipment>("shipment", shipment => shipment.Status == "Shipped")
+    .Then(context =>
+    {
+        Console.WriteLine("MAIN: shipment monitor saw Shipped");
+    });
+
+var waitDemoOrder = new Order
+{
+    Id = Guid.NewGuid(),
+    Text = "SHIP-64001",
+    TargetRank = "Captain",
+    GivenBy = "DebugDemo",
+    IsProcessed = false
+};
+
+waitDemoEngine.Assert(waitDemoOrder);
+
+// Fire only PREPARE. This also asserts the staged shipment into working
+// memory, creating a pending DISPATCH activation.
+waitDemoEngine.FireGroup("PREPARE");
+
+Console.WriteLine($"After PREPARE, DISPATCH pending: {waitDemoEngine.Agenda.HasActivationsInGroup("DISPATCH")}");
+Console.WriteLine($"After PREPARE, MAIN pending: {waitDemoEngine.Agenda.HasActivationsInGroup("MAIN")}");
+
+// Focus DISPATCH. The readiness hook is false, so FireAll pauses there:
+// no DISPATCH or MAIN actions should run yet.
+waitDemoEngine.FocusAgendaGroup("DISPATCH").FireAll();
+
+Console.WriteLine($"Paused focus: {waitDemoEngine.Agenda.FocusedAgendaGroup}");
+Console.WriteLine($"Actions fired so far: {string.Join(" -> ", waitDemoFiringOrder)}");
+
+// Simulate the external condition becoming ready, then resume processing.
+// DISPATCH runs first; after it empties, focus returns to MAIN.
+carrierReady = true;
+waitDemoEngine.FireAll();
+
+Console.WriteLine($"Final focus: {waitDemoEngine.Agenda.FocusedAgendaGroup}");
+Console.WriteLine($"Final firing order: {string.Join(" -> ", waitDemoFiringOrder)}");
+Console.WriteLine(waitDemoEngine.GetAgendaGroupStatistics());
+
+waitHookRegistration.Dispose();
+

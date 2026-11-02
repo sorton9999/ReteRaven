@@ -375,6 +375,13 @@ public class TestPublishAndResume
         var input = new Inventory { Id = Guid.NewGuid(), Quantity = 1 };
         var ready = false;
         var fireCount = 0;
+        string? firedEventGroup = null;
+        TimeSpan? firedEventDuration = null;
+        engine.RuleFired += (_, eventArgs) =>
+        {
+            firedEventGroup = eventArgs.AgendaGroup;
+            firedEventDuration = eventArgs.Duration;
+        };
         using IDisposable waitHook = engine.RegisterWaitForHook("EXTERNAL", () => ready);
 
         engine.Begin("WaitForExternal")
@@ -397,6 +404,22 @@ public class TestPublishAndResume
         Assert.Equal(1, fireCount);
         Assert.Equal("MAIN", engine.Agenda.FocusedAgendaGroup);
         Assert.False(engine.Agenda.HasActivationsInGroup("EXTERNAL"));
+
+        AgendaGroupRuntimeStatistics statistics = Assert.Single(
+            engine.GetAgendaGroupRuntimeStatistics().Where(group => group.GroupName == "EXTERNAL"));
+        Assert.Equal(1, statistics.ActivationCount);
+        Assert.Equal(1, statistics.WaitCount);
+        Assert.NotNull(statistics.LastFocusedAt);
+        Assert.NotNull(statistics.LastActivationAt);
+        Assert.False(statistics.IsWaiting);
+        Assert.Equal("EXTERNAL", firedEventGroup);
+        Assert.NotNull(firedEventDuration);
+        Assert.True(firedEventDuration.Value >= TimeSpan.Zero);
+        Assert.Contains(engine.AgendaGroupActivityLog, activity =>
+            activity.GroupName == "EXTERNAL" && activity.Activity == "Waiting");
+        Assert.Contains(engine.AgendaGroupActivityLog, activity =>
+            activity.GroupName == "EXTERNAL" && activity.Activity == "ActivationCompleted");
+        Assert.Contains("Total run time:", engine.GetAgendaGroupStatistics());
     }
 
     private sealed class DerivedFact : Fact

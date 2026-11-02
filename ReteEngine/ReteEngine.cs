@@ -153,6 +153,11 @@ namespace ReteEngine
         public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
 
         /// <summary>
+        /// Raised after a rule action completes successfully, including its agenda group and execution duration.
+        /// </summary>
+        public event EventHandler<RuleFiredEventArgs>? RuleFired;
+
+        /// <summary>
         /// Initializes a new instance of the ReteEngine with optional beta-node sharing.
         /// </summary>
         /// <param name="enableBetaNodeSharing">If true (default), rules with identical prefixes share nodes.</param>
@@ -170,6 +175,11 @@ namespace ReteEngine
             ArgumentNullException.ThrowIfNull(options);
             _enableBetaNodeSharing = options.EnableBetaNodeSharing;
             _autoRefreshOnPropertyChanged = options.AutoRefreshOnPropertyChanged;
+            _agenda.ActivationFired += activity => RuleFired?.Invoke(this, new RuleFiredEventArgs(
+                activity.GroupName,
+                activity.RuleName ?? string.Empty,
+                activity.Timestamp,
+                activity.Duration ?? TimeSpan.Zero));
         }
 
         /// <summary>
@@ -183,6 +193,35 @@ namespace ReteEngine
         public string GetBetaNodeRegistryStatistics()
         {
             return _betaNodeRegistry.GetStatistics();
+        }
+
+        /// <summary>
+        /// Gets the agenda-group timing summary and recent group activity log.
+        /// </summary>
+        public string GetAgendaGroupStatistics()
+        {
+            return _agenda.GetAgendaGroupStatistics();
+        }
+
+        /// <summary>
+        /// Gets the most recent agenda-group activity records.
+        /// </summary>
+        public IReadOnlyList<AgendaGroupActivityRecord> AgendaGroupActivityLog => _agenda.GroupActivityLog;
+
+        /// <summary>
+        /// Gets a snapshot of timing and activity counters for each registered agenda group.
+        /// </summary>
+        public IReadOnlyList<AgendaGroupRuntimeStatistics> GetAgendaGroupRuntimeStatistics()
+        {
+            return _agenda.GetAgendaGroupRuntimeStatistics();
+        }
+
+        /// <summary>
+        /// Clears retained agenda-group activity records without resetting cumulative timing counters.
+        /// </summary>
+        public void ClearAgendaGroupActivityLog()
+        {
+            _agenda.ClearGroupActivityLog();
         }
 
         /// <summary>
