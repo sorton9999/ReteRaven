@@ -1,3 +1,11 @@
+//-----------------------------------------------------------------------
+// <copyright file="RuleExecutionContext.cs">
+//     Copyright (c) Steven Orton. All rights reserved.
+//     Licensed under the GNU Lesser General Public License v2.1.
+//     See LICENSE file in the ReteRaven project root for full license
+//     information.
+// </copyright>
+//-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 

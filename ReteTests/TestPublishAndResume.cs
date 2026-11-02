@@ -422,6 +422,79 @@ public class TestPublishAndResume
         Assert.Contains("Total run time:", engine.GetAgendaGroupStatistics());
     }
 
+    [Fact]
+    public void ReadinessStrategy_CanPauseAndResumeAnAgendaGroup()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("EXTERNAL");
+        var strategy = new FixedReadinessStrategy(ready: false);
+        IDisposable registration = engine.Agenda.RegisterReadinessStrategy("EXTERNAL", strategy);
+        var fired = false;
+        engine.Begin("StrategyGatedRule")
+            .AgendaGroup("EXTERNAL")
+            .Where<Inventory>("inventory")
+            .Then(_ => fired = true);
+        engine.Assert(new Inventory { Id = Guid.NewGuid(), Quantity = 1 });
+
+        engine.FireGroup("EXTERNAL");
+        Assert.False(fired);
+
+        registration.Dispose();
+        engine.FireGroup("EXTERNAL");
+        Assert.True(fired);
+    }
+
+    [Fact]
+    public void AgendaStatistics_RaisesSnapshotEventsWhenGroupStatisticsChange()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("EVENTS");
+        var updates = new List<AgendaGroupRuntimeStatistics>();
+        engine.Agenda.GroupStatisticsUpdated += updates.Add;
+        engine.Begin("StatisticsEventRule")
+            .AgendaGroup("EVENTS")
+            .Where<Inventory>("inventory")
+            .Then(_ => { });
+        engine.Assert(new Inventory { Id = Guid.NewGuid(), Quantity = 1 });
+
+        engine.FireGroup("EVENTS");
+
+        Assert.Contains(updates, statistics =>
+            statistics.GroupName == "EVENTS" && statistics.ActivationCount == 1);
+        Assert.Equal(1, updates[^1].ActivationCount);
+        Assert.NotNull(updates[^1].LastActivationAt);
+    }
+
+    [Fact]
+    public void AgendaDiagnostics_CanBeDisabledForFastExecution()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.Agenda.CollectStatistics = false;
+        engine.Agenda.RecordGroupActivityLog = false;
+        engine.Agenda.ClearGroupActivityLog();
+        engine.DefineAgendaGroup("FAST");
+        var statisticsEvents = 0;
+        engine.Agenda.GroupStatisticsUpdated += _ => statisticsEvents++;
+        engine.Begin("FastRule")
+            .AgendaGroup("FAST")
+            .Where<Inventory>("inventory")
+            .Then(_ => { });
+        engine.Assert(new Inventory { Id = Guid.NewGuid(), Quantity = 1 });
+
+        engine.FireGroup("FAST");
+
+        AgendaGroupRuntimeStatistics statistics = Assert.Single(
+            engine.GetAgendaGroupRuntimeStatistics().Where(group => group.GroupName == "FAST"));
+        Assert.Equal(0, statistics.ActivationCount);
+        Assert.Equal(0, statisticsEvents);
+        Assert.DoesNotContain(engine.AgendaGroupActivityLog, activity => activity.GroupName == "FAST");
+    }
+
+    private sealed class FixedReadinessStrategy(bool ready) : IAgendaGroupReadinessStrategy
+    {
+        public bool CanResume() => ready;
+    }
+
     private sealed class DerivedFact : Fact
     {
         public void NotifyChanged() => OnPropertyChanged(nameof(Name));
