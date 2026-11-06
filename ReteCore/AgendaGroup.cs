@@ -366,6 +366,9 @@ namespace ReteCore
             }
         }
 
+        /// <summary>
+        /// A delegated readiness strategy that invokes a supplied callback to determine whether the group can resume firing.
+        /// </summary>
         internal sealed class DelegateReadinessStrategy : IAgendaGroupReadinessStrategy
         {
             /// <summary>

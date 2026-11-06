@@ -23,6 +23,19 @@ namespace ReteCore
     public class Agenda
     {
         /// <summary>
+        /// Raised whenever the agenda-group focus stack changes.
+        /// </summary>
+        public event EventHandler<AgendaFocusStackChangedEventArgs>? FocusStackChanged;
+        /// <summary>
+        /// Raised after a rule activation completes successfully.
+        /// </summary>
+        public event Action<AgendaGroupActivityRecord>? ActivationFired;
+        /// <summary>
+        /// Raised whenever a registered agenda group's runtime statistics change.
+        /// </summary>
+        public event Action<AgendaGroupRuntimeStatistics>? GroupStatisticsUpdated;
+
+        /// <summary>
         /// The default group.  All rules without a group assignment belong to this.
         /// </summary>
         public const string MainAgendaGroup = "MAIN";
@@ -38,7 +51,9 @@ namespace ReteCore
         /// Stores fired activation keys per fact revision, preventing repeats within one revision while permitting reactivation after updates.
         /// </summary>
         private readonly HashSet<string> _firedActivationsRegistry = new();
-        /// <summary>Tracks update revisions by fact instance for revision-aware activation refraction.</summary>
+        /// <summary>
+        /// Tracks update revisions by fact instance for revision-aware activation refraction.
+        /// </summary>
         private readonly Dictionary<object, long> _factRevisions = new(ReferenceEqualityComparer.Instance);
         /// <summary>
         /// This is a list that allows the agenda to generate stable keys for activations that involve reference types, ensuring
@@ -142,16 +157,6 @@ namespace ReteCore
             Array.AsReadOnly(_groups.Values.SelectMany(group => group.ActivityLog).OrderBy(record => record.Timestamp).TakeLast(1000).ToArray());
 
         /// <summary>
-        /// Raised after a rule activation completes successfully.
-        /// </summary>
-        public event Action<AgendaGroupActivityRecord>? ActivationFired;
-
-        /// <summary>
-        /// Raised whenever a registered agenda group's runtime statistics change.
-        /// </summary>
-        public event Action<AgendaGroupRuntimeStatistics>? GroupStatisticsUpdated;
-
-        /// <summary>
         /// Gets a snapshot of timing and activity counters for every registered group.
         /// </summary>
         public IReadOnlyList<AgendaGroupRuntimeStatistics> GetAgendaGroupRuntimeStatistics()
@@ -237,8 +242,10 @@ namespace ReteCore
             groupName = ResolveAgendaGroupName(groupName);
             if (!string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal))
             {
+                IReadOnlyList<string> previousStack = CaptureFocusStack();
                 _agendaGroupFocusStack.Add(groupName);
                 RecordGroupFocus(groupName, "GroupFocused");
+                NotifyFocusStackChanged(previousStack, AgendaFocusStackChangeReason.GroupFocused);
             }
         }
 
@@ -248,11 +255,24 @@ namespace ReteCore
         /// <returns>True when a focused group was removed; otherwise false.</returns>
         public bool PopAgendaGroupFocus()
         {
+            return PopAgendaGroupFocus(AgendaFocusStackChangeReason.GroupPopped);
+        }
+
+        /// <summary>
+        /// Pop the currently focused group from the focus stack, returning focus to the previous group. The base `MAIN` group
+        /// cannot be removed. Notify subscribers of the change with the specified reason.
+        /// </summary>
+        /// <param name="reason">The reason for popping the focused group.</param>
+        /// <returns>True when a focused group was removed; otherwise false.</returns>
+        private bool PopAgendaGroupFocus(AgendaFocusStackChangeReason reason)
+        {
             if (_agendaGroupFocusStack.Count <= 1) return false;
+            IReadOnlyList<string> previousStack = CaptureFocusStack();
             string poppedGroup = FocusedAgendaGroup;
             _agendaGroupFocusStack.RemoveAt(_agendaGroupFocusStack.Count - 1);
             RecordActivity(poppedGroup, "FocusPopped");
             RecordGroupFocus(FocusedAgendaGroup, "FocusResumed");
+            NotifyFocusStackChanged(previousStack, reason);
             return true;
         }
 
@@ -476,7 +496,7 @@ namespace ReteCore
             }
             while (!string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal) ||
                 HasActivationsInGroup(groupName) ||
-                PopAgendaGroupFocus());
+                PopAgendaGroupFocus(AgendaFocusStackChangeReason.GroupAutomaticallyPopped));
         }
 
         /// <summary>
@@ -676,6 +696,41 @@ namespace ReteCore
             _groups[groupName].RecordFocus(activity);
         }
 
+        /// <summary>
+        /// Take a snapshot of the current agenda-group focus stack for change notification. This method creates a read-only
+        /// copy of the current focus stack, allowing subscribers to receive a snapshot of the stack's state before any 
+        /// changes occur. This is useful for tracking focus changes and understanding the context in which the focus stack
+        /// was modified.
+        /// </summary>
+        /// <returns>A read-only list representing the current focus stack.</returns>
+        private IReadOnlyList<string> CaptureFocusStack() => Array.AsReadOnly(_agendaGroupFocusStack.ToArray());
+
+        /// <summary>
+        /// Invokes the FocusStackChanged event to notify subscribers that the agenda-group focus stack has changed. This
+        /// method is called whenever a group is focused or popped from the stack, providing subscribers with the previous
+        /// state of the stack and the reason for the change.
+        /// </summary>
+        /// <param name="previousStack">The previous state of the focus stack.</param>
+        /// <param name="reason">The reason for the focus stack change.</param>
+        private void NotifyFocusStackChanged(
+            IReadOnlyList<string> previousStack,
+            AgendaFocusStackChangeReason reason)
+        {
+            FocusStackChanged?.Invoke(this, new AgendaFocusStackChangedEventArgs(
+                DateTimeOffset.UtcNow,
+                previousStack,
+                _agendaGroupFocusStack,
+                reason));
+        }
+
+        /// <summary>
+        /// Create a new agenda group with the specified name and configure its properties. This method initializes a new instance
+        /// of the AgendaGroup class, sets its properties for statistics collection and activity logging, and subscribes to its
+        /// StatisticsUpdated event to propagate updates to the parent agenda. The created group is then returned for further use
+        /// or registration.
+        /// </summary>
+        /// <param name="groupName">The name of the agenda group to create.</param>
+        /// <returns>The created AgendaGroup instance.</returns>
         private AgendaGroup CreateAgendaGroup(string groupName)
         {
             var group = new AgendaGroup(groupName);

@@ -354,6 +354,51 @@ public class TestPublishAndResume
     }
 
     [Fact]
+    public void AgendaGroups_FocusStackChangedReportsManualAndAutomaticChanges()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        engine.DefineAgendaGroup("A").DefineAgendaGroup("B");
+        var changes = new List<AgendaFocusStackChangedEventArgs>();
+        engine.Agenda.FocusStackChanged += (_, eventArgs) => changes.Add(eventArgs);
+
+        engine.FocusAgendaGroup("A");
+        engine.FocusAgendaGroup("A");
+        engine.FocusAgendaGroup("B");
+        Assert.True(engine.Agenda.PopAgendaGroupFocus());
+        engine.FireAll();
+
+        Assert.Collection(changes,
+            change =>
+            {
+                Assert.Equal(AgendaFocusStackChangeReason.GroupFocused, change.Reason);
+                Assert.Equal(new[] { "MAIN" }, change.PreviousStack);
+                Assert.Equal(new[] { "MAIN", "A" }, change.CurrentStack);
+            },
+            change =>
+            {
+                Assert.Equal(AgendaFocusStackChangeReason.GroupFocused, change.Reason);
+                Assert.Equal(new[] { "MAIN", "A" }, change.PreviousStack);
+                Assert.Equal(new[] { "MAIN", "A", "B" }, change.CurrentStack);
+            },
+            change =>
+            {
+                Assert.Equal(AgendaFocusStackChangeReason.GroupPopped, change.Reason);
+                Assert.Equal(new[] { "MAIN", "A", "B" }, change.PreviousStack);
+                Assert.Equal(new[] { "MAIN", "A" }, change.CurrentStack);
+            },
+            change =>
+            {
+                Assert.Equal(AgendaFocusStackChangeReason.GroupAutomaticallyPopped, change.Reason);
+                Assert.Equal(new[] { "MAIN", "A" }, change.PreviousStack);
+                Assert.Equal(new[] { "MAIN" }, change.CurrentStack);
+                Assert.NotEqual(default, change.ChangedAt);
+            });
+
+        Assert.Equal(new[] { "MAIN", "A" }, changes[0].CurrentStack);
+        Assert.Equal("MAIN", engine.Agenda.FocusedAgendaGroup);
+    }
+
+    [Fact]
     public void AgendaGroups_RejectDuplicateDefinitionsAndUnknownReferences()
     {
         var engine = new ReteEngine.ReteEngine();
