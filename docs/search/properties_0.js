@@ -1,8 +1,16 @@
 var searchData=
 [
-  ['action_0',['Action',['../class_rete_core_1_1_activation.html#a26bc7c07c0c8f91170cc7d4a6f0b9c04',1,'ReteCore.Activation.Action'],['../class_rete_core_1_1_rule_metadata.html#a575e2c53607b1a6865bfd1a72eb1ee89',1,'ReteCore.RuleMetadata.Action']]],
-  ['activations_1',['Activations',['../class_rete_core_1_1_agenda.html#a2c603d5fedf37ce173fd8aaea11d3b41',1,'ReteCore::Agenda']]],
-  ['agenda_2',['Agenda',['../class_rete_core_1_1_rule_metadata.html#a98b2b8454652408cba747729b0380749',1,'ReteCore.RuleMetadata.Agenda'],['../class_rete_engine_1_1_rete_engine.html#a3bed090030ab23747f4af9d81690bf10',1,'ReteEngine.ReteEngine.Agenda']]],
-  ['alias_3',['Alias',['../class_rete_core_1_1_late_filter.html#a39fcd90e9ea14c8120434be6cf33fec1',1,'ReteCore::LateFilter']]],
-  ['amount_4',['Amount',['../class_rete_program_1_1_line_item.html#aa6f5fc3845a0c7dc7024872a2c50ee61',1,'ReteProgram::LineItem']]]
+  ['action_0',['Action',['../class_rete_core_1_1_activation.html#a26bc7c07c0c8f91170cc7d4a6f0b9c04',1,'ReteCore.Activation.Action'],['../class_rete_core_1_1_rule_metadata.html#aea47d39cca2fbd823eb3221c9634e367',1,'ReteCore.RuleMetadata.Action']]],
+  ['activationid_1',['ActivationId',['../class_rete_core_1_1_rule_execution_context.html#aeb9544934cdbe528f8684054631eb5ee',1,'ReteCore::RuleExecutionContext']]],
+  ['activations_2',['Activations',['../class_rete_core_1_1_agenda.html#a2c603d5fedf37ce173fd8aaea11d3b41',1,'ReteCore.Agenda.Activations'],['../class_rete_core_1_1_agenda_group.html#a8e9aea54fd7137d22d03b2f79f91f284',1,'ReteCore.AgendaGroup.Activations']]],
+  ['activitylog_3',['ActivityLog',['../class_rete_core_1_1_agenda_group.html#acc83b3eb0586f77d8d664740ccf37945',1,'ReteCore::AgendaGroup']]],
+  ['agenda_4',['Agenda',['../class_rete_core_1_1_rule_metadata.html#a98b2b8454652408cba747729b0380749',1,'ReteCore.RuleMetadata.Agenda'],['../class_rete_engine_1_1_rete_engine.html#a3bed090030ab23747f4af9d81690bf10',1,'ReteEngine.ReteEngine.Agenda']]],
+  ['agendagroup_5',['AgendaGroup',['../class_rete_engine_1_1_rule_fired_event_args.html#acbbf85343c2e5e18dae438549c372c84',1,'ReteEngine::RuleFiredEventArgs']]],
+  ['agendagroupactivitylog_6',['AgendaGroupActivityLog',['../class_rete_engine_1_1_rete_engine.html#af3ffd897ad5fb72b342589a912b5d9e0',1,'ReteEngine::ReteEngine']]],
+  ['agendagroupfocusstack_7',['AgendaGroupFocusStack',['../class_rete_core_1_1_agenda.html#a129af3a42d99a02ceb82271627b68456',1,'ReteCore::Agenda']]],
+  ['agendagroupname_8',['AgendaGroupName',['../class_rete_core_1_1_activation.html#ac22a1bc465593bfb2a49019cd9285d00',1,'ReteCore.Activation.AgendaGroupName'],['../class_rete_core_1_1_rule_execution_context.html#a61b5a32c21cdd5cc333e8778b587e944',1,'ReteCore.RuleExecutionContext.AgendaGroupName'],['../class_rete_core_1_1_rule_metadata.html#a918b9ff2b33387c9dbb5814f77f08c2f',1,'ReteCore.RuleMetadata.AgendaGroupName']]],
+  ['agendagroups_9',['AgendaGroups',['../class_rete_core_1_1_agenda.html#a7d6b5aaf2871bfd71a4c44ff3c8a2937',1,'ReteCore::Agenda']]],
+  ['alias_10',['Alias',['../class_rete_core_1_1_late_filter.html#a39fcd90e9ea14c8120434be6cf33fec1',1,'ReteCore::LateFilter']]],
+  ['amount_11',['Amount',['../class_rete_program_1_1_line_item.html#aa6f5fc3845a0c7dc7024872a2c50ee61',1,'ReteProgram::LineItem']]],
+  ['autorefreshonpropertychanged_12',['AutoRefreshOnPropertyChanged',['../class_rete_engine_1_1_rete_engine_options.html#a773cb23731712458dde6c56118fd828a',1,'ReteEngine::ReteEngineOptions']]]
 ];

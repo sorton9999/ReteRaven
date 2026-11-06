@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,8 +108,14 @@ Properties</h2></td></tr>
 <tr class="memdesc:a93a31c84f2c0e0e5f187217dcd8b738e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The index of the rule in the Rete network. This index is assigned when the rule is added to the engine.  <br /></td></tr>
 <tr class="memitem:ad0ec447073afdf3dc6cccc6a4e7362b4" id="r_ad0ec447073afdf3dc6cccc6a4e7362b4"><td class="memItemLeft">required string&#160;</td><td class="memItemRight"><a class="el" href="#ad0ec447073afdf3dc6cccc6a4e7362b4">Name</a><code> [get]</code></td></tr>
 <tr class="memdesc:ad0ec447073afdf3dc6cccc6a4e7362b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the rule. This is used for identification and debugging purposes, allowing users to trace which rule is being activated when an activation is fired. This is a required field.  <br /></td></tr>
-<tr class="memitem:a575e2c53607b1a6865bfd1a72eb1ee89" id="r_a575e2c53607b1a6865bfd1a72eb1ee89"><td class="memItemLeft">required Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a575e2c53607b1a6865bfd1a72eb1ee89">Action</a><code> [get]</code></td></tr>
-<tr class="memdesc:a575e2c53607b1a6865bfd1a72eb1ee89"><td class="mdescLeft">&#160;</td><td class="mdescRight">The action delegate that defines the operation to be performed when this rule is activated. The action takes a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> as a parameter, which contains the facts that triggered the activation. This is a required field.  <br /></td></tr>
+<tr class="memitem:a918b9ff2b33387c9dbb5814f77f08c2f" id="r_a918b9ff2b33387c9dbb5814f77f08c2f"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a918b9ff2b33387c9dbb5814f77f08c2f">AgendaGroupName</a> = <a class="el" href="class_rete_core_1_1_agenda.html#a039cf30d5e212f84cd99abfb62c727c4">Agenda.MainAgendaGroup</a><code> [get]</code></td></tr>
+<tr class="memdesc:a918b9ff2b33387c9dbb5814f77f08c2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The agenda group that receives activations for this rule.  <br /></td></tr>
+<tr class="memitem:aea47d39cca2fbd823eb3221c9634e367" id="r_aea47d39cca2fbd823eb3221c9634e367"><td class="memItemLeft">Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a><code> [get]</code></td></tr>
+<tr class="memdesc:aea47d39cca2fbd823eb3221c9634e367"><td class="mdescLeft">&#160;</td><td class="mdescRight">The legacy action delegate that receives the token which triggered the activation.  <br /></td></tr>
+<tr class="memitem:acbf84b97c433a4a2cd765acba34aaf8b" id="r_acbf84b97c433a4a2cd765acba34aaf8b"><td class="memItemLeft"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#acbf84b97c433a4a2cd765acba34aaf8b">ContextAction</a><code> [get]</code></td></tr>
+<tr class="memdesc:acbf84b97c433a4a2cd765acba34aaf8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The context action delegate that receives the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>, providing access to the token, agenda, and other relevant information when the rule is activated.  <br /></td></tr>
+<tr class="memitem:a0e0f708ff5a5ee23d06c2f346c9f9bdc" id="r_a0e0f708ff5a5ee23d06c2f346c9f9bdc"><td class="memItemLeft"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a0e0f708ff5a5ee23d06c2f346c9f9bdc">PublishChanges</a><code> [get]</code></td></tr>
+<tr class="memdesc:a0e0f708ff5a5ee23d06c2f346c9f9bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optional delegate that is called when a batch of fact changes is published by a successful staged rule action. This allows for custom handling or processing of the fact changes after the rule has been executed.  <br /></td></tr>
 <tr class="memitem:a98b2b8454652408cba747729b0380749" id="r_a98b2b8454652408cba747729b0380749"><td class="memItemLeft">required Agenda&#160;</td><td class="memItemRight"><a class="el" href="#a98b2b8454652408cba747729b0380749">Agenda</a><code> [get]</code></td></tr>
 <tr class="memdesc:a98b2b8454652408cba747729b0380749"><td class="mdescLeft">&#160;</td><td class="mdescRight">The agenda to which activations of this rule should be added when the rule is activated. This allows for flexibility in managing activations, as different rules can be directed to different agendas if needed. This is a required field.  <br /></td></tr>
 <tr class="memitem:a3935ddf6a318cb2d1f2e402f39720d0e" id="r_a3935ddf6a318cb2d1f2e402f39720d0e"><td class="memItemLeft">List&lt; Func&lt; bool &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3935ddf6a318cb2d1f2e402f39720d0e">GlobalGuards</a> = new()<code> [get]</code></td></tr>
@@ -144,8 +150,8 @@ Properties</h2></td></tr>
 </div>
 </div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
-<a id="a575e2c53607b1a6865bfd1a72eb1ee89" name="a575e2c53607b1a6865bfd1a72eb1ee89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a575e2c53607b1a6865bfd1a72eb1ee89">&#9670;&#160;</a></span>Action</h2>
+<a id="aea47d39cca2fbd823eb3221c9634e367" name="aea47d39cca2fbd823eb3221c9634e367"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea47d39cca2fbd823eb3221c9634e367">&#9670;&#160;</a></span>Action</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +160,7 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">required Action&lt;<a class="el" href="class_rete_core_1_1_token.html">Token</a>&gt; ReteCore.RuleMetadata.Action</td>
+          <td class="memname">Action&lt;<a class="el" href="class_rete_core_1_1_token.html">Token</a>&gt;? ReteCore.RuleMetadata.Action</td>
         </tr>
       </table>
   </td>
@@ -164,7 +170,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The action delegate that defines the operation to be performed when this rule is activated. The action takes a <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> as a parameter, which contains the facts that triggered the activation. This is a required field. </p>
+<p>The legacy action delegate that receives the token which triggered the activation. </p>
 
 </div>
 </div>
@@ -189,6 +195,54 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The agenda to which activations of this rule should be added when the rule is activated. This allows for flexibility in managing activations, as different rules can be directed to different agendas if needed. This is a required field. </p>
+
+</div>
+</div>
+<a id="a918b9ff2b33387c9dbb5814f77f08c2f" name="a918b9ff2b33387c9dbb5814f77f08c2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a918b9ff2b33387c9dbb5814f77f08c2f">&#9670;&#160;</a></span>AgendaGroupName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ReteCore.RuleMetadata.AgendaGroupName = <a class="el" href="class_rete_core_1_1_agenda.html#a039cf30d5e212f84cd99abfb62c727c4">Agenda.MainAgendaGroup</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The agenda group that receives activations for this rule. </p>
+
+</div>
+</div>
+<a id="acbf84b97c433a4a2cd765acba34aaf8b" name="acbf84b97c433a4a2cd765acba34aaf8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbf84b97c433a4a2cd765acba34aaf8b">&#9670;&#160;</a></span>ContextAction</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt;<a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a>&gt;? ReteCore.RuleMetadata.ContextAction</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The context action delegate that receives the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>, providing access to the token, agenda, and other relevant information when the rule is activated. </p>
 
 </div>
 </div>
@@ -285,6 +339,30 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>An integer representing the rule level priority of activations created by this terminal node. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for control over the execution order of rules, when it is important to ensure that certain rules are executed before others. A default value of 0 means that if priority is not specified, it will not affect the execution order of activations relative to those with explicitly set priority values. </p>
+
+</div>
+</div>
+<a id="a0e0f708ff5a5ee23d06c2f346c9f9bdc" name="a0e0f708ff5a5ee23d06c2f346c9f9bdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e0f708ff5a5ee23d06c2f346c9f9bdc">&#9670;&#160;</a></span>PublishChanges</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt;IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a>&gt; &gt;? ReteCore.RuleMetadata.PublishChanges</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The optional delegate that is called when a batch of fact changes is published by a successful staged rule action. This allows for custom handling or processing of the fact changes after the rule has been executed. </p>
 
 </div>
 </div>

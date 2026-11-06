@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['fact_0',['Fact',['../class_rete_core_1_1_token.html#a176e789694d2a69443acf707848f9992',1,'ReteCore::Token']]],
-  ['facts_1',['Facts',['../class_rete_core_1_1_alpha_memory.html#a61d986788bcd2d42e091c532461fe8a3',1,'ReteCore::AlphaMemory']]]
+  ['enablebetanodesharing_0',['EnableBetaNodeSharing',['../class_rete_engine_1_1_rete_engine_options.html#a2d2c01f5964b273c58d4b7cdcc578cc4',1,'ReteEngine::ReteEngineOptions']]]
 ];

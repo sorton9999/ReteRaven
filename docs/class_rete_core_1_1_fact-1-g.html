@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -108,6 +108,8 @@ Inheritance diagram for ReteCore.Fact&lt; T &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a2860ad959b032b1bd4e91c6483ba1fe3" id="r_a2860ad959b032b1bd4e91c6483ba1fe3"><td class="memItemLeft">virtual <a class="el" href="#a69ae23fef4cf76d2ddff8067fd366eff">Fact</a>&lt; T &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a2860ad959b032b1bd4e91c6483ba1fe3">Snapshot</a> ()</td></tr>
+<tr class="memdesc:a2860ad959b032b1bd4e91c6483ba1fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a shallow snapshot of this fact, preserving its runtime type and current state. Derived facts with mutable reference-type members should override this method to copy those members.  <br /></td></tr>
 <tr class="memitem:a69ae23fef4cf76d2ddff8067fd366eff" id="r_a69ae23fef4cf76d2ddff8067fd366eff"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a69ae23fef4cf76d2ddff8067fd366eff">Fact</a> (T data)</td></tr>
 <tr class="memdesc:a69ae23fef4cf76d2ddff8067fd366eff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor initializes a new instance of the <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> class with the specified data. It assigns the provided data to the Value property, which in turn sets the underlying fact and raises the PropertyChanged event if necessary.  <br /></td></tr>
 <tr class="memitem:aefd88d33f538c875fcbc7feaac4568b2" id="r_aefd88d33f538c875fcbc7feaac4568b2"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#aefd88d33f538c875fcbc7feaac4568b2">TValue&lt; T &gt;</a> ()</td></tr>
@@ -244,6 +246,36 @@ Events</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a2860ad959b032b1bd4e91c6483ba1fe3" name="a2860ad959b032b1bd4e91c6483ba1fe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2860ad959b032b1bd4e91c6483ba1fe3">&#9670;&#160;</a></span>Snapshot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="#a69ae23fef4cf76d2ddff8067fd366eff">Fact</a>&lt; T &gt; <a class="el" href="class_rete_core_1_1_fact.html">ReteCore.Fact</a>&lt; T &gt;.Snapshot </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a shallow snapshot of this fact, preserving its runtime type and current state. Derived facts with mutable reference-type members should override this method to copy those members. </p>
+<dl class="section return"><dt>Returns</dt><dd>A detached snapshot of this fact.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a06f767389965747986828ddad479ed43">ReteCore.IFact</a>.</p>
 
 </div>
 </div>

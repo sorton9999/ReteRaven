@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -116,6 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac1d2fa685d208e842b0284030ad4e8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor for the FluentConverter class. It takes a <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> instance and a rule name as parameters, which are used to create a new ReteBuilder instance.  <br /></td></tr>
 <tr class="memitem:a60940d589be5cd0435c1efcdfab60563" id="r_a60940d589be5cd0435c1efcdfab60563"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a60940d589be5cd0435c1efcdfab60563">And</a> ()</td></tr>
 <tr class="memdesc:a60940d589be5cd0435c1efcdfab60563"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method that allows for chaining multiple conditions on the same fact type without needing to repeat the fact type in the method signature. This allows for the progression of conditions in a more natural way, where you can start with a condition on a fact type and then chain additional conditions on the same fact type using <a class="el" href="#a60940d589be5cd0435c1efcdfab60563" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">And</a> and <a class="el" href="#a4fac93e495af69c0334782bf22c55e59" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">Or</a> without needing to specify the fact type again. This helps to keep the rule definition more concise and readable when dealing with multiple conditions on the same fact type.  <br /></td></tr>
+<tr class="memitem:a081f9c76ab2599e8e34f63e9fe3c4019" id="r_a081f9c76ab2599e8e34f63e9fe3c4019"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a081f9c76ab2599e8e34f63e9fe3c4019">AgendaGroup</a> (string groupName)</td></tr>
+<tr class="memdesc:a081f9c76ab2599e8e34f63e9fe3c4019"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html#a0a9de12082c222ce9cd8ec6ace7330e5" title="Assigns the rule to an agenda group. Rules default to MAIN.">ReteBuilder&lt;TInitial&gt;.AgendaGroup</a> that assigns this rule to an agenda group.  <br /></td></tr>
 <tr class="memitem:a4fac93e495af69c0334782bf22c55e59" id="r_a4fac93e495af69c0334782bf22c55e59"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4fac93e495af69c0334782bf22c55e59">Or</a> ()</td></tr>
 <tr class="memdesc:a4fac93e495af69c0334782bf22c55e59"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method that allows for chaining multiple conditions on the same fact type without needing to repeat the fact type in the method signature for similar reasons as with the <a class="el" href="#a60940d589be5cd0435c1efcdfab60563" title="A convenience method that allows for chaining multiple conditions on the same fact type without needi...">And</a> call above.  <br /></td></tr>
 <tr class="memitem:a6fb889a5c0f2e8bd89c906e3704a506d" id="r_a6fb889a5c0f2e8bd89c906e3704a506d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a6fb889a5c0f2e8bd89c906e3704a506d">If</a> (string name, Func&lt; bool &gt; globalCondition)</td></tr>
@@ -168,6 +170,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:abfc38b7bffeb80db68f01ff0aeddd232"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Or that adds an OR branch for a named fact with optional multiple conditions.  <br /></td></tr>
 <tr class="memitem:ab5310deedc0c70da2568a9d6215dcfc7" id="r_ab5310deedc0c70da2568a9d6215dcfc7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab5310deedc0c70da2568a9d6215dcfc7">Then</a> (Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
 <tr class="memdesc:ab5310deedc0c70da2568a9d6215dcfc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Then that registers the action to execute when the rule fires.  <br /></td></tr>
+<tr class="memitem:a70875611b1b07bd7e14e6fcd29e68e23" id="r_a70875611b1b07bd7e14e6fcd29e68e23"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a70875611b1b07bd7e14e6fcd29e68e23">CtxThen</a> (Action&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt; action, int salience=0)</td></tr>
+<tr class="memdesc:a70875611b1b07bd7e14e6fcd29e68e23"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.CtxThen that registers the action to execute when the rule fires, providing access to the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The FluentConverter class provides a fluent interface for defining rules in the Rete engine. It implements the <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a>, <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a>, <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a>, and <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html" title="This interface defines the method for building aggregate conditions in a rule. It allows for specifyi...">IAggregationBuilder</a> interfaces, allowing users to build complex rules using a natural and readable syntax. The class internally uses a ReteBuilder to construct the rule based on the method calls made through the fluent interface. This class helps to abstract away the complexities of the underlying Rete engine and provides a more intuitive way for users to define rules, while still leveraging the capabilities of the engine. </p>
@@ -178,6 +182,27 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a081f9c76ab2599e8e34f63e9fe3c4019" name="a081f9c76ab2599e8e34f63e9fe3c4019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a081f9c76ab2599e8e34f63e9fe3c4019">&#9670;&#160;</a></span>AgendaGroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a> ReteEngine.FluentConverter&lt; TInitial &gt;.AgendaGroup </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html#a0a9de12082c222ce9cd8ec6ace7330e5" title="Assigns the rule to an agenda group. Rules default to MAIN.">ReteBuilder&lt;TInitial&gt;.AgendaGroup</a> that assigns this rule to an agenda group. </p>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a92a658f4cfe0d2bf61739007305d033b">ReteEngine.IRuleSetup</a>.</p>
+
+</div>
+</div>
 <a id="a680ef67d99282a649a232f7a180a6323" name="a680ef67d99282a649a232f7a180a6323"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a680ef67d99282a649a232f7a180a6323">&#9670;&#160;</a></span>All&lt; T &gt;()</h2>
 
@@ -433,6 +458,38 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
 
 <p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#a79c21c0908e1806b9450a9866350e2c8">ReteEngine.IAggregationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="a70875611b1b07bd7e14e6fcd29e68e23" name="a70875611b1b07bd7e14e6fcd29e68e23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70875611b1b07bd7e14e6fcd29e68e23">&#9670;&#160;</a></span>CtxThen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteEngine.FluentConverter&lt; TInitial &gt;.CtxThen </td>
+          <td>(</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>action</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>salience</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.CtxThen that registers the action to execute when the rule fires, providing access to the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to execute when the rule is activated; receives the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>.</td></tr>
+    <tr><td class="paramname">salience</td><td>An optional salience (priority) modifier for the rule's activation.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a69d4f3f67bee5354006cddc9ab04f9e4">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>

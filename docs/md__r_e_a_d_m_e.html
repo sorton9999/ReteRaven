@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -104,81 +104,91 @@ $(function(){initNavTree('md__r_e_a_d_m_e.html','',''); });
 <div class="line">    [AI Decision Engine]</div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 *** ReteRaven ***</h2>
-<p>A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity. It features a modern fluent rule builder that allows you to define complex logic using a type-safe, readable DSL. Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact-matching and pattern-binding with ease. </p>
+<p>A high-performance production rule system and inference engine for .NET, built on a custom implementation of the Rete algorithm. Designed for speed and developer productivity. It features a modern fluent rule builder that allows you to define complex logic using a type-safe, readable DSL.</p>
+<p>Whether you are building an expert system, a business logic layer, or a reactive data pipeline, this C# rule engine provides the tools to handle sophisticated fact matching and pattern binding with ease.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 This project is open-source and distributed under the LGPL license.</h2>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 ==&gt; Key Features</h2>
 <ul>
-<li>= O(1) to O(n) Pattern Matching: Avoid massive foreach loops. Rule evaluation cost is relative to the number of changes, not the size of your world.</li>
+<li>= Incremental Rete Matching: The network updates rule matches as facts change, avoiding a full reevaluation of every rule.</li>
 <li>= Fluent API: Define complex rules using a readable, LINQ-style syntax.</li>
-<li>= Automatic Retraction: Simplifies memory management. When you Update a fact, the network automatically handles the retraction of the old state and the assertion of the new one.</li>
-<li>= Advanced Logic Nodes: Full support for Negation (Not) and Existential (Exists) patterns, allowing for complex "Wait for all" and "At least one" logic.</li>
-<li>= Command Queue Ready: Designed to work as an inference layer that outputs executable commands, keeping your simulation state-safe.</li>
+<li>= In-Place Fact Updates: Update existing facts and refresh their matching state in the network without treating every update as a new fact.</li>
+<li>= Expressive Pattern Matching: Rules support joins, logical branches, negation, existence checks, and additional filters.</li>
+<li>= Advanced Logic Nodes: Support for <span class="tt">Or</span>, <span class="tt">Not</span>, <span class="tt">AndNot</span>, and <span class="tt">Exists</span> conditions, including an indexed <span class="tt">Exists</span> implementation.</li>
+<li>= Beta-Node Sharing: Compatible beta-memory nodes can be cached and reused across rules to reduce duplicated network structures.</li>
+<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt"><a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a></span>, and <span class="tt">Average</span>.</li>
+<li>= Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.</li>
+<li>= Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.</li>
+<li>= Rule Prioritization: Control firing order with rule priority and activation salience.</li>
+<li>= Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.</li>
 </ul>
 <hr  />
  <h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 ==&gt; Quick Start</h2>
-<p>This API was developed in .NET Core 8 and assumes the use of Visual Studio 2022.</p>
+<p>This API targets .NET 8 and assumes the use of Visual Studio 2022.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 1. Define Your Facts</h2>
-<p>Facts are composed of Cells that implement <span class="tt">INotifyPropertyChanged</span> representing your world state.</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> Task : Cell</div>
+<p>Facts can be composed of <span class="tt">Fact</span> objects. For automatic refresh when properties change, facts should raise <span class="tt">INotifyPropertyChanged</span> notifications.</p>
+<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Task : Fact</div>
 <div class="line">{</div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">int</span> ParentId { <span class="keyword">get</span>; <span class="keyword">set</span>; } <span class="comment">// Throw PropertyChangeEvent</span></div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">string</span> <a class="code hl_variable" href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a> { <span class="keyword">get</span>; <span class="keyword">set</span>; } <span class="comment">// Throw PropertyChangedEvent</span></div>
+<div class="line">    <span class="keyword">public</span> <span class="keywordtype">int</span> ParentId { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
+<div class="line">    <span class="keyword">public</span> <span class="keywordtype">string</span> <a class="code hl_variable" href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a> { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
 <div class="line">}</div>
-<div class="ttc" id="a_program_8cs_html_a399143b9812ebd122f31f60327ca283d"><div class="ttname"><a href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a></div><div class="ttdeci">shipment. Status</div><div class="ttdef"><b>Definition</b> Program.cs:388</div></div>
+<div class="ttc" id="a_program_8cs_html_a399143b9812ebd122f31f60327ca283d"><div class="ttname"><a href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a></div><div class="ttdeci">shipment. Status</div><div class="ttdef"><b>Definition</b> Program.cs:391</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 2. Configure the Engine</h2>
-<p>Use the Fluent Builder to define your domain logic.</p>
+<p>Use the fluent builder to define your domain logic.</p>
 <div class="fragment"><div class="line">var <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a> = <span class="keyword">new</span> <a class="code hl_namespace" href="namespace_rete_engine.html">ReteEngine</a>();</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Begin(<span class="stringliteral">&quot;BubbleUpCompletion&quot;</span>)</div>
 <div class="line">    .Where&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, parent =&gt; parent.Status == <span class="stringliteral">&quot;Incomplete&quot;</span>)</div>
-<div class="line">    <span class="comment">// Ensure the parent has children</span></div>
+<div class="line">    <span class="comment">// Ensure the parent has children.</span></div>
 <div class="line">    .Exists&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, (child, parent) =&gt; child.ParentId == parent.Id)</div>
-<div class="line">    <span class="comment">// Only fire when NO children are still incomplete (Recursive Return)</span></div>
-<div class="line">    .Not&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, (child, parent) =&gt; child.ParentId == parent.Id &amp;&amp; child.Status == <span class="stringliteral">&quot;Incomplete&quot;</span>)</div>
-<div class="line">    .<a class="code hl_function" href="_program_8cs.html#aeca908d3c8fc9e8cee7d380b93b07ad6">Then</a>(match =&gt; {</div>
+<div class="line">    <span class="comment">// Only fire when no children are still incomplete.</span></div>
+<div class="line">    .Not&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, (child, parent) =&gt;</div>
+<div class="line">        child.ParentId == parent.Id &amp;&amp; child.Status == <span class="stringliteral">&quot;Incomplete&quot;</span>)</div>
+<div class="line">    .<a class="code hl_function" href="_program_8cs.html#aeca908d3c8fc9e8cee7d380b93b07ad6">Then</a>(match =&gt;</div>
+<div class="line">    {</div>
 <div class="line">        var parent = match.Get&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>);</div>
-<div class="line">        <span class="comment">// Automatic Retraction handles the state swap</span></div>
 <div class="line">        parent.Status = <span class="stringliteral">&quot;Complete&quot;</span>;</div>
 <div class="line">        <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Update(parent);</div>
 <div class="line">    });</div>
 <div class="ttc" id="a_program_8cs_html_a11ebb594932bb49d3558b9fa3859cc36"><div class="ttname"><a href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a></div><div class="ttdeci">var engine</div><div class="ttdef"><b>Definition</b> Program.cs:15</div></div>
 <div class="ttc" id="a_program_8cs_html_aeca908d3c8fc9e8cee7d380b93b07ad6"><div class="ttname"><a href="_program_8cs.html#aeca908d3c8fc9e8cee7d380b93b07ad6">Then</a></div><div class="ttdeci">engine.CheckAdd. Then(token=&gt; { var a=token.Get&lt; Fact &gt;(&quot;FirstCell&quot;);var b=token.Get&lt; Fact &gt;(&quot;SecondCell&quot;);Console.WriteLine($&quot;Conflict found on {a.Id}!&quot;);}, salience:10)</div></div>
 <div class="ttc" id="anamespace_rete_engine_html"><div class="ttname"><a href="namespace_rete_engine.html">ReteEngine</a></div><div class="ttdef"><b>Definition</b> FluentConverter.cs:19</div></div>
-</div><!-- fragment --><p> You can define multiple rules in the engine with different chains of conditions and assign separate actions for each.</p>
+</div><!-- fragment --><p>You can define multiple rules in the engine, each with its own chain of conditions and action.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 3. Pulse the Simulation</h2>
 <p>Integrate the engine into your tick loop.</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keywordtype">void</span> OnTick() {</div>
-<div class="line">    <span class="comment">// 1. Sync world changes</span></div>
+<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keywordtype">void</span> OnTick()</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// 1. Synchronize world changes.</span></div>
 <div class="line">    <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Assert(changedEntity);</div>
-<div class="line">    </div>
-<div class="line">    <span class="comment">// 2. Fire rules</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 2. Fire pending rules.</span></div>
 <div class="line">    <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.FireAll();</div>
-<div class="line">    </div>
-<div class="line">    <span class="comment">// 3. Process resulting commands</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 3. Process resulting commands.</span></div>
 <div class="line">    commandQueue.Process();</div>
 <div class="line">}</div>
-</div><!-- fragment --> <hr  />
+</div><!-- fragment --><hr  />
  <h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 ==&gt; Recursive Patterns</h2>
-<p>ReteRaven excels at hierarchical logic. Because it supports Automatic Retraction and Negation, you can implement:</p>
+<p>ReteRaven supports hierarchical logic patterns such as:</p>
 <ol type="1">
-<li>Top-Down Breakdown: Rules that split "Complex Tasks" into "Sub-Tasks."</li>
-<li>Bottom-Up Bubble: Rules that use .Not() to wait for all children to complete before marking a parent as finished.</li>
-<li>Recursive Chains: Propagating states through deep trees (like chain-of-command or crafting trees) without manual stack management.</li>
+<li>Top-Down Breakdown: Rules that split complex tasks into sub-tasks.</li>
+<li>Bottom-Up Bubble: Rules that use <span class="tt">.Not()</span> to wait for all children to complete before marking a parent as finished.</li>
+<li>Recursive Chains: Propagate states through deep trees, such as a chain of command or crafting tree, without manual stack management.</li>
 </ol>
 <hr  />
  <h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 ==&gt; Rule Prioritization</h2>
-<p>ReteRaven uses a "Depth-First" conflict resolution strategy. When multiple rules are satisfied, the engine prioritizes:</p><ol type="1">
-<li>Rule Priority: (Highest value first) Rule-level prioritization of firing rules</li>
-<li>Salience: (Highest value first) Condition-level prioritization</li>
-<li>Recency (LIFO): The most recently matched activation fires first, allowing new facts to "short-circuit" older logic.</li>
+<p>ReteRaven uses a depth-first conflict-resolution strategy. When multiple rules are satisfied, the engine prioritizes:</p>
+<ol type="1">
+<li>Rule Priority: Highest value first; controls rule-level prioritization.</li>
+<li>Salience: Highest value first; controls activation-level prioritization.</li>
+<li>Recency (LIFO): The most recently matched activation fires first, allowing new facts to take precedence over older logic.</li>
 </ol>
 <hr  />
  <h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
@@ -186,12 +196,36 @@ This project is open-source and distributed under the LGPL license.</h2>
 <ol type="1">
 <li>Clone the repository.</li>
 <li>Add the ReteRaven project references to your C# solution.</li>
-<li>Implement your CommandQueue and start coding your rules.</li>
+<li>Implement your command queue and start defining rules.</li>
 </ol>
 <hr  />
  <h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+==&gt; Future Features</h2>
+<p>The following capabilities are planned and are not part of the current released functionality.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+Performance &amp; Scaling</h3>
+<ul>
+<li>= [DONE] <span class="tt">Publish-and-Resume Agenda Coordination</span>: Agenda groups will be able to publish fact changes through the engine and resume dependent groups once their prerequisites are satisfied.</li>
+<li>= <span class="tt">Parallel Agenda Processing</span>: Independent agenda groups may process concurrently. Shared working-memory and Rete-network mutations will require explicit coordination and are expected to remain serialized initially. </li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+Developer Tooling</h3>
+<ul>
+<li>= <span class="tt">Rule Templates</span>: Allow users to define a rule "shape" once and instantiate it with different parameters at runtime.</li>
+<li>= <span class="tt">Visualizer</span>: A tool that exports the Rete Graph to a DOT file or Mermaid diagram so developers can "see" their logic tree.</li>
+<li>= <span class="tt">Serialization</span>: Save and load RuleMetadata to JSON/XML so rules can be managed in a database instead of just C# code. </li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+Far Future v2.0</h3>
+<ul>
+<li>= <span class="tt">The "Self-Optimizing" Rete</span></li>
+<li>= <span class="tt">Temporal Logic (Time-Aware Rules)</span></li>
+<li>= <span class="tt">Explanatory AI (The "Why" Feature)</span></li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 ==&gt; License</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 This project is licensed under the LGPL v2.1 License — feel free to use it in your games, simulations, or personal projects.</h2>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

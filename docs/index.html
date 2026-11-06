@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -112,11 +112,17 @@ This project is open-source and distributed under the LGPL license.</h1>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 ==&gt; Key Features</h1>
 <ul>
-<li>= O(1) to O(n) Pattern Matching: Avoid massive foreach loops. Rule evaluation cost is relative to the number of changes, not the size of your world.</li>
+<li>= Incremental Rete Matching: The network updates rule matches as facts change, avoiding a full reevaluation of every rule.</li>
 <li>= Fluent API: Define complex rules using a readable, LINQ-style syntax.</li>
-<li>= Automatic Retraction: Simplifies memory management. When you Update a fact, the network automatically handles the retraction of the old state and the assertion of the new one.</li>
-<li>= Advanced Logic Nodes: Full support for Negation (Not) and Existential (Exists) patterns, allowing for complex "Wait for all" and "At least one" logic.</li>
-<li>= Command Queue Ready: Designed to work as an inference layer that outputs executable commands, keeping your simulation state-safe.</li>
+<li>= In-Place Fact Updates: Update existing facts and refresh their matching state in the network without treating every update as a new fact.</li>
+<li>= Expressive Pattern Matching: Rules support joins, logical branches, negation, existence checks, and additional filters.</li>
+<li>= Advanced Logic Nodes: Support for <span class="tt">Or</span>, <span class="tt">Not</span>, <span class="tt">AndNot</span>, and <span class="tt">Exists</span> conditions, including an indexed <span class="tt">Exists</span> implementation.</li>
+<li>= Beta-Node Sharing: Compatible beta-memory nodes can be cached and reused across rules to reduce duplicated network structures.</li>
+<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt"><a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a></span>, and <span class="tt">Average</span>.</li>
+<li>= Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.</li>
+<li>= Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.</li>
+<li>= Rule Prioritization: Control firing order with rule priority and activation salience.</li>
+<li>= Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.</li>
 </ul>
 <hr  />
  <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
@@ -126,7 +132,7 @@ This project is open-source and distributed under the LGPL license.</h1>
 1. Define Your Facts</h1>
 <p>Facts are composed of Cells that implement <span class="tt">INotifyPropertyChanged</span> representing your world state.</p>
 <pre style="font-family: monospace; white-space: pre; line-height: 1.2;">
-public Task : Cell
+public Task : Fact
 {
     public int ParentId { get; set; } // Throw PropertyChangeEvent
     public string Status { get; set; } // Throw PropertyChangedEvent

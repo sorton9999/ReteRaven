@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -102,21 +102,24 @@ Inheritance diagram for ReteCore.Fact:</div>
  <div class="center">
   <img src="class_rete_core_1_1_fact.png" usemap="#ReteCore_2EFact_map" alt=""/>
   <map id="ReteCore_2EFact_map" name="ReteCore_2EFact_map">
-<area href="class_rete_program_1_1_critical_cell.html" alt="ReteProgram.CriticalCell" shape="rect" coords="173,112,336,136"/>
-<area href="class_rete_program_1_1_duty_status.html" alt="ReteProgram.DutyStatus" shape="rect" coords="173,168,336,192"/>
-<area href="class_rete_program_1_1_inventory.html" alt="ReteProgram.Inventory" shape="rect" coords="173,224,336,248"/>
-<area href="class_rete_program_1_1_officer.html" alt="ReteProgram.Officer" shape="rect" coords="173,280,336,304"/>
-<area href="class_rete_program_1_1_order.html" alt="ReteProgram.Order" shape="rect" coords="173,336,336,360"/>
-<area href="class_rete_program_1_1_product.html" alt="ReteProgram.Product" shape="rect" coords="173,392,336,416"/>
-<area href="class_rete_program_1_1_risk_factor.html" alt="ReteProgram.RiskFactor" shape="rect" coords="173,448,336,472"/>
-<area href="class_rete_program_1_1_sensor.html" alt="ReteProgram.Sensor" shape="rect" coords="173,504,336,528"/>
-<area href="class_rete_program_1_1_shipment.html" alt="ReteProgram.Shipment" shape="rect" coords="173,560,336,584"/>
-<area href="class_rete_program_1_1_system_status.html" alt="ReteProgram.SystemStatus" shape="rect" coords="173,616,336,640"/>
+<area href="interface_rete_core_1_1_i_fact.html" title="An interface representing a fact in the Rete network. This interface allows for abstraction and flexi..." alt="ReteCore.IFact" shape="rect" coords="0,0,163,24"/>
+<area href="class_rete_program_1_1_critical_cell.html" alt="ReteProgram.CriticalCell" shape="rect" coords="259,112,422,136"/>
+<area href="class_rete_program_1_1_duty_status.html" alt="ReteProgram.DutyStatus" shape="rect" coords="259,168,422,192"/>
+<area href="class_rete_program_1_1_inventory.html" alt="ReteProgram.Inventory" shape="rect" coords="259,224,422,248"/>
+<area href="class_rete_program_1_1_officer.html" alt="ReteProgram.Officer" shape="rect" coords="259,280,422,304"/>
+<area href="class_rete_program_1_1_order.html" alt="ReteProgram.Order" shape="rect" coords="259,336,422,360"/>
+<area href="class_rete_program_1_1_product.html" alt="ReteProgram.Product" shape="rect" coords="259,392,422,416"/>
+<area href="class_rete_program_1_1_risk_factor.html" alt="ReteProgram.RiskFactor" shape="rect" coords="259,448,422,472"/>
+<area href="class_rete_program_1_1_sensor.html" alt="ReteProgram.Sensor" shape="rect" coords="259,504,422,528"/>
+<area href="class_rete_program_1_1_shipment.html" alt="ReteProgram.Shipment" shape="rect" coords="259,560,422,584"/>
+<area href="class_rete_program_1_1_system_status.html" alt="ReteProgram.SystemStatus" shape="rect" coords="259,616,422,640"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a2df5e9451ce8a4e0d731de25a3a5fdfc" id="r_a2df5e9451ce8a4e0d731de25a3a5fdfc"><td class="memItemLeft">virtual <a class="el" href="class_rete_core_1_1_fact.html">Fact</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2df5e9451ce8a4e0d731de25a3a5fdfc">Snapshot</a> ()</td></tr>
+<tr class="memdesc:a2df5e9451ce8a4e0d731de25a3a5fdfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a shallow snapshot of this fact, preserving its runtime type and current property state. Derived facts with mutable reference-type members should override this method to copy those members.  <br /></td></tr>
 <tr class="memitem:a7b5831c5fb1685237c57a391f2d62fec" id="r_a7b5831c5fb1685237c57a391f2d62fec"><td class="memItemLeft">override bool&#160;</td><td class="memItemRight"><a class="el" href="#a7b5831c5fb1685237c57a391f2d62fec">Equals</a> (object? obj)</td></tr>
 <tr class="memdesc:a7b5831c5fb1685237c57a391f2d62fec"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Equals method is overridden to provide a way to compare two <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instances for equality.  <br /></td></tr>
 <tr class="memitem:afab9d5c4b86fc95763d41c7da765bba7" id="r_afab9d5c4b86fc95763d41c7da765bba7"><td class="memItemLeft">override int&#160;</td><td class="memItemRight"><a class="el" href="#afab9d5c4b86fc95763d41c7da765bba7">GetHashCode</a> ()</td></tr>
@@ -131,12 +134,16 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a41c4e0d6b62af9c0dc51bbf500cf1e7c" id="r_a41c4e0d6b62af9c0dc51bbf500cf1e7c"><td class="memItemLeft">Guid&#160;</td><td class="memItemRight"><a class="el" href="#a41c4e0d6b62af9c0dc51bbf500cf1e7c">Id</a><code> [get, set]</code></td></tr>
+<tr class="memitem:a41c4e0d6b62af9c0dc51bbf500cf1e7c" id="r_a41c4e0d6b62af9c0dc51bbf500cf1e7c"><td class="memItemLeft">Guid&#160;</td><td class="memItemRight"><a class="el" href="#a41c4e0d6b62af9c0dc51bbf500cf1e7c">Id</a> = Guid.NewGuid()<code> [get]</code></td></tr>
 <tr class="memdesc:a41c4e0d6b62af9c0dc51bbf500cf1e7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior.  <br /></td></tr>
-<tr class="memitem:a8dbc59ee8ed38e3e87471f718b773163" id="r_a8dbc59ee8ed38e3e87471f718b773163"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a8dbc59ee8ed38e3e87471f718b773163">Name</a> = string.Empty<code> [get, set]</code></td></tr>
+<tr class="memitem:a8dbc59ee8ed38e3e87471f718b773163" id="r_a8dbc59ee8ed38e3e87471f718b773163"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a8dbc59ee8ed38e3e87471f718b773163">Name</a> = string.Empty<code> [get]</code></td></tr>
 <tr class="memdesc:a8dbc59ee8ed38e3e87471f718b773163"><td class="mdescLeft">&#160;</td><td class="mdescRight">A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use.  <br /></td></tr>
-<tr class="memitem:ab7725b06604dc69ba4b6fc1a0f96fac6" id="r_ab7725b06604dc69ba4b6fc1a0f96fac6"><td class="memItemLeft">object?&#160;</td><td class="memItemRight"><a class="el" href="#ab7725b06604dc69ba4b6fc1a0f96fac6">Value</a><code> [get, set]</code></td></tr>
+<tr class="memitem:ab7725b06604dc69ba4b6fc1a0f96fac6" id="r_ab7725b06604dc69ba4b6fc1a0f96fac6"><td class="memItemLeft">object?&#160;</td><td class="memItemRight"><a class="el" href="#ab7725b06604dc69ba4b6fc1a0f96fac6">Value</a><code> [get]</code></td></tr>
 <tr class="memdesc:ab7725b06604dc69ba4b6fc1a0f96fac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the value stored in this cell. When setting the Value, if the new value is different from the current value, the PropertyChanged event is raised to notify any observers that the value has changed. The Value property can hold any object.  <br /></td></tr>
+<tr class="memitem:ad0dbe58c3defa2592c1601ea16fe5a82" id="r_ad0dbe58c3defa2592c1601ea16fe5a82"><td class="memItemLeft">object&#160;</td><td class="memItemRight"><a class="el" href="#ad0dbe58c3defa2592c1601ea16fe5a82">UnderlyingObject</a><code> [get]</code></td></tr>
+<tr class="memdesc:ad0dbe58c3defa2592c1601ea16fe5a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">The underlying object of this fact, which is the same as the Value property. This property provides a way to access the value without needing to cast it.  <br /></td></tr>
+<tr class="memitem:a6ee14fbfe29a6d48e2933c809c64da6b" id="r_a6ee14fbfe29a6d48e2933c809c64da6b"><td class="memItemLeft">Type&#160;</td><td class="memItemRight"><a class="el" href="#a6ee14fbfe29a6d48e2933c809c64da6b">DataType</a><code> [get]</code></td></tr>
+<tr class="memdesc:a6ee14fbfe29a6d48e2933c809c64da6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the underlying object stored in this fact. This property is useful for reflection or when the type of the value needs to be known at runtime. If the Value is null, this property returns typeof(object).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
@@ -226,6 +233,36 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a2df5e9451ce8a4e0d731de25a3a5fdfc" name="a2df5e9451ce8a4e0d731de25a3a5fdfc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2df5e9451ce8a4e0d731de25a3a5fdfc">&#9670;&#160;</a></span>Snapshot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_rete_core_1_1_fact.html">Fact</a> ReteCore.Fact.Snapshot </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a shallow snapshot of this fact, preserving its runtime type and current property state. Derived facts with mutable reference-type members should override this method to copy those members. </p>
+<dl class="section return"><dt>Returns</dt><dd>A detached snapshot of this fact.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a06f767389965747986828ddad479ed43">ReteCore.IFact</a>.</p>
+
+</div>
+</div>
 <a id="aaf8838f5e8cc420f2092cd9b5c39355f" name="aaf8838f5e8cc420f2092cd9b5c39355f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf8838f5e8cc420f2092cd9b5c39355f">&#9670;&#160;</a></span>ToString()</h2>
 
@@ -247,6 +284,32 @@ Events</h2></td></tr>
 </div>
 </div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="a6ee14fbfe29a6d48e2933c809c64da6b" name="a6ee14fbfe29a6d48e2933c809c64da6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee14fbfe29a6d48e2933c809c64da6b">&#9670;&#160;</a></span>DataType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Type ReteCore.Fact.DataType</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The type of the underlying object stored in this fact. This property is useful for reflection or when the type of the value needs to be known at runtime. If the Value is null, this property returns typeof(object). </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#ad80c84a6f41c25bbffdd1d9497b91e0b">ReteCore.IFact</a>.</p>
+
+</div>
+</div>
 <a id="a41c4e0d6b62af9c0dc51bbf500cf1e7c" name="a41c4e0d6b62af9c0dc51bbf500cf1e7c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41c4e0d6b62af9c0dc51bbf500cf1e7c">&#9670;&#160;</a></span>Id</h2>
 
@@ -257,17 +320,19 @@ Events</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Guid ReteCore.Fact.Id</td>
+          <td class="memname">Guid ReteCore.Fact.Id = Guid.NewGuid()</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>The unique identifier for this cell. The Id is typically assigned when the cell is created and should remain constant for the lifetime of the cell to ensure consistent behavior. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a67f88403874fc7f46a394fcc1cd12377">ReteCore.IFact</a>.</p>
 
 </div>
 </div>
@@ -286,12 +351,38 @@ Events</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>A identifying name for this cell, which can be used for display purposes or to associate the cell with a specific role or meaning in the context of its use. </p>
+
+</div>
+</div>
+<a id="ad0dbe58c3defa2592c1601ea16fe5a82" name="ad0dbe58c3defa2592c1601ea16fe5a82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0dbe58c3defa2592c1601ea16fe5a82">&#9670;&#160;</a></span>UnderlyingObject</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">object ReteCore.Fact.UnderlyingObject</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The underlying object of this fact, which is the same as the Value property. This property provides a way to access the value without needing to cast it. </p>
+
+<p>Implements <a class="el" href="interface_rete_core_1_1_i_fact.html#a7bcb6e9f1746cd9063c698753d770029">ReteCore.IFact</a>.</p>
 
 </div>
 </div>
@@ -310,7 +401,7 @@ Events</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

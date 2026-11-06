@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -112,6 +112,7 @@ Inheritance diagram for ReteEngine.IRuleSetup:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab08e0c5feca3e4a955a2d3d22feedec1" id="r_ab08e0c5feca3e4a955a2d3d22feedec1"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab08e0c5feca3e4a955a2d3d22feedec1">If</a> (string name, Func&lt; bool &gt; globalCondition)</td></tr>
 <tr class="memitem:a1628f35f580ae17a4dcd93f430bce41c" id="r_a1628f35f580ae17a4dcd93f430bce41c"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1628f35f580ae17a4dcd93f430bce41c">If&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; lateCondition)</td></tr>
+<tr class="memitem:a92a658f4cfe0d2bf61739007305d033b" id="r_a92a658f4cfe0d2bf61739007305d033b"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a92a658f4cfe0d2bf61739007305d033b">AgendaGroup</a> (string groupName)</td></tr>
 <tr class="memitem:a08129760a5655bb33d791d908a7047d2" id="r_a08129760a5655bb33d791d908a7047d2"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a08129760a5655bb33d791d908a7047d2">Priority</a> (int priority)</td></tr>
 <tr class="memitem:a2cd22dff84453936e8ac790cf8a1ca7d" id="r_a2cd22dff84453936e8ac790cf8a1ca7d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2cd22dff84453936e8ac790cf8a1ca7d">First</a> ()</td></tr>
 <tr class="memitem:a43df21d39397944b8cdaca1e1ece0cc3" id="r_a43df21d39397944b8cdaca1e1ece0cc3"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a43df21d39397944b8cdaca1e1ece0cc3">Next</a> ()</td></tr>
@@ -128,6 +129,25 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the starting point for the fluent interface for defining rules in the Rete engine. It provides methods for specifying global conditions, rule priority, and the initial conditions for the rule. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a92a658f4cfe0d2bf61739007305d033b" name="a92a658f4cfe0d2bf61739007305d033b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92a658f4cfe0d2bf61739007305d033b">&#9670;&#160;</a></span>AgendaGroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a> ReteEngine.IRuleSetup.AgendaGroup </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a081f9c76ab2599e8e34f63e9fe3c4019">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+
+</div>
+</div>
 <a id="a8969c898c1fa194fbc455b460d448b32" name="a8969c898c1fa194fbc455b460d448b32"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8969c898c1fa194fbc455b460d448b32">&#9670;&#160;</a></span>Exists&lt; T &gt;()</h2>
 

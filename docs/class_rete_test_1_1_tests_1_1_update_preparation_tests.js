@@ -18,6 +18,7 @@ var class_rete_test_1_1_tests_1_1_update_preparation_tests =
     [ "PropertyChangedSubscription_IsRemovedOnRetractAndNotDuplicatedOnReassert", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#aa6054aa3b6c9d81a0d44d0bcff8f2336", null ],
     [ "PropertyChangedSubscription_IsRemovedWhenEngineIsDisposed", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a41aa4e495adcda188c1b0d078e6d8b72", null ],
     [ "PropertyChangeOnAFiredStillValidMatchCreatesANewRevisionActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#afbe4f2397d743737ac6ba93eecaabb8f", null ],
+    [ "PropertyChangeRetractionOnlyCancelsTheRetractedRuleActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#abba7b6d83d97334fdc172866540683db", null ],
     [ "RefreshingAnUnchangedMatchDoesNotDuplicateItsActivation", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a4b3a95f769091359cf2858b7f3fb06bc", null ],
     [ "Update_BatchProcessesEachFactAndReturnsTheEngine", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a36893232ae699946eb6598d800cc8efb", null ],
     [ "Update_ExistingFactRefreshesInPlaceWithoutAddingAnotherSubscription", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html#a15f222a6ad673da7b383fa42cbd2725b", null ],

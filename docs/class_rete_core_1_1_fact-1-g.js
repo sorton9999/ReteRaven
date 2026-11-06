@@ -4,6 +4,7 @@ var class_rete_core_1_1_fact_1_g =
     [ "Fact", "class_rete_core_1_1_fact-1-g.html#a69ae23fef4cf76d2ddff8067fd366eff", null ],
     [ "GetHashCode", "class_rete_core_1_1_fact-1-g.html#a31eeb76a84bc1cc15253998e012289c5", null ],
     [ "OnPropertyChanged", "class_rete_core_1_1_fact-1-g.html#a6b3c1ff8126d71d4136368f6bb8c777f", null ],
+    [ "Snapshot", "class_rete_core_1_1_fact-1-g.html#a2860ad959b032b1bd4e91c6483ba1fe3", null ],
     [ "ToString", "class_rete_core_1_1_fact-1-g.html#ab885f4d31ce5f41cb414bc592db88b2f", null ],
     [ "TValue< T >", "class_rete_core_1_1_fact-1-g.html#aefd88d33f538c875fcbc7feaac4568b2", null ],
     [ "DataType", "class_rete_core_1_1_fact-1-g.html#a25424c0c1fe031fdd3cd0a595b667844", null ],

@@ -21,6 +21,7 @@ var class_rete_test_1_1_tests_1_1_rete_builder_integration_tests =
     [ "PriorityRule_First_Before_Next", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#a9c307288bb76cfcdd53353822c052af8", null ],
     [ "PriorityRule_Simple_Fire_Order", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#acc3380d0bd7cacc67ac99c5b63333619", null ],
     [ "Refresh_ShouldPropagateExistingFacts_ToRulesAddedAfterAssertion", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#a7534abde8ec79b1c47862f4b366b71d6", null ],
+    [ "RetractBeforeFireAll_CancelsOnlyTheRetractedFactMatch", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#a4c2e1a995c113746f77bf7b1a28e1374", null ],
     [ "SalienceRule_First_Before_Next", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#acd49c8a24cf5a882c010404381a66e35", null ],
     [ "SimpleRemoveRule_PreventsRuleFromFiring", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#a6ea7143d35fbfc456e7dd686780bdb61", null ],
     [ "SimpleRule_Fires_When_Condition_Met", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html#a0b6bc5d443d70baee4f65b4bff5fd809", null ],

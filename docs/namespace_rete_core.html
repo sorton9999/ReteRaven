@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -100,6 +100,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> class represents a pending rule activation in a Rete-based rule engine. It encapsulates the information needed to execute a rule when its conditions are met, including the name of the rule, the action to perform, the token that triggered the activation, and the salience (priority) of the activation. Activations are typically created by terminal nodes in the Rete network and added to an agenda for later execution. When an activation is fired, it executes its associated action using the token that caused it to be activated. The salience value allows for prioritizing activations when multiple rules are activated simultaneously, with higher salience values being executed first.  <a href="class_rete_core_1_1_activation.html#details">More...</a><br /></td></tr>
 <tr class="memitem:Agenda" id="r_Agenda"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_agenda.html">Agenda</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_core_1_1_agenda.html" title="The Agenda class manages pending rule activations in a Rete-based rule engine. It maintains a list of...">Agenda</a> class manages pending rule activations in a Rete-based rule engine. It maintains a list of activations that have been triggered but not yet executed.  <a href="class_rete_core_1_1_agenda.html#details">More...</a><br /></td></tr>
+<tr class="memitem:AgendaFocusStackChangedEventArgs" id="r_AgendaFocusStackChangedEventArgs"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_agenda_focus_stack_changed_event_args.html">AgendaFocusStackChangedEventArgs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides immutable details about a change to the agenda focus stack.  <a href="class_rete_core_1_1_agenda_focus_stack_changed_event_args.html#details">More...</a><br /></td></tr>
+<tr class="memitem:AgendaGroup" id="r_AgendaGroup"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_agenda_group.html">AgendaGroup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encapsulates pending activations, readiness policies, and runtime diagnostics for one agenda group.  <a href="class_rete_core_1_1_agenda_group.html#details">More...</a><br /></td></tr>
 <tr class="memitem:AggregationGroupNode" id="r_AggregationGroupNode"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_aggregation_group_node.html">AggregationGroupNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a RETE network node that performs aggregation over groups of facts matching specified join conditions.  <a href="class_rete_core_1_1_aggregation_group_node.html#details">More...</a><br /></td></tr>
 <tr class="memitem:FactSnapshot" id="r_FactSnapshot"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="struct_rete_core_1_1_fact_snapshot.html">FactSnapshot</a></td></tr>
@@ -124,6 +128,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An interface representing a fact in the Rete network. This interface allows for abstraction and flexibility in handling facts of various types within the Rete engine, enabling the implementation of different fact representations while maintaining a consistent interface for interaction with the rest of the system.  <a href="interface_rete_core_1_1_i_fact.html#details">More...</a><br /></td></tr>
 <tr class="memitem:Fact_3C_20T_20_3E" id="r_Fact_3C_20T_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_fact-1-g.html">Fact&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The container for any types of data. This class implements INotifyPropertyChanged to allow observers to be notified when the underlying fact changes. It also includes a unique identifier (Id) to ensure that each <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> instance can be uniquely identified.  <a href="class_rete_core_1_1_fact-1-g.html#details">More...</a><br /></td></tr>
+<tr class="memitem:IAgendaGroupReadinessStrategy" id="r_IAgendaGroupReadinessStrategy"><td class="memItemLeft">interface &#160;</td><td class="memItemRight"><a class="el" href="interface_rete_core_1_1_i_agenda_group_readiness_strategy.html">IAgendaGroupReadinessStrategy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an agenda group is currently allowed to fire activations.  <a href="interface_rete_core_1_1_i_agenda_group_readiness_strategy.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ILatentMemory" id="r_ILatentMemory"><td class="memItemLeft">interface &#160;</td><td class="memItemRight"><a class="el" href="interface_rete_core_1_1_i_latent_memory.html">ILatentMemory</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An interface representing a latent memory in a Rete network, which holds tokens that are not yet fully processed or activated.  <a href="interface_rete_core_1_1_i_latent_memory.html#details">More...</a><br /></td></tr>
 <tr class="memitem:IndexedExistsNode" id="r_IndexedExistsNode"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_indexed_exists_node.html">IndexedExistsNode</a></td></tr>
@@ -140,6 +146,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a node in a Rete network that forwards facts to multiple successor nodes, effectively implementing a logical OR branch.  <a href="class_rete_core_1_1_or_node.html#details">More...</a><br /></td></tr>
 <tr class="memitem:RootNode" id="r_RootNode"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_root_node.html">RootNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_core_1_1_root_node.html" title="The RootNode class represents the root of the Rete network. It serves as the entry point for all fact...">RootNode</a> class represents the root of the Rete network. It serves as the entry point for all facts asserted into the network and is responsible for propagating facts to its successor nodes. The <a class="el" href="class_rete_core_1_1_root_node.html" title="The RootNode class represents the root of the Rete network. It serves as the entry point for all fact...">RootNode</a> does not perform any specific processing on the facts but simply serves as a starting point for the flow of facts through the network. This class provides the foundation for how facts are introduced and propagated through the network.  <a href="class_rete_core_1_1_root_node.html#details">More...</a><br /></td></tr>
+<tr class="memitem:RuleExecutionContext" id="r_RuleExecutionContext"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact base until the context is completed, and can be discarded if the rule execution is aborted. An origin is stored with each change to identify the rule execution that produced it. The context also allows for controlled publication of the staged changes.  <a href="class_rete_core_1_1_rule_execution_context.html#details">More...</a><br /></td></tr>
 <tr class="memitem:RuleMetadata" id="r_RuleMetadata"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_rule_metadata.html">RuleMetadata</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_core_1_1_rule_metadata.html" title="The RuleMetadata class encapsulates all the necessary information about a rule in a Rete-based rule e...">RuleMetadata</a> class encapsulates all the necessary information about a rule in a Rete-based rule engine.  <a href="class_rete_core_1_1_rule_metadata.html#details">More...</a><br /></td></tr>
 <tr class="memitem:LateFilter" id="r_LateFilter"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_late_filter.html">LateFilter</a></td></tr>
@@ -150,7 +158,230 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule engine. <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> identity is stable (GUID-based) so it can be used safely as dictionary/set keys even if underlying facts mutate.  <a href="class_rete_core_1_1_token.html#details">More...</a><br /></td></tr>
 <tr class="memitem:Fact" id="r_Fact"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_core_1_1_fact.html">Fact</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a data cell with an identifier and a value, supporting property change notification.  <a href="class_rete_core_1_1_fact.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a72361f178af34017744b521f63ed18c8" id="r_a72361f178af34017744b521f63ed18c8"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a72361f178af34017744b521f63ed18c8">AgendaFocusStackChangeReason</a> { <a class="el" href="#a72361f178af34017744b521f63ed18c8ae3b00642608860aeefbf37f5a58f85f1">GroupFocused</a>
+, <a class="el" href="#a72361f178af34017744b521f63ed18c8a9fd906629c22a8dc9524b681de0a5221">GroupPopped</a>
+, <a class="el" href="#a72361f178af34017744b521f63ed18c8a1c8217da0c4f78ce903dd26fca0c40dc">GroupAutomaticallyPopped</a>
+ }</td></tr>
+<tr class="memdesc:a72361f178af34017744b521f63ed18c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies how the agenda focus stack changed.  <a href="#a72361f178af34017744b521f63ed18c8">More...</a><br /></td></tr>
+<tr class="memitem:a15fd416fbb2e492fb0e7753d1e7cea36" id="r_a15fd416fbb2e492fb0e7753d1e7cea36"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a15fd416fbb2e492fb0e7753d1e7cea36">FactChangeTypeEnum</a> { <a class="el" href="#a15fd416fbb2e492fb0e7753d1e7cea36ad530f9d1b94f864f2238775b0e19e48c">Assert</a>
+, <a class="el" href="#a15fd416fbb2e492fb0e7753d1e7cea36a06933067aafd48425d67bcb01bba5cb6">Update</a>
+, <a class="el" href="#a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19">Retract</a>
+ }</td></tr>
+<tr class="memdesc:a15fd416fbb2e492fb0e7753d1e7cea36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the operation represented by a fact change.  <a href="#a15fd416fbb2e492fb0e7753d1e7cea36">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a8093c8e230976f46f7b47bc451bc49bd" id="r_a8093c8e230976f46f7b47bc451bc49bd"><td class="memItemLeft">record&#160;</td><td class="memItemRight"><a class="el" href="#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a> (DateTimeOffset Timestamp, string GroupName, string Activity, string? RuleName=null, TimeSpan? Duration=null)</td></tr>
+<tr class="memdesc:a8093c8e230976f46f7b47bc451bc49bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Records a timestamped agenda-group event, optionally associated with a rule activation and elapsed time.  <br /></td></tr>
+<tr class="memitem:a9e9ccf917e2b767f0bf18319af3314c7" id="r_a9e9ccf917e2b767f0bf18319af3314c7"><td class="memItemLeft">record&#160;</td><td class="memItemRight"><a class="el" href="#a9e9ccf917e2b767f0bf18319af3314c7">AgendaGroupRuntimeStatistics</a> (string GroupName, int FocusCount, int ActivationCount, DateTimeOffset? LastFocusedAt, DateTimeOffset? LastActivationAt, TimeSpan TotalRunTime, int WaitCount, TimeSpan TotalWaitTime, bool IsWaiting, TimeSpan CurrentWaitTime)</td></tr>
+<tr class="memdesc:a9e9ccf917e2b767f0bf18319af3314c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a snapshot of timing and activity counters for one agenda group.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a74a110b5079c75e52cb453d36a673a63" id="r_a74a110b5079c75e52cb453d36a673a63"><td class="memItemLeft">readonly record struct&#160;</td><td class="memItemRight"><a class="el" href="#a74a110b5079c75e52cb453d36a673a63">FactChangeOrigin</a> (string? <a class="el" href="class_rete_core_1_1_agenda_group.html">AgendaGroup</a>, string? RuleName, Guid? ActivationId)</td></tr>
+<tr class="memdesc:a74a110b5079c75e52cb453d36a673a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies the rule execution responsible for creating a fact change.  <br /></td></tr>
 </table>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="a72361f178af34017744b521f63ed18c8" name="a72361f178af34017744b521f63ed18c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72361f178af34017744b521f63ed18c8">&#9670;&#160;</a></span>AgendaFocusStackChangeReason</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a72361f178af34017744b521f63ed18c8">ReteCore.AgendaFocusStackChangeReason</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Identifies how the agenda focus stack changed. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a72361f178af34017744b521f63ed18c8ae3b00642608860aeefbf37f5a58f85f1" name="a72361f178af34017744b521f63ed18c8ae3b00642608860aeefbf37f5a58f85f1"></a>GroupFocused&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a72361f178af34017744b521f63ed18c8a9fd906629c22a8dc9524b681de0a5221" name="a72361f178af34017744b521f63ed18c8a9fd906629c22a8dc9524b681de0a5221"></a>GroupPopped&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a72361f178af34017744b521f63ed18c8a1c8217da0c4f78ce903dd26fca0c40dc" name="a72361f178af34017744b521f63ed18c8a1c8217da0c4f78ce903dd26fca0c40dc"></a>GroupAutomaticallyPopped&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a15fd416fbb2e492fb0e7753d1e7cea36" name="a15fd416fbb2e492fb0e7753d1e7cea36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15fd416fbb2e492fb0e7753d1e7cea36">&#9670;&#160;</a></span>FactChangeTypeEnum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a15fd416fbb2e492fb0e7753d1e7cea36">ReteCore.FactChangeTypeEnum</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Describes the operation represented by a fact change. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a15fd416fbb2e492fb0e7753d1e7cea36ad530f9d1b94f864f2238775b0e19e48c" name="a15fd416fbb2e492fb0e7753d1e7cea36ad530f9d1b94f864f2238775b0e19e48c"></a>Assert&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a15fd416fbb2e492fb0e7753d1e7cea36a06933067aafd48425d67bcb01bba5cb6" name="a15fd416fbb2e492fb0e7753d1e7cea36a06933067aafd48425d67bcb01bba5cb6"></a>Update&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19" name="a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19"></a>Retract&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a8093c8e230976f46f7b47bc451bc49bd" name="a8093c8e230976f46f7b47bc451bc49bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8093c8e230976f46f7b47bc451bc49bd">&#9670;&#160;</a></span>AgendaGroupActivityRecord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">record ReteCore.AgendaGroupActivityRecord </td>
+          <td>(</td>
+          <td class="paramtype">DateTimeOffset</td>          <td class="paramname"><span class="paramname"><em>Timestamp</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>GroupName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>Activity</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>RuleName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeSpan?</td>          <td class="paramname"><span class="paramname"><em>Duration</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel sealed">sealed</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Records a timestamped agenda-group event, optionally associated with a rule activation and elapsed time. </p>
+
+</div>
+</div>
+<a id="a9e9ccf917e2b767f0bf18319af3314c7" name="a9e9ccf917e2b767f0bf18319af3314c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e9ccf917e2b767f0bf18319af3314c7">&#9670;&#160;</a></span>AgendaGroupRuntimeStatistics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">record ReteCore.AgendaGroupRuntimeStatistics </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>GroupName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>FocusCount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>ActivationCount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DateTimeOffset?</td>          <td class="paramname"><span class="paramname"><em>LastFocusedAt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DateTimeOffset?</td>          <td class="paramname"><span class="paramname"><em>LastActivationAt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeSpan</td>          <td class="paramname"><span class="paramname"><em>TotalRunTime</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>WaitCount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeSpan</td>          <td class="paramname"><span class="paramname"><em>TotalWaitTime</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>IsWaiting</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeSpan</td>          <td class="paramname"><span class="paramname"><em>CurrentWaitTime</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel sealed">sealed</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provides a snapshot of timing and activity counters for one agenda group. </p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="a74a110b5079c75e52cb453d36a673a63" name="a74a110b5079c75e52cb453d36a673a63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74a110b5079c75e52cb453d36a673a63">&#9670;&#160;</a></span>FactChangeOrigin</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">readonly record struct ReteCore.FactChangeOrigin(string? <a class="el" href="class_rete_core_1_1_agenda_group.html">AgendaGroup</a>, string? RuleName, Guid? ActivationId) </td>
+          <td>(</td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>AgendaGroup</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>RuleName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid?</td>          <td class="paramname"><span class="paramname"><em>ActivationId</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Identifies the rule execution responsible for creating a fact change. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="class_rete_core_1_1_agenda_group.html" title="Encapsulates pending activations, readiness policies, and runtime diagnostics for one agenda group.">AgendaGroup</a></td><td>The agenda group that produced the change, if any.</td></tr>
+    <tr><td class="paramname">RuleName</td><td>The rule that produced the change, if any.</td></tr>
+    <tr><td class="paramname">ActivationId</td><td>The activation that produced the change, if any.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

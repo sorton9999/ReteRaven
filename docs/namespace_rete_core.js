@@ -2,6 +2,8 @@ var namespace_rete_core =
 [
     [ "Activation", "class_rete_core_1_1_activation.html", "class_rete_core_1_1_activation" ],
     [ "Agenda", "class_rete_core_1_1_agenda.html", "class_rete_core_1_1_agenda" ],
+    [ "AgendaFocusStackChangedEventArgs", "class_rete_core_1_1_agenda_focus_stack_changed_event_args.html", "class_rete_core_1_1_agenda_focus_stack_changed_event_args" ],
+    [ "AgendaGroup", "class_rete_core_1_1_agenda_group.html", "class_rete_core_1_1_agenda_group" ],
     [ "AggregationGroupNode", "class_rete_core_1_1_aggregation_group_node.html", "class_rete_core_1_1_aggregation_group_node" ],
     [ "FactSnapshot", "struct_rete_core_1_1_fact_snapshot.html", "struct_rete_core_1_1_fact_snapshot" ],
     [ "AllNode", "class_rete_core_1_1_all_node.html", "class_rete_core_1_1_all_node" ],
@@ -14,6 +16,7 @@ var namespace_rete_core =
     [ "ExistsNode", "class_rete_core_1_1_exists_node.html", "class_rete_core_1_1_exists_node" ],
     [ "IFact", "interface_rete_core_1_1_i_fact.html", "interface_rete_core_1_1_i_fact" ],
     [ "Fact&lt; T &gt;", "class_rete_core_1_1_fact-1-g.html", "class_rete_core_1_1_fact-1-g" ],
+    [ "IAgendaGroupReadinessStrategy", "interface_rete_core_1_1_i_agenda_group_readiness_strategy.html", "interface_rete_core_1_1_i_agenda_group_readiness_strategy" ],
     [ "ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", "interface_rete_core_1_1_i_latent_memory" ],
     [ "IndexedExistsNode", "class_rete_core_1_1_indexed_exists_node.html", "class_rete_core_1_1_indexed_exists_node" ],
     [ "IReteNode", "interface_rete_core_1_1_i_rete_node.html", "interface_rete_core_1_1_i_rete_node" ],
@@ -22,9 +25,23 @@ var namespace_rete_core =
     [ "ObjectTypeNode&lt; T &gt;", "class_rete_core_1_1_object_type_node-1-g.html", "class_rete_core_1_1_object_type_node-1-g" ],
     [ "OrNode", "class_rete_core_1_1_or_node.html", "class_rete_core_1_1_or_node" ],
     [ "RootNode", "class_rete_core_1_1_root_node.html", "class_rete_core_1_1_root_node" ],
+    [ "RuleExecutionContext", "class_rete_core_1_1_rule_execution_context.html", "class_rete_core_1_1_rule_execution_context" ],
     [ "RuleMetadata", "class_rete_core_1_1_rule_metadata.html", "class_rete_core_1_1_rule_metadata" ],
     [ "LateFilter", "class_rete_core_1_1_late_filter.html", "class_rete_core_1_1_late_filter" ],
     [ "TerminalNode", "class_rete_core_1_1_terminal_node.html", "class_rete_core_1_1_terminal_node" ],
     [ "Token", "class_rete_core_1_1_token.html", "class_rete_core_1_1_token" ],
-    [ "Fact", "class_rete_core_1_1_fact.html", "class_rete_core_1_1_fact" ]
+    [ "Fact", "class_rete_core_1_1_fact.html", "class_rete_core_1_1_fact" ],
+    [ "AgendaFocusStackChangeReason", "namespace_rete_core.html#a72361f178af34017744b521f63ed18c8", [
+      [ "GroupFocused", "namespace_rete_core.html#a72361f178af34017744b521f63ed18c8ae3b00642608860aeefbf37f5a58f85f1", null ],
+      [ "GroupPopped", "namespace_rete_core.html#a72361f178af34017744b521f63ed18c8a9fd906629c22a8dc9524b681de0a5221", null ],
+      [ "GroupAutomaticallyPopped", "namespace_rete_core.html#a72361f178af34017744b521f63ed18c8a1c8217da0c4f78ce903dd26fca0c40dc", null ]
+    ] ],
+    [ "FactChangeTypeEnum", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36", [
+      [ "Assert", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36ad530f9d1b94f864f2238775b0e19e48c", null ],
+      [ "Update", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36a06933067aafd48425d67bcb01bba5cb6", null ],
+      [ "Retract", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19", null ]
+    ] ],
+    [ "AgendaGroupActivityRecord", "namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd", null ],
+    [ "AgendaGroupRuntimeStatistics", "namespace_rete_core.html#a9e9ccf917e2b767f0bf18319af3314c7", null ],
+    [ "FactChangeOrigin", "namespace_rete_core.html#a74a110b5079c75e52cb453d36a673a63", null ]
 ];

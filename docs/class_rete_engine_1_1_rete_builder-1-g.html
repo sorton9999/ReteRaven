@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.4.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -107,6 +107,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a60591b8639aeb68c3482f14e94e6770c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Groups facts of type TRightFact into the token under the specified alias. This method creates a GroupBuilder that allows for further configuration of the grouping operation.  <br /></td></tr>
 <tr class="memitem:a71f3e2d52a5afcf8caf9ed9549970d1f" id="r_a71f3e2d52a5afcf8caf9ed9549970d1f"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a71f3e2d52a5afcf8caf9ed9549970d1f">Priority</a> (int level)</td></tr>
 <tr class="memdesc:a71f3e2d52a5afcf8caf9ed9549970d1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The rule level priority determines the order in which rules are executed when multiple rules are eligible to fire. Higher priority values indicate that a rule should be executed before those with lower priority values. By default, the priority is set to 0, and rules with the same priority will be executed in the order they were added to the agenda. Use this method to explicitly set the priority of a rule, allowing you to control the execution order when there are competing rules that could fire at the same time. This is particularly useful in scenarios where certain rules must take precedence over others based on business logic or specific conditions.  <br /></td></tr>
+<tr class="memitem:a0a9de12082c222ce9cd8ec6ace7330e5" id="r_a0a9de12082c222ce9cd8ec6ace7330e5"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a0a9de12082c222ce9cd8ec6ace7330e5">AgendaGroup</a> (string groupName)</td></tr>
+<tr class="memdesc:a0a9de12082c222ce9cd8ec6ace7330e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns the rule to an agenda group. Rules default to <span class="tt">MAIN</span>.  <br /></td></tr>
 <tr class="memitem:a6f9bec33e5aaa5d18e011ffd6e5df06c" id="r_a6f9bec33e5aaa5d18e011ffd6e5df06c"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6f9bec33e5aaa5d18e011ffd6e5df06c">First</a> ()</td></tr>
 <tr class="memdesc:a6f9bec33e5aaa5d18e011ffd6e5df06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience method to set the rule's priority to a high value, ensuring that it will be executed before any rules with lower priority when multiple rules are eligible to fire.  <br /></td></tr>
 <tr class="memitem:a189a550b0c9ad5ea79731d560333b31a" id="r_a189a550b0c9ad5ea79731d560333b31a"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189a550b0c9ad5ea79731d560333b31a">Next</a> ()</td></tr>
@@ -133,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5eb8f017ae1e04ef08519f835c16b21a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows you to define an aggregate condition on a collection of facts of type T that have been aggregated into the token given the specified alias. The provided predicate will be evaluated against the collection of facts at the time the rule fires, allowing you to specify conditions that depend on the aggregated data. You could use this method to check if all facts in the collection satisfy a certain condition, if any fact meets a criterion, or if the collection contains a specific number of items.  <br /></td></tr>
 <tr class="memitem:a189b596a98d88d4f0e6c6f8e5dfad756" id="r_a189b596a98d88d4f0e6c6f8e5dfad756"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189b596a98d88d4f0e6c6f8e5dfad756">Then</a> (Action&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, int salience=0)</td></tr>
 <tr class="memdesc:a189b596a98d88d4f0e6c6f8e5dfad756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal action to the rule that will be executed when the rule is triggered. This method finalizes the rule definition by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience values indicate higher priority, meaning that rules with greater salience will be executed before those with lower salience when they are both eligible to fire. The default salience is 0, and rules with the same salience will be executed in the order they were added to the agenda. Use this method to specify the action that should be taken when the rule's conditions are met, and optionally assign a salience to influence the execution order of the rule relative to others.  <br /></td></tr>
+<tr class="memitem:a38df84760ea0878c4786fc616335080f" id="r_a38df84760ea0878c4786fc616335080f"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a38df84760ea0878c4786fc616335080f">CtxThen</a> (Action&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt; action, int salience=0)</td></tr>
+<tr class="memdesc:a38df84760ea0878c4786fc616335080f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a rule action that stages fact changes and explicitly publishes them after the action succeeds. The fact is introduced into the rule network and evaluated against the conditions of the rule. If the rule's conditions are satisfied, the action is executed, and any changes to facts are staged. After the action completes successfully, the changes are published to the working memory, allowing other rules to react to the updated state. This method is useful for scenarios where you want to ensure that fact changes are only made visible to other rules after a successful action execution, providing a controlled way to manage state changes in the rule engine.  <br /></td></tr>
 <tr class="memitem:a32282ebe0df576e46a643a6f6084e348" id="r_a32282ebe0df576e46a643a6f6084e348"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a32282ebe0df576e46a643a6f6084e348">Trace</a> (string label, TextWriter? output=null)</td></tr>
 <tr class="memdesc:a32282ebe0df576e46a643a6f6084e348"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a transparent trace checkpoint after the current rule condition.  <br /></td></tr>
 <tr class="memitem:a2c54326eb39af9bb6759ec6a8bdaaf3e" id="r_a2c54326eb39af9bb6759ec6a8bdaaf3e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2c54326eb39af9bb6759ec6a8bdaaf3e">Assert</a> (object fact)</td></tr>
@@ -164,6 +168,25 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a0a9de12082c222ce9cd8ec6ace7330e5" name="a0a9de12082c222ce9cd8ec6ace7330e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a9de12082c222ce9cd8ec6ace7330e5">&#9670;&#160;</a></span>AgendaGroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.AgendaGroup </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assigns the rule to an agenda group. Rules default to <span class="tt">MAIN</span>. </p>
+
+</div>
+</div>
 <a id="a5eb8f017ae1e04ef08519f835c16b21a" name="a5eb8f017ae1e04ef08519f835c16b21a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5eb8f017ae1e04ef08519f835c16b21a">&#9670;&#160;</a></span>All&lt; T &gt;()</h2>
 
@@ -311,6 +334,29 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a38df84760ea0878c4786fc616335080f" name="a38df84760ea0878c4786fc616335080f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38df84760ea0878c4786fc616335080f">&#9670;&#160;</a></span>CtxThen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt; ReteEngine.ReteBuilder&lt; TInitial &gt;.CtxThen </td>
+          <td>(</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>action</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>salience</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a rule action that stages fact changes and explicitly publishes them after the action succeeds. The fact is introduced into the rule network and evaluated against the conditions of the rule. If the rule's conditions are satisfied, the action is executed, and any changes to facts are staged. After the action completes successfully, the changes are published to the working memory, allowing other rules to react to the updated state. This method is useful for scenarios where you want to ensure that fact changes are only made visible to other rules after a successful action execution, providing a controlled way to manage state changes in the rule engine. </p>
 
 </div>
 </div>

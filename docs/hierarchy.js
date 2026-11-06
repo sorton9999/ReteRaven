@@ -1,11 +1,17 @@
 var hierarchy =
 [
     [ "ReteCore.Agenda", "class_rete_core_1_1_agenda.html", null ],
+    [ "ReteCore.AgendaGroup", "class_rete_core_1_1_agenda_group.html", null ],
     [ "ReteCore.BetaNodeRegistry", "class_rete_core_1_1_beta_node_registry.html", null ],
     [ "ReteTests.BetaNodeSharingIntegrationTests", "class_rete_tests_1_1_beta_node_sharing_integration_tests.html", null ],
+    [ "EventArgs", null, [
+      [ "ReteCore.AgendaFocusStackChangedEventArgs", "class_rete_core_1_1_agenda_focus_stack_changed_event_args.html", null ],
+      [ "ReteEngine.RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", null ]
+    ] ],
     [ "ReteCore.FactSnapshot", "struct_rete_core_1_1_fact_snapshot.html", null ],
     [ "ReteTest.Tests.ReteBuilderIntegrationTests.GInventory", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests_1_1_g_inventory.html", null ],
     [ "ReteTest.Tests.ReteBuilderIntegrationTests.GProduct", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests_1_1_g_product.html", null ],
+    [ "ReteCore.IAgendaGroupReadinessStrategy", "interface_rete_core_1_1_i_agenda_group_readiness_strategy.html", null ],
     [ "ReteEngine.IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", [
       [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
     ] ],
@@ -23,17 +29,6 @@ var hierarchy =
       [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
     ] ],
     [ "ReteCore.IFact", "interface_rete_core_1_1_i_fact.html", [
-      [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
-    ] ],
-    [ "ReteEngine.IGroupBuilder&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_builder-1-g.html", [
-      [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ]
-    ] ],
-    [ "ReteCore.ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", [
-      [ "ReteCore.BetaMemory", "class_rete_core_1_1_beta_memory.html", null ],
-      [ "ReteCore.CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", null ],
-      [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
-    ] ],
-    [ "INotifyPropertyChanged", null, [
       [ "ReteCore.Fact", "class_rete_core_1_1_fact.html", [
         [ "ReteProgram.CriticalCell", "class_rete_program_1_1_critical_cell.html", null ],
         [ "ReteProgram.DutyStatus", "class_rete_program_1_1_duty_status.html", null ],
@@ -46,6 +41,18 @@ var hierarchy =
         [ "ReteProgram.Shipment", "class_rete_program_1_1_shipment.html", null ],
         [ "ReteProgram.SystemStatus", "class_rete_program_1_1_system_status.html", null ]
       ] ],
+      [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
+    ] ],
+    [ "ReteEngine.IGroupBuilder&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_builder-1-g.html", [
+      [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ]
+    ] ],
+    [ "ReteCore.ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", [
+      [ "ReteCore.BetaMemory", "class_rete_core_1_1_beta_memory.html", null ],
+      [ "ReteCore.CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", null ],
+      [ "ReteEngine.ReteEngine.TraceNode", "class_rete_engine_1_1_rete_engine_1_1_trace_node.html", null ]
+    ] ],
+    [ "INotifyPropertyChanged", null, [
+      [ "ReteCore.Fact", "class_rete_core_1_1_fact.html", null ],
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
     ] ],
     [ "ReteCore.IReteNode", "interface_rete_core_1_1_i_rete_node.html", [
@@ -78,7 +85,10 @@ var hierarchy =
     [ "ReteEngine.ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", null ],
     [ "ReteTest.Tests.ReteBuilderIntegrationTests", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html", null ],
     [ "ReteTest.Tests.ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", null ],
+    [ "ReteEngine.ReteEngineOptions", "class_rete_engine_1_1_rete_engine_options.html", null ],
+    [ "ReteCore.RuleExecutionContext", "class_rete_core_1_1_rule_execution_context.html", null ],
     [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],
+    [ "ReteTest.Tests.TestPublishAndResume", "class_rete_test_1_1_tests_1_1_test_publish_and_resume.html", null ],
     [ "ReteTest.Tests.TraceNodeTests", "class_rete_test_1_1_tests_1_1_trace_node_tests.html", null ],
     [ "ReteTest.Tests.UpdatePreparationTests", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html", null ]
 ];

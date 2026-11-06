@@ -9,5 +9,7 @@ var namespace_rete_engine =
     [ "GroupBuilder&lt; TInitial, TRightFact &gt;", "class_rete_engine_1_1_group_builder-2-g.html", "class_rete_engine_1_1_group_builder-2-g" ],
     [ "JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", "class_rete_engine_1_1_join_key_extractor" ],
     [ "ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", "class_rete_engine_1_1_rete_builder-1-g" ],
-    [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ]
+    [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ],
+    [ "ReteEngineOptions", "class_rete_engine_1_1_rete_engine_options.html", "class_rete_engine_1_1_rete_engine_options" ],
+    [ "RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", "class_rete_engine_1_1_rule_fired_event_args" ]
 ];

@@ -1,5 +1,6 @@
 var interface_rete_engine_1_1_i_rule_setup =
 [
+    [ "AgendaGroup", "interface_rete_engine_1_1_i_rule_setup.html#a92a658f4cfe0d2bf61739007305d033b", null ],
     [ "Exists< T >", "interface_rete_engine_1_1_i_rule_setup.html#a8969c898c1fa194fbc455b460d448b32", null ],
     [ "First", "interface_rete_engine_1_1_i_rule_setup.html#a2cd22dff84453936e8ac790cf8a1ca7d", null ],
     [ "From< T >", "interface_rete_engine_1_1_i_rule_setup.html#a20fde36cfa7ca64fc3a217bbe6bf24de", null ],
