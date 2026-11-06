@@ -2,6 +2,14 @@
 
 This file summarizes notable features and improvements.
 
+## v1.5 (Nov 1, 2026)
+
+### Publish-Resume and Agenda Groups
+
+- Added a Publish-Resume fact change mechanism that allows for rule dependencies
+- Added Agenda Groups that allows for rule organization and gating
+- Added more diagnostics and statistics generation and logging
+
 ## v1.4.1 (Oct 30, 2026)
 
 ### Update-in-place and fact refresh improvements

@@ -20,16 +20,16 @@ This project is open-source and distributed under the LGPL license.
 ------------------------------
 ## ==> Key Features
 
-* = Efficient Pattern Matching: The Rete network avoids repeatedly evaluating every rule against every fact. Rule evaluation focuses on changes as facts enter, leave, or update in the network.
+* = Incremental Rete Matching: The network updates rule matches as facts change, avoiding a full reevaluation of every rule.
 * = Fluent API: Define complex rules using a readable, LINQ-style syntax.
 * = In-Place Fact Updates: Update existing facts and refresh their matching state in the network without treating every update as a new fact.
-* = Reactive Fact Refresh: Facts that notify property changes can be refreshed automatically by the engine.
+* = Expressive Pattern Matching: Rules support joins, logical branches, negation, existence checks, and additional filters.
 * = Advanced Logic Nodes: Support for `Or`, `Not`, `AndNot`, and `Exists` conditions, including an indexed `Exists` implementation.
 * = Beta-Node Sharing: Compatible beta-memory nodes can be cached and reused across rules to reduce duplicated network structures.
 * = Grouping and Aggregation: Group matched facts and calculate common aggregates such as `Sum`, `Count`, and `Average`.
-* = Activation Refraction: Avoids repeatedly firing the same match without a relevant fact-state change.
+* = Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.
+* = Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.
 * = Rule Prioritization: Control firing order with rule priority and activation salience.
-* = Rule Removal: Remove rules along with their connected nodes.
 * = Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.
 
 ------------------------------
@@ -122,7 +122,7 @@ ReteRaven uses a depth-first conflict-resolution strategy. When multiple rules a
 The following capabilities are planned and are not part of the current released functionality.
 
 ### Performance & Scaling
-* = `Publish-and-Resume Agenda Coordination`: Agenda groups will be able to publish fact changes through the engine and resume dependent groups once their prerequisites are satisfied.
+* = [DONE] `Publish-and-Resume Agenda Coordination`: Agenda groups will be able to publish fact changes through the engine and resume dependent groups once their prerequisites are satisfied.
 * = `Parallel Agenda Processing`: Independent agenda groups may process concurrently. Shared working-memory and Rete-network mutations will require explicit coordination and are expected to remain serialized initially.
 ### Developer Tooling
 * = `Rule Templates`: Allow users to define a rule "shape" once and instantiate it with different parameters at runtime.
