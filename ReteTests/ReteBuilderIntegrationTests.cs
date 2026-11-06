@@ -367,6 +367,32 @@ namespace ReteTest.Tests
         }
 
         [Fact]
+        public void RetractBeforeFireAll_CancelsOnlyTheRetractedFactMatch()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            var firedFactIds = new Guid[2];
+            var fireCount = 0;
+
+            engine.Begin("ProcessCell")
+                .Where<Fact>("Cell", _ => true)
+                .Then(token => firedFactIds[fireCount++] = token.Get<Fact>("Cell").Id);
+
+            var cell1 = new Fact { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
+            var cell2 = new Fact { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
+
+            engine.Assert(cell1, cell2);
+            Assert.Equal(2, engine.Agenda.Activations.Count(activation => activation.State == ActivationStateEnum.Pending));
+
+            engine.Retract(cell2);
+            Assert.Single(engine.Agenda.Activations.Where(activation => activation.State == ActivationStateEnum.Pending));
+
+            engine.FireAll();
+
+            Assert.Equal(1, fireCount);
+            Assert.Equal(cell1.Id, firedFactIds[0]);
+        }
+
+        [Fact]
         public void AutoRetraction_WhenConditionFails_DerivedFactIsRemoved()
         {
             var engine = new ReteEngine.ReteEngine();
@@ -678,7 +704,7 @@ namespace ReteTest.Tests
             // The activation should have been changed to Fired, but not removed from the list.
             var loggedActivation = historicalActivations.First();
             Assert.Equal("SimpleVerificationRule", loggedActivation.RuleName);
-            Assert.Equal(ActivationState.Fired, loggedActivation.State);
+            Assert.Equal(ActivationStateEnum.Fired, loggedActivation.State);
         }
 
 

@@ -65,6 +65,16 @@ namespace ReteEngine
         /// </summary>
         private readonly List<TerminalNode> _terminalNodes = new();
         /// <summary>
+        /// A list of fact change batches that have been published by successful staged rule actions. Each batch represents a set of changes to facts that
+        /// were made during the execution of a rule action and were published to the working memory after the action completed successfully.
+        /// </summary>
+        private readonly List<IReadOnlyList<FactChange>> _publishedChangeBatches = new();
+        /// <summary>
+        /// A FIFO list if fact change batches that are pending publication. This queue is used to manage the order of fact changes that need to be applied
+        /// to the working memory and network proper.
+        /// </summary>
+        private readonly Queue<IReadOnlyList<FactChange>> _pendingChangeBatches = new();
+        /// <summary>
         /// The alpha registry is a dictionary that maps a tuple of type and name to an AlphaMemory instance. This allows for efficient retrieval of 
         /// alpha memories based on the type and name of the facts they are associated with.
         /// </summary>
@@ -80,6 +90,21 @@ namespace ReteEngine
         /// Default is true (sharing enabled).
         /// </summary>
         private bool _enableBetaNodeSharing = true;
+        /// <summary>
+        /// The flag to control whether the engine automatically subscribes to INotifyPropertyChanged facts and refreshes the network when those facts change.
+        /// </summary>
+        private bool _autoRefreshOnPropertyChanged = true;
+        /// <summary>
+        /// The flag to track whether the working memory needs to be replayed through the network. This is set to true when a terminal node is added after
+        /// facts have already been asserted, ensuring that all facts are properly evaluated against the new rule conditions.
+        /// </summary>
+        private bool _needsWorkingMemoryReplay;
+        /// <summary>
+        /// The flag to track whether the engine is currently applying fact change batches. This is used to prevent re-entrant calls to FireAll while a batch
+        /// is being applied, which could lead to inconsistent state or unexpected behavior. When this flag is set to true, any attempts to fire rules will
+        /// result in an exception, ensuring that the engine maintains a consistent state during batch application.
+        /// </summary>
+        private bool _isApplyingChangeBatches;
         /// <summary>
         /// A private flag to track whether the ReteEngine has been disposed.
         /// </summary>
@@ -101,12 +126,60 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Registers an agenda group for later use by rules and firing operations. `MAIN` is registered by default.
+        /// </summary>
+        public ReteEngine DefineAgendaGroup(string groupName)
+        {
+            _agenda.DefineAgendaGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Registers a readiness hook for a defined agenda group. Returning false pauses that group's firing until the hook allows it to resume.
+        /// </summary>
+        public IDisposable RegisterWaitForHook(string groupName, Func<bool> canResume)
+        {
+            return _agenda.RegisterWaitForHook(groupName, canResume);
+        }
+
+        /// <summary>
+        /// Gets the change batches published by successful staged rule actions.
+        /// </summary>
+        public IReadOnlyList<IReadOnlyList<FactChange>> PublishedChangeBatches => _publishedChangeBatches.AsReadOnly();
+
+        /// <summary>
+        /// Raised when a staged rule action successfully publishes a change batch.
+        /// </summary>
+        public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
+
+        /// <summary>
+        /// Raised after a rule action completes successfully, including its agenda group and execution duration.
+        /// </summary>
+        public event EventHandler<RuleFiredEventArgs>? RuleFired;
+
+        /// <summary>
         /// Initializes a new instance of the ReteEngine with optional beta-node sharing.
         /// </summary>
         /// <param name="enableBetaNodeSharing">If true (default), rules with identical prefixes share nodes.</param>
         public ReteEngine(bool enableBetaNodeSharing = true)
+            : this(new ReteEngineOptions { EnableBetaNodeSharing = enableBetaNodeSharing })
         {
-            _enableBetaNodeSharing = enableBetaNodeSharing;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ReteEngine with the specified options.
+        /// </summary>
+        /// <param name="options">Options controlling engine behavior.</param>
+        public ReteEngine(ReteEngineOptions options)
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            _enableBetaNodeSharing = options.EnableBetaNodeSharing;
+            _autoRefreshOnPropertyChanged = options.AutoRefreshOnPropertyChanged;
+            _agenda.ActivationFired += activity => RuleFired?.Invoke(this, new RuleFiredEventArgs(
+                activity.GroupName,
+                activity.RuleName ?? string.Empty,
+                activity.Timestamp,
+                activity.Duration ?? TimeSpan.Zero));
         }
 
         /// <summary>
@@ -120,6 +193,35 @@ namespace ReteEngine
         public string GetBetaNodeRegistryStatistics()
         {
             return _betaNodeRegistry.GetStatistics();
+        }
+
+        /// <summary>
+        /// Gets the agenda-group timing summary and recent group activity log.
+        /// </summary>
+        public string GetAgendaGroupStatistics()
+        {
+            return _agenda.GetAgendaGroupStatistics();
+        }
+
+        /// <summary>
+        /// Gets the most recent agenda-group activity records.
+        /// </summary>
+        public IReadOnlyList<AgendaGroupActivityRecord> AgendaGroupActivityLog => _agenda.GroupActivityLog;
+
+        /// <summary>
+        /// Gets a snapshot of timing and activity counters for each registered agenda group.
+        /// </summary>
+        public IReadOnlyList<AgendaGroupRuntimeStatistics> GetAgendaGroupRuntimeStatistics()
+        {
+            return _agenda.GetAgendaGroupRuntimeStatistics();
+        }
+
+        /// <summary>
+        /// Clears retained agenda-group activity records without resetting cumulative timing counters.
+        /// </summary>
+        public void ClearAgendaGroupActivityLog()
+        {
+            _agenda.ClearGroupActivityLog();
         }
 
         /// <summary>
@@ -138,6 +240,10 @@ namespace ReteEngine
         public void AddTerminalNode(TerminalNode node)
         {
             _terminalNodes.Add(node);
+            if (_workingMemory.Count > 0)
+            {
+                _needsWorkingMemoryReplay = true;
+            }
         }
 
         /// <summary>
@@ -164,7 +270,7 @@ namespace ReteEngine
             if (!alreadyExists)
             {
                 _workingMemory.Add(fact);
-                if (!_disposed && fact is INotifyPropertyChanged observable)
+                if (!_disposed && _autoRefreshOnPropertyChanged && fact is INotifyPropertyChanged observable)
                 {
                     PropertyChangedEventHandler handler = (sender, args) =>
                     {
@@ -255,12 +361,52 @@ namespace ReteEngine
         /// <returns>The current instance of the ReteEngine.</returns>
         public ReteEngine FireAll()
         {
-            // Work any pre-loaded facts through the network.
-            // This takes care of any facts that were asserted
-            // before the network was fully built.
-            _workingMemory.ForEach(f => _root.Assert(f));
+            EnsureRulesCanFire();
+            ReplayWorkingMemoryIfNeeded();
             _agenda.FireAll();
             return this;
+        }
+
+        /// <summary>
+        /// Places an agenda group on top of the focus stack so it fires before previously focused groups.
+        /// </summary>
+        public ReteEngine FocusAgendaGroup(string groupName)
+        {
+            _agenda.FocusAgendaGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Fires pending activations from only the specified agenda group, leaving other groups pending.
+        /// </summary>
+        public ReteEngine FireGroup(string groupName)
+        {
+            EnsureRulesCanFire();
+            ReplayWorkingMemoryIfNeeded();
+            _agenda.FireGroup(groupName);
+            return this;
+        }
+
+        /// <summary>
+        /// Make sure the rule is ready before trying to fire.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if not ready</exception>
+        private void EnsureRulesCanFire()
+        {
+            if (_isApplyingChangeBatches)
+            {
+                throw new InvalidOperationException("Rules cannot be fired while a fact-change batch is being applied.");
+            }
+        }
+
+        /// <summary>
+        /// Detects whether or not the facts need to be worked through the network before rules are asserted.
+        /// </summary>
+        private void ReplayWorkingMemoryIfNeeded()
+        {
+            if (!_needsWorkingMemoryReplay) return;
+            _workingMemory.ForEach(f => _root.Assert(f));
+            _needsWorkingMemoryReplay = false;
         }
 
         /// <summary>
@@ -316,6 +462,174 @@ namespace ReteEngine
             else
             {
                 Assert(fact);
+            }
+        }
+
+        /// <summary>
+        /// Publishes a batch of fact changes to the working memory and raises the FactChangesPublished event. This method is called after a staged
+        /// rule action successfully completes.
+        /// </summary>
+        /// <param name="changes">The batch of fact changes to publish.</param>
+        internal void PublishChanges(IReadOnlyList<FactChange> changes)
+        {
+            _pendingChangeBatches.Enqueue(changes);
+            if (_isApplyingChangeBatches) return;
+
+            _isApplyingChangeBatches = true;
+            try
+            {
+                while (_pendingChangeBatches.Count > 0)
+                {
+                    IReadOnlyList<FactChange> batch = _pendingChangeBatches.Dequeue();
+                    ValidateChangeBatch(batch);
+                    foreach (FactChange change in batch)
+                    {
+                        ApplyChange(change);
+                    }
+
+                    _publishedChangeBatches.Add(batch);
+                    FactChangesPublished?.Invoke(batch);
+                }
+            }
+            finally
+            {
+                _isApplyingChangeBatches = false;
+            }
+        }
+
+        /// <summary>
+        /// Validates a batch of fact changes to ensure that they are consistent and can be applied to the working memory. This method checks for null changes, 
+        /// duplicate fact IDs, and expected revisions.
+        /// </summary>
+        /// <param name="changes">The batch of fact changes to validate.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the batch contains invalid changes.</exception>
+        private void ValidateChangeBatch(IReadOnlyList<FactChange> changes)
+        {
+            var states = new Dictionary<Guid, (bool Exists, long Revision)>();
+            foreach (FactChange change in changes)
+            {
+                if (change == null)
+                {
+                    throw new InvalidOperationException("A change batch cannot contain a null change.");
+                }
+
+                if (!states.TryGetValue(change.FactId, out var state))
+                {
+                    IFact? current = FindFactById(change.FactId);
+                    state = (current != null, current == null ? 0 : _agenda.GetFactRevision(current));
+                }
+
+                switch (change.Kind)
+                {
+                    case FactChangeTypeEnum.Assert:
+                        ValidateFactPayload(change);
+                        if (!state.Exists) state = (true, 0);
+                        break;
+                    case FactChangeTypeEnum.Update:
+                        ValidateFactPayload(change);
+                        ValidateExpectedRevision(change, state);
+                        state = state.Exists ? (true, state.Revision + 1) : (true, 0);
+                        break;
+                    case FactChangeTypeEnum.Retract:
+                        ValidateExpectedRevision(change, state);
+                        if (state.Exists) state = (false, 0);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported fact change kind '{change.Kind}'.");
+                }
+
+                states[change.FactId] = state;
+            }
+        }
+
+        /// <summary>
+        /// Validate the payload of a fact change to ensure that it contains a valid fact with the matching identity. This method checks that the fact is not null
+        /// and that its ID matches the expected FactId in the change.
+        /// </summary>
+        /// <param name="change">The fact change to validate.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the fact change payload is invalid.</exception>
+        private static void ValidateFactPayload(FactChange change)
+        {
+            if (change.Fact == null || change.Fact.Id != change.FactId)
+            {
+                throw new InvalidOperationException("An assert or update change must contain a fact with the matching identity.");
+            }
+        }
+
+        /// <summary>
+        /// Validate the expected revision of a fact change against the current state of the fact in working memory. This method checks that the expected revision 
+        /// matches the current revision of the fact, if it exists.
+        /// </summary>
+        /// <param name="change">The fact change to validate.</param>
+        /// <param name="state">The current state of the fact in working memory.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the expected revision does not match the current revision.</exception>
+        private static void ValidateExpectedRevision(FactChange change, (bool Exists, long Revision) state)
+        {
+            if (change.ExpectedRevision.HasValue &&
+                (!state.Exists || state.Revision != change.ExpectedRevision.Value))
+            {
+                throw new InvalidOperationException(
+                    $"Fact '{change.FactId}' has revision {(state.Exists ? state.Revision.ToString() : "missing")}; " +
+                    $"expected revision {change.ExpectedRevision.Value}.");
+            }
+        }
+
+        /// <summary>
+        /// Get the fact in working memory with the specified identity, or null if no such fact exists. Throws an exception if more than one fact with the same
+        /// identity is found.
+        /// </summary>
+        /// <param name="factId">The identity of the fact to find.</param>
+        /// <returns>The fact with the specified identity, or null if no such fact exists.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if more than one fact with the same identity is found.</exception>
+        private IFact? FindFactById(Guid factId)
+        {
+            IFact[] matches = _workingMemory.OfType<IFact>()
+                .Where(fact => fact.Id == factId)
+                .Take(2)
+                .ToArray();
+            if (matches.Length > 1)
+            {
+                throw new InvalidOperationException($"Working memory contains more than one fact with identity '{factId}'.");
+            }
+            return matches.SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Apply the specified fact change to the working memory and Rete network. This method handles asserting, updating, and retracting facts based on the kind of change.
+        /// </summary>
+        /// <param name="change">The fact change to apply.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the change cannot be applied.</exception>
+        private void ApplyChange(FactChange change)
+        {
+            IFact? existing = FindFactById(change.FactId);
+            switch (change.Kind)
+            {
+                case FactChangeTypeEnum.Assert:
+                    if (existing == null) Assert(change.Fact!);
+                    break;
+                case FactChangeTypeEnum.Update:
+                    IFact replacement = change.Fact!;
+                    if (existing == null)
+                    {
+                        Assert(replacement);
+                    }
+                    else if (ReferenceEquals(existing, replacement))
+                    {
+                        UpdateFact(replacement, null);
+                    }
+                    else
+                    {
+                        long nextRevision = _agenda.GetFactRevision(existing) + 1;
+                        Retract(existing);
+                        Assert(replacement);
+                        _agenda.SetFactRevision(replacement, nextRevision);
+                    }
+                    break;
+                case FactChangeTypeEnum.Retract:
+                    if (existing != null) Retract(existing);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported fact change kind '{change.Kind}'.");
             }
         }
 

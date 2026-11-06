@@ -35,6 +35,7 @@ namespace ReteEngine
     {
         IRuleSetup If(string name, Func<bool> globalCondition);
         IConnectionBuilder If<T>(string name, Func<T, bool> lateCondition);
+        IRuleSetup AgendaGroup(string groupName);
         IRuleSetup Priority(int priority);
         IRuleSetup First();
         IRuleSetup Next();
@@ -75,6 +76,7 @@ namespace ReteEngine
         IConnectionBuilder Or();
 
         void Then(Action<Token> action, int salience = 0);
+        void CtxThen(Action<RuleExecutionContext> action, int salience = 0);
     }
 
     /// <summary>
@@ -105,6 +107,7 @@ namespace ReteEngine
         IConnectionBuilder Or();
 
         void Then(Action<Token> action, int salience = 0);
+        void CtxThen(Action<RuleExecutionContext> action, int salience = 0);
     }
 
     /// <summary>
@@ -175,6 +178,15 @@ namespace ReteEngine
         /// <returns>The current <see cref="IConnectionBuilder"/> (this instance) to continue building the rule.</returns>
         public IConnectionBuilder And()
         {
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder{TInitial}.AgendaGroup"/> that assigns this rule to an agenda group.
+        /// </summary>
+        public IRuleSetup AgendaGroup(string groupName)
+        {
+            _builder.AgendaGroup(groupName);
             return this;
         }
 
@@ -508,6 +520,17 @@ namespace ReteEngine
         public void Then(Action<Token> action, int salience = 0)
         {
             _builder.Then(action, salience);
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.CtxThen that registers the action to execute when the rule fires,
+        /// providing access to the <see cref="RuleExecutionContext"/>.
+        /// </summary>
+        /// <param name="action">The action to execute when the rule is activated; receives the <see cref="RuleExecutionContext"/>.</param>
+        /// <param name="salience">An optional salience (priority) modifier for the rule's activation.</param>
+        public void CtxThen(Action<RuleExecutionContext> action, int salience = 0)
+        {
+            _builder.CtxThen(action, salience);
         }
 
 

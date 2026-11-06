@@ -16,28 +16,22 @@ var engine = new ReteEngine.ReteEngine();
 
 var cell1 = new Fact { Id = Guid.NewGuid(), Name = "Cell1", Value = 100 };
 var cell2 = new Fact { Id = Guid.NewGuid(), Name = "Cell2", Value = 200 };
-cell1.PropertyChanged += Cell_PropertyChanged;
-cell2.PropertyChanged += Cell_PropertyChanged;
 
 engine.Assert(cell1);
 engine.Assert(cell2); // Activates the rule
 engine.Retract(cell2); // Retracts the rule before it fires
 engine.FireAll();      // Nothing prints because of the retraction
 
-cell1.Value = 300; // Update cell1's value
-cell2.Value = 500; // Update cell2's value to match cell1
+var previousCell1 = cell1;
+cell1 = new Fact { Id = previousCell1.Id, Name = previousCell1.Name, Value = 300 };
+engine.Retract(previousCell1);
+engine.Assert(cell1);
+
+var previousCell2 = cell2;
+cell2 = new Fact { Id = previousCell2.Id, Name = previousCell2.Name, Value = 500 };
+engine.Retract(previousCell2);
+engine.Assert(cell2);
 var cell3 = new Fact { Id = Guid.NewGuid(), Name = "Cell3", Value = 1000 };
-
-cell3.PropertyChanged += Cell_PropertyChanged;
-
-void Cell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-{
-    Fact cell = sender as Fact;
-    if (cell != null)
-    {
-        Console.WriteLine($"Fact \'{cell.Id}\' new Value:[{cell.Value}].");
-    }
-}
 
 BetaMemory initialBetaMemory = new BetaMemory();
 initialBetaMemory.AddSuccessor(new JoinNode(initialBetaMemory, new AlphaMemory(), "B", (t, f) => true)); // Dummy join to start the chain
@@ -98,7 +92,7 @@ joinABC.AddSuccessor(terminal);
 engine.Begin("DetectConflict")
     .Where<Fact>("FirstCell")
     .And<Fact>("SecondCell", (token, next) =>
-        token.Get<Fact>("FirstCell").Id == next.Id &&
+        token.Get<Fact>("FirstCell").Id != next.Id &&
         token.Get<Fact>("FirstCell").Value != next.Value,
         "CheckAdd")
     .Then(token =>
@@ -233,10 +227,19 @@ engine5.Assert(criticalCell);
 
 engine5.FireAll();
 
-// This value change should trigger the rule to mark it Normal and print the alert
-criticalCell.Value = 120;
+// Replace the immutable fact state to trigger the rule again.
+var previousCriticalCell = criticalCell;
+criticalCell = new CriticalCell
+{
+    Id = previousCriticalCell.Id,
+    Name = previousCriticalCell.Name,
+    Status = "Normal",
+    Value = 120
+};
+engine5.Retract(previousCriticalCell);
+engine5.Assert(criticalCell);
 
-// Fire the rule again to see the affect of the value change
+// Fire the rule again to see the effect of the replacement
 engine5.FireAll();
 
 var engine6 = new ReteEngine.ReteEngine();
@@ -882,4 +885,122 @@ engineK.Assert(inventoryK1, inventoryK2);
 engineK.FireAll();
 inventoryK1.Quantity = 10; // This should trigger the "InStock" rule and update the location
 engineK.FireAll();
+
+
+Console.WriteLine("\n--- Testing Agenda Groups and Readiness Hooks ---");
+
+var waitDemoEngine = new ReteEngine.ReteEngine();
+waitDemoEngine.DefineAgendaGroup("PREPARE");
+waitDemoEngine.DefineAgendaGroup("DISPATCH");
+
+var carrierReady = false;
+var waitDemoFiringOrder = new List<string>();
+waitDemoEngine.RuleFired += (_, e) =>
+    waitDemoFiringOrder.Add($"{e.AgendaGroup}: {e.RuleName}");
+var waitHookRegistration = waitDemoEngine.RegisterWaitForHook(
+    "DISPATCH",
+    () => carrierReady);
+
+// PREPARE priority 20: create a staged shipment.
+// Publishing makes it visible to the Rete network, but does not fire
+// activations in other agenda groups.
+waitDemoEngine.Begin("PrepareShipment")
+    .AgendaGroup("PREPARE")
+    .Priority(20)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .CtxThen(context =>
+    {
+        Order order = context.Match.Get<Order>("order");
+        waitDemoFiringOrder.Add("PREPARE: create shipment");
+        Console.WriteLine($"PREPARE: validating {order.Text}");
+
+        context.Assert(new Shipment
+        {
+            Id = Guid.NewGuid(),
+            ProductId = 64001,
+            Status = "ReadyToShip"
+        });
+        context.Publish();
+    });
+
+// PREPARE priority 10: this should run after PrepareShipment.
+waitDemoEngine.Begin("RecordPreparation")
+    .AgendaGroup("PREPARE")
+    .Priority(10)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .Then(context =>
+    {
+        Console.WriteLine("PREPARE: audit recorded");
+    });
+
+// DISPATCH is gated by the readiness hook.
+// Updating by snapshot preserves the shipment's identity.
+waitDemoEngine.Begin("DispatchShipment")
+    .AgendaGroup("DISPATCH")
+    .Priority(5)
+    .Where<Shipment>("shipment", shipment => shipment.Status == "ReadyToShip")
+    .CtxThen(context =>
+    {
+        Shipment shipment = context.Match.Get<Shipment>("shipment");
+        Shipment shippedSnapshot = (Shipment)shipment.Snapshot();
+        shippedSnapshot.Status = "Shipped";
+
+        Console.WriteLine($"DISPATCH: shipping product {shipment.ProductId}");
+
+        context.Update(shippedSnapshot, expectedRevision: 0);
+        context.Publish();
+    });
+
+// These rules belong to MAIN. The high-priority order rule demonstrates
+// that group focus takes precedence over rule priority across groups.
+waitDemoEngine.Begin("MainOrderMonitor")
+    .Priority(10000)
+    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .Then(context =>
+    {
+        Console.WriteLine("MAIN: order monitor ran");
+    });
+
+waitDemoEngine.Begin("MainShipmentMonitor")
+    .Where<Shipment>("shipment", shipment => shipment.Status == "Shipped")
+    .Then(context =>
+    {
+        Console.WriteLine("MAIN: shipment monitor saw Shipped");
+    });
+
+var waitDemoOrder = new Order
+{
+    Id = Guid.NewGuid(),
+    Text = "SHIP-64001",
+    TargetRank = "Captain",
+    GivenBy = "DebugDemo",
+    IsProcessed = false
+};
+
+waitDemoEngine.Assert(waitDemoOrder);
+
+// Fire only PREPARE. This also asserts the staged shipment into working
+// memory, creating a pending DISPATCH activation.
+waitDemoEngine.FireGroup("PREPARE");
+
+Console.WriteLine($"After PREPARE, DISPATCH pending: {waitDemoEngine.Agenda.HasActivationsInGroup("DISPATCH")}");
+Console.WriteLine($"After PREPARE, MAIN pending: {waitDemoEngine.Agenda.HasActivationsInGroup("MAIN")}");
+
+// Focus DISPATCH. The readiness hook is false, so FireAll pauses there:
+// no DISPATCH or MAIN actions should run yet.
+waitDemoEngine.FocusAgendaGroup("DISPATCH").FireAll();
+
+Console.WriteLine($"Paused focus: {waitDemoEngine.Agenda.FocusedAgendaGroup}");
+Console.WriteLine($"Actions fired so far: {string.Join(" -> ", waitDemoFiringOrder)}");
+
+// Simulate the external condition becoming ready, then resume processing.
+// DISPATCH runs first; after it empties, focus returns to MAIN.
+carrierReady = true;
+waitDemoEngine.FireAll();
+
+Console.WriteLine($"Final focus: {waitDemoEngine.Agenda.FocusedAgendaGroup}");
+Console.WriteLine($"Final firing order: {string.Join(" -> ", waitDemoFiringOrder)}");
+Console.WriteLine(waitDemoEngine.GetAgendaGroupStatistics());
+
+waitHookRegistration.Dispose();
 

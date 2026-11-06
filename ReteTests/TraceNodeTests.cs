@@ -49,7 +49,7 @@ public class TraceNodeTests
         Assert.Equal(new[] { 8, 12, 12 }, observedQuantities);
 
         inventory.ProductId = 99;
-        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == ReteCore.Activation.ActivationState.Pending));
+        Assert.Empty(engine.Agenda.Activations.Where(activation => activation.State == ReteCore.Activation.ActivationStateEnum.Pending));
         engine.FireAll();
         Assert.Equal(new[] { 8, 12, 12 }, observedQuantities);
 

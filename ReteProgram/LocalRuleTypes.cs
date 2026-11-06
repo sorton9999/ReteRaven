@@ -18,15 +18,11 @@ namespace ReteProgram
     // Test classes
     public class SystemStatus : Fact
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
         public bool IsActive { get; set; }
     };
 
     public class Sensor : Fact
     {
-        public string Name { get; set; }
-        public Guid Id { get; set; }
         public string Type { get; set; }
         public bool IsTriggered
         {
@@ -432,7 +428,6 @@ namespace ReteProgram
 
     public class RiskFactor : Fact
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public int ProductId 
         { 
             get { return _productId; } 
