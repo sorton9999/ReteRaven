@@ -151,11 +151,17 @@ namespace ReteCore
         /// <param name="ruleName">The associated rule name, if any.</param>
         /// <param name="duration">The elapsed time associated with the activity, if any.</param>
         /// <param name="timestamp">The activity timestamp, or the current time when omitted.</param>
-        internal void RecordActivity(string activity, string? ruleName = null, TimeSpan? duration = null, DateTimeOffset? timestamp = null)
+        /// <param name="activationId">The associated activation identifier, if any.</param>
+        internal void RecordActivity(
+            string activity,
+            string? ruleName = null,
+            TimeSpan? duration = null,
+            DateTimeOffset? timestamp = null,
+            Guid? activationId = null)
         {
             if (!RecordActivityLog) return;
             if (_activityLog.Count == MaximumActivityRecords) _activityLog.Dequeue();
-            _activityLog.Enqueue(new AgendaGroupActivityRecord(timestamp ?? DateTimeOffset.UtcNow, Name, activity, ruleName, duration));
+            _activityLog.Enqueue(new AgendaGroupActivityRecord(timestamp ?? DateTimeOffset.UtcNow, Name, activity, ruleName, duration, activationId));
         }
 
         /// <summary>
@@ -250,7 +256,7 @@ namespace ReteCore
                 _statistics.ActivationCount++;
                 _statistics.LastActivationAt = startedAt;
             }
-            RecordActivity("ActivationStarted", activation.RuleName, timestamp: startedAt);
+            RecordActivity("ActivationStarted", activation.RuleName, timestamp: startedAt, activationId: activation.Id);
             if (collectStatistics) NotifyStatisticsUpdated();
             Stopwatch? stopwatch = collectStatistics || recordActivityLog ? Stopwatch.StartNew() : null;
             try
@@ -263,7 +269,7 @@ namespace ReteCore
                 {
                     stopwatch.Stop();
                     if (collectStatistics) _statistics.TotalRunTime += stopwatch.Elapsed;
-                    RecordActivity("ActivationFailed", activation.RuleName, stopwatch.Elapsed);
+                    RecordActivity("ActivationFailed", activation.RuleName, stopwatch.Elapsed, activationId: activation.Id);
                     if (collectStatistics) NotifyStatisticsUpdated();
                 }
                 throw;
@@ -272,8 +278,14 @@ namespace ReteCore
             stopwatch?.Stop();
             TimeSpan? duration = stopwatch?.Elapsed;
             if (collectStatistics && duration.HasValue) _statistics.TotalRunTime += duration.Value;
-            var record = new AgendaGroupActivityRecord(DateTimeOffset.UtcNow, Name, "ActivationCompleted", activation.RuleName, duration);
-            RecordActivity(record.Activity, record.RuleName, record.Duration, record.Timestamp);
+            var record = new AgendaGroupActivityRecord(
+                DateTimeOffset.UtcNow,
+                Name,
+                "ActivationCompleted",
+                activation.RuleName,
+                duration,
+                activation.Id);
+            RecordActivity(record.Activity, record.RuleName, record.Duration, record.Timestamp, record.ActivationId);
             if (collectStatistics) NotifyStatisticsUpdated();
             return record;
         }

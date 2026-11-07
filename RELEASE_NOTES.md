@@ -2,6 +2,12 @@
 
 This file summarizes notable features and improvements.
 
+## v1.5 (Nov 6, 2026)
+
+### Rollback mechanism
+
+- A Drools-like agenda control + Rete/CLIPS-style inference + WAL/event-sourced rollback semantics.
+
 ## v1.5 (Nov 1, 2026)
 
 ### Publish-Resume and Agenda Groups

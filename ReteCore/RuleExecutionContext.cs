@@ -110,7 +110,8 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Publishes the staged fact changes.
+        /// Publishes the staged fact changes. Only published changes are inside the rollback boundary.
+        /// External side effects executed directly in a rule action are outside this boundary.
         /// </summary>
         public void Publish()
         {

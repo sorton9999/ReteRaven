@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ReteCore;
 
@@ -106,6 +107,34 @@ namespace ReteEngine
         /// </summary>
         private bool _isApplyingChangeBatches;
         /// <summary>
+        /// Captures the rollback boundary mode configured for this engine instance.
+        /// </summary>
+        private readonly RollbackBoundaryMode _rollbackBoundaryMode = RollbackBoundaryMode.PublishedFactChangesOnly;
+        /// <summary>
+        /// Captures the rollback conflict policy configured for this engine instance.
+        /// </summary>
+        private readonly RollbackConflictPolicy _rollbackConflictPolicy = RollbackConflictPolicy.FailFast;
+        /// <summary>
+        /// Captures the rollback idempotency mode configured for this engine instance.
+        /// </summary>
+        private readonly RollbackIdempotencyMode _rollbackIdempotencyMode = RollbackIdempotencyMode.Idempotent;
+        /// <summary>
+        /// Stores committed rollback journal entries for published fact-change batches.
+        /// </summary>
+        private readonly List<RollbackJournalEntry> _rollbackJournal = new();
+        /// <summary>
+        /// The next rollback epoch identifier assigned to a publish-resume drain cycle.
+        /// </summary>
+        private long _nextRollbackEpoch;
+        /// <summary>
+        /// The next rollback sequence value assigned to a committed rollback journal entry.
+        /// </summary>
+        private long _nextRollbackSequence;
+        /// <summary>
+        /// Tracks rollback journal sequences that have already been rolled back.
+        /// </summary>
+        private readonly HashSet<long> _rolledBackSequences = new();
+        /// <summary>
         /// A private flag to track whether the ReteEngine has been disposed.
         /// </summary>
         private bool _disposed;
@@ -124,6 +153,27 @@ namespace ReteEngine
         {
             get { return _agenda; }
         }
+
+        /// <summary>
+        /// Gets the rollback boundary mode configured for this engine instance.
+        /// </summary>
+        public RollbackBoundaryMode RollbackBoundaryMode => _rollbackBoundaryMode;
+
+        /// <summary>
+        /// Gets the rollback conflict policy configured for this engine instance.
+        /// </summary>
+        public RollbackConflictPolicy RollbackConflictPolicy => _rollbackConflictPolicy;
+
+        /// <summary>
+        /// Gets the rollback idempotency mode configured for this engine instance.
+        /// </summary>
+        public RollbackIdempotencyMode RollbackIdempotencyMode => _rollbackIdempotencyMode;
+
+        /// <summary>
+        /// Gets whether rollback supports compensating external side effects executed inside rule actions.
+        /// This value is false because rollback scope is limited to published fact-change batches.
+        /// </summary>
+        public bool SupportsExternalSideEffectRollback => false;
 
         /// <summary>
         /// Registers an agenda group for later use by rules and firing operations. `MAIN` is registered by default.
@@ -148,9 +198,18 @@ namespace ReteEngine
         public IReadOnlyList<IReadOnlyList<FactChange>> PublishedChangeBatches => _publishedChangeBatches.AsReadOnly();
 
         /// <summary>
+        /// Gets the committed rollback journal entries for published fact-change batches.
+        /// </summary>
+        public IReadOnlyList<RollbackJournalEntry> RollbackJournal => _rollbackJournal.AsReadOnly();
+        /// <summary>
         /// Raised when a staged rule action successfully publishes a change batch.
         /// </summary>
         public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
+
+        /// <summary>
+        /// Raised for rollback lifecycle activity during publish-resume journaling and rollback execution.
+        /// </summary>
+        public event EventHandler<RollbackLifecycleEventArgs>? RollbackLifecycle;
 
         /// <summary>
         /// Raised after a rule action completes successfully, including its agenda group and execution duration.
@@ -175,11 +234,15 @@ namespace ReteEngine
             ArgumentNullException.ThrowIfNull(options);
             _enableBetaNodeSharing = options.EnableBetaNodeSharing;
             _autoRefreshOnPropertyChanged = options.AutoRefreshOnPropertyChanged;
+            _rollbackBoundaryMode = options.RollbackBoundaryMode;
+            _rollbackConflictPolicy = options.RollbackConflictPolicy;
+            _rollbackIdempotencyMode = options.RollbackIdempotencyMode;
             _agenda.ActivationFired += activity => RuleFired?.Invoke(this, new RuleFiredEventArgs(
                 activity.GroupName,
                 activity.RuleName ?? string.Empty,
                 activity.Timestamp,
-                activity.Duration ?? TimeSpan.Zero));
+                activity.Duration ?? TimeSpan.Zero,
+                activity.ActivationId));
         }
 
         /// <summary>
@@ -356,7 +419,7 @@ namespace ReteEngine
         /// method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a 
         /// crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based 
         /// on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the
-        /// working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired.
+        /// working memory to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired.
         /// </summary>
         /// <returns>The current instance of the ReteEngine.</returns>
         public ReteEngine FireAll()
@@ -458,11 +521,26 @@ namespace ReteEngine
             {
                 _agenda.AdvanceFactRevision(fact);
                 _root.Refresh(fact, propertyName ?? string.Empty);
+                return;
             }
-            else
+
+            // The exact instance is not in working memory, but a published batch may have committed a detached
+            // snapshot under the same logical identity (IFact.Id). In that case, replace the tracked snapshot
+            // with this instance rather than inserting a duplicate fact with the same identity.
+            if (fact is IFact identityFact)
             {
-                Assert(fact);
+                IFact? existingById = FindFactById(identityFact.Id);
+                if (existingById != null)
+                {
+                    long nextRevision = _agenda.GetFactRevision(existingById) + 1;
+                    Retract(existingById);
+                    Assert(fact);
+                    _agenda.SetFactRevision(fact, nextRevision);
+                    return;
+                }
             }
+
+            Assert(fact);
         }
 
         /// <summary>
@@ -472,22 +550,99 @@ namespace ReteEngine
         /// <param name="changes">The batch of fact changes to publish.</param>
         internal void PublishChanges(IReadOnlyList<FactChange> changes)
         {
+            RollbackJournalEntry CreateRollbackEntry(
+                long epoch,
+                IReadOnlyList<FactChange> batch,
+                IReadOnlyList<RollbackJournalChangeEntry> journalChanges,
+                DateTimeOffset committedAt)
+            {
+                FactChangeOrigin? sharedOrigin = GetSharedOrigin(batch);
+
+                return new RollbackJournalEntry(
+                    Interlocked.Increment(ref _nextRollbackSequence),
+                    epoch,
+                    committedAt,
+                    sharedOrigin?.AgendaGroup,
+                    sharedOrigin?.RuleName,
+                    sharedOrigin?.ActivationId,
+                    Array.AsReadOnly(journalChanges.ToArray()));
+            }
+
             _pendingChangeBatches.Enqueue(changes);
             if (_isApplyingChangeBatches) return;
 
             _isApplyingChangeBatches = true;
+            long epoch = Interlocked.Increment(ref _nextRollbackEpoch);
             try
             {
                 while (_pendingChangeBatches.Count > 0)
                 {
                     IReadOnlyList<FactChange> batch = _pendingChangeBatches.Dequeue();
                     ValidateChangeBatch(batch);
-                    foreach (FactChange change in batch)
+
+                    FactChangeOrigin? sharedOrigin = GetSharedOrigin(batch);
+                    DateTimeOffset startedAt = DateTimeOffset.UtcNow;
+                    EmitRollbackLifecycle(
+                        RollbackLifecycleStage.Started,
+                        epoch,
+                        null,
+                        null,
+                        null,
+                        sharedOrigin?.AgendaGroup,
+                        sharedOrigin?.RuleName,
+                        sharedOrigin?.ActivationId,
+                        null,
+                        startedAt);
+
+                    var journalChanges = new List<RollbackJournalChangeEntry>(batch.Count);
+                    for (int index = 0; index < batch.Count; index++)
                     {
+                        FactChange change = batch[index];
+                        var before = CaptureFactState(change.FactId);
                         ApplyChange(change);
+                        var after = CaptureFactState(change.FactId);
+
+                        var journalChange = new RollbackJournalChangeEntry(
+                            index,
+                            change.Kind,
+                            change.FactId,
+                            change.ExpectedRevision,
+                            change.Origin,
+                            SnapshotFact(change.Fact),
+                            before.Exists,
+                            before.Revision,
+                            SnapshotFact(before.Fact),
+                            after.Exists,
+                            after.Revision,
+                            SnapshotFact(after.Fact));
+                        journalChanges.Add(journalChange);
+                        EmitRollbackLifecycle(
+                            RollbackLifecycleStage.Applied,
+                            epoch,
+                            null,
+                            index,
+                            change.FactId,
+                            change.Origin?.AgendaGroup,
+                            change.Origin?.RuleName,
+                            change.Origin?.ActivationId,
+                            change.Kind,
+                            DateTimeOffset.UtcNow);
                     }
 
                     _publishedChangeBatches.Add(batch);
+                    RollbackJournalEntry entry = CreateRollbackEntry(epoch, batch, journalChanges, DateTimeOffset.UtcNow);
+                    _rollbackJournal.Add(entry);
+                    EmitRollbackLifecycle(
+                        RollbackLifecycleStage.Completed,
+                        epoch,
+                        entry.Sequence,
+                        null,
+                        null,
+                        entry.AgendaGroup,
+                        entry.RuleName,
+                        entry.ActivationId,
+                        null,
+                        entry.CommittedAt);
                     FactChangesPublished?.Invoke(batch);
                 }
             }
@@ -495,6 +650,285 @@ namespace ReteEngine
             {
                 _isApplyingChangeBatches = false;
             }
+        }
+
+        /// <summary>
+        /// Rolls back the most recently committed and not-yet-rolled-back published batch.
+        /// </summary>
+        /// <returns>True when a rollback was attempted; otherwise false when no pending rollback entry exists.</returns>
+        public bool RollbackLastPublishedBatch()
+        {
+            RollbackJournalEntry? latestPending = GetLatestPendingRollbackEntry();
+            if (latestPending == null)
+            {
+                return false;
+            }
+
+            return RollbackPublishedBatch(latestPending.Sequence);
+        }
+
+        /// <summary>
+        /// Rolls back a committed published batch by sequence. Only strict reverse commit order is supported.
+        /// </summary>
+        /// <param name="sequence">The rollback journal sequence to reverse.</param>
+        /// <returns>True when rollback work was applied or confirmed idempotently; otherwise false when nothing is pending.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when sequence is missing, already rolled back under non-idempotent policy, or out-of-order.</exception>
+        public bool RollbackPublishedBatch(long sequence)
+        {
+            RollbackJournalEntry? entry = _rollbackJournal.FirstOrDefault(journalEntry => journalEntry.Sequence == sequence);
+            if (entry == null)
+            {
+                throw new InvalidOperationException($"Rollback sequence '{sequence}' was not found.");
+            }
+
+            if (_rolledBackSequences.Contains(sequence))
+            {
+                if (_rollbackIdempotencyMode == RollbackIdempotencyMode.Idempotent)
+                {
+                    EmitRollbackLifecycle(
+                        RollbackLifecycleStage.Skipped,
+                        entry.Epoch,
+                        entry.Sequence,
+                        null,
+                        null,
+                        entry.AgendaGroup,
+                        entry.RuleName,
+                        entry.ActivationId,
+                        null,
+                        DateTimeOffset.UtcNow);
+                    return true;
+                }
+
+                throw new InvalidOperationException($"Rollback sequence '{sequence}' has already been applied.");
+            }
+
+            RollbackJournalEntry? latestPending = GetLatestPendingRollbackEntry();
+            if (latestPending == null)
+            {
+                return false;
+            }
+
+            if (latestPending.Sequence != sequence)
+            {
+                throw new InvalidOperationException(
+                    $"Out-of-order rollback is not supported. Latest rollbackable sequence is '{latestPending.Sequence}' in epoch '{latestPending.Epoch}'.");
+            }
+
+            return ExecuteRollback(entry);
+        }
+
+        /// <summary>
+        /// Execute rollback for a single committed journal entry.
+        /// </summary>
+        private bool ExecuteRollback(RollbackJournalEntry entry)
+        {
+            _isApplyingChangeBatches = true;
+            try
+            {
+                EmitRollbackLifecycle(
+                    RollbackLifecycleStage.Started,
+                    entry.Epoch,
+                    entry.Sequence,
+                    null,
+                    null,
+                    entry.AgendaGroup,
+                    entry.RuleName,
+                    entry.ActivationId,
+                    null,
+                    DateTimeOffset.UtcNow);
+
+                for (int i = entry.Changes.Count - 1; i >= 0; i--)
+                {
+                    RollbackJournalChangeEntry change = entry.Changes[i];
+                    var current = CaptureFactState(change.FactId);
+                    bool matchesBefore = current.Exists == change.ExistedBefore && current.Revision == change.RevisionBefore;
+                    bool matchesAfter = current.Exists == change.ExistsAfter && current.Revision == change.RevisionAfter;
+
+                    if (matchesBefore)
+                    {
+                        EmitRollbackLifecycle(
+                            RollbackLifecycleStage.Skipped,
+                            entry.Epoch,
+                            entry.Sequence,
+                            change.Index,
+                            change.FactId,
+                            change.Origin?.AgendaGroup,
+                            change.Origin?.RuleName,
+                            change.Origin?.ActivationId,
+                            change.Kind,
+                            DateTimeOffset.UtcNow);
+                        continue;
+                    }
+
+                    if (!matchesAfter)
+                    {
+                        EmitRollbackLifecycle(
+                            RollbackLifecycleStage.Conflicted,
+                            entry.Epoch,
+                            entry.Sequence,
+                            change.Index,
+                            change.FactId,
+                            change.Origin?.AgendaGroup,
+                            change.Origin?.RuleName,
+                            change.Origin?.ActivationId,
+                            change.Kind,
+                            DateTimeOffset.UtcNow);
+
+                        if (_rollbackConflictPolicy == RollbackConflictPolicy.FailFast)
+                        {
+                            throw new InvalidOperationException(
+                                $"Rollback conflict for fact '{change.FactId}' in sequence '{entry.Sequence}': current state does not match committed state.");
+                        }
+
+                        continue;
+                    }
+
+                    RestoreFactState(change);
+                    EmitRollbackLifecycle(
+                        RollbackLifecycleStage.Applied,
+                        entry.Epoch,
+                        entry.Sequence,
+                        change.Index,
+                        change.FactId,
+                        change.Origin?.AgendaGroup,
+                        change.Origin?.RuleName,
+                        change.Origin?.ActivationId,
+                        change.Kind,
+                        DateTimeOffset.UtcNow);
+                }
+
+                _rolledBackSequences.Add(entry.Sequence);
+                EmitRollbackLifecycle(
+                    RollbackLifecycleStage.Completed,
+                    entry.Epoch,
+                    entry.Sequence,
+                    null,
+                    null,
+                    entry.AgendaGroup,
+                    entry.RuleName,
+                    entry.ActivationId,
+                    null,
+                    DateTimeOffset.UtcNow);
+                return true;
+            }
+            finally
+            {
+                _isApplyingChangeBatches = false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the latest rollback journal entry that has not yet been rolled back.
+        /// </summary>
+        private RollbackJournalEntry? GetLatestPendingRollbackEntry()
+        {
+            for (int i = _rollbackJournal.Count - 1; i >= 0; i--)
+            {
+                if (!_rolledBackSequences.Contains(_rollbackJournal[i].Sequence))
+                {
+                    return _rollbackJournal[i];
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Restores a fact to the journaled pre-change state.
+        /// </summary>
+        private void RestoreFactState(RollbackJournalChangeEntry change)
+        {
+            IFact? existing = FindFactById(change.FactId);
+            if (!change.ExistedBefore)
+            {
+                if (existing != null)
+                {
+                    Retract(existing);
+                }
+
+                return;
+            }
+
+            if (change.FactBefore == null)
+            {
+                throw new InvalidOperationException(
+                    $"Rollback journal entry for fact '{change.FactId}' does not include a pre-change snapshot.");
+            }
+
+            if (existing != null)
+            {
+                Retract(existing);
+            }
+
+            IFact restored = change.FactBefore.Snapshot();
+            Assert(restored);
+            _agenda.SetFactRevision(restored, change.RevisionBefore);
+        }
+
+        /// <summary>
+        /// Captures the current fact existence/revision/snapshot state for rollback bookkeeping.
+        /// </summary>
+        private (bool Exists, long Revision, IFact? Fact) CaptureFactState(Guid factId)
+        {
+            IFact? fact = FindFactById(factId);
+            if (fact == null)
+            {
+                return (false, 0, null);
+            }
+
+            return (true, _agenda.GetFactRevision(fact), SnapshotFact(fact));
+        }
+
+        /// <summary>
+        /// Emits a rollback lifecycle notification.
+        /// </summary>
+        private void EmitRollbackLifecycle(
+            RollbackLifecycleStage stage,
+            long epoch,
+            long? sequence,
+            int? changeIndex,
+            Guid? factId,
+            string? agendaGroup,
+            string? ruleName,
+            Guid? activationId,
+            FactChangeTypeEnum? kind,
+            DateTimeOffset occurredAt)
+        {
+            RollbackLifecycle?.Invoke(this, new RollbackLifecycleEventArgs(
+                stage,
+                epoch,
+                sequence,
+                changeIndex,
+                factId,
+                agendaGroup,
+                ruleName,
+                activationId,
+                kind,
+                occurredAt));
+        }
+
+        /// <summary>
+        /// Gets a shared origin when all changes in the batch were produced by the same activation.
+        /// </summary>
+        private static FactChangeOrigin? GetSharedOrigin(IReadOnlyList<FactChange> batch)
+        {
+            if (batch.Count == 0)
+            {
+                return null;
+            }
+
+            FactChangeOrigin? firstOrigin = batch[0].Origin;
+            return batch.All(change => EqualityComparer<FactChangeOrigin?>.Default.Equals(change.Origin, firstOrigin))
+                ? firstOrigin
+                : null;
+        }
+
+        /// <summary>
+        /// Creates a detached snapshot for journal persistence.
+        /// </summary>
+        private static IFact? SnapshotFact(IFact? fact)
+        {
+            return fact?.Snapshot();
         }
 
         /// <summary>

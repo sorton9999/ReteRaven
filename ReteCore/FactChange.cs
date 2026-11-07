@@ -72,6 +72,7 @@ namespace ReteCore
 
         /// <summary>
         /// Gets the optional origin of this change for diagnostics and future rollback.
+        /// Only published changes participate in rollback boundaries.
         /// </summary>
         public FactChangeOrigin? Origin { get; }
 
