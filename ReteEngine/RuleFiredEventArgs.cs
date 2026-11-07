@@ -15,12 +15,18 @@ namespace ReteEngine
     /// </summary>
     public sealed class RuleFiredEventArgs : EventArgs
     {
-        public RuleFiredEventArgs(string agendaGroup, string ruleName, DateTimeOffset firedAt, TimeSpan duration)
+        public RuleFiredEventArgs(
+            string agendaGroup,
+            string ruleName,
+            DateTimeOffset firedAt,
+            TimeSpan duration,
+            Guid? activationId = null)
         {
             AgendaGroup = agendaGroup;
             RuleName = ruleName;
             FiredAt = firedAt;
             Duration = duration;
+            ActivationId = activationId;
         }
 
         public string AgendaGroup { get; }
@@ -30,5 +36,7 @@ namespace ReteEngine
         public DateTimeOffset FiredAt { get; }
 
         public TimeSpan Duration { get; }
+
+        public Guid? ActivationId { get; }
     }
 }

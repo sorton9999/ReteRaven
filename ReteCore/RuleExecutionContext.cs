@@ -28,6 +28,10 @@ namespace ReteCore
         /// </summary>
         private readonly List<FactChange> _changes = new();
         /// <summary>
+        /// The list of external side effects observed during this context execution.
+        /// </summary>
+        private readonly List<RuleSideEffect> _sideEffects = new();
+        /// <summary>
         /// A private flag indicating whether publication of the staged changes has been requested.  Once publication is requested,
         /// no further changes can be staged.
         /// </summary>
@@ -110,12 +114,47 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Publishes the staged fact changes.
+        /// Publishes the staged fact changes. Only published changes are inside the rollback boundary.
+        /// External side effects executed directly in a rule action are outside this boundary.
         /// </summary>
         public void Publish()
         {
             EnsureCanStage();
             _publishRequested = true;
+        }
+
+        /// <summary>
+        /// Registers external side-effect metadata for audit and optional compensation during rollback.
+        /// </summary>
+        /// <param name="category">A category describing the side effect type.</param>
+        /// <param name="description">A human-readable description of the side effect.</param>
+        /// <param name="compensator">An optional compensating action that can undo the side effect.</param>
+        /// <param name="metadata">Optional key/value metadata for diagnostics and governance.</param>
+        public void RegisterSideEffect(
+            string category,
+            string description,
+            Action? compensator = null,
+            IReadOnlyDictionary<string, string>? metadata = null)
+        {
+            EnsureActive();
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                throw new ArgumentException("A side-effect category cannot be null or whitespace.", nameof(category));
+            }
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentException("A side-effect description cannot be null or whitespace.", nameof(description));
+            }
+
+            _sideEffects.Add(new RuleSideEffect(
+                category,
+                description,
+                _origin,
+                compensator,
+                metadata == null
+                    ? new Dictionary<string, string>()
+                    : new Dictionary<string, string>(metadata),
+                DateTimeOffset.UtcNow));
         }
 
         /// <summary>
@@ -143,6 +182,15 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Retrieves the list of external side effects registered during this context execution.
+        /// </summary>
+        /// <returns>A read-only list of registered side effects.</returns>
+        internal IReadOnlyList<RuleSideEffect> GetSideEffects()
+        {
+            return Array.AsReadOnly(_sideEffects.ToArray());
+        }
+
+        /// <summary>
         /// Discard the context, clearing any staged fact changes and marking the context as completed.  Once the context is discarded,
         /// no further changes can be staged.
         /// </summary>
@@ -150,6 +198,7 @@ namespace ReteCore
         {
             _completed = true;
             _changes.Clear();
+            _sideEffects.Clear();
         }
 
         /// <summary>
@@ -166,6 +215,19 @@ namespace ReteCore
             if (_publishRequested)
             {
                 throw new InvalidOperationException("No changes can be staged after publication is requested.");
+            }
+        }
+
+        /// <summary>
+        /// Throws an InvalidOperationException if the context has been completed or discarded, indicating that it is no longer
+        /// active and cannot accept further operations.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been completed or discarded.</exception>
+        private void EnsureActive()
+        {
+            if (_completed)
+            {
+                throw new InvalidOperationException("The rule execution context is no longer active.");
             }
         }
     }

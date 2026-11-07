@@ -76,6 +76,10 @@ namespace ReteCore
         /// Controls whether agenda groups retain activity records.
         /// </summary>
         private bool _recordGroupActivityLog = true;
+        /// <summary>
+        /// Controls whether the agenda writes diagnostic Console.WriteLine trace messages. Disabled by default.
+        /// </summary>
+        public bool EnableConsoleTraceLogging { get; set; }
 
         /// <summary>
         /// Constructor
@@ -328,7 +332,10 @@ namespace ReteCore
             string keyFacts = GenerateActivationKey(activation);
             if (_firedActivationsRegistry.Contains(keyFacts))
             {
-                Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                }
                 return;
             }
             group.Add(activation);
@@ -354,7 +361,7 @@ namespace ReteCore
             {
                 removedCount = RemoveFromGroups(a => a.Match.NamedFacts.Values.Any(f => f == factOrToken));
             }
-            if (removedCount > 0)
+            if (removedCount > 0 && EnableConsoleTraceLogging)
             {
                 Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations.");
             }
@@ -377,7 +384,7 @@ namespace ReteCore
                 (agendaGroupName == null || activation.AgendaGroupName == agendaGroupName) &&
                 GenerateTupleKey(activation.RuleName, activation.Match) == tupleKey);
 
-            if (removedCount > 0)
+            if (removedCount > 0 && EnableConsoleTraceLogging)
             {
                 Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations for rule '{ruleName}'.");
             }
@@ -399,7 +406,7 @@ namespace ReteCore
                 (agendaGroupName == null || activation.AgendaGroupName == agendaGroupName) &&
                 activation.Match.NamedFacts.Values.Any(value => ReferenceEquals(value, fact)));
 
-            if (removedCount > 0)
+            if (removedCount > 0 && EnableConsoleTraceLogging)
             {
                 Console.WriteLine($"[AGENDA] Cancelled {removedCount} pending activations for rule '{ruleName}'.");
             }
@@ -407,7 +414,7 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Clears fired-revision markers when a match leaves the network so a later match can activate again.  These are
+        /// Clears fired-revision markers
         /// all detected and removed by group name.
         /// </summary>
         /// <param name="ruleName">The rule associated with the match.</param>
@@ -524,12 +531,18 @@ namespace ReteCore
                 string keyFacts = GenerateActivationKey(activation);
                 if (_firedActivationsRegistry.Contains(keyFacts))
                 {
-                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                    if (EnableConsoleTraceLogging)
+                    {
+                        Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                    }
                     activation.State = Activation.ActivationStateEnum.Cancelled;
                     RecordActivity(groupName, "DuplicateActivationSkipped", activation.RuleName);
                     return false;
                 }
-                Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' in group '{groupName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' in group '{groupName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+                }
                 activation.State = Activation.ActivationStateEnum.Fired;
                 _firedActivationsRegistry.Add(keyFacts);
                 FireActivation(activation);
@@ -567,7 +580,10 @@ namespace ReteCore
                         f.Equals(retractedFact)))
                     {
                         activation.State = Activation.ActivationStateEnum.Cancelled;
-                        Console.WriteLine($"[TM_RETRACT] Automatically cancelled pending activation for rule '{activation.RuleName}' due to fact retraction.");
+                        if (EnableConsoleTraceLogging)
+                        {
+                            Console.WriteLine($"[TM_RETRACT] Automatically cancelled pending activation for rule '{activation.RuleName}' due to fact retraction.");
+                        }
                     }
                 }
             }
@@ -607,11 +623,15 @@ namespace ReteCore
         /// <returns>A unique key representing the activation.</returns>
         private string GenerateActivationKey(string ruleName, Token match, string agendaGroupName)
         {
-            string revisionParts = string.Join(",", match.NamedFacts
-                .OrderBy(pair => pair.Key, StringComparer.Ordinal)
-                .Select(pair => $"{pair.Key}={GetRevisionKey(pair.Value)}"));
-            string groupPart = agendaGroupName == MainAgendaGroup ? string.Empty : $"|group:{agendaGroupName}";
-            return $"{GenerateTupleKey(ruleName, match)}{groupPart}|revision:{revisionParts}";
+            var builder = new StringBuilder();
+            AppendTupleKey(builder, ruleName, match);
+            if (agendaGroupName != MainAgendaGroup)
+            {
+                builder.Append("|group:").Append(agendaGroupName);
+            }
+            builder.Append("|revision:");
+            AppendSortedNamedFacts(builder, match.NamedFacts, AppendRevisionKey);
+            return builder.ToString();
         }
 
         /// <summary>
@@ -622,41 +642,93 @@ namespace ReteCore
         /// <returns>A unique key representing the activation.</returns>
         private string GenerateTupleKey(string ruleName, Token match)
         {
-            string FormatValue(object? value)
-            {
-                if (value == null) return "null";
-                if (value is Token token)
-                {
-                    return FormatNamedFacts(token.NamedFacts);
-                }
-                if (value is IFact fact)
-                {
-                    return $"{value.GetType().FullName}#fact:{fact.Id}";
-                }
-                if (value is System.Collections.IEnumerable enumerable && value is not string)
-                {
-                    var parts = new List<string>();
-                    foreach (var item in enumerable) parts.Add(FormatValue(item));
-                    return $"[{string.Join(";", parts)}]";
-                }
-                if (value is string || value.GetType().IsValueType)
-                {
-                    string formatted = value is IFormattable formattable
-                        ? formattable.ToString(null, CultureInfo.InvariantCulture) ?? string.Empty
-                        : value.ToString() ?? string.Empty;
-                    return $"{value.GetType().FullName}:{formatted}";
-                }
+            var builder = new StringBuilder();
+            AppendTupleKey(builder, ruleName, match);
+            return builder.ToString();
+        }
 
-                var identity = _objectIdentities.GetValue(value,
-                    _ => new ActivationIdentity(Interlocked.Increment(ref _nextObjectIdentity)));
-                return $"{value.GetType().FullName}#ref:{identity.Value}";
+        /// <summary>
+        /// Appends the stable tuple-key representation (rule name and sorted named facts) to the supplied builder.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="ruleName">The name of the rule.</param>
+        /// <param name="match">The token containing named facts.</param>
+        private void AppendTupleKey(StringBuilder builder, string ruleName, Token match)
+        {
+            builder.Append(ruleName).Append('_');
+            AppendSortedNamedFacts(builder, match.NamedFacts, AppendValue);
+        }
+
+        /// <summary>
+        /// Appends a comma-separated, key-sorted "name=value" representation of the supplied named facts using the
+        /// given value-formatting delegate, avoiding the intermediate allocations of LINQ OrderBy/Select/Join.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="namedFacts">The named facts to format.</param>
+        /// <param name="appendValue">A delegate that appends the formatted representation of a fact value.</param>
+        private static void AppendSortedNamedFacts(
+            StringBuilder builder,
+            IEnumerable<KeyValuePair<string, object>> namedFacts,
+            Action<StringBuilder, object?> appendValue)
+        {
+            KeyValuePair<string, object>[] sorted = namedFacts as KeyValuePair<string, object>[] ?? namedFacts.ToArray();
+            Array.Sort(sorted, (a, b) => string.CompareOrdinal(a.Key, b.Key));
+            for (int i = 0; i < sorted.Length; i++)
+            {
+                if (i > 0) builder.Append(',');
+                builder.Append(sorted[i].Key).Append('=');
+                appendValue(builder, sorted[i].Value);
+            }
+        }
+
+        /// <summary>
+        /// Appends the tuple-key representation of a single fact value (a Token, IFact, enumerable, value type, or
+        /// reference type) to the supplied builder.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="value">The value to format.</param>
+        private void AppendValue(StringBuilder builder, object? value)
+        {
+            if (value == null)
+            {
+                builder.Append("null");
+                return;
+            }
+            if (value is Token token)
+            {
+                AppendSortedNamedFacts(builder, token.NamedFacts, AppendValue);
+                return;
+            }
+            if (value is IFact fact)
+            {
+                builder.Append(value.GetType().FullName).Append("#fact:").Append(fact.Id);
+                return;
+            }
+            if (value is System.Collections.IEnumerable enumerable && value is not string)
+            {
+                builder.Append('[');
+                bool first = true;
+                foreach (var item in enumerable)
+                {
+                    if (!first) builder.Append(';');
+                    first = false;
+                    AppendValue(builder, item);
+                }
+                builder.Append(']');
+                return;
+            }
+            if (value is string || value.GetType().IsValueType)
+            {
+                string formatted = value is IFormattable formattable
+                    ? formattable.ToString(null, CultureInfo.InvariantCulture) ?? string.Empty
+                    : value.ToString() ?? string.Empty;
+                builder.Append(value.GetType().FullName).Append(':').Append(formatted);
+                return;
             }
 
-            string FormatNamedFacts(IEnumerable<KeyValuePair<string, object>> namedFacts) => string.Join(",",
-                namedFacts.OrderBy(pair => pair.Key, StringComparer.Ordinal)
-                    .Select(pair => $"{pair.Key}={FormatValue(pair.Value)}"));
-
-            return $"{ruleName}_{FormatNamedFacts(match.NamedFacts)}";
+            var identity = _objectIdentities.GetValue(value,
+                _ => new ActivationIdentity(Interlocked.Increment(ref _nextObjectIdentity)));
+            builder.Append(value.GetType().FullName).Append("#ref:").Append(identity.Value);
         }
 
         /// <summary>
@@ -669,21 +741,51 @@ namespace ReteCore
         /// <returns>A stable revision key representing the current revision of the value.</returns>
         private string GetRevisionKey(object? value)
         {
-            if (value == null || value is string || value.GetType().IsValueType) return "0";
+            var builder = new StringBuilder();
+            AppendRevisionKey(builder, value);
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Appends a stable revision key for a given value (a fact, token, enumerable, or reference type) to the
+        /// supplied builder, avoiding the intermediate allocations of LINQ OrderBy/Select/Join.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="value">The value for which to append the revision key.</param>
+        private void AppendRevisionKey(StringBuilder builder, object? value)
+        {
+            if (value == null || value is string || value.GetType().IsValueType)
+            {
+                builder.Append('0');
+                return;
+            }
             if (value is Token token)
             {
-                return string.Join(",", token.NamedFacts
-                    .OrderBy(pair => pair.Key, StringComparer.Ordinal)
-                    .Select(pair => $"{pair.Key}={GetRevisionKey(pair.Value)}"));
+                AppendSortedNamedFacts(builder, token.NamedFacts, AppendRevisionKey);
+                return;
             }
             if (value is System.Collections.IEnumerable enumerable)
             {
-                return $"[{string.Join(";", enumerable.Cast<object?>().Select(GetRevisionKey))}]";
+                builder.Append('[');
+                bool first = true;
+                foreach (var item in enumerable)
+                {
+                    if (!first) builder.Append(';');
+                    first = false;
+                    AppendRevisionKey(builder, item);
+                }
+                builder.Append(']');
+                return;
             }
 
-            return _factRevisions.TryGetValue(value, out long revision)
-                ? revision.ToString(CultureInfo.InvariantCulture)
-                : "0";
+            if (_factRevisions.TryGetValue(value, out long revision))
+            {
+                builder.Append(revision);
+            }
+            else
+            {
+                builder.Append('0');
+            }
         }
 
         /// <summary>

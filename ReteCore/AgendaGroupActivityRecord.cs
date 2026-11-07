@@ -18,5 +18,6 @@ namespace ReteCore
         string GroupName,
         string Activity,
         string? RuleName = null,
-        TimeSpan? Duration = null);
+        TimeSpan? Duration = null,
+        Guid? ActivationId = null);
 }

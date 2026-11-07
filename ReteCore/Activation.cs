@@ -75,6 +75,10 @@ namespace ReteCore
         /// </summary>
         public Action<IReadOnlyList<FactChange>>? PublishChanges { get; }
         /// <summary>
+        /// The action delegate that receives side-effect metadata observed during context-action execution.
+        /// </summary>
+        public Action<IReadOnlyList<RuleSideEffect>>? PublishSideEffects { get; }
+        /// <summary>
         /// The token that triggered this activation. This token contains the facts that matched the conditions of the rule 
         /// associated with this activation. When the activation is fired, this token will be passed to the action delegate, 
         /// allowing it to access the relevant facts and perform the necessary operations defined by the rule. The token 
@@ -148,6 +152,7 @@ namespace ReteCore
         /// <param name="name">The name of the activation.  Usually the rule name.</param>
         /// <param name="action">The context-aware action that executes when this activation fires.</param>
         /// <param name="publishChanges">The action that publishes the fact changes produced by the context-aware action.</param>
+        /// <param name="publishSideEffects">The action that publishes side-effect metadata produced by the context-aware action.</param>
         /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
         /// <param name="priority">A priority value relative to other activations.</param>
         /// <param name="salience">A priority value relative to other activations.</param>
@@ -155,6 +160,7 @@ namespace ReteCore
             string name,
             Action<RuleExecutionContext> action,
             Action<IReadOnlyList<FactChange>> publishChanges,
+            Action<IReadOnlyList<RuleSideEffect>>? publishSideEffects,
             Token match,
             int priority,
             int salience,
@@ -163,6 +169,7 @@ namespace ReteCore
         {
             ContextAction = action;
             PublishChanges = publishChanges;
+            PublishSideEffects = publishSideEffects;
         }
 
         /// <summary>
@@ -195,7 +202,12 @@ namespace ReteCore
             }
 
             // Complete the context and retrieve any fact changes that were staged during the execution of the context action.
+            IReadOnlyList<RuleSideEffect> sideEffects = context.GetSideEffects();
             IReadOnlyList<FactChange>? changes = context.Complete();
+            if (sideEffects.Count > 0)
+            {
+                PublishSideEffects?.Invoke(sideEffects);
+            }
             if (changes != null)
             {
                 PublishChanges?.Invoke(changes);

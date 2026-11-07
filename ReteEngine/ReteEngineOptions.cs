@@ -24,5 +24,21 @@ namespace ReteEngine
         /// This setting does not prevent the fact object itself from being mutated.
         /// </summary>
         public bool AutoRefreshOnPropertyChanged { get; init; } = true;
+
+        /// <summary>
+        /// Gets or sets the rollback boundary mode used by the engine.
+        /// The current boundary limits rollback eligibility to explicitly published fact changes.
+        /// </summary>
+        public RollbackBoundaryMode RollbackBoundaryMode { get; init; } = RollbackBoundaryMode.PublishedFactChangesOnly;
+
+        /// <summary>
+        /// Gets or sets the conflict policy used during rollback processing.
+        /// </summary>
+        public RollbackConflictPolicy RollbackConflictPolicy { get; init; } = RollbackConflictPolicy.FailFast;
+
+        /// <summary>
+        /// Gets or sets the idempotency guarantee mode for rollback operations.
+        /// </summary>
+        public RollbackIdempotencyMode RollbackIdempotencyMode { get; init; } = RollbackIdempotencyMode.Idempotent;
     }
 }
