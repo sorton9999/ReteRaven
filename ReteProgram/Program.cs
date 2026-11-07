@@ -911,7 +911,6 @@ waitDemoEngine.Begin("PrepareShipment")
     .CtxThen(context =>
     {
         Order order = context.Match.Get<Order>("order");
-        waitDemoFiringOrder.Add("PREPARE: create shipment");
         Console.WriteLine($"PREPARE: validating {order.Text}");
 
         context.Assert(new Shipment

@@ -123,6 +123,10 @@ namespace ReteEngine
         /// </summary>
         private readonly List<RollbackJournalEntry> _rollbackJournal = new();
         /// <summary>
+        /// Stores committed metadata for each published fact-change batch.
+        /// </summary>
+        private readonly List<PublishedBatchMetadataEntry> _publishedBatchMetadata = new();
+        /// <summary>
         /// The next rollback epoch identifier assigned to a publish-resume drain cycle.
         /// </summary>
         private long _nextRollbackEpoch;
@@ -209,6 +213,12 @@ namespace ReteEngine
         /// Gets the committed rollback journal entries for published fact-change batches.
         /// </summary>
         public IReadOnlyList<RollbackJournalEntry> RollbackJournal => _rollbackJournal.AsReadOnly();
+
+        /// <summary>
+        /// Gets committed metadata for published fact-change batches.
+        /// </summary>
+        public IReadOnlyList<PublishedBatchMetadataEntry> PublishedBatchMetadata => _publishedBatchMetadata.AsReadOnly();
+
         /// <summary>
         /// Gets side-effect audit entries observed during context-action execution.
         /// </summary>
@@ -217,6 +227,11 @@ namespace ReteEngine
         /// Raised when a staged rule action successfully publishes a change batch.
         /// </summary>
         public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
+
+        /// <summary>
+        /// Raised when published-batch metadata is committed for audit correlation.
+        /// </summary>
+        public event Action<PublishedBatchMetadataEntry>? PublishedBatchMetadataCommitted;
 
         /// <summary>
         /// Raised for rollback lifecycle activity during publish-resume journaling and rollback execution.
@@ -696,6 +711,16 @@ namespace ReteEngine
                     RollbackJournalEntry entry = CreateRollbackEntry(epoch, batch, journalChanges, DateTimeOffset.UtcNow);
                     _rollbackJournal.Add(entry);
                     CorrelateSideEffects(entry);
+                    var metadataEntry = new PublishedBatchMetadataEntry(
+                        entry.Sequence,
+                        entry.Epoch,
+                        entry.CommittedAt,
+                        entry.AgendaGroup,
+                        entry.RuleName,
+                        entry.ActivationId,
+                        batch.Count);
+                    _publishedBatchMetadata.Add(metadataEntry);
+                    PublishedBatchMetadataCommitted?.Invoke(metadataEntry);
                     EmitRollbackLifecycle(
                         RollbackLifecycleStage.Completed,
                         epoch,
@@ -843,7 +868,10 @@ namespace ReteEngine
                             change.Origin?.RuleName,
                             change.Origin?.ActivationId,
                             change.Kind,
-                            DateTimeOffset.UtcNow);
+                            DateTimeOffset.UtcNow,
+                            _rollbackConflictPolicy == RollbackConflictPolicy.FailFast
+                                ? RollbackConflictOutcome.FailFastAborted
+                                : RollbackConflictOutcome.ConflictDetected);
 
                         if (_rollbackConflictPolicy == RollbackConflictPolicy.FailFast)
                         {
@@ -1075,6 +1103,7 @@ namespace ReteEngine
         /// <param name="activationId">The ID of the activation associated with the rollback.</param>
         /// <param name="kind">The kind of fact change.</param>
         /// <param name="occurredAt">The timestamp of when the rollback event occurred.</param>
+        /// <param name="conflictOutcome">The outcome of the conflict resolution, if applicable.</param>
         private void EmitRollbackLifecycle(
             RollbackLifecycleStage stage,
             long epoch,
@@ -1085,7 +1114,8 @@ namespace ReteEngine
             string? ruleName,
             Guid? activationId,
             FactChangeTypeEnum? kind,
-            DateTimeOffset occurredAt)
+            DateTimeOffset occurredAt,
+            RollbackConflictOutcome conflictOutcome = RollbackConflictOutcome.None)
         {
             RollbackLifecycle?.Invoke(this, new RollbackLifecycleEventArgs(
                 stage,
@@ -1097,7 +1127,8 @@ namespace ReteEngine
                 ruleName,
                 activationId,
                 kind,
-                occurredAt));
+                occurredAt,
+                conflictOutcome));
         }
 
         /// <summary>

@@ -37,4 +37,16 @@ namespace ReteEngine
         string? RuleName,
         Guid? ActivationId,
         IReadOnlyList<RollbackJournalChangeEntry> Changes);
+
+    /// <summary>
+    /// Captures committed metadata for a published fact-change batch to support audit correlation.
+    /// </summary>
+    public sealed record PublishedBatchMetadataEntry(
+        long Sequence,
+        long Epoch,
+        DateTimeOffset CommittedAt,
+        string? AgendaGroup,
+        string? RuleName,
+        Guid? ActivationId,
+        int ChangeCount);
 }

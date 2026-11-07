@@ -575,4 +575,85 @@ public class TestRollback
         Assert.Null(sideEffect.Epoch);
         Assert.Equal(RollbackSideEffectDisposition.NonRollbackable, sideEffect.Disposition);
     }
+
+    [Fact]
+    public void RollbackLifecycle_ConflictEventIncludesFailFastOutcomeAndCorrelation()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var lifecycle = new List<RollbackLifecycleEventArgs>();
+        engine.RollbackLifecycle += (_, eventArgs) => lifecycle.Add(eventArgs);
+
+        ReteCore.Fact<string>? projected = null;
+
+        engine.Begin("ConflictOutcomeLifecycle")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                projected = new ReteCore.Fact<string>("stable");
+                context.Assert(projected);
+                context.Publish();
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(17));
+        engine.FireAll();
+
+        RollbackJournalEntry entry = Assert.Single(engine.RollbackJournal);
+        projected!.Value = "tampered";
+        engine.Update(projected, nameof(ReteCore.Fact<string>.Value));
+
+        Assert.Throws<InvalidOperationException>(() => engine.RollbackPublishedBatch(entry.Sequence));
+
+        RollbackLifecycleEventArgs conflicted = Assert.Single(lifecycle.Where(e =>
+            e.Stage == RollbackLifecycleStage.Conflicted &&
+            e.Sequence == entry.Sequence));
+
+        Assert.Equal(RollbackConflictOutcome.FailFastAborted, conflicted.ConflictOutcome);
+        Assert.Equal(entry.ActivationId, conflicted.ActivationId);
+        Assert.Equal(entry.Epoch, conflicted.Epoch);
+    }
+
+    [Fact]
+    public void RollbackCorrelation_PublishedBatchMetadataCorrelatesWithRuleFiredActivityAndBatchOrigin()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        RuleFiredEventArgs? fired = null;
+        PublishedBatchMetadataEntry? publishedMetadata = null;
+        engine.RuleFired += (_, eventArgs) => fired = eventArgs;
+        engine.PublishedBatchMetadataCommitted += metadata => publishedMetadata = metadata;
+
+        engine.Begin("MetadataCorrelationPublish")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                context.Assert(new ReteCore.Fact<string>("meta"));
+                context.Publish();
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(4));
+        engine.FireAll();
+
+        Assert.NotNull(fired);
+        Assert.NotNull(publishedMetadata);
+
+        RollbackJournalEntry journal = Assert.Single(engine.RollbackJournal);
+        PublishedBatchMetadataEntry metadata = Assert.Single(engine.PublishedBatchMetadata);
+        Assert.Equal(metadata, publishedMetadata);
+
+        Assert.Equal(journal.Sequence, metadata.Sequence);
+        Assert.Equal(journal.Epoch, metadata.Epoch);
+        Assert.Equal(journal.ActivationId, metadata.ActivationId);
+        Assert.Equal(journal.RuleName, metadata.RuleName);
+        Assert.Equal(journal.AgendaGroup, metadata.AgendaGroup);
+        Assert.Equal(1, metadata.ChangeCount);
+
+        FactChange change = Assert.Single(engine.PublishedChangeBatches.Single());
+        Assert.Equal(metadata.ActivationId, change.Origin?.ActivationId);
+        Assert.Equal(metadata.RuleName, change.Origin?.RuleName);
+        Assert.Equal(metadata.AgendaGroup, change.Origin?.AgendaGroup);
+
+        AgendaGroupActivityRecord completed = Assert.Single(engine.AgendaGroupActivityLog
+            .Where(record => record.Activity == "ActivationCompleted" && record.RuleName == "MetadataCorrelationPublish"));
+        Assert.Equal(metadata.ActivationId, completed.ActivationId);
+        Assert.Equal(fired!.ActivationId, metadata.ActivationId);
+    }
 }

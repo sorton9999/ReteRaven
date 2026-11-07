@@ -23,6 +23,16 @@ namespace ReteEngine
     }
 
     /// <summary>
+    /// Describes conflict disposition for rollback lifecycle events.
+    /// </summary>
+    public enum RollbackConflictOutcome
+    {
+        None,
+        ConflictDetected,
+        FailFastAborted
+    }
+
+    /// <summary>
     /// Provides correlation details for rollback lifecycle notifications.
     /// </summary>
     public sealed class RollbackLifecycleEventArgs : EventArgs
@@ -37,7 +47,8 @@ namespace ReteEngine
             string? ruleName,
             Guid? activationId,
             FactChangeTypeEnum? kind,
-            DateTimeOffset occurredAt)
+            DateTimeOffset occurredAt,
+            RollbackConflictOutcome conflictOutcome = RollbackConflictOutcome.None)
         {
             Stage = stage;
             Epoch = epoch;
@@ -49,6 +60,7 @@ namespace ReteEngine
             ActivationId = activationId;
             Kind = kind;
             OccurredAt = occurredAt;
+            ConflictOutcome = conflictOutcome;
         }
 
         public RollbackLifecycleStage Stage { get; }
@@ -70,5 +82,7 @@ namespace ReteEngine
         public FactChangeTypeEnum? Kind { get; }
 
         public DateTimeOffset OccurredAt { get; }
+
+        public RollbackConflictOutcome ConflictOutcome { get; }
     }
 }
