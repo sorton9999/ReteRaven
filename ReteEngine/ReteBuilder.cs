@@ -797,6 +797,7 @@ namespace ReteEngine
                 Action = action,
                 ContextAction = contextAction,
                 PublishChanges = contextAction == null ? null : _engine.PublishChanges,
+                PublishSideEffects = contextAction == null ? null : _engine.RecordSideEffects,
                 Agenda = _engine.Agenda,
                 GlobalGuards = globalConditionsCopy,
                 LateFilters = lateFiltersCopy,

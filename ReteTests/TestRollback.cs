@@ -344,4 +344,235 @@ public class TestRollback
         Assert.Equal(RollbackLifecycleStage.Skipped, skipped.Stage);
         Assert.Equal(entry.Sequence, skipped.Sequence);
     }
+
+    [Theory]
+    [InlineData("MissingSequence")]
+    [InlineData("OutOfOrderSequence")]
+    [InlineData("ConflictedCurrentState")]
+    public void RollbackFailureModes_MatrixProducesExpectedFailures(string failureMode)
+    {
+        var engine = new ReteEngine.ReteEngine();
+
+        switch (failureMode)
+        {
+            case "MissingSequence":
+            {
+                var missing = Assert.Throws<InvalidOperationException>(() => engine.RollbackPublishedBatch(404));
+                Assert.Contains("was not found", missing.Message);
+                break;
+            }
+            case "OutOfOrderSequence":
+            {
+                engine.Begin("OutOfOrderMatrix")
+                    .Where<ReteCore.Fact<int>>("signal")
+                    .CtxThen(context =>
+                    {
+                        context.Assert(new ReteCore.Fact<string>(Guid.NewGuid().ToString()));
+                        context.Publish();
+                    });
+
+                engine.Assert(new ReteCore.Fact<int>(1), new ReteCore.Fact<int>(2));
+                engine.FireAll();
+
+                long first = engine.RollbackJournal[0].Sequence;
+                var outOfOrder = Assert.Throws<InvalidOperationException>(() => engine.RollbackPublishedBatch(first));
+                Assert.Contains("Out-of-order rollback", outOfOrder.Message);
+                break;
+            }
+            case "ConflictedCurrentState":
+            {
+                ReteCore.Fact<string>? projected = null;
+
+                engine.Begin("ConflictMatrix")
+                    .Where<ReteCore.Fact<int>>("signal")
+                    .CtxThen(context =>
+                    {
+                        projected = new ReteCore.Fact<string>("stable");
+                        context.Assert(projected);
+                        context.Publish();
+                    });
+
+                engine.Assert(new ReteCore.Fact<int>(7));
+                engine.FireAll();
+
+                projected!.Value = "tampered";
+                engine.Update(projected, nameof(ReteCore.Fact<string>.Value));
+
+                var conflicted = Assert.Throws<InvalidOperationException>(() => engine.RollbackLastPublishedBatch());
+                Assert.Contains("Rollback conflict", conflicted.Message);
+                break;
+            }
+            default:
+                throw new InvalidOperationException($"Unsupported failure-mode test case '{failureMode}'.");
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RollbackFailureModes_ReturnsFalseWhenNoPendingEntry(bool afterRollingBackLatest)
+    {
+        var engine = new ReteEngine.ReteEngine();
+
+        if (afterRollingBackLatest)
+        {
+            engine.Begin("NoPendingAfterRollback")
+                .Where<ReteCore.Fact<int>>("signal")
+                .CtxThen(context =>
+                {
+                    context.Assert(new ReteCore.Fact<string>("once"));
+                    context.Publish();
+                });
+
+            engine.Assert(new ReteCore.Fact<int>(1));
+            engine.FireAll();
+
+            Assert.True(engine.RollbackLastPublishedBatch());
+        }
+
+        Assert.False(engine.RollbackLastPublishedBatch());
+    }
+
+    [Fact]
+    public void RollbackDeterminism_RepeatedRunsProduceSameJournalAndLifecycleSignature()
+    {
+        static (string JournalSignature, string LifecycleSignature) RunScenario()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            var lifecycle = new List<RollbackLifecycleEventArgs>();
+            engine.RollbackLifecycle += (_, eventArgs) => lifecycle.Add(eventArgs);
+
+            engine.Begin("DeterminismMatrix")
+                .Where<ReteCore.Fact<int>>("signal")
+                .CtxThen(context =>
+                {
+                    var created = new ReteCore.Fact<string>("v1");
+                    var updated = created.Snapshot();
+                    updated.Value = "v2";
+
+                    context.Assert(created);
+                    context.Update(updated, expectedRevision: 0);
+                    context.Publish();
+                });
+
+            engine.Assert(new ReteCore.Fact<int>(99));
+            engine.FireAll();
+
+            RollbackJournalEntry entry = Assert.Single(engine.RollbackJournal);
+            Assert.True(engine.RollbackPublishedBatch(entry.Sequence));
+
+            var journalSignature = string.Join("|", entry.Changes
+                .OrderBy(change => change.Index)
+                .Select(change => $"{change.Index}:{change.Kind}:{change.ExistedBefore}->{change.ExistsAfter}:{change.RevisionBefore}->{change.RevisionAfter}"));
+
+            var lifecycleSignature = string.Join(">", lifecycle
+                .Where(e => e.Epoch == entry.Epoch)
+                .Select(e => $"{e.Stage}:{e.Sequence?.ToString() ?? "-"}:{e.ChangeIndex?.ToString() ?? "-"}:{e.Kind?.ToString() ?? "-"}"));
+
+            return (journalSignature, lifecycleSignature);
+        }
+
+        var first = RunScenario();
+        var second = RunScenario();
+        var third = RunScenario();
+
+        Assert.Equal(first.JournalSignature, second.JournalSignature);
+        Assert.Equal(second.JournalSignature, third.JournalSignature);
+        Assert.Equal(first.LifecycleSignature, second.LifecycleSignature);
+        Assert.Equal(second.LifecycleSignature, third.LifecycleSignature);
+    }
+
+    [Fact]
+    public void RollbackSideEffects_WithoutCompensatorRemainExternalAndAreAudited()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var externalCounter = 0;
+
+        engine.Begin("AuditOnlySideEffect")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                externalCounter++;
+                context.RegisterSideEffect(
+                    category: "Counter",
+                    description: "Increment external counter");
+                context.Assert(new ReteCore.Fact<string>("audit-only"));
+                context.Publish();
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(1));
+        engine.FireAll();
+
+        Assert.Equal(1, externalCounter);
+        Assert.True(engine.RollbackLastPublishedBatch());
+        Assert.Equal(1, externalCounter);
+
+        RollbackSideEffectAuditEntry sideEffect = Assert.Single(engine.RollbackSideEffectAudit);
+        Assert.Equal("Counter", sideEffect.Category);
+        Assert.Equal("AuditOnlySideEffect", sideEffect.RuleName);
+        Assert.NotNull(sideEffect.Sequence);
+        Assert.Equal(RollbackSideEffectDisposition.NonRollbackable, sideEffect.Disposition);
+    }
+
+    [Fact]
+    public void RollbackSideEffects_WithCompensatorAreCompensatedOnRollback()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var externalQueue = new List<string>();
+
+        engine.Begin("CompensatedSideEffect")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                externalQueue.Add("sent");
+                context.RegisterSideEffect(
+                    category: "Notification",
+                    description: "Send external notification",
+                    compensator: () => externalQueue.RemoveAt(externalQueue.Count - 1),
+                    metadata: new Dictionary<string, string>
+                    {
+                        ["channel"] = "email",
+                        ["severity"] = "info"
+                    });
+                context.Assert(new ReteCore.Fact<string>("compensated"));
+                context.Publish();
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(2));
+        engine.FireAll();
+
+        Assert.Single(externalQueue);
+        Assert.True(engine.RollbackLastPublishedBatch());
+        Assert.Empty(externalQueue);
+
+        RollbackSideEffectAuditEntry sideEffect = Assert.Single(engine.RollbackSideEffectAudit);
+        Assert.True(sideEffect.HasCompensator);
+        Assert.Equal(RollbackSideEffectDisposition.Compensated, sideEffect.Disposition);
+        Assert.Equal("email", sideEffect.Metadata["channel"]);
+        Assert.NotNull(sideEffect.DisposedAt);
+    }
+
+    [Fact]
+    public void RollbackSideEffects_AreAuditedWithoutSequenceWhenNoPublishOccurs()
+    {
+        var engine = new ReteEngine.ReteEngine();
+
+        engine.Begin("SideEffectWithoutPublish")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                context.RegisterSideEffect(
+                    category: "ExternalApi",
+                    description: "Called external endpoint without publish");
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(3));
+        engine.FireAll();
+
+        RollbackSideEffectAuditEntry sideEffect = Assert.Single(engine.RollbackSideEffectAudit);
+        Assert.Equal("SideEffectWithoutPublish", sideEffect.RuleName);
+        Assert.Null(sideEffect.Sequence);
+        Assert.Null(sideEffect.Epoch);
+        Assert.Equal(RollbackSideEffectDisposition.NonRollbackable, sideEffect.Disposition);
+    }
 }

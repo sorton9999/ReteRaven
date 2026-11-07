@@ -135,6 +135,14 @@ namespace ReteEngine
         /// </summary>
         private readonly HashSet<long> _rolledBackSequences = new();
         /// <summary>
+        /// Stores side-effect audit entries emitted by context actions.
+        /// </summary>
+        private readonly List<RollbackSideEffectAuditEntry> _rollbackSideEffectAudit = new();
+        /// <summary>
+        /// Stores compensator delegates for side effects that explicitly registered one.
+        /// </summary>
+        private readonly Dictionary<Guid, Action> _sideEffectCompensators = new();
+        /// <summary>
         /// A private flag to track whether the ReteEngine has been disposed.
         /// </summary>
         private bool _disposed;
@@ -178,7 +186,7 @@ namespace ReteEngine
         /// <summary>
         /// Registers an agenda group for later use by rules and firing operations. `MAIN` is registered by default.
         /// </summary>
-        public ReteEngine DefineAgendaGroup(string groupName)
+        public ReteEngine DefineAgendaGroup(String groupName)
         {
             _agenda.DefineAgendaGroup(groupName);
             return this;
@@ -187,7 +195,7 @@ namespace ReteEngine
         /// <summary>
         /// Registers a readiness hook for a defined agenda group. Returning false pauses that group's firing until the hook allows it to resume.
         /// </summary>
-        public IDisposable RegisterWaitForHook(string groupName, Func<bool> canResume)
+        public IDisposable RegisterWaitForHook(String groupName, Func<bool> canResume)
         {
             return _agenda.RegisterWaitForHook(groupName, canResume);
         }
@@ -202,6 +210,10 @@ namespace ReteEngine
         /// </summary>
         public IReadOnlyList<RollbackJournalEntry> RollbackJournal => _rollbackJournal.AsReadOnly();
         /// <summary>
+        /// Gets side-effect audit entries observed during context-action execution.
+        /// </summary>
+        public IReadOnlyList<RollbackSideEffectAuditEntry> RollbackSideEffectAudit => _rollbackSideEffectAudit.AsReadOnly();
+        /// <summary>
         /// Raised when a staged rule action successfully publishes a change batch.
         /// </summary>
         public event Action<IReadOnlyList<FactChange>>? FactChangesPublished;
@@ -215,6 +227,11 @@ namespace ReteEngine
         /// Raised after a rule action completes successfully, including its agenda group and execution duration.
         /// </summary>
         public event EventHandler<RuleFiredEventArgs>? RuleFired;
+
+        /// <summary>
+        /// Raised when side effects are observed or compensation state changes.
+        /// </summary>
+        public event EventHandler<RollbackSideEffectEventArgs>? RollbackSideEffect;
 
         /// <summary>
         /// Initializes a new instance of the ReteEngine with optional beta-node sharing.
@@ -544,6 +561,52 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Records side-effect metadata produced by a successful context action. This method is called after a staged
+        /// rule action completes successfully and produces side effects that need to be tracked for potential rollback
+        /// or auditing purposes. The side effects are stored in the rollback side-effect audit list, and if any of the
+        /// side effects have associated compensators, they are also recorded for later execution if a rollback occurs.
+        /// This allows the engine to maintain a history of side effects and their associated metadata, enabling better
+        /// tracking and management of external actions taken during rule execution.
+        /// </summary>
+        /// <param name="sideEffects">The list of side effects to record.</param>
+        internal void RecordSideEffects(IReadOnlyList<ReteCore.RuleSideEffect> sideEffects)
+        {
+            if (sideEffects.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var sideEffect in sideEffects)
+            {
+                Guid sideEffectId = Guid.NewGuid();
+                var metadata = new Dictionary<string, string>(sideEffect.Metadata);
+                var entry = new RollbackSideEffectAuditEntry(
+                    sideEffectId,
+                    null,
+                    null,
+                    sideEffect.Origin.AgendaGroup,
+                    sideEffect.Origin.RuleName,
+                    sideEffect.Origin.ActivationId,
+                    sideEffect.Category,
+                    sideEffect.Description,
+                    sideEffect.HasCompensator,
+                    metadata,
+                    sideEffect.OccurredAt,
+                    sideEffect.HasCompensator
+                        ? RollbackSideEffectDisposition.PendingCompensation
+                        : RollbackSideEffectDisposition.NonRollbackable);
+
+                _rollbackSideEffectAudit.Add(entry);
+                if (sideEffect.Compensator != null)
+                {
+                    _sideEffectCompensators[sideEffectId] = sideEffect.Compensator;
+                }
+
+                RollbackSideEffect?.Invoke(this, new RollbackSideEffectEventArgs(entry));
+            }
+        }
+
+        /// <summary>
         /// Publishes a batch of fact changes to the working memory and raises the FactChangesPublished event. This method is called after a staged
         /// rule action successfully completes.
         /// </summary>
@@ -632,6 +695,7 @@ namespace ReteEngine
                     _publishedChangeBatches.Add(batch);
                     RollbackJournalEntry entry = CreateRollbackEntry(epoch, batch, journalChanges, DateTimeOffset.UtcNow);
                     _rollbackJournal.Add(entry);
+                    CorrelateSideEffects(entry);
                     EmitRollbackLifecycle(
                         RollbackLifecycleStage.Completed,
                         epoch,
@@ -718,8 +782,15 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Execute rollback for a single committed journal entry.
+        /// Execute rollback for a single committed journal entry. This method applies the rollback changes in reverse order, restoring each
+        /// fact to its pre-change state. It also handles side-effect compensation and emits lifecycle events for each stage of the rollback
+        /// process. If any conflicts are detected during the rollback (e.g., the current state of a fact does not match the expected state),
+        /// the method will either skip the conflicting change or throw an exception based on the configured rollback conflict policy. After
+        /// successfully applying all changes, the sequence is marked as rolled back.
         /// </summary>
+        /// <param name="entry">The rollback journal entry to be applied.</param>
+        /// <returns>True if the rollback was successfully applied; otherwise, false.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the rollback cannot be applied due to conflicts or invalid state.</exception>
         private bool ExecuteRollback(RollbackJournalEntry entry)
         {
             _isApplyingChangeBatches = true;
@@ -797,6 +868,7 @@ namespace ReteEngine
                         DateTimeOffset.UtcNow);
                 }
 
+                CompensateSideEffects(entry);
                 _rolledBackSequences.Add(entry.Sequence);
                 EmitRollbackLifecycle(
                     RollbackLifecycleStage.Completed,
@@ -818,7 +890,103 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Gets the latest rollback journal entry that has not yet been rolled back.
+        /// Correlates previously observed side effects to the committed journal entry for the same activation. This method updates
+        /// the epoch and sequence of any side-effect audit entries that match the activation ID of the provided rollback journal
+        /// entry. It ensures that side effects are properly associated with the corresponding journal entry, allowing for accurate
+        /// tracking and potential compensation during rollback operations. After updating the side-effect entries, it raises the
+        /// RollbackSideEffect event to notify subscribers of the correlation.
+        /// </summary>
+        /// <param name="entry">The rollback journal entry to correlate side effects with.</param>
+        private void CorrelateSideEffects(RollbackJournalEntry entry)
+        {
+            if (entry.ActivationId == null)
+            {
+                return;
+            }
+
+            foreach (var sideEffect in _rollbackSideEffectAudit.Where(audit =>
+                         audit.ActivationId == entry.ActivationId &&
+                         audit.Sequence == null))
+            {
+                sideEffect.Epoch = entry.Epoch;
+                sideEffect.Sequence = entry.Sequence;
+                RollbackSideEffect?.Invoke(this, new RollbackSideEffectEventArgs(sideEffect));
+            }
+        }
+
+        /// <summary>
+        /// Attempts compensation for side effects associated with the supplied rollback entry. This method iterates through the
+        /// side-effect audit entries that match the activation ID of the provided rollback journal entry. For each side effect that
+        /// has a compensator and has not yet been compensated, it attempts to execute the compensator. If the compensator is not
+        /// available or fails, it updates the disposition of the side effect accordingly and raises the RollbackSideEffect event to
+        /// notify subscribers of the outcome. The method respects the configured rollback conflict policy, throwing exceptions for
+        /// failures if the policy is set to FailFast.
+        /// </summary>
+        /// <param name="entry">The journal entry to process a side effect for.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the rollback conflict policy is set to FailFast and a compensator
+        /// is not available or fails.</exception>
+        private void CompensateSideEffects(RollbackJournalEntry entry)
+        {
+            if (entry.ActivationId == null)
+            {
+                return;
+            }
+
+            var candidates = _rollbackSideEffectAudit
+                .Where(audit => audit.ActivationId == entry.ActivationId)
+                .OrderByDescending(audit => audit.OccurredAt)
+                .ToList();
+
+            foreach (var sideEffect in candidates)
+            {
+                if (!sideEffect.HasCompensator || sideEffect.Disposition == RollbackSideEffectDisposition.Compensated)
+                {
+                    continue;
+                }
+
+                if (!_sideEffectCompensators.TryGetValue(sideEffect.SideEffectId, out var compensator))
+                {
+                    sideEffect.Disposition = RollbackSideEffectDisposition.CompensationFailed;
+                    sideEffect.DisposedAt = DateTimeOffset.UtcNow;
+                    sideEffect.DispositionDetail = "Compensator was not available.";
+                    RollbackSideEffect?.Invoke(this, new RollbackSideEffectEventArgs(sideEffect));
+
+                    if (_rollbackConflictPolicy == RollbackConflictPolicy.FailFast)
+                    {
+                        throw new InvalidOperationException(
+                            $"Rollback compensation for side effect '{sideEffect.SideEffectId}' could not run because no compensator was available.");
+                    }
+
+                    continue;
+                }
+
+                try
+                {
+                    compensator();
+                    sideEffect.Disposition = RollbackSideEffectDisposition.Compensated;
+                    sideEffect.DisposedAt = DateTimeOffset.UtcNow;
+                    sideEffect.DispositionDetail = "Compensation applied during rollback.";
+                    RollbackSideEffect?.Invoke(this, new RollbackSideEffectEventArgs(sideEffect));
+                }
+                catch (Exception ex)
+                {
+                    sideEffect.Disposition = RollbackSideEffectDisposition.CompensationFailed;
+                    sideEffect.DisposedAt = DateTimeOffset.UtcNow;
+                    sideEffect.DispositionDetail = ex.Message;
+                    RollbackSideEffect?.Invoke(this, new RollbackSideEffectEventArgs(sideEffect));
+
+                    if (_rollbackConflictPolicy == RollbackConflictPolicy.FailFast)
+                    {
+                        throw new InvalidOperationException(
+                            $"Rollback compensation failed for side effect '{sideEffect.SideEffectId}'.", ex);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the latest rollback journal entry that has not yet been rolled back. This method iterates through the rollback
+        /// journal in reverse order, checking each entry's sequence against the set of rolled-back sequences.
         /// </summary>
         private RollbackJournalEntry? GetLatestPendingRollbackEntry()
         {
@@ -834,8 +1002,14 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Restores a fact to the journaled pre-change state.
+        /// Restores a fact to the journaled pre-change state. This method is called during rollback to revert a fact to its state
+        /// before a change was applied. It checks whether the fact existed before the change and whether a snapshot of the fact's
+        /// state is available. If the fact did not exist before, it retracts the current instance if it exists. If the fact did
+        /// exist, it retracts the current instance (if any) and asserts a new instance based on the pre-change snapshot, restoring
+        /// its revision to the recorded value. This ensures that the working memory accurately reflects the state of facts as they
+        /// were before the changes were applied.
         /// </summary>
+        /// <param name="change">The journal change entry containing the pre-change state.</param>
         private void RestoreFactState(RollbackJournalChangeEntry change)
         {
             IFact? existing = FindFactById(change.FactId);
@@ -866,8 +1040,14 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Captures the current fact existence/revision/snapshot state for rollback bookkeeping.
+        /// Captures the current fact existence/revision/snapshot state for rollback bookkeeping. This method retrieves the current
+        /// state of a fact in working memory, including whether it exists, its revision number, and a snapshot of its state. It is
+        /// used to record the state of facts before changes are applied, allowing for accurate rollback if needed. If the fact does
+        /// not exist in working memory, it returns a tuple indicating that the fact does not exist, with a revision of 0 and a null
+        /// snapshot.
         /// </summary>
+        /// <param name="factId">The ID of the fact to capture the state for.</param>
+        /// <returns>A tuple containing whether the fact exists, its revision number, and a snapshot of its state.</returns>
         private (bool Exists, long Revision, IFact? Fact) CaptureFactState(Guid factId)
         {
             IFact? fact = FindFactById(factId);
@@ -880,8 +1060,21 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Emits a rollback lifecycle notification.
+        /// Emits a rollback lifecycle notification. This method raises the RollbackLifecycle event to notify subscribers of the current
+        /// stage of the rollback process. It provides detailed information about the rollback operation, including the epoch, sequence,
+        /// change index, fact ID, agenda group, rule name, activation ID, change kind, and the timestamp of when the event occurred. 
+        /// This allows for tracking and monitoring of the rollback process in a granular manner.
         /// </summary>
+        /// <param name="stage">The current stage of the rollback process.</param>
+        /// <param name="epoch">The epoch of the rollback operation.</param>
+        /// <param name="sequence">The sequence number of the rollback operation.</param>
+        /// <param name="changeIndex">The index of the change within the rollback batch.</param>
+        /// <param name="factId">The ID of the fact involved in the rollback.</param>
+        /// <param name="agendaGroup">The agenda group associated with the rollback.</param>
+        /// <param name="ruleName">The name of the rule associated with the rollback.</param>
+        /// <param name="activationId">The ID of the activation associated with the rollback.</param>
+        /// <param name="kind">The kind of fact change.</param>
+        /// <param name="occurredAt">The timestamp of when the rollback event occurred.</param>
         private void EmitRollbackLifecycle(
             RollbackLifecycleStage stage,
             long epoch,
@@ -908,8 +1101,11 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Gets a shared origin when all changes in the batch were produced by the same activation.
+        /// Gets a shared origin when all changes in the batch were produced by the same activation. If the batch contains changes from multiple
+        /// activations, this method returns null.
         /// </summary>
+        /// <param name="batch">The batch of fact changes to evaluate.</param>
+        /// <returns>The shared origin if all changes have the same origin; otherwise, null.</returns>
         private static FactChangeOrigin? GetSharedOrigin(IReadOnlyList<FactChange> batch)
         {
             if (batch.Count == 0)
@@ -924,8 +1120,13 @@ namespace ReteEngine
         }
 
         /// <summary>
-        /// Creates a detached snapshot for journal persistence.
+        /// Creates a detached snapshot for journal persistence. This method is used to create a snapshot of a fact's state that can be stored in
+        /// the rollback journal. It ensures that the snapshot is independent of the original fact instance, allowing for accurate restoration
+        /// during rollback operations. If the fact is null, it returns null; otherwise, it calls the Snapshot method on the fact to create a
+        /// detached copy.
         /// </summary>
+        /// <param name="fact">The fact to create a snapshot of.</param>
+        /// <returns>A detached snapshot of the fact, or null if the fact is null.</returns>
         private static IFact? SnapshotFact(IFact? fact)
         {
             return fact?.Snapshot();

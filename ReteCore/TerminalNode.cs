@@ -131,6 +131,7 @@ namespace ReteCore
                         _ruleName,
                         contextAction,
                         _ruleMetadata.PublishChanges,
+                        _ruleMetadata.PublishSideEffects,
                         finalMatch,
                         _priority,
                         _salience,

@@ -52,6 +52,10 @@ namespace ReteCore
         /// </summary>
         public Action<IReadOnlyList<FactChange>>? PublishChanges { get; init; }
         /// <summary>
+        /// The optional delegate that is called when side-effect metadata is registered by a successful context action.
+        /// </summary>
+        public Action<IReadOnlyList<RuleSideEffect>>? PublishSideEffects { get; init; }
+        /// <summary>
         /// The agenda to which activations of this rule should be added when the rule is activated. This allows for 
         /// flexibility in managing activations, as different rules can be directed to different agendas if needed. 
         /// This is a required field.
