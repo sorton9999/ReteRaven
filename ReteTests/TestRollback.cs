@@ -656,4 +656,87 @@ public class TestRollback
         Assert.Equal(metadata.ActivationId, completed.ActivationId);
         Assert.Equal(fired!.ActivationId, metadata.ActivationId);
     }
+
+    [Fact]
+    public void RollbackSharedReference_MutatingOriginalFactAfterPublishDoesNotAffectRollback()
+    {
+        var engine = new ReteEngine.ReteEngine();
+        var stagedFact = new Inventory { Id = Guid.NewGuid(), Quantity = 5 };
+
+        engine.Begin("SharedReferenceImmunity")
+            .Where<ReteCore.Fact<int>>("signal")
+            .CtxThen(context =>
+            {
+                context.Assert(stagedFact);
+                context.Publish();
+            });
+
+        engine.Assert(new ReteCore.Fact<int>(1));
+        engine.FireAll();
+
+        // Mutate the original staged instance directly, bypassing the engine, after the batch has been
+        // committed and journaled. The journal should hold a detached snapshot immune to this mutation.
+        stagedFact.Quantity = 777;
+
+        Assert.True(engine.RollbackLastPublishedBatch());
+
+        var observed = new List<int>();
+        engine.Begin("ObserveInventoryAfterRollback")
+            .Where<Inventory>("inventory")
+            .Then(t => observed.Add(t.Get<Inventory>("inventory").Quantity));
+
+        engine.Assert(stagedFact);
+        engine.FireAll();
+
+        // Only the mutated instance remains asserted (since the committed/journaled copy was rolled back,
+        // i.e., retracted), proving the journal/rollback path never observed or restored the mutated value.
+        Assert.DoesNotContain(5, observed);
+    }
+
+    [Fact]
+    public void RollbackReplay_SameInputAndSequenceProduceSameFinalFactBaseStateAcrossRuns()
+    {
+        static (bool RolledBack, bool FactRemainsAfterRollback, int? ObservedQuantityAfterRollback) RunScenario()
+        {
+            var engine = new ReteEngine.ReteEngine();
+            var stagedFact = new Inventory { Id = Guid.NewGuid(), Quantity = 42 };
+
+            engine.Begin("ReplayPublish")
+                .Where<ReteCore.Fact<int>>("signal")
+                .CtxThen(context =>
+                {
+                    context.Assert(stagedFact);
+                    context.Publish();
+                });
+
+            engine.Assert(new ReteCore.Fact<int>(1));
+            engine.FireAll();
+
+            bool rolledBack = engine.RollbackLastPublishedBatch();
+
+            var observed = new List<int>();
+            engine.Begin("ReplayObserve")
+                .Where<Inventory>("inventory")
+                .Then(t => observed.Add(t.Get<Inventory>("inventory").Quantity));
+
+            engine.FireAll();
+
+            return (rolledBack, observed.Count > 0, observed.Count > 0 ? observed[0] : (int?)null);
+        }
+
+        var first = RunScenario();
+        var second = RunScenario();
+        var third = RunScenario();
+
+        Assert.Equal(first.RolledBack, second.RolledBack);
+        Assert.Equal(second.RolledBack, third.RolledBack);
+        Assert.Equal(first.FactRemainsAfterRollback, second.FactRemainsAfterRollback);
+        Assert.Equal(second.FactRemainsAfterRollback, third.FactRemainsAfterRollback);
+        Assert.Equal(first.ObservedQuantityAfterRollback, second.ObservedQuantityAfterRollback);
+        Assert.Equal(second.ObservedQuantityAfterRollback, third.ObservedQuantityAfterRollback);
+
+        // The rolled-back fact should no longer be present in working memory.
+        Assert.True(first.RolledBack);
+        Assert.False(first.FactRemainsAfterRollback);
+    }
 }

@@ -164,13 +164,13 @@ namespace ReteCore
         {
             if (fact is Token token)
             {
-                if (_agenda.RemoveByRuleAndMatch(_ruleName, token, _ruleMetadata.AgendaGroupName) > 0)
+                if (_agenda.RemoveByRuleAndMatch(_ruleName, token, _ruleMetadata.AgendaGroupName) > 0 && _agenda.EnableConsoleTraceLogging)
                 {
                     Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
                 }
                 _ruleMetadata.Agenda.ForgetActivation(_ruleName, token, _ruleMetadata.AgendaGroupName);
             }
-            else if (_agenda.RemoveByRuleAndFact(_ruleName, fact, _ruleMetadata.AgendaGroupName) > 0)
+            else if (_agenda.RemoveByRuleAndFact(_ruleName, fact, _ruleMetadata.AgendaGroupName) > 0 && _agenda.EnableConsoleTraceLogging)
             {
                 Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
             }

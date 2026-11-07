@@ -957,6 +957,7 @@ waitDemoEngine.Begin("MainOrderMonitor")
     .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
     .Then(context =>
     {
+        //Order order = context.Match.Get<Order>("order");
         Console.WriteLine("MAIN: order monitor ran");
     });
 
@@ -1002,4 +1003,70 @@ Console.WriteLine($"Final firing order: {string.Join(" -> ", waitDemoFiringOrder
 Console.WriteLine(waitDemoEngine.GetAgendaGroupStatistics());
 
 waitHookRegistration.Dispose();
+
+Console.WriteLine("\n--- Testing Rollback Mechanism (RuleExecutionContext Discard) ---");
+
+var rollbackEngine = new ReteEngine.ReteEngine();
+int publishedBatchCount = 0;
+rollbackEngine.FactChangesPublished += _ => publishedBatchCount++;
+
+var rollbackInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 777, Quantity = 1 };
+
+// This rule stages an Assert and a Publish, but then throws before Fire() can
+// complete the context. The staged changes are discarded (rolled back) rather
+// than applied, and no FactChangesPublished event is raised.
+rollbackEngine.Begin("StageThenFail")
+    .Where<Inventory>("inventory")
+    .CtxThen(context =>
+    {
+        context.Assert(new Fact<int>(999));
+        context.Publish();
+        throw new InvalidOperationException("Simulated failure after staging changes.");
+    });
+
+rollbackEngine.Assert(rollbackInventory);
+try
+{
+    rollbackEngine.FireAll();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Caught expected exception: {ex.Message}");
+}
+
+Console.WriteLine($"Published batches after failed rule: {publishedBatchCount} (expected 0)");
+Console.WriteLine($"Published change batches recorded: {rollbackEngine.PublishedChangeBatches.Count} (expected 0)");
+
+// A second scenario: staged changes are rejected (rolled back) when the
+// expected revision no longer matches the current fact revision, simulating
+// an optimistic-concurrency conflict.
+Console.WriteLine("\n--- Testing Rollback via Stale Revision Rejection ---");
+
+var revisionEngine = new ReteEngine.ReteEngine();
+var currentCounter = new Fact<int>(1);
+var staleReplacement = currentCounter.Snapshot();
+staleReplacement.Value = 2;
+var revisionInventory = new Inventory { Id = Guid.NewGuid(), ProductId = 778, Quantity = 1 };
+
+revisionEngine.Begin("RejectStaleRevision")
+    .Where<Inventory>("inventory")
+    .CtxThen(context =>
+    {
+        // Deliberately claim an expected revision that won't match, forcing
+        // the publish pipeline to reject and roll back the staged update.
+        context.Update(staleReplacement, expectedRevision: 99);
+        context.Publish();
+    });
+
+revisionEngine.Assert(currentCounter, revisionInventory);
+try
+{
+    revisionEngine.FireAll();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Caught expected revision-mismatch exception: {ex.Message}");
+}
+
+Console.WriteLine($"Published change batches after stale revision: {revisionEngine.PublishedChangeBatches.Count} (expected 0)");
 

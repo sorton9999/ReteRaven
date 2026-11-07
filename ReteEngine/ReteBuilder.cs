@@ -119,7 +119,7 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
         public ReteBuilder<TInitial> Where<T>(string name, string? debugLabel = null, Func<T, bool>? initialCondition = null)
         {
-            if (debugLabel != null)
+            if (debugLabel != null && _engine.EnableConditionTraceLogging)
             {
                 Console.WriteLine($"===> Start {name}");
             }
@@ -141,7 +141,7 @@ namespace ReteEngine
                 if (existingAdapter != null)
                 {
                     _lastNode = beta;
-                    if (debugLabel != null)
+                    if (debugLabel != null && _engine.EnableConditionTraceLogging)
                     {
                         Console.WriteLine($"[BetaRegistry] Adapter HIT: Sharing existing branch.");
                     }
@@ -330,7 +330,7 @@ namespace ReteEngine
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
                 bool result = joinCondition(token, fact);
-                if (debugLabel != null)
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
                 }
@@ -460,7 +460,7 @@ namespace ReteEngine
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
                 bool result = joinCondition(token, fact);
-                if (debugLabel != null)
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
                 }
@@ -514,7 +514,7 @@ namespace ReteEngine
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
                 bool result = joinCondition(token, fact);
-                if (debugLabel != null)
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
                 }
@@ -575,7 +575,7 @@ namespace ReteEngine
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
                 bool result = joinCondition(token, fact);
-                if (debugLabel != null)
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
                 }
@@ -644,7 +644,7 @@ namespace ReteEngine
             {
                 if (joinCondition == null) return true;
                 bool result = joinCondition(token, (T)fact);
-                if (debugLabel != null)
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
                 }

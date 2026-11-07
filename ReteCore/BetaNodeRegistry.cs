@@ -57,6 +57,11 @@ namespace ReteCore
         private int _notNodeCacheMisses = 0;
 
         /// <summary>
+        /// Controls whether the registry writes diagnostic Console.WriteLine trace messages. Disabled by default.
+        /// </summary>
+        public bool EnableConsoleTraceLogging { get; set; }
+
+        /// <summary>
         /// Retrieves or creates a BetaMemory node for a given pattern at a given point in the network.
         /// If a BetaMemory with the exact (previousNode, patternSignature) pair exists, it is reused.
         /// Otherwise, a new BetaMemory is created and cached.
@@ -73,14 +78,20 @@ namespace ReteCore
             if (_betaMemoryCache.TryGetValue(key, out var beta))
             {
                 _betaMemoryCacheHits++;
-                Console.WriteLine($"[BetaRegistry] Cache HIT: {patternSignature}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Cache HIT: {patternSignature}");
+                }
                 return beta;
             }
 
             beta = new BetaMemory();
             _betaMemoryCache[key] = beta;
             _betaMemoryCacheMisses++;
-            Console.WriteLine($"[BetaRegistry] Cache MISS (created new): {patternSignature}");
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] Cache MISS (created new): {patternSignature}");
+            }
             return beta;
         }
 
@@ -113,7 +124,10 @@ namespace ReteCore
             if (_joinNodeCache.TryGetValue(key, out var pair))
             {
                 _joinNodeCacheHits++;
-                Console.WriteLine($"[BetaRegistry] Join HIT: {joinSignature}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Join HIT: {joinSignature}");
+                }
                 return pair;
             }
 
@@ -125,7 +139,10 @@ namespace ReteCore
 
             _joinNodeCache[key] = pair;
             _joinNodeCacheMisses++;
-            Console.WriteLine($"[BetaRegistry] Join MISS (created new): {joinSignature}");
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] Join MISS (created new): {joinSignature}");
+            }
             return pair;
         }
 
@@ -147,7 +164,10 @@ namespace ReteCore
             if (_notNodeCache.TryGetValue(key, out var pair))
             {
                 _notNodeCacheHits++;
-                Console.WriteLine($"[BetaRegistry] Join HIT: {joinSignature}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Join HIT: {joinSignature}");
+                }
                 return pair;
             }
 
@@ -158,7 +178,10 @@ namespace ReteCore
             pair = (notNode, betaMemory);
             _notNodeCache[key] = pair;
             _notNodeCacheMisses++;
-            Console.WriteLine($"[BetaRegistry] Join MISS (created new): {joinSignature}");
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] Join MISS (created new): {joinSignature}");
+            }
             return pair;
         }
 
@@ -177,7 +200,10 @@ namespace ReteCore
             // Check if already connected
             if (previousNode.Successors.Contains(nodeToConnect))
             {
-                Console.WriteLine($"[BetaRegistry] Node already connected, skipping.");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Node already connected, skipping.");
+                }
                 return;
             }
 
@@ -185,28 +211,43 @@ namespace ReteCore
             if (previousNode is BetaMemory beta)
             {
                 beta.AddSuccessor(nodeToConnect);
-                Console.WriteLine($"[BetaRegistry] Connected BetaMemory → {nodeToConnect.GetType().Name}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Connected BetaMemory → {nodeToConnect.GetType().Name}");
+                }
             }
             else if (previousNode is CompositeBetaMemory compositeBeta)
             {
                 compositeBeta.AddSuccessor(nodeToConnect);
-                Console.WriteLine($"[BetaRegistry] Connected CompositeBetaMemory → {nodeToConnect.GetType().Name}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Connected CompositeBetaMemory → {nodeToConnect.GetType().Name}");
+                }
             }
             else if (previousNode is AlphaMemory alpha)
             {
                 alpha.AddSuccessor(nodeToConnect);
-                Console.WriteLine($"[BetaRegistry] Connected AlphaMemory → {nodeToConnect.GetType().Name}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Connected AlphaMemory → {nodeToConnect.GetType().Name}");
+                }
             }
             else if (previousNode is AlphaToBetaAdapter adapter)
             {
                 adapter.AddSuccessor(nodeToConnect);
-                Console.WriteLine($"[BetaRegistry] Connected AlphaToBetaAdapter → {nodeToConnect.GetType().Name}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Connected AlphaToBetaAdapter → {nodeToConnect.GetType().Name}");
+                }
             }
             else
             {
                 // Generic node type with AddSuccessor
                 previousNode.AddSuccessor(nodeToConnect);
-                Console.WriteLine($"[BetaRegistry] Connected {previousNode.GetType().Name} → {nodeToConnect.GetType().Name}");
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Connected {previousNode.GetType().Name} → {nodeToConnect.GetType().Name}");
+                }
             }
         }
 
@@ -224,7 +265,10 @@ namespace ReteCore
             _joinNodeCacheMisses = 0;
             _notNodeCacheHits = 0;
             _notNodeCacheMisses = 0;
-            Console.WriteLine("[BetaRegistry] Cleared all cached nodes.");
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine("[BetaRegistry] Cleared all cached nodes.");
+            }
         }
 
         /// <summary>

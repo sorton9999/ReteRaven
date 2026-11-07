@@ -107,6 +107,26 @@ namespace ReteEngine
         /// </summary>
         private bool _isApplyingChangeBatches;
         /// <summary>
+        /// Gets or sets whether per-evaluation diagnostic trace output (e.g. "[DEBUG:...] Result: ...") is written to the
+        /// console for conditions and joins built through the fluent API. This is disabled by default: the fluent builder
+        /// overloads use <see cref="System.Runtime.CompilerServices.CallerArgumentExpressionAttribute"/> to automatically
+        /// capture a human-readable label for every condition/join lambda, but that label capture alone should not cause
+        /// console output on every single rule evaluation. Enable this only for interactive debugging, since it adds
+        /// significant overhead (console I/O on every fact/token evaluation). Setting this also toggles diagnostic
+        /// console tracing in the agenda and beta-node registry.
+        /// </summary>
+        public bool EnableConditionTraceLogging
+        {
+            get => _enableConditionTraceLogging;
+            set
+            {
+                _enableConditionTraceLogging = value;
+                _agenda.EnableConsoleTraceLogging = value;
+                _betaNodeRegistry.EnableConsoleTraceLogging = value;
+            }
+        }
+        private bool _enableConditionTraceLogging;
+        /// <summary>
         /// Captures the rollback boundary mode configured for this engine instance.
         /// </summary>
         private readonly RollbackBoundaryMode _rollbackBoundaryMode = RollbackBoundaryMode.PublishedFactChangesOnly;
@@ -1376,29 +1396,44 @@ namespace ReteEngine
                 foreach (var key in keysToRemove)
                 {
                     _alphaRegistry.Remove(key);
-                    Console.WriteLine($"[ReteEngine] Removed alpha memory for rule: {ruleName} (Type: {key.Type.Name})");
+                    if (EnableConditionTraceLogging)
+                    {
+                        Console.WriteLine($"[ReteEngine] Removed alpha memory for rule: {ruleName} (Type: {key.Type.Name})");
+                    }
                 }
             }
             if (_agenda.RemoveActivationsByRule(ruleName))
             {
-                Console.WriteLine($"[ReteEngine] Removed activations for rule: {ruleName}");
+                if (EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[ReteEngine] Removed activations for rule: {ruleName}");
+                }
             }
             else
             {
-                Console.WriteLine($"[ReteEngine] No activations found for rule: {ruleName}");
+                if (EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[ReteEngine] No activations found for rule: {ruleName}");
+                }
             }
 
             var terminalNode = _terminalNodes.FirstOrDefault(t => t.RuleMetadata.Name == ruleName);
             if (terminalNode != null)
             {
                 terminalNode.RemoveFromParentNode();
-                Console.WriteLine($"[ReteEngine] Removed terminal node for rule: {ruleName}");
+                if (EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[ReteEngine] Removed terminal node for rule: {ruleName}");
+                }
                 _terminalNodes.Remove(terminalNode);
                 PruneOrphanedNodes(terminalNode.Parent);
             }
             else
             {
-                Console.WriteLine($"[ReteEngine] No terminal node found for rule: {ruleName}");
+                if (EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[ReteEngine] No terminal node found for rule: {ruleName}");
+                }
             }
         }
 
