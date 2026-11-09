@@ -81,6 +81,21 @@ namespace ReteEngine
         /// </summary>
         private readonly Dictionary<(Type Type, string Name), object> _alphaRegistry = new();
         /// <summary>
+        /// Tracks the identity of the predicate that was used to create the primary AlphaMemory registered for each
+        /// (Type, Name) key in <see cref="_alphaRegistry"/>. Used to detect when a later call reuses the same alias
+        /// with a genuinely different, conflicting predicate.
+        /// </summary>
+        private readonly Dictionary<(Type Type, string Name), string> _alphaRegistryPredicateIdentity = new();
+        /// <summary>
+        /// Holds alternate AlphaMemory instances created when a (Type, Name) alias is reused with a predicate that
+        /// conflicts with the one originally registered for that alias. Keeping these distinct (rather than silently
+        /// reusing the original AlphaMemory, or silently discarding the new predicate) prevents two potential issues:
+        /// (1) a second condition on the same alias silently losing its own filter in favor of the first caller's,
+        /// and (2) a join reusing a predicate-filtered memory it was never meant to share, creating a self-referential
+        /// or otherwise incorrect network topology.
+        /// </summary>
+        private readonly Dictionary<(Type Type, string Name, string PredicateIdentity), object> _alphaRegistryVariants = new();
+        /// <summary>
         /// The beta node registry manages caching and sharing of beta memory nodes and join nodes
         /// across multiple rules. This enables significant memory savings when multiple rules share
         /// common prefixes in their condition chains.
@@ -272,8 +287,9 @@ namespace ReteEngine
         /// Initializes a new instance of the ReteEngine with optional beta-node sharing.
         /// </summary>
         /// <param name="enableBetaNodeSharing">If true (default), rules with identical prefixes share nodes.</param>
-        public ReteEngine(bool enableBetaNodeSharing = true)
-            : this(new ReteEngineOptions { EnableBetaNodeSharing = enableBetaNodeSharing })
+        /// <param name="enableConditionTraceLogging">If true, condition trace logging is enabled.</param>
+        public ReteEngine(bool enableBetaNodeSharing = true, bool enableConditionTraceLogging = false)
+            : this(new ReteEngineOptions { EnableBetaNodeSharing = enableBetaNodeSharing, EnableConditionTraceLogging = enableConditionTraceLogging })
         {
         }
 
@@ -285,6 +301,7 @@ namespace ReteEngine
         {
             ArgumentNullException.ThrowIfNull(options);
             _enableBetaNodeSharing = options.EnableBetaNodeSharing;
+            EnableConditionTraceLogging = options.EnableConditionTraceLogging;
             _autoRefreshOnPropertyChanged = options.AutoRefreshOnPropertyChanged;
             _rollbackBoundaryMode = options.RollbackBoundaryMode;
             _rollbackConflictPolicy = options.RollbackConflictPolicy;
@@ -1357,12 +1374,12 @@ namespace ReteEngine
                 _root.AddSuccessor(typeNode);
             }
 
-            // Use a combination of type and name as the key for the alpha registry.
-            // We want to reuse the same alpha memory for the same type and name,
-            // but allow different conditions to create separate alpha memories if needed.
             var registryKey = (type, name ?? "default");
+            string predicateIdentity = PatternSignatureBuilder.PredicateIdentity(initialCondition);
+
             if (!_alphaRegistry.ContainsKey(registryKey))
             {
+                // First time this (type, name) alias has been requested: register it as the primary.
                 AlphaConditionNode<T>? alphaConditionNode = null;
                 var alpha = new AlphaMemory();
                 if (initialCondition != null)
@@ -1372,8 +1389,38 @@ namespace ReteEngine
                 typeNode.AddSuccessor(alphaConditionNode != null ? alphaConditionNode : alpha);
 
                 _alphaRegistry[registryKey] = alpha;
+                _alphaRegistryPredicateIdentity[registryKey] = predicateIdentity;
+                return alpha;
             }
-            return (AlphaMemory)_alphaRegistry[registryKey];
+
+            string primaryPredicateIdentity = _alphaRegistryPredicateIdentity.TryGetValue(registryKey, out var pid) ? pid : "none";
+            bool isConflictingPredicate = initialCondition != null && predicateIdentity != primaryPredicateIdentity;
+
+            if (!isConflictingPredicate)
+            {
+                return (AlphaMemory)_alphaRegistry[registryKey];
+            }
+
+            // A different, non-null predicate was supplied for an alias that already has a primary registration.
+            // Create (or reuse) a distinct variant AlphaMemory for this specific predicate rather than colliding
+            // with the primary one.
+            var variantKey = (type, name ?? "default", predicateIdentity);
+            if (!_alphaRegistryVariants.TryGetValue(variantKey, out var variantAlphaObj))
+            {
+                var variantAlpha = new AlphaMemory();
+                var variantConditionNode = new AlphaConditionNode<T>(name ?? "", initialCondition!, variantAlpha);
+                typeNode.AddSuccessor(variantConditionNode);
+                _alphaRegistryVariants[variantKey] = variantAlpha;
+                variantAlphaObj = variantAlpha;
+
+                if (EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[ReteEngine] Note: alias '{name ?? "default"}' for type {type.Name} was reused with a " +
+                        "different predicate. A separate AlphaMemory was created to avoid silently sharing or " +
+                        "discarding either condition. Consider using distinct aliases for distinct conditions.");
+                }
+            }
+            return (AlphaMemory)variantAlphaObj;
         }
 
         /// <summary>
@@ -1390,9 +1437,14 @@ namespace ReteEngine
             {
                 return;
             }
-            if (_alphaRegistry.Keys.Any(k => k.Name == ruleName))
+            // The registry key's Name field now has the form "{alias}:{predicateIdentity}", so match on the
+            // alias portion (everything before the last ':') rather than requiring an exact match.
+            bool MatchesAlias((Type Type, string Name) k) =>
+                k.Name == ruleName || k.Name.StartsWith($"{ruleName}:", StringComparison.Ordinal);
+
+            if (_alphaRegistry.Keys.Any(MatchesAlias))
             {
-                var keysToRemove = _alphaRegistry.Keys.Where(k => k.Name == ruleName).ToList();
+                var keysToRemove = _alphaRegistry.Keys.Where(MatchesAlias).ToList();
                 foreach (var key in keysToRemove)
                 {
                     _alphaRegistry.Remove(key);

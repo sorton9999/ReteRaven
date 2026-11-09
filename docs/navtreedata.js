@@ -28,28 +28,31 @@ var NAVTREE =
     [ "Project Documentation", "index.html", "index" ],
     [ "README", "md__r_e_a_d_m_e.html", null ],
     [ "ReteRaven Release Notes", "md__r_e_l_e_a_s_e___n_o_t_e_s.html", [
-      [ "v1.5 (Nov 1, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md41", [
-        [ "Publish-Resume and Agenda Groups", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md42", null ]
+      [ "v1.5.1 (Nov 7, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md41", [
+        [ "Rollback mechanism", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md42", null ]
       ] ],
-      [ "v1.4.1 (Oct 30, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md43", [
-        [ "Update-in-place and fact refresh improvements", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md44", null ]
+      [ "v1.5 (Nov 1, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md43", [
+        [ "Publish-Resume and Agenda Groups", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md44", null ]
       ] ],
-      [ "v1.4 (Sept 12, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md45", [
-        [ "Beta-node sharing", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md46", null ]
+      [ "v1.4.1 (Oct 30, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md45", [
+        [ "Update-in-place and fact refresh improvements", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md46", null ]
       ] ],
-      [ "v1.3.1 (Sept 5, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md47", [
-        [ "Fact grouping", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md48", null ]
+      [ "v1.4 (Sept 12, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md47", [
+        [ "Beta-node sharing", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md48", null ]
       ] ],
-      [ "v1.3 (May 22, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md49", [
-        [ "Aggregation and rule-builder improvements", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md50", null ]
+      [ "v1.3.1 (Sept 5, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md49", [
+        [ "Fact grouping", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md50", null ]
       ] ],
-      [ "v1.2 (May 15, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md51", [
-        [ "Rule and fact management", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md52", null ]
+      [ "v1.3 (May 22, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md51", [
+        [ "Aggregation and rule-builder improvements", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md52", null ]
       ] ],
-      [ "v1.1 (May 3, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md53", [
-        [ "Conditions, priorities, and rule metadata", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md54", null ]
+      [ "v1.2 (May 15, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md53", [
+        [ "Rule and fact management", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md54", null ]
       ] ],
-      [ "Earlier development (Mar 29–Apr 15, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md55", null ]
+      [ "v1.1 (May 3, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md55", [
+        [ "Conditions, priorities, and rule metadata", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md56", null ]
+      ] ],
+      [ "Earlier development (Mar 29–Apr 15, 2026)", "md__r_e_l_e_a_s_e___n_o_t_e_s.html#autotoc_md57", null ]
     ] ],
     [ "Packages", "namespaces.html", [
       [ "Package List", "namespaces.html", "namespaces_dup" ],
@@ -74,12 +77,7 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", "globals_dup" ],
-        [ "Functions", "globals_func.html", null ],
-        [ "Variables", "globals_vars.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];
@@ -87,13 +85,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_activation_8cs.html",
-"_program_8cs.html#ad9b37262062075c0bc4f634be902edf7",
-"class_rete_core_1_1_alpha_condition_node-1-g.html#a8b6562296bf9be4008a52dac778e7e79",
-"class_rete_core_1_1_join_node.html#aa1dec06c20b9592255ad18b1905bff60",
-"class_rete_engine_1_1_fluent_converter-1-g.html#ae5bffa3882077d91fbc28c2653cf809b",
-"class_rete_program_1_1_risk_factor.html",
-"class_rete_tests_1_1_beta_node_sharing_tests.html#a8f1ef032a443e53521d0c72412e18f1f",
-"interface_rete_engine_1_1_i_rule_setup.html#a3aa2b6cd3a9b41087bdd4e7fa6ead958"
+"class_rete_core_1_1_alpha_condition_node-1-g.html#ada8108189231224500c9371683fdc068",
+"class_rete_core_1_1_late_filter.html#a81ecae6e5d30f8ab9777c902800436fe",
+"class_rete_engine_1_1_group_builder-2-g.html#a956c097827cef5246f52c799b4fc7ead",
+"class_rete_engine_1_1_rule_fired_event_args.html#a82ea2ea1dc0a8c38ffe6d1da9ed269c6",
+"namespace_rete_engine.html#a0a9a5f1c5eaff8f517dfc3a78d48dee6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

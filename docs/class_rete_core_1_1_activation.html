@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -115,8 +115,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adf0113ef8e30d7df0c410c6dcfaab1cb" id="r_adf0113ef8e30d7df0c410c6dcfaab1cb"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#adf0113ef8e30d7df0c410c6dcfaab1cb">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt; action, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int priority, int salience, string agendaGroupName=<a class="el" href="class_rete_core_1_1_agenda.html#a039cf30d5e212f84cd99abfb62c727c4">Agenda.MainAgendaGroup</a>)</td></tr>
 <tr class="memdesc:adf0113ef8e30d7df0c410c6dcfaab1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> instance with the specified rule name, action, token match, and salience. This constructor initializes the properties of the activation, allowing it to be added to an agenda for later execution when the conditions of the associated rule are satisfied. The rule name is used for identification and debugging purposes, while the action defines what will be executed when the activation fires. The token match contains the facts that triggered the activation, and the salience determines the priority of this activation relative to others in the agenda.  <br /></td></tr>
-<tr class="memitem:a4655f3670b43c65ecd9ce42c2a5659ac" id="r_a4655f3670b43c65ecd9ce42c2a5659ac"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4655f3670b43c65ecd9ce42c2a5659ac">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt; action, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt; publishChanges, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int priority, int salience, string agendaGroupName=<a class="el" href="class_rete_core_1_1_agenda.html#a039cf30d5e212f84cd99abfb62c727c4">Agenda.MainAgendaGroup</a>)</td></tr>
-<tr class="memdesc:a4655f3670b43c65ecd9ce42c2a5659ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alternate constructor for creating an <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> instance that includes a context-aware action and a publish changes action.  <br /></td></tr>
+<tr class="memitem:a610c7a08d786a813bbdb03689bfa7447" id="r_a610c7a08d786a813bbdb03689bfa7447"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a610c7a08d786a813bbdb03689bfa7447">Activation</a> (string name, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; <a class="el" href="class_rete_core_1_1_rule_execution_context.html">RuleExecutionContext</a> &gt; action, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt; publishChanges, <a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a> &gt; &gt;? publishSideEffects, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, int priority, int salience, string agendaGroupName=<a class="el" href="class_rete_core_1_1_agenda.html#a039cf30d5e212f84cd99abfb62c727c4">Agenda.MainAgendaGroup</a>)</td></tr>
+<tr class="memdesc:a610c7a08d786a813bbdb03689bfa7447"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alternate constructor for creating an <a class="el" href="class_rete_core_1_1_activation.html" title="The Activation class represents a pending rule activation in a Rete-based rule engine....">Activation</a> instance that includes a context-aware action and a publish changes action.  <br /></td></tr>
 <tr class="memitem:ad9e022585999eff1c5819acdc5ba7fc4" id="r_ad9e022585999eff1c5819acdc5ba7fc4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad9e022585999eff1c5819acdc5ba7fc4">Fire</a> ()</td></tr>
 <tr class="memdesc:ad9e022585999eff1c5819acdc5ba7fc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires the activation by executing its associated action. If a context-aware action is defined, it creates a <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a> and invokes the context action. After execution, it completes the context and publishes any fact changes if applicable. If no context action is defined, it simply invokes the standard action with the triggering token. This method encapsulates the logic for executing the rule's behavior when its conditions are met.  <br /></td></tr>
 <tr class="memitem:a0183c8594fcb6fe388e341b31bdd4a8f" id="r_a0183c8594fcb6fe388e341b31bdd4a8f"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a0183c8594fcb6fe388e341b31bdd4a8f">CompareTo</a> (<a class="el" href="#adf0113ef8e30d7df0c410c6dcfaab1cb">Activation</a>? other)</td></tr>
@@ -136,6 +136,8 @@ Properties</h2></td></tr>
 <tr class="memdesc:a69600821495cf53fd55b2e0009367f00"><td class="mdescLeft">&#160;</td><td class="mdescRight">The action delegate that defines the operation to be performed when this activation is fired. The action takes a <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a> as a parameter, which contains the facts that triggered the activation and provides additional context for executing the rule's action. When the Fire method is called, this action will be executed with the associated context, allowing it to perform the necessary operations defined by the rule, such as modifying facts, asserting new facts, or interacting with external systems based on the matched conditions.  <br /></td></tr>
 <tr class="memitem:af654598d13c3bd1772b025308f96a222" id="r_af654598d13c3bd1772b025308f96a222"><td class="memItemLeft"><a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#af654598d13c3bd1772b025308f96a222">PublishChanges</a><code> [get]</code></td></tr>
 <tr class="memdesc:af654598d13c3bd1772b025308f96a222"><td class="mdescLeft">&#160;</td><td class="mdescRight">The action delegate that defines the operation to be performed when this activation is fired. The action takes a IReadOnlyList&lt;FactChange&gt; as a parameter, which contains the fact changes that were published by the rule execution. When the Fire method is called, this action will be executed with the associated fact changes, allowing it to perform the necessary operations defined by the rule, such as updating external systems or triggering additional rules based on the changes.  <br /></td></tr>
+<tr class="memitem:afe82ccecf5c757e86ecbd1e3df43c5d0" id="r_afe82ccecf5c757e86ecbd1e3df43c5d0"><td class="memItemLeft"><a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#afe82ccecf5c757e86ecbd1e3df43c5d0">PublishSideEffects</a><code> [get]</code></td></tr>
+<tr class="memdesc:afe82ccecf5c757e86ecbd1e3df43c5d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The action delegate that receives side-effect metadata observed during context-action execution.  <br /></td></tr>
 <tr class="memitem:a4f42bc2178c6cd1084d9294f4ec343d7" id="r_a4f42bc2178c6cd1084d9294f4ec343d7"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_token.html">Token</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4f42bc2178c6cd1084d9294f4ec343d7">Match</a><code> [get]</code></td></tr>
 <tr class="memdesc:a4f42bc2178c6cd1084d9294f4ec343d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The token that triggered this activation. This token contains the facts that matched the conditions of the rule associated with this activation. When the activation is fired, this token will be passed to the action delegate, allowing it to access the relevant facts and perform the necessary operations defined by the rule. The token serves as a context for the activation, providing the information needed to execute the rule's action effectively.  <br /></td></tr>
 <tr class="memitem:a7c77105e84382c33dd56416856099c6b" id="r_a7c77105e84382c33dd56416856099c6b"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a7c77105e84382c33dd56416856099c6b">Salience</a><code> [get]</code></td></tr>
@@ -224,8 +226,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a4655f3670b43c65ecd9ce42c2a5659ac" name="a4655f3670b43c65ecd9ce42c2a5659ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4655f3670b43c65ecd9ce42c2a5659ac">&#9670;&#160;</a></span>Activation() <span class="overload">[2/2]</span></h2>
+<a id="a610c7a08d786a813bbdb03689bfa7447" name="a610c7a08d786a813bbdb03689bfa7447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a610c7a08d786a813bbdb03689bfa7447">&#9670;&#160;</a></span>Activation() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,6 +246,11 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>publishChanges</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a> &gt; &gt;?</td>          <td class="paramname"><span class="paramname"><em>publishSideEffects</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -274,6 +281,7 @@ Properties</h2></td></tr>
     <tr><td class="paramname">name</td><td>The name of the activation. Usually the rule name.</td></tr>
     <tr><td class="paramname">action</td><td>The context-aware action that executes when this activation fires.</td></tr>
     <tr><td class="paramname">publishChanges</td><td>The action that publishes the fact changes produced by the context-aware action.</td></tr>
+    <tr><td class="paramname">publishSideEffects</td><td>The action that publishes side-effect metadata produced by the context-aware action.</td></tr>
     <tr><td class="paramname">match</td><td>The triggering <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> containing the fact on which to act upon.</td></tr>
     <tr><td class="paramname">priority</td><td>A priority value relative to other activations.</td></tr>
     <tr><td class="paramname">salience</td><td>A priority value relative to other activations.</td></tr>
@@ -495,6 +503,30 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The action delegate that defines the operation to be performed when this activation is fired. The action takes a IReadOnlyList&lt;FactChange&gt; as a parameter, which contains the fact changes that were published by the rule execution. When the Fire method is called, this action will be executed with the associated fact changes, allowing it to perform the necessary operations defined by the rule, such as updating external systems or triggering additional rules based on the changes. </p>
+
+</div>
+</div>
+<a id="afe82ccecf5c757e86ecbd1e3df43c5d0" name="afe82ccecf5c757e86ecbd1e3df43c5d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe82ccecf5c757e86ecbd1e3df43c5d0">&#9670;&#160;</a></span>PublishSideEffects</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a>&lt;IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a>&gt; &gt;? ReteCore.Activation.PublishSideEffects</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The action delegate that receives side-effect metadata observed during context-action execution. </p>
 
 </div>
 </div>

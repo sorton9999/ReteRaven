@@ -29,7 +29,7 @@ This project is open-source and distributed under the LGPL license.
 * = Grouping and Aggregation: Group matched facts and calculate common aggregates such as `Sum`, `Count`, and `Average`.
 * = Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.
 * = Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.
-* = Rule Prioritization: Control firing order with rule priority and activation salience.
+* = Rollback Mechanism: A Drools-like agenda control + Rete/CLIPS-style inference + WAL/event-sourced rollback semantics.
 * = Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.
 
 ------------------------------

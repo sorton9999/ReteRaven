@@ -41,7 +41,8 @@ var namespace_rete_core =
       [ "Update", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36a06933067aafd48425d67bcb01bba5cb6", null ],
       [ "Retract", "namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19", null ]
     ] ],
-    [ "AgendaGroupActivityRecord", "namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd", null ],
+    [ "AgendaGroupActivityRecord", "namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689", null ],
     [ "AgendaGroupRuntimeStatistics", "namespace_rete_core.html#a9e9ccf917e2b767f0bf18319af3314c7", null ],
+    [ "RuleSideEffect", "namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422", null ],
     [ "FactChangeOrigin", "namespace_rete_core.html#a74a110b5079c75e52cb453d36a673a63", null ]
 ];

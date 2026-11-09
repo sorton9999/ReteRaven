@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -98,7 +98,7 @@ $(function(){initNavTree('class_rete_core_1_1_activation.html','',''); });
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a26bc7c07c0c8f91170cc7d4a6f0b9c04">Action</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#adf0113ef8e30d7df0c410c6dcfaab1cb">Activation</a>(string name, Action&lt; Token &gt; action, Token match, int priority, int salience, string agendaGroupName=Agenda.MainAgendaGroup)</td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a4655f3670b43c65ecd9ce42c2a5659ac">Activation</a>(string name, Action&lt; RuleExecutionContext &gt; action, Action&lt; IReadOnlyList&lt; FactChange &gt; &gt; publishChanges, Token match, int priority, int salience, string agendaGroupName=Agenda.MainAgendaGroup)</td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a610c7a08d786a813bbdb03689bfa7447">Activation</a>(string name, Action&lt; RuleExecutionContext &gt; action, Action&lt; IReadOnlyList&lt; FactChange &gt; &gt; publishChanges, Action&lt; IReadOnlyList&lt; RuleSideEffect &gt; &gt;? publishSideEffects, Token match, int priority, int salience, string agendaGroupName=Agenda.MainAgendaGroup)</td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a75ef464d0394c5ac1ccd94cff658a856">ActivationStateEnum</a> enum name</td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#ac22a1bc465593bfb2a49019cd9285d00">AgendaGroupName</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a0183c8594fcb6fe388e341b31bdd4a8f">CompareTo</a>(Activation? other)</td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
@@ -108,10 +108,11 @@ $(function(){initNavTree('class_rete_core_1_1_activation.html','',''); });
   <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a4f42bc2178c6cd1084d9294f4ec343d7">Match</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a418e5c9c997a02b8be4eaad87acd0ad1">Priority</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#af654598d13c3bd1772b025308f96a222">PublishChanges</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a493fc7b647c43420fdd9fd8299180bf9">RuleName</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a7c77105e84382c33dd56416856099c6b">Salience</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#acf18e604c4aced28b4f1aa40675e7114">State</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#ae094a2ed15c188bbe01d12d0b7449497">Timestamp</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#afe82ccecf5c757e86ecbd1e3df43c5d0">PublishSideEffects</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a493fc7b647c43420fdd9fd8299180bf9">RuleName</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#a7c77105e84382c33dd56416856099c6b">Salience</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#acf18e604c4aced28b4f1aa40675e7114">State</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html#ae094a2ed15c188bbe01d12d0b7449497">Timestamp</a></td><td class="entry"><a class="el" href="class_rete_core_1_1_activation.html">ReteCore.Activation</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
