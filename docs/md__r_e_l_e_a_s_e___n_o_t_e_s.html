@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -96,17 +96,24 @@ $(function(){initNavTree('md__r_e_l_e_a_s_e___n_o_t_e_s.html','',''); });
 <div class="textblock"><p><a class="anchor" id="autotoc_md40"></a></p>
 <p>This file summarizes notable features and improvements.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
-v1.5 (Nov 1, 2026)</h1>
+v1.5.1 (Nov 7, 2026)</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+Rollback mechanism</h2>
+<ul>
+<li>A Drools-like agenda control + Rete/CLIPS-style inference + WAL/event-sourced rollback semantics.</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+v1.5 (Nov 1, 2026)</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 Publish-Resume and Agenda Groups</h2>
 <ul>
 <li>Added a Publish-Resume fact change mechanism that allows for rule dependencies</li>
 <li>Added Agenda Groups that allows for rule organization and gating</li>
 <li>Added more diagnostics and statistics generation and logging</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
 v1.4.1 (Oct 30, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
 Update-in-place and fact refresh improvements</h2>
 <ul>
 <li>Added update-in-place behavior for facts already in working memory.</li>
@@ -116,44 +123,44 @@ Update-in-place and fact refresh improvements</h2>
 <li>Rebuilt indexed <span class="tt">Exists</span> indexes during refresh to avoid stale keys.</li>
 <li>Added property-change handler tracking, with handlers detached when facts are retracted or the engine is disposed.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
 v1.4 (Sept 12, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
 Beta-node sharing</h2>
 <ul>
 <li>Added caching and reuse of compatible beta-memory nodes across rules.</li>
 <li>Extended node sharing to rules using <span class="tt">Or</span>, <span class="tt">Not</span>, and <span class="tt">AndNot</span> operators.</li>
 <li>Added tests and documentation for shared-node behavior.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
 v1.3.1 (Sept 5, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
 Fact grouping</h2>
 <ul>
-<li>Added support for grouping facts and performing <span class="tt">Sum</span>, <span class="tt"><a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a></span>, and <span class="tt">Average</span> operations.</li>
+<li>Added support for grouping facts and performing <span class="tt">Sum</span>, <span class="tt">Count</span>, and <span class="tt">Average</span> operations.</li>
 <li>Added grouping support to the fluent rule builder.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
 v1.3 (May 22, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
 Aggregation and rule-builder improvements</h2>
 <ul>
 <li>Added the <span class="tt">.From</span> and <span class="tt">.All</span> aggregation clauses.</li>
 <li>Introduced a fluent rule-definition state machine to guide rule authoring and improve editor completion.</li>
 <li>Updated builder methods to use caller argument expressions for cleaner rule definitions.</li>
-<li>Made <span class="tt"><a class="el" href="_program_8cs.html#ab30f11f3601e57efea39e9e4e1814beb">Assert</a></span>, <span class="tt"><a class="el" href="_program_8cs.html#a4895540481f9186ea8b6d15c6fd611b5">Update</a></span>, and <span class="tt"><a class="el" href="_program_8cs.html#ac88db23de5e13ee2495d9a455052fbf8">FireAll</a></span> chainable and added single-fact and batch processing support.</li>
+<li>Made <span class="tt">Assert</span>, <span class="tt">Update</span>, and <span class="tt">FireAll</span> chainable and added single-fact and batch processing support.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
 v1.2 (May 15, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
 Rule and fact management</h2>
 <ul>
 <li>Added the ability to remove a rule along with its connected nodes.</li>
 <li>Expanded <span class="tt">Cell</span> to accept arbitrary values and provide a unique ID.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
 v1.1 (May 3, 2026)</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
 Conditions, priorities, and rule metadata</h2>
 <ul>
 <li>Added global <span class="tt">If</span> conditions and typed <span class="tt">If&lt;T&gt;</span> conditions.</li>
@@ -161,7 +168,7 @@ Conditions, priorities, and rule metadata</h2>
 <li>Added <span class="tt">RuleMetadata</span> and an incrementing rule index.</li>
 <li>Added the <span class="tt">Fact</span> class in preparation for evolving the fact model.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 Earlier development (Mar 29–Apr 15, 2026)</h1>
 <ul>
 <li>Added the <span class="tt">Or</span> rule-builder operation and activation refraction to prevent repeated firing of the same match.</li>

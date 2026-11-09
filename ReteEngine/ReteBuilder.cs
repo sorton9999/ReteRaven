@@ -124,10 +124,12 @@ namespace ReteEngine
                 Console.WriteLine($"===> Start {name}");
             }
             var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
-            
-            // Generate a signature for this Where pattern
-            string patternSignature = $"Where<{typeof(T).FullName}>({name})";
-            //string patternSignature = PatternSignatureBuilder.WhereSignature(name, initialCondition);
+
+            // Generate a signature for this Where pattern. The signature incorporates the predicate's
+            // identity so that two Where<T> calls sharing the same alias but with different predicates
+            // (or one with a predicate and one without) are treated as distinct patterns instead of
+            // silently sharing the same cached BetaMemory/AlphaMemory branch.
+            string patternSignature = PatternSignatureBuilder.WhereSignature(name, initialCondition);
 
             // This is where BetaMemory Nodes can be reused.  A cache is searched in the Beta Registry for candidate
             // BetaMemory objects to reuse.  If one is not found, a new one is created and registered.

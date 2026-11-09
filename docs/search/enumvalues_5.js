@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['retract_0',['Retract',['../namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36a0dfc45bc99de47ebc26a3a7752eb1e19',1,'ReteCore']]]
+  ['none_0',['None',['../namespace_rete_engine.html#ae1588fd3fcc3077666180812bd7c5533a6adf97f83acf6453d4a6a4b1070f3754',1,'ReteEngine']]],
+  ['nonrollbackable_1',['NonRollbackable',['../namespace_rete_engine.html#a1aa56962ccf5c73a7184815564b2ee0fa2a6c9aa665f427f89acae6b3d3e8b7ff',1,'ReteEngine']]]
 ];

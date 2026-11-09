@@ -414,16 +414,20 @@ namespace ReteTests
             int rule1Fires = 0;
             int rule2Fires = 0;
 
-            // Define two distinct rules that share the exact same structural .Or predicate array array footprint
+            // Define two distinct rules that share the exact same structural .Or predicate array array footprint.
+            // Note: predicate-aware caching keys alpha/beta sharing on delegate identity, so the SAME delegate
+            // instance must be reused across both rules for them to share the underlying Where<Product> node.
+            Func<Product, bool> sharedProductFilter = p => p.Category == "Electronics";
+
             engine.Begin("Rule_Or_First")
-                .Where<Product>("P", p => p.Category == "Electronics")
+                .Where<Product>("P", sharedProductFilter)
                 .Or<CriticalCell>("Fact", null,
                     (t, c) => c.Value as int? > 500,
                     (t, c) => c.Value as int? < 200)
                 .Then(t => rule1Fires++);
 
             engine.Begin("Rule_Or_Second")
-                .Where<Product>("P", p => p.Category == "Electronics")
+                .Where<Product>("P", sharedProductFilter)
                 .Or<CriticalCell>("Fact", null,
                     (t, c) => c.Value as int? > 500,
                     (t, c) => c.Value as int? < 200)
@@ -463,15 +467,16 @@ namespace ReteTests
             int rule2Fires = 0;
 
             Func<Token, Inventory, bool> sharedFilter = (t, inv) => inv.Quantity == 0;
+            Func<Product, bool> sharedProductFilter = p => p.Category == "Electronics";
 
             // Both rules use the exact same negated filter context block
             engine.Begin("Rule_AndNot_A")
-                .Where<Product>("P", p => p.Category == "Electronics")
+                .Where<Product>("P", sharedProductFilter)
                 .AndNot<Inventory>("I", sharedFilter)
                 .Then(t => rule1Fires++);
 
             engine.Begin("Rule_AndNot_B")
-                .Where<Product>("P", p => p.Category == "Electronics")
+                .Where<Product>("P", sharedProductFilter)
                 .AndNot<Inventory>("I", sharedFilter)
                 .Then(t => rule2Fires++);
 

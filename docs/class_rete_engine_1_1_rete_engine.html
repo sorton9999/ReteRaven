@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -110,12 +110,12 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a351ae746ce26d8a80f4dae9050e2bd05" id="r_a351ae746ce26d8a80f4dae9050e2bd05"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a351ae746ce26d8a80f4dae9050e2bd05">DefineAgendaGroup</a> (string groupName)</td></tr>
-<tr class="memdesc:a351ae746ce26d8a80f4dae9050e2bd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an agenda group for later use by rules and firing operations. <span class="tt">MAIN</span> is registered by default.  <br /></td></tr>
-<tr class="memitem:ae5409911fa9f5358387df71c035dc572" id="r_ae5409911fa9f5358387df71c035dc572"><td class="memItemLeft">IDisposable&#160;</td><td class="memItemRight"><a class="el" href="#ae5409911fa9f5358387df71c035dc572">RegisterWaitForHook</a> (string groupName, Func&lt; bool &gt; canResume)</td></tr>
-<tr class="memdesc:ae5409911fa9f5358387df71c035dc572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a readiness hook for a defined agenda group. Returning false pauses that group's firing until the hook allows it to resume.  <br /></td></tr>
-<tr class="memitem:a682b8f2685319297e08f50e234930aee" id="r_a682b8f2685319297e08f50e234930aee"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> (bool enableBetaNodeSharing=true)</td></tr>
-<tr class="memdesc:a682b8f2685319297e08f50e234930aee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> with optional beta-node sharing.  <br /></td></tr>
+<tr class="memitem:a82b64ee3a9878ec211bd651efaa4e603" id="r_a82b64ee3a9878ec211bd651efaa4e603"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a82b64ee3a9878ec211bd651efaa4e603">DefineAgendaGroup</a> (String groupName)</td></tr>
+<tr class="memdesc:a82b64ee3a9878ec211bd651efaa4e603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an agenda group for later use by rules and firing operations. <span class="tt">MAIN</span> is registered by default.  <br /></td></tr>
+<tr class="memitem:ae1d460287885e30b29b9e04ab60d1fa2" id="r_ae1d460287885e30b29b9e04ab60d1fa2"><td class="memItemLeft">IDisposable&#160;</td><td class="memItemRight"><a class="el" href="#ae1d460287885e30b29b9e04ab60d1fa2">RegisterWaitForHook</a> (String groupName, Func&lt; bool &gt; canResume)</td></tr>
+<tr class="memdesc:ae1d460287885e30b29b9e04ab60d1fa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a readiness hook for a defined agenda group. Returning false pauses that group's firing until the hook allows it to resume.  <br /></td></tr>
+<tr class="memitem:ab5c16fff242284a2bbb56342841c0624" id="r_ab5c16fff242284a2bbb56342841c0624"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> (bool enableBetaNodeSharing=true, bool enableConditionTraceLogging=false)</td></tr>
+<tr class="memdesc:ab5c16fff242284a2bbb56342841c0624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> with optional beta-node sharing.  <br /></td></tr>
 <tr class="memitem:a77485793bf0a4e76f6dfe728ce3e663a" id="r_a77485793bf0a4e76f6dfe728ce3e663a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a77485793bf0a4e76f6dfe728ce3e663a">ReteEngine</a> (<a class="el" href="class_rete_engine_1_1_rete_engine_options.html">ReteEngineOptions</a> options)</td></tr>
 <tr class="memdesc:a77485793bf0a4e76f6dfe728ce3e663a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> with the specified options.  <br /></td></tr>
 <tr class="memitem:aae40d15e26860f290a3bc91424611638" id="r_aae40d15e26860f290a3bc91424611638"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#aae40d15e26860f290a3bc91424611638">GetBetaNodeRegistryStatistics</a> ()</td></tr>
@@ -130,24 +130,28 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a012e8d0f5fa25d40b09326ec5c55cf50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the beta-node cache (useful for testing or resetting engine state).  <br /></td></tr>
 <tr class="memitem:ad9fbfeeb72021b42a55fa0cb0f4bf86b" id="r_ad9fbfeeb72021b42a55fa0cb0f4bf86b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad9fbfeeb72021b42a55fa0cb0f4bf86b">AddTerminalNode</a> (<a class="el" href="class_rete_core_1_1_terminal_node.html">TerminalNode</a> node)</td></tr>
 <tr class="memdesc:ad9fbfeeb72021b42a55fa0cb0f4bf86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a terminal node to the Rete network. Terminal nodes represent the conditions of rules and are responsible for creating activations when their conditions are met. When a terminal node is added, it is stored in the list of terminal nodes for management purposes.  <br /></td></tr>
-<tr class="memitem:aead9887e398fbe7688948aafe4ab6f9a" id="r_aead9887e398fbe7688948aafe4ab6f9a"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#aead9887e398fbe7688948aafe4ab6f9a">Assert</a> (params object[] facts)</td></tr>
+<tr class="memitem:aead9887e398fbe7688948aafe4ab6f9a" id="r_aead9887e398fbe7688948aafe4ab6f9a"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#aead9887e398fbe7688948aafe4ab6f9a">Assert</a> (params object[] facts)</td></tr>
 <tr class="memdesc:aead9887e398fbe7688948aafe4ab6f9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The public fact insertion method that introduces facts as a batch Assert. The private working Assert method is called for each fact in the array.  <br /></td></tr>
 <tr class="memitem:a18758b98c310f4445f0faeef7beb449e" id="r_a18758b98c310f4445f0faeef7beb449e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a18758b98c310f4445f0faeef7beb449e">Refresh</a> (object fact, string propertyName=null)</td></tr>
 <tr class="memdesc:a18758b98c310f4445f0faeef7beb449e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes a fact in the Rete network, which may trigger re-evaluation of the fact and its propagation to successor nodes if necessary. This method is typically called when a property of a fact changes, and it allows the Rete network to update its state based on the new information. The Refresh method is crucial for ensuring that the Rete network remains accurate and responsive to changes in facts over time.  <br /></td></tr>
-<tr class="memitem:a4030fe3317a95ff23f4b45059a8419e4" id="r_a4030fe3317a95ff23f4b45059a8419e4"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4030fe3317a95ff23f4b45059a8419e4">Retract</a> (params object[] facts)</td></tr>
+<tr class="memitem:a4030fe3317a95ff23f4b45059a8419e4" id="r_a4030fe3317a95ff23f4b45059a8419e4"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4030fe3317a95ff23f4b45059a8419e4">Retract</a> (params object[] facts)</td></tr>
 <tr class="memdesc:a4030fe3317a95ff23f4b45059a8419e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The public fact retraction method that removes facts as a batch Retract. The private working Retract method is called for each fact in the array.  <br /></td></tr>
 <tr class="memitem:aafd6b6a771c0322f90f26adb42c4f73c" id="r_aafd6b6a771c0322f90f26adb42c4f73c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aafd6b6a771c0322f90f26adb42c4f73c">Dispose</a> ()</td></tr>
 <tr class="memdesc:aafd6b6a771c0322f90f26adb42c4f73c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detaches all retained property-change handlers; repeated disposal is harmless.  <br /></td></tr>
-<tr class="memitem:aa629ff925f0d4e68241ff96751c96e44" id="r_aa629ff925f0d4e68241ff96751c96e44"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa629ff925f0d4e68241ff96751c96e44">FireAll</a> ()</td></tr>
-<tr class="memdesc:aa629ff925f0d4e68241ff96751c96e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired.  <br /></td></tr>
-<tr class="memitem:a3484ead0362106516fa800464f07c033" id="r_a3484ead0362106516fa800464f07c033"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3484ead0362106516fa800464f07c033">FocusAgendaGroup</a> (string groupName)</td></tr>
+<tr class="memitem:aa629ff925f0d4e68241ff96751c96e44" id="r_aa629ff925f0d4e68241ff96751c96e44"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa629ff925f0d4e68241ff96751c96e44">FireAll</a> ()</td></tr>
+<tr class="memdesc:aa629ff925f0d4e68241ff96751c96e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the working memory to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired.  <br /></td></tr>
+<tr class="memitem:a3484ead0362106516fa800464f07c033" id="r_a3484ead0362106516fa800464f07c033"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3484ead0362106516fa800464f07c033">FocusAgendaGroup</a> (string groupName)</td></tr>
 <tr class="memdesc:a3484ead0362106516fa800464f07c033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Places an agenda group on top of the focus stack so it fires before previously focused groups.  <br /></td></tr>
-<tr class="memitem:afc403bc4fa326104b3dcdf34bffb91ee" id="r_afc403bc4fa326104b3dcdf34bffb91ee"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#afc403bc4fa326104b3dcdf34bffb91ee">FireGroup</a> (string groupName)</td></tr>
+<tr class="memitem:afc403bc4fa326104b3dcdf34bffb91ee" id="r_afc403bc4fa326104b3dcdf34bffb91ee"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#afc403bc4fa326104b3dcdf34bffb91ee">FireGroup</a> (string groupName)</td></tr>
 <tr class="memdesc:afc403bc4fa326104b3dcdf34bffb91ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires pending activations from only the specified agenda group, leaving other groups pending.  <br /></td></tr>
-<tr class="memitem:ad9f97a8fe72e959fdf9de889dc9eaa88" id="r_ad9f97a8fe72e959fdf9de889dc9eaa88"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad9f97a8fe72e959fdf9de889dc9eaa88">Update</a> (params object[] facts)</td></tr>
+<tr class="memitem:ad9f97a8fe72e959fdf9de889dc9eaa88" id="r_ad9f97a8fe72e959fdf9de889dc9eaa88"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad9f97a8fe72e959fdf9de889dc9eaa88">Update</a> (params object[] facts)</td></tr>
 <tr class="memdesc:ad9f97a8fe72e959fdf9de889dc9eaa88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates each fact independently and returns this engine for fluent chaining. A still-valid match may fire again once for a new fact revision; updates coalesce while its activation is pending.  <br /></td></tr>
-<tr class="memitem:ab0731188389c8c8348593c6283e306ce" id="r_ab0731188389c8c8348593c6283e306ce"><td class="memItemLeft"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab0731188389c8c8348593c6283e306ce">Update</a> (object fact, string? propertyName)</td></tr>
+<tr class="memitem:ab0731188389c8c8348593c6283e306ce" id="r_ab0731188389c8c8348593c6283e306ce"><td class="memItemLeft"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab0731188389c8c8348593c6283e306ce">Update</a> (object fact, string? propertyName)</td></tr>
 <tr class="memdesc:ab0731188389c8c8348593c6283e306ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates one fact, optionally providing the changed property name for dependency-aware reevaluation. A still-valid match may fire again once for this new revision; repeated updates while pending keep one activation.  <br /></td></tr>
+<tr class="memitem:a54c65c00ea19bf30d1d222e5f86713a3" id="r_a54c65c00ea19bf30d1d222e5f86713a3"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a54c65c00ea19bf30d1d222e5f86713a3">RollbackLastPublishedBatch</a> ()</td></tr>
+<tr class="memdesc:a54c65c00ea19bf30d1d222e5f86713a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rolls back the most recently committed and not-yet-rolled-back published batch.  <br /></td></tr>
+<tr class="memitem:a89aedd11c7941111eb6c93d535b0b858" id="r_a89aedd11c7941111eb6c93d535b0b858"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a89aedd11c7941111eb6c93d535b0b858">RollbackPublishedBatch</a> (long sequence)</td></tr>
+<tr class="memdesc:a89aedd11c7941111eb6c93d535b0b858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rolls back a committed published batch by sequence. Only strict reverse commit order is supported.  <br /></td></tr>
 <tr class="memitem:a3da4465240987a9a97e63f84cd5cdcac" id="r_a3da4465240987a9a97e63f84cd5cdcac"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3da4465240987a9a97e63f84cd5cdcac">Begin</a> (string ruleName)</td></tr>
 <tr class="memdesc:a3da4465240987a9a97e63f84cd5cdcac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the definition of a new rule in the Rete engine. This method initializes a new ReteBuilder instance for the specified rule name, allowing users to define the conditions and actions of the rule using a fluent interface. The ReteBuilder provides methods for specifying the conditions of the rule, as well as the actions to be executed when the rule is triggered. By calling the Begin method, users can start building a new rule and ultimately add it to the Rete network, where it will be evaluated against asserted facts and can trigger activations based on its conditions. The rule name provided to the Begin method is used for identification and management purposes, allowing users to easily reference and potentially remove the rule from the network in the future if needed.  <br /></td></tr>
 <tr class="memitem:ac76678ba17b90ff6fbfed05b743dad68" id="r_ac76678ba17b90ff6fbfed05b743dad68"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac76678ba17b90ff6fbfed05b743dad68">GetAlphaMemory&lt; T &gt;</a> (string? name=null, Func&lt; T, bool &gt;? initialCondition=null)</td></tr>
@@ -159,29 +163,51 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:a4475170a7cc8d5271c61f6e70b1778ca" id="r_a4475170a7cc8d5271c61f6e70b1778ca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a4475170a7cc8d5271c61f6e70b1778ca">EnableConditionTraceLogging</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4475170a7cc8d5271c61f6e70b1778ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets whether per-evaluation diagnostic trace output (e.g. "[DEBUG:...] Result: ...") is written to the console for conditions and joins built through the fluent API. This is disabled by default: the fluent builder overloads use System.Runtime.CompilerServices.CallerArgumentExpressionAttribute to automatically capture a human-readable label for every condition/join lambda, but that label capture alone should not cause console output on every single rule evaluation. Enable this only for interactive debugging, since it adds significant overhead (console I/O on every fact/token evaluation). Setting this also toggles diagnostic console tracing in the agenda and beta-node registry.  <br /></td></tr>
 <tr class="memitem:a9f9bbed9f002ef62bcf3717a2eaf7a87" id="r_a9f9bbed9f002ef62bcf3717a2eaf7a87"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a9f9bbed9f002ef62bcf3717a2eaf7a87">Root</a><code> [get]</code></td></tr>
 <tr class="memdesc:a9f9bbed9f002ef62bcf3717a2eaf7a87"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the root node of the Rete network. This property allows external code to access the root node, which serves as the entry point for all facts asserted into the network.  <br /></td></tr>
 <tr class="memitem:a3bed090030ab23747f4af9d81690bf10" id="r_a3bed090030ab23747f4af9d81690bf10"><td class="memItemLeft">Agenda&#160;</td><td class="memItemRight"><a class="el" href="#a3bed090030ab23747f4af9d81690bf10">Agenda</a><code> [get]</code></td></tr>
 <tr class="memdesc:a3bed090030ab23747f4af9d81690bf10"><td class="mdescLeft">&#160;</td><td class="mdescRight">The accessor for the agenda of the Rete engine. This property allows external code to access the agenda, which manages pending rule activations in the rule engine. The agenda maintains a list of activations that have been triggered but not yet executed, and it processes these activations based on their salience (priority) when the FireAll method is called.  <br /></td></tr>
+<tr class="memitem:ac7629d662e31560a64c7ad37a7af3f72" id="r_ac7629d662e31560a64c7ad37a7af3f72"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1b">RollbackBoundaryMode</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac7629d662e31560a64c7ad37a7af3f72">RollbackBoundaryMode</a><code> [get]</code></td></tr>
+<tr class="memdesc:ac7629d662e31560a64c7ad37a7af3f72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the rollback boundary mode configured for this engine instance.  <br /></td></tr>
+<tr class="memitem:abcb9af86348bd2ec633cce03b2a26bfa" id="r_abcb9af86348bd2ec633cce03b2a26bfa"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9">RollbackConflictPolicy</a>&#160;</td><td class="memItemRight"><a class="el" href="#abcb9af86348bd2ec633cce03b2a26bfa">RollbackConflictPolicy</a><code> [get]</code></td></tr>
+<tr class="memdesc:abcb9af86348bd2ec633cce03b2a26bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the rollback conflict policy configured for this engine instance.  <br /></td></tr>
+<tr class="memitem:aad6a677d032d338ee8d36a23980809bc" id="r_aad6a677d032d338ee8d36a23980809bc"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861">RollbackIdempotencyMode</a>&#160;</td><td class="memItemRight"><a class="el" href="#aad6a677d032d338ee8d36a23980809bc">RollbackIdempotencyMode</a><code> [get]</code></td></tr>
+<tr class="memdesc:aad6a677d032d338ee8d36a23980809bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the rollback idempotency mode configured for this engine instance.  <br /></td></tr>
+<tr class="memitem:a862e1e752a5ec7c48873765281b66e0b" id="r_a862e1e752a5ec7c48873765281b66e0b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a862e1e752a5ec7c48873765281b66e0b">SupportsExternalSideEffectRollback</a><code> [get]</code></td></tr>
+<tr class="memdesc:a862e1e752a5ec7c48873765281b66e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets whether rollback supports compensating external side effects executed inside rule actions. This value is false because rollback scope is limited to published fact-change batches.  <br /></td></tr>
 <tr class="memitem:a16e8631a146aad506dabd27f56f7f758" id="r_a16e8631a146aad506dabd27f56f7f758"><td class="memItemLeft">IReadOnlyList&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a16e8631a146aad506dabd27f56f7f758">PublishedChangeBatches</a><code> [get]</code></td></tr>
 <tr class="memdesc:a16e8631a146aad506dabd27f56f7f758"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the change batches published by successful staged rule actions.  <br /></td></tr>
+<tr class="memitem:a3975557a8a307e41483a1382e000df64" id="r_a3975557a8a307e41483a1382e000df64"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_engine.html#a0a9a5f1c5eaff8f517dfc3a78d48dee6">RollbackJournalEntry</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3975557a8a307e41483a1382e000df64">RollbackJournal</a><code> [get]</code></td></tr>
+<tr class="memdesc:a3975557a8a307e41483a1382e000df64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the committed rollback journal entries for published fact-change batches.  <br /></td></tr>
+<tr class="memitem:acafeb7fdc79de478eff29b2070455c3e" id="r_acafeb7fdc79de478eff29b2070455c3e"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_engine.html#af3f6a49d742c4d953ec7510efc46ede4">PublishedBatchMetadataEntry</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#acafeb7fdc79de478eff29b2070455c3e">PublishedBatchMetadata</a><code> [get]</code></td></tr>
+<tr class="memdesc:acafeb7fdc79de478eff29b2070455c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets committed metadata for published fact-change batches.  <br /></td></tr>
+<tr class="memitem:ae23b9c283ee079201ba9c40f8870b7b9" id="r_ae23b9c283ee079201ba9c40f8870b7b9"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="class_rete_engine_1_1_rollback_side_effect_audit_entry.html">RollbackSideEffectAuditEntry</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae23b9c283ee079201ba9c40f8870b7b9">RollbackSideEffectAudit</a><code> [get]</code></td></tr>
+<tr class="memdesc:ae23b9c283ee079201ba9c40f8870b7b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets side-effect audit entries observed during context-action execution.  <br /></td></tr>
 <tr class="memitem:accbb192d569508aa6b173f56c0b1bcb6" id="r_accbb192d569508aa6b173f56c0b1bcb6"><td class="memItemLeft">BetaNodeRegistry?&#160;</td><td class="memItemRight"><a class="el" href="#accbb192d569508aa6b173f56c0b1bcb6">BetaNodeRegistry</a><code> [get]</code></td></tr>
 <tr class="memdesc:accbb192d569508aa6b173f56c0b1bcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the beta node registry. Returns null if sharing is disabled.  <br /></td></tr>
-<tr class="memitem:af3ffd897ad5fb72b342589a912b5d9e0" id="r_af3ffd897ad5fb72b342589a912b5d9e0"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af3ffd897ad5fb72b342589a912b5d9e0">AgendaGroupActivityLog</a><code> [get]</code></td></tr>
+<tr class="memitem:af3ffd897ad5fb72b342589a912b5d9e0" id="r_af3ffd897ad5fb72b342589a912b5d9e0"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af3ffd897ad5fb72b342589a912b5d9e0">AgendaGroupActivityLog</a><code> [get]</code></td></tr>
 <tr class="memdesc:af3ffd897ad5fb72b342589a912b5d9e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the most recent agenda-group activity records.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
 <tr class="memitem:a572149f80d2448f79c8484599ffd9bbd" id="r_a572149f80d2448f79c8484599ffd9bbd"><td class="memItemLeft">Action&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a572149f80d2448f79c8484599ffd9bbd">FactChangesPublished</a></td></tr>
 <tr class="memdesc:a572149f80d2448f79c8484599ffd9bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised when a staged rule action successfully publishes a change batch.  <br /></td></tr>
+<tr class="memitem:a1936d5b399553ad9cc31b1a4ce0db10c" id="r_a1936d5b399553ad9cc31b1a4ce0db10c"><td class="memItemLeft">Action&lt; <a class="el" href="namespace_rete_engine.html#af3f6a49d742c4d953ec7510efc46ede4">PublishedBatchMetadataEntry</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a1936d5b399553ad9cc31b1a4ce0db10c">PublishedBatchMetadataCommitted</a></td></tr>
+<tr class="memdesc:a1936d5b399553ad9cc31b1a4ce0db10c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised when published-batch metadata is committed for audit correlation.  <br /></td></tr>
+<tr class="memitem:a1eb1e4252fbb323964e6a9adfb2b0e95" id="r_a1eb1e4252fbb323964e6a9adfb2b0e95"><td class="memItemLeft">EventHandler&lt; <a class="el" href="class_rete_engine_1_1_rollback_lifecycle_event_args.html">RollbackLifecycleEventArgs</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a1eb1e4252fbb323964e6a9adfb2b0e95">RollbackLifecycle</a></td></tr>
+<tr class="memdesc:a1eb1e4252fbb323964e6a9adfb2b0e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised for rollback lifecycle activity during publish-resume journaling and rollback execution.  <br /></td></tr>
 <tr class="memitem:afd46b43e5b8f2bd6e73aff262b63e4c6" id="r_afd46b43e5b8f2bd6e73aff262b63e4c6"><td class="memItemLeft">EventHandler&lt; <a class="el" href="class_rete_engine_1_1_rule_fired_event_args.html">RuleFiredEventArgs</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#afd46b43e5b8f2bd6e73aff262b63e4c6">RuleFired</a></td></tr>
 <tr class="memdesc:afd46b43e5b8f2bd6e73aff262b63e4c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised after a rule action completes successfully, including its agenda group and execution duration.  <br /></td></tr>
+<tr class="memitem:a827d47e1552c32df12494bb51780f87c" id="r_a827d47e1552c32df12494bb51780f87c"><td class="memItemLeft">EventHandler&lt; <a class="el" href="class_rete_engine_1_1_rollback_side_effect_event_args.html">RollbackSideEffectEventArgs</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a827d47e1552c32df12494bb51780f87c">RollbackSideEffect</a></td></tr>
+<tr class="memdesc:a827d47e1552c32df12494bb51780f87c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised when side effects are observed or compensation state changes.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> class represents the core of a Rete-based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> serves as the main interface for interacting with the Rete-based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a682b8f2685319297e08f50e234930aee" name="a682b8f2685319297e08f50e234930aee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a682b8f2685319297e08f50e234930aee">&#9670;&#160;</a></span>ReteEngine() <span class="overload">[1/2]</span></h2>
+<a id="ab5c16fff242284a2bbb56342841c0624" name="ab5c16fff242284a2bbb56342841c0624"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5c16fff242284a2bbb56342841c0624">&#9670;&#160;</a></span>ReteEngine() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,8 +215,12 @@ Events</h2></td></tr>
         <tr>
           <td class="memname">ReteEngine.ReteEngine.ReteEngine </td>
           <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enableBetaNodeSharing</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enableBetaNodeSharing</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enableConditionTraceLogging</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -199,6 +229,7 @@ Events</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">enableBetaNodeSharing</td><td>If true (default), rules with identical prefixes share nodes.</td></tr>
+    <tr><td class="paramname">enableConditionTraceLogging</td><td>If true, condition trace logging is enabled.</td></tr>
   </table>
   </dd>
 </dl>
@@ -263,7 +294,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.Assert </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.Assert </td>
           <td>(</td>
           <td class="paramtype">params object[]</td>          <td class="paramname"><span class="paramname"><em>facts</em></span></td><td>)</td>
           <td></td>
@@ -371,16 +402,16 @@ Events</h2></td></tr>
 
 </div>
 </div>
-<a id="a351ae746ce26d8a80f4dae9050e2bd05" name="a351ae746ce26d8a80f4dae9050e2bd05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a351ae746ce26d8a80f4dae9050e2bd05">&#9670;&#160;</a></span>DefineAgendaGroup()</h2>
+<a id="a82b64ee3a9878ec211bd651efaa4e603" name="a82b64ee3a9878ec211bd651efaa4e603"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82b64ee3a9878ec211bd651efaa4e603">&#9670;&#160;</a></span>DefineAgendaGroup()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.DefineAgendaGroup </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.DefineAgendaGroup </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -416,7 +447,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.FireAll </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.FireAll </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -424,7 +455,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the working memory through the network to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired. </p>
+<p>Fires all pending activations in the agenda. This method processes the list of activations that have been triggered but not yet executed. The method continues to fire activations until the agenda is empty, ensuring that all rules that have been triggered are executed. This is a crucial part of the inference process in a the rule engine, allowing it to respond to changes in facts and execute the appropriate rules based on the current state of the network. Additionally, before firing activations from the agenda, this method processes any pre-loaded facts in the working memory to ensure that all facts are properly asserted and can trigger any relevant rules before activations are fired. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current instance of the <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a>.</dd></dl>
 
 </div>
@@ -436,7 +467,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.FireGroup </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.FireGroup </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
           <td></td>
@@ -455,7 +486,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.FocusAgendaGroup </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.FocusAgendaGroup </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span></td><td>)</td>
           <td></td>
@@ -591,8 +622,8 @@ Events</h2></td></tr>
 
 </div>
 </div>
-<a id="ae5409911fa9f5358387df71c035dc572" name="ae5409911fa9f5358387df71c035dc572"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5409911fa9f5358387df71c035dc572">&#9670;&#160;</a></span>RegisterWaitForHook()</h2>
+<a id="ae1d460287885e30b29b9e04ab60d1fa2" name="ae1d460287885e30b29b9e04ab60d1fa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1d460287885e30b29b9e04ab60d1fa2">&#9670;&#160;</a></span>RegisterWaitForHook()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -600,7 +631,7 @@ Events</h2></td></tr>
         <tr>
           <td class="memname">IDisposable ReteEngine.ReteEngine.RegisterWaitForHook </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span>, </td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>groupName</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -646,7 +677,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.Retract </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.Retract </td>
           <td>(</td>
           <td class="paramtype">params object[]</td>          <td class="paramname"><span class="paramname"><em>facts</em></span></td><td>)</td>
           <td></td>
@@ -665,6 +696,58 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a54c65c00ea19bf30d1d222e5f86713a3" name="a54c65c00ea19bf30d1d222e5f86713a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54c65c00ea19bf30d1d222e5f86713a3">&#9670;&#160;</a></span>RollbackLastPublishedBatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteEngine.ReteEngine.RollbackLastPublishedBatch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Rolls back the most recently committed and not-yet-rolled-back published batch. </p>
+<dl class="section return"><dt>Returns</dt><dd>True when a rollback was attempted; otherwise false when no pending rollback entry exists.</dd></dl>
+
+</div>
+</div>
+<a id="a89aedd11c7941111eb6c93d535b0b858" name="a89aedd11c7941111eb6c93d535b0b858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89aedd11c7941111eb6c93d535b0b858">&#9670;&#160;</a></span>RollbackPublishedBatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteEngine.ReteEngine.RollbackPublishedBatch </td>
+          <td>(</td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>sequence</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Rolls back a committed published batch by sequence. Only strict reverse commit order is supported. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td>The rollback journal sequence to reverse.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True when rollback work was applied or confirmed idempotently; otherwise false when nothing is pending.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidOperationException</td><td>Thrown when sequence is missing, already rolled back under non-idempotent policy, or out-of-order.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ab0731188389c8c8348593c6283e306ce" name="ab0731188389c8c8348593c6283e306ce"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0731188389c8c8348593c6283e306ce">&#9670;&#160;</a></span>Update() <span class="overload">[1/2]</span></h2>
 
@@ -672,7 +755,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.Update </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.Update </td>
           <td>(</td>
           <td class="paramtype">object</td>          <td class="paramname"><span class="paramname"><em>fact</em></span>, </td>
         </tr>
@@ -704,7 +787,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a682b8f2685319297e08f50e234930aee">ReteEngine</a> ReteEngine.ReteEngine.Update </td>
+          <td class="memname"><a class="el" href="#ab5c16fff242284a2bbb56342841c0624">ReteEngine</a> ReteEngine.ReteEngine.Update </td>
           <td>(</td>
           <td class="paramtype">params object[]</td>          <td class="paramname"><span class="paramname"><em>facts</em></span></td><td>)</td>
           <td></td>
@@ -759,7 +842,7 @@ Events</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a>&gt; ReteEngine.ReteEngine.AgendaGroupActivityLog</td>
+          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a>&gt; ReteEngine.ReteEngine.AgendaGroupActivityLog</td>
         </tr>
       </table>
   </td>
@@ -797,6 +880,54 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a4475170a7cc8d5271c61f6e70b1778ca" name="a4475170a7cc8d5271c61f6e70b1778ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4475170a7cc8d5271c61f6e70b1778ca">&#9670;&#160;</a></span>EnableConditionTraceLogging</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteEngine.ReteEngine.EnableConditionTraceLogging</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets whether per-evaluation diagnostic trace output (e.g. "[DEBUG:...] Result: ...") is written to the console for conditions and joins built through the fluent API. This is disabled by default: the fluent builder overloads use System.Runtime.CompilerServices.CallerArgumentExpressionAttribute to automatically capture a human-readable label for every condition/join lambda, but that label capture alone should not cause console output on every single rule evaluation. Enable this only for interactive debugging, since it adds significant overhead (console I/O on every fact/token evaluation). Setting this also toggles diagnostic console tracing in the agenda and beta-node registry. </p>
+
+</div>
+</div>
+<a id="acafeb7fdc79de478eff29b2070455c3e" name="acafeb7fdc79de478eff29b2070455c3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acafeb7fdc79de478eff29b2070455c3e">&#9670;&#160;</a></span>PublishedBatchMetadata</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_engine.html#af3f6a49d742c4d953ec7510efc46ede4">PublishedBatchMetadataEntry</a>&gt; ReteEngine.ReteEngine.PublishedBatchMetadata</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets committed metadata for published fact-change batches. </p>
+
+</div>
+</div>
 <a id="a16e8631a146aad506dabd27f56f7f758" name="a16e8631a146aad506dabd27f56f7f758"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16e8631a146aad506dabd27f56f7f758">&#9670;&#160;</a></span>PublishedChangeBatches</h2>
 
@@ -818,6 +949,126 @@ Events</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets the change batches published by successful staged rule actions. </p>
+
+</div>
+</div>
+<a id="ac7629d662e31560a64c7ad37a7af3f72" name="ac7629d662e31560a64c7ad37a7af3f72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7629d662e31560a64c7ad37a7af3f72">&#9670;&#160;</a></span>RollbackBoundaryMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1b">RollbackBoundaryMode</a> ReteEngine.ReteEngine.RollbackBoundaryMode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the rollback boundary mode configured for this engine instance. </p>
+
+</div>
+</div>
+<a id="abcb9af86348bd2ec633cce03b2a26bfa" name="abcb9af86348bd2ec633cce03b2a26bfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcb9af86348bd2ec633cce03b2a26bfa">&#9670;&#160;</a></span>RollbackConflictPolicy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9">RollbackConflictPolicy</a> ReteEngine.ReteEngine.RollbackConflictPolicy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the rollback conflict policy configured for this engine instance. </p>
+
+</div>
+</div>
+<a id="aad6a677d032d338ee8d36a23980809bc" name="aad6a677d032d338ee8d36a23980809bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad6a677d032d338ee8d36a23980809bc">&#9670;&#160;</a></span>RollbackIdempotencyMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861">RollbackIdempotencyMode</a> ReteEngine.ReteEngine.RollbackIdempotencyMode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the rollback idempotency mode configured for this engine instance. </p>
+
+</div>
+</div>
+<a id="a3975557a8a307e41483a1382e000df64" name="a3975557a8a307e41483a1382e000df64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3975557a8a307e41483a1382e000df64">&#9670;&#160;</a></span>RollbackJournal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_engine.html#a0a9a5f1c5eaff8f517dfc3a78d48dee6">RollbackJournalEntry</a>&gt; ReteEngine.ReteEngine.RollbackJournal</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the committed rollback journal entries for published fact-change batches. </p>
+
+</div>
+</div>
+<a id="ae23b9c283ee079201ba9c40f8870b7b9" name="ae23b9c283ee079201ba9c40f8870b7b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae23b9c283ee079201ba9c40f8870b7b9">&#9670;&#160;</a></span>RollbackSideEffectAudit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IReadOnlyList&lt;<a class="el" href="class_rete_engine_1_1_rollback_side_effect_audit_entry.html">RollbackSideEffectAuditEntry</a>&gt; ReteEngine.ReteEngine.RollbackSideEffectAudit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets side-effect audit entries observed during context-action execution. </p>
 
 </div>
 </div>
@@ -845,6 +1096,30 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a862e1e752a5ec7c48873765281b66e0b" name="a862e1e752a5ec7c48873765281b66e0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a862e1e752a5ec7c48873765281b66e0b">&#9670;&#160;</a></span>SupportsExternalSideEffectRollback</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteEngine.ReteEngine.SupportsExternalSideEffectRollback</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets whether rollback supports compensating external side effects executed inside rule actions. This value is false because rollback scope is limited to published fact-change batches. </p>
+
+</div>
+</div>
 <a name="doc-event-members" id="doc-event-members"></a><h2 id="header-doc-event-members" class="groupheader">Event Documentation</h2>
 <a id="a572149f80d2448f79c8484599ffd9bbd" name="a572149f80d2448f79c8484599ffd9bbd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a572149f80d2448f79c8484599ffd9bbd">&#9670;&#160;</a></span>FactChangesPublished</h2>
@@ -859,6 +1134,54 @@ Events</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Raised when a staged rule action successfully publishes a change batch. </p>
+
+</div>
+</div>
+<a id="a1936d5b399553ad9cc31b1a4ce0db10c" name="a1936d5b399553ad9cc31b1a4ce0db10c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1936d5b399553ad9cc31b1a4ce0db10c">&#9670;&#160;</a></span>PublishedBatchMetadataCommitted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action&lt;<a class="el" href="namespace_rete_engine.html#af3f6a49d742c4d953ec7510efc46ede4">PublishedBatchMetadataEntry</a>&gt;? ReteEngine.ReteEngine.PublishedBatchMetadataCommitted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Raised when published-batch metadata is committed for audit correlation. </p>
+
+</div>
+</div>
+<a id="a1eb1e4252fbb323964e6a9adfb2b0e95" name="a1eb1e4252fbb323964e6a9adfb2b0e95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eb1e4252fbb323964e6a9adfb2b0e95">&#9670;&#160;</a></span>RollbackLifecycle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_rete_engine_1_1_rollback_lifecycle_event_args.html">RollbackLifecycleEventArgs</a>&gt;? ReteEngine.ReteEngine.RollbackLifecycle</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Raised for rollback lifecycle activity during publish-resume journaling and rollback execution. </p>
+
+</div>
+</div>
+<a id="a827d47e1552c32df12494bb51780f87c" name="a827d47e1552c32df12494bb51780f87c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a827d47e1552c32df12494bb51780f87c">&#9670;&#160;</a></span>RollbackSideEffect</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_rete_engine_1_1_rollback_side_effect_event_args.html">RollbackSideEffectEventArgs</a>&gt;? ReteEngine.ReteEngine.RollbackSideEffect</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Raised when side effects are observed or compensation state changes. </p>
 
 </div>
 </div>

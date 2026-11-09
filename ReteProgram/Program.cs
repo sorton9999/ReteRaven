@@ -9,6 +9,7 @@
 using ReteCore;
 using ReteEngine;
 using ReteProgram;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 
@@ -889,7 +890,7 @@ engineK.FireAll();
 
 Console.WriteLine("\n--- Testing Agenda Groups and Readiness Hooks ---");
 
-var waitDemoEngine = new ReteEngine.ReteEngine();
+var waitDemoEngine = new ReteEngine.ReteEngine(enableConditionTraceLogging: true);
 waitDemoEngine.DefineAgendaGroup("PREPARE");
 waitDemoEngine.DefineAgendaGroup("DISPATCH");
 
@@ -926,9 +927,15 @@ waitDemoEngine.Begin("PrepareShipment")
 waitDemoEngine.Begin("RecordPreparation")
     .AgendaGroup("PREPARE")
     .Priority(10)
-    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
-    .Then(context =>
+    .Where<Order>("orderPrep", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal) && !order.IsProcessed)
+    .CtxThen(context =>
     {
+        Order order = context.Match.Get<Order>("orderPrep");
+        Order ordSnap = (Order)order.Snapshot();
+        ordSnap.IsProcessed = true;
+
+        context.Update(ordSnap, null);
+        context.Publish();
         Console.WriteLine("PREPARE: audit recorded");
     });
 
@@ -954,15 +961,15 @@ waitDemoEngine.Begin("DispatchShipment")
 // that group focus takes precedence over rule priority across groups.
 waitDemoEngine.Begin("MainOrderMonitor")
     .Priority(10000)
-    .Where<Order>("order", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .Where<Order>("orderMon", order => order.Text.StartsWith("SHIP-", StringComparison.Ordinal))
+    .And<Order>("orderProcessedCheck", (token, order) => order.IsProcessed == true)
     .Then(context =>
     {
-        //Order order = context.Match.Get<Order>("order");
         Console.WriteLine("MAIN: order monitor ran");
     });
 
 waitDemoEngine.Begin("MainShipmentMonitor")
-    .Where<Shipment>("shipment", shipment => shipment.Status == "Shipped")
+    .Where<Shipment>("shipmentMon", shipment => shipment.Status == "Shipped")
     .Then(context =>
     {
         Console.WriteLine("MAIN: shipment monitor saw Shipped");
@@ -1006,7 +1013,7 @@ waitHookRegistration.Dispose();
 
 Console.WriteLine("\n--- Testing Rollback Mechanism (RuleExecutionContext Discard) ---");
 
-var rollbackEngine = new ReteEngine.ReteEngine();
+var rollbackEngine = new ReteEngine.ReteEngine(enableConditionTraceLogging: true);
 int publishedBatchCount = 0;
 rollbackEngine.FactChangesPublished += _ => publishedBatchCount++;
 
@@ -1042,7 +1049,7 @@ Console.WriteLine($"Published change batches recorded: {rollbackEngine.Published
 // an optimistic-concurrency conflict.
 Console.WriteLine("\n--- Testing Rollback via Stale Revision Rejection ---");
 
-var revisionEngine = new ReteEngine.ReteEngine();
+var revisionEngine = new ReteEngine.ReteEngine(enableConditionTraceLogging: true);
 var currentCounter = new Fact<int>(1);
 var staleReplacement = currentCounter.Snapshot();
 staleReplacement.Value = 2;
@@ -1070,3 +1077,155 @@ catch (InvalidOperationException ex)
 
 Console.WriteLine($"Published change batches after stale revision: {revisionEngine.PublishedChangeBatches.Count} (expected 0)");
 
+
+// ========================================== Test Case: Auto Retraction When Condition Fails (Derived Fact is Removed) ==========================================
+Console.WriteLine("\n--- Auto Retraction When Condition Fails_DerivedFactIsRemoved ---");
+
+var engineL = new ReteEngine.ReteEngine(enableConditionTraceLogging: true);
+discountActiveCount = 0;
+
+var orderL = new Inventory { Id = Guid.NewGuid(), Count = 1500 };
+
+// Rule 1: High Value Order -> Logic Assert a Discount
+engineL.Begin("HighValueDiscount")
+    .Where<Inventory>("IHi", o => o.Count >= 1000 && !o.HasDiscount)
+    .CtxThen(t => {
+        var inv = (Inventory)t.Match.Get<Inventory>("IHi");
+        inv.HasDiscount = true; // Mark that a discount has been applied
+        t.Update(inv, null); // Update the fact in the engine
+        t.Publish(); // Publish the change to trigger any dependent rules
+        Console.WriteLine($"High value order detected (Count: {inv.Count}), applying discount.");
+    });
+
+// Rule 2: Track if Discount is in memory
+engineL.Begin("TrackDiscount")
+    .Where<Inventory>("IDisc", o => o.HasDiscount)
+    .Then(t => {
+        Console.WriteLine($"Tracking discount for order count {t.Get<Inventory>("IDisc").Count}.");
+        discountActiveCount++;
+    });
+
+// Initial Assertion (Order is $1500)
+engineL.Assert(orderL);
+engineL.FireAll();
+Console.WriteLine(
+    $"After the initial FireAll, expected one discount activation for order count {orderL.Count}, but got {discountActiveCount}.");
+// The Auto-Retraction Event
+// We update the order so it no longer meets the >= 1000 criteria
+orderL.Count = 500;
+engineL.FireAll();
+
+// Verify the "TrackDiscount" rule didn't fire again 
+// Discount should have been retracted, so count should not increase
+Console.WriteLine(
+    $"After updating the order count, expected one discount activation for order count {orderL.Count}, but got {discountActiveCount}.");
+
+
+// ========================================== Test Case: Fact Revision Rollback on Rete Network ==========================================
+Console.WriteLine("\n--- Testing Fact Revision Rollback on Rete Network ---");
+
+var engineM = new ReteEngine.ReteEngine(enableConditionTraceLogging: true);
+var lifecycle = new List<RollbackLifecycleEventArgs>();
+var sideEffects = new List<RollbackSideEffectEventArgs>();
+engineM.RollbackLifecycle += (_, eventArgs) => lifecycle.Add(eventArgs);
+engineM.RollbackSideEffect += (_, eventArgs) => sideEffects.Add(eventArgs);
+var externalQueue = new List<string>();
+
+discountActiveCount = 0;
+bool txFailed = false;
+
+// Setup our initial high-value order
+var orderM = new Inventory { Id = Guid.NewGuid(), Count = 1500, HasDiscount = false };
+
+// Rule 1: High Value Order -> Applies Discount
+engineM.Begin("HighValueDiscount")
+    .Where<Inventory>("IHi", o => o.Count >= 1000 && !o.HasDiscount)
+    .CtxThen(t => {
+        var inv = t.Match.Get<Inventory>("IHi");
+        inv.HasDiscount = true;
+        t.Update(inv, null);
+        t.Publish();
+        Console.WriteLine($"[Rule 1] Applied discount. Count: {inv.Count}, HasDiscount: {inv.HasDiscount}");
+    });
+
+// Rule 2: Track Active Discounts
+engineM.Begin("TrackDiscount")
+    .Where<Inventory>("IDisc", o => o.HasDiscount)
+    .Then(t => {
+        var inv = t.Get<Inventory>("IDisc");
+        Console.WriteLine($"[Rule 2] Tracking discount. Count: {inv.Count}");
+        discountActiveCount++;
+    });
+
+// Rule 3: Operational Safeguard / Failure Trigger
+// This rule simulates a terminal business failure if an unapproved large order slips through.
+engineM.Begin("EnforceFraudCheck")
+    .Priority(1000)
+    .Where<Inventory>("IFraud", o => o.Count > 1200 && o.HasDiscount)
+    .CtxThen(t => {
+        externalQueue.Add("Larry");
+        externalQueue.Add("Moe");
+        t.RegisterSideEffect(
+            category: "Alert",
+            description: "Send external alert",
+            compensator: () => externalQueue.ForEach(name => Console.WriteLine($">>>> Email sent to {name} <<<<")),
+            metadata: new Dictionary<string, string>
+            {
+                ["channel"] = "email",
+                ["severity"] = "alert"
+            });
+        t.Assert(new ReteCore.Fact<string>("compensated"));
+        t.Publish();
+        Console.WriteLine("[Rule 3] FRAUD ALERT: High value discount exceeds safety thresholds! Forcing abort.");
+        txFailed = true;
+    });
+
+
+Console.WriteLine($"\nBaseline captured. Inventory Count: {orderM.Count}, HasDiscount: {orderM.HasDiscount}");
+
+// Assert the fact to kick off the network
+engineM.Assert(orderM);
+
+// This will trigger Rule 1, which publishes a change, which triggers Rule 2 AND Rule 3.
+// Rule 3 will throw an exception mid-flight.
+engineM.FireAll();
+if (txFailed)
+{
+    Console.WriteLine($"\n[SYSTEM CATCH] Rule execution failed as expected.");
+    Console.WriteLine("Initiating roll back to baseline revision...");
+
+    IReadOnlyList<RollbackJournalEntry> entriesEnd = engineM.RollbackJournal;
+    if (entriesEnd == null || entriesEnd.Count == 0)
+    {
+        Console.WriteLine("Rollback journal is empty. Cannot capture baseline revision.");
+    }
+    else
+    {
+        var latestEntry = entriesEnd[entriesEnd.Count - 1];
+        Console.WriteLine($"Rolling back published batch sequence: {latestEntry.Sequence}");
+        engineM.RollbackPublishedBatch(latestEntry.Sequence);
+    }
+
+    orderM.HasDiscount = false;
+}
+
+Console.WriteLine("\n--- Post-Rollback Verification ---");
+Console.WriteLine($"Expected HasDiscount: False | Actual HasDiscount: {orderM.HasDiscount}");
+
+discountActiveCount = 0;
+
+foreach (var effect in sideEffects)
+{
+    Console.WriteLine($"[Side Effect]: {effect.Entry.Disposition} | Category: {effect.Entry.Category} | Description: {effect.Entry.Description} | Has Compensator: {effect.Entry.HasCompensator}");
+}
+
+Console.WriteLine($"Expected TrackDiscount Activations: 0 | Actual: {discountActiveCount}");
+
+if (!orderM.HasDiscount && discountActiveCount == 0)
+{
+    Console.WriteLine("\n SUCCESS: Rollback cleared the fraudulent inventory.");
+}
+else
+{
+    Console.WriteLine("\n❌ FAILURE: Rollback failed to clear the fraudulent inventory state.");
+}

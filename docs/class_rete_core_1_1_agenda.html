@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -130,7 +130,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a29dca955e9c1458e460c289232013244" id="r_a29dca955e9c1458e460c289232013244"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a29dca955e9c1458e460c289232013244">RemoveByRuleAndFact</a> (string ruleName, object fact, string? agendaGroupName=null)</td></tr>
 <tr class="memdesc:a29dca955e9c1458e460c289232013244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes pending activations for the specified rule that contain the specified fact instance.  <br /></td></tr>
 <tr class="memitem:acf01dee3d4f1b40eed5c2f4e6ea8b561" id="r_acf01dee3d4f1b40eed5c2f4e6ea8b561"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acf01dee3d4f1b40eed5c2f4e6ea8b561">ForgetActivation</a> (string ruleName, <a class="el" href="class_rete_core_1_1_token.html">Token</a> match, string? agendaGroupName=null)</td></tr>
-<tr class="memdesc:acf01dee3d4f1b40eed5c2f4e6ea8b561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears fired-revision markers when a match leaves the network so a later match can activate again. These are all detected and removed by group name.  <br /></td></tr>
+<tr class="memdesc:acf01dee3d4f1b40eed5c2f4e6ea8b561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears fired-revision markers all detected and removed by group name.  <br /></td></tr>
 <tr class="memitem:a3f263febaad2055474db875caf54c7e0" id="r_a3f263febaad2055474db875caf54c7e0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3f263febaad2055474db875caf54c7e0">AdvanceFactRevision</a> (object fact)</td></tr>
 <tr class="memdesc:a3f263febaad2055474db875caf54c7e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advances the revision used to distinguish activations after a fact update. This method is called when a fact is updated in the working memory, indicating that any previous activations associated with the old state of the fact should be considered outdated. By incrementing the revision number for the fact, it ensures that future activations will be treated as new and can be fired again, even if they were previously executed with an older revision of the fact.  <br /></td></tr>
 <tr class="memitem:aea62070852e275b845c61080f78136c7" id="r_aea62070852e275b845c61080f78136c7"><td class="memItemLeft">long&#160;</td><td class="memItemRight"><a class="el" href="#aea62070852e275b845c61080f78136c7">GetFactRevision</a> (object fact)</td></tr>
@@ -157,6 +157,8 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:a2dd29490ece11615e13444027c28eba4" id="r_a2dd29490ece11615e13444027c28eba4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a2dd29490ece11615e13444027c28eba4">EnableConsoleTraceLogging</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a2dd29490ece11615e13444027c28eba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls whether the agenda writes diagnostic Console.WriteLine trace messages. Disabled by default.  <br /></td></tr>
 <tr class="memitem:a2fd3bf45a6e0931e7b9ac14f43cfb4c8" id="r_a2fd3bf45a6e0931e7b9ac14f43cfb4c8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a2fd3bf45a6e0931e7b9ac14f43cfb4c8">CollectStatistics</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a2fd3bf45a6e0931e7b9ac14f43cfb4c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets whether agenda groups collect timing and activity counters. Enabled by default.  <br /></td></tr>
 <tr class="memitem:a9c846d9bf8ab4c26feb2aba72fbfa74a" id="r_a9c846d9bf8ab4c26feb2aba72fbfa74a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a9c846d9bf8ab4c26feb2aba72fbfa74a">RecordGroupActivityLog</a><code> [get, set]</code></td></tr>
@@ -171,14 +173,14 @@ Properties</h2></td></tr>
 <tr class="memdesc:a129af3a42d99a02ceb82271627b68456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current agenda-group focus stack, from the base group to the focused group.  <br /></td></tr>
 <tr class="memitem:a7d6b5aaf2871bfd71a4c44ff3c8a2937" id="r_a7d6b5aaf2871bfd71a4c44ff3c8a2937"><td class="memItemLeft">IReadOnlyCollection&lt; string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a7d6b5aaf2871bfd71a4c44ff3c8a2937">AgendaGroups</a><code> [get]</code></td></tr>
 <tr class="memdesc:a7d6b5aaf2871bfd71a4c44ff3c8a2937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the registered agenda-group names.  <br /></td></tr>
-<tr class="memitem:ae1b48c6426b72cd6806fef8c1d97df83" id="r_ae1b48c6426b72cd6806fef8c1d97df83"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae1b48c6426b72cd6806fef8c1d97df83">GroupActivityLog</a><code> [get]</code></td></tr>
+<tr class="memitem:ae1b48c6426b72cd6806fef8c1d97df83" id="r_ae1b48c6426b72cd6806fef8c1d97df83"><td class="memItemLeft">IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae1b48c6426b72cd6806fef8c1d97df83">GroupActivityLog</a><code> [get]</code></td></tr>
 <tr class="memdesc:ae1b48c6426b72cd6806fef8c1d97df83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the most recent group-activity records. The log retains at most 1,000 records.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
 <tr class="memitem:ae0e17decc447839b67fc57ba1c0613cd" id="r_ae0e17decc447839b67fc57ba1c0613cd"><td class="memItemLeft">EventHandler&lt; <a class="el" href="class_rete_core_1_1_agenda_focus_stack_changed_event_args.html">AgendaFocusStackChangedEventArgs</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#ae0e17decc447839b67fc57ba1c0613cd">FocusStackChanged</a></td></tr>
 <tr class="memdesc:ae0e17decc447839b67fc57ba1c0613cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised whenever the agenda-group focus stack changes.  <br /></td></tr>
-<tr class="memitem:a64a2b49dcdbda305455b4be212981d45" id="r_a64a2b49dcdbda305455b4be212981d45"><td class="memItemLeft">Action&lt; <a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a64a2b49dcdbda305455b4be212981d45">ActivationFired</a></td></tr>
+<tr class="memitem:a64a2b49dcdbda305455b4be212981d45" id="r_a64a2b49dcdbda305455b4be212981d45"><td class="memItemLeft">Action&lt; <a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a64a2b49dcdbda305455b4be212981d45">ActivationFired</a></td></tr>
 <tr class="memdesc:a64a2b49dcdbda305455b4be212981d45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised after a rule activation completes successfully.  <br /></td></tr>
 <tr class="memitem:ac26a528ff66a7ab754f51653dbd8a8b3" id="r_ac26a528ff66a7ab754f51653dbd8a8b3"><td class="memItemLeft">Action&lt; <a class="el" href="namespace_rete_core.html#a9e9ccf917e2b767f0bf18319af3314c7">AgendaGroupRuntimeStatistics</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#ac26a528ff66a7ab754f51653dbd8a8b3">GroupStatisticsUpdated</a></td></tr>
 <tr class="memdesc:ac26a528ff66a7ab754f51653dbd8a8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raised whenever a registered agenda group's runtime statistics change.  <br /></td></tr>
@@ -400,7 +402,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Clears fired-revision markers when a match leaves the network so a later match can activate again. These are all detected and removed by group name. </p>
+<p>Clears fired-revision markers all detected and removed by group name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ruleName</td><td>The rule associated with the match.</td></tr>
@@ -908,6 +910,30 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a2dd29490ece11615e13444027c28eba4" name="a2dd29490ece11615e13444027c28eba4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dd29490ece11615e13444027c28eba4">&#9670;&#160;</a></span>EnableConsoleTraceLogging</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Agenda.EnableConsoleTraceLogging</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Controls whether the agenda writes diagnostic Console.WriteLine trace messages. Disabled by default. </p>
+
+</div>
+</div>
 <a id="a838f8dedeb4889e336511702e459e47f" name="a838f8dedeb4889e336511702e459e47f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a838f8dedeb4889e336511702e459e47f">&#9670;&#160;</a></span>FocusedAgendaGroup</h2>
 
@@ -942,7 +968,7 @@ Events</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a>&gt; ReteCore.Agenda.GroupActivityLog</td>
+          <td class="memname">IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a>&gt; ReteCore.Agenda.GroupActivityLog</td>
         </tr>
       </table>
   </td>
@@ -1012,7 +1038,7 @@ Events</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Action&lt;<a class="el" href="namespace_rete_core.html#a8093c8e230976f46f7b47bc451bc49bd">AgendaGroupActivityRecord</a>&gt;? ReteCore.Agenda.ActivationFired</td>
+          <td class="memname">Action&lt;<a class="el" href="namespace_rete_core.html#a7751b31e92d72a7fe93539c185894689">AgendaGroupActivityRecord</a>&gt;? ReteCore.Agenda.ActivationFired</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -105,7 +105,7 @@ Inheritance diagram for ReteEngine.RuleFiredEventArgs:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa9be318f11404de7011a42d06b0c6f59" id="r_aa9be318f11404de7011a42d06b0c6f59"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa9be318f11404de7011a42d06b0c6f59">RuleFiredEventArgs</a> (string agendaGroup, string ruleName, DateTimeOffset firedAt, TimeSpan duration)</td></tr>
+<tr class="memitem:aa4cb4b87e18d02eda5525c5224ac064d" id="r_aa4cb4b87e18d02eda5525c5224ac064d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa4cb4b87e18d02eda5525c5224ac064d">RuleFiredEventArgs</a> (string agendaGroup, string ruleName, DateTimeOffset firedAt, TimeSpan duration, Guid? activationId=null)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -113,12 +113,13 @@ Properties</h2></td></tr>
 <tr class="memitem:abe65144f404b4660542a70f38f6f5d47" id="r_abe65144f404b4660542a70f38f6f5d47"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#abe65144f404b4660542a70f38f6f5d47">RuleName</a><code> [get]</code></td></tr>
 <tr class="memitem:a82ea2ea1dc0a8c38ffe6d1da9ed269c6" id="r_a82ea2ea1dc0a8c38ffe6d1da9ed269c6"><td class="memItemLeft">DateTimeOffset&#160;</td><td class="memItemRight"><a class="el" href="#a82ea2ea1dc0a8c38ffe6d1da9ed269c6">FiredAt</a><code> [get]</code></td></tr>
 <tr class="memitem:a4c7cf145773a62c31d561d61b5aa98cd" id="r_a4c7cf145773a62c31d561d61b5aa98cd"><td class="memItemLeft">TimeSpan&#160;</td><td class="memItemRight"><a class="el" href="#a4c7cf145773a62c31d561d61b5aa98cd">Duration</a><code> [get]</code></td></tr>
+<tr class="memitem:afdb49089361def4b2b12d753976abf3e" id="r_afdb49089361def4b2b12d753976abf3e"><td class="memItemLeft">Guid?&#160;</td><td class="memItemRight"><a class="el" href="#afdb49089361def4b2b12d753976abf3e">ActivationId</a><code> [get]</code></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides timing and group details for a successfully fired rule activation. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa9be318f11404de7011a42d06b0c6f59" name="aa9be318f11404de7011a42d06b0c6f59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9be318f11404de7011a42d06b0c6f59">&#9670;&#160;</a></span>RuleFiredEventArgs()</h2>
+<a id="aa4cb4b87e18d02eda5525c5224ac064d" name="aa4cb4b87e18d02eda5525c5224ac064d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4cb4b87e18d02eda5525c5224ac064d">&#9670;&#160;</a></span>RuleFiredEventArgs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,7 +142,12 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TimeSpan</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>&#160;)</td>
+          <td class="paramtype">TimeSpan</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid?</td>          <td class="paramname"><span class="paramname"><em>activationId</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -149,6 +155,28 @@ Properties</h2></td></tr>
 </div>
 </div>
 <a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="afdb49089361def4b2b12d753976abf3e" name="afdb49089361def4b2b12d753976abf3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdb49089361def4b2b12d753976abf3e">&#9670;&#160;</a></span>ActivationId</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Guid? ReteEngine.RuleFiredEventArgs.ActivationId</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acbbf85343c2e5e18dae438549c372c84" name="acbbf85343c2e5e18dae438549c372c84"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbbf85343c2e5e18dae438549c372c84">&#9670;&#160;</a></span>AgendaGroup</h2>
 

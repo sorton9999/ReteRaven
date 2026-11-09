@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -118,10 +118,10 @@ This project is open-source and distributed under the LGPL license.</h1>
 <li>= Expressive Pattern Matching: Rules support joins, logical branches, negation, existence checks, and additional filters.</li>
 <li>= Advanced Logic Nodes: Support for <span class="tt">Or</span>, <span class="tt">Not</span>, <span class="tt">AndNot</span>, and <span class="tt">Exists</span> conditions, including an indexed <span class="tt">Exists</span> implementation.</li>
 <li>= Beta-Node Sharing: Compatible beta-memory nodes can be cached and reused across rules to reduce duplicated network structures.</li>
-<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt"><a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a></span>, and <span class="tt">Average</span>.</li>
+<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt">Count</span>, and <span class="tt">Average</span>.</li>
 <li>= Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.</li>
 <li>= Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.</li>
-<li>= Rule Prioritization: Control firing order with rule priority and activation salience.</li>
+<li>= Rollback Mechanism: A Drools-like agenda control + Rete/CLIPS-style inference + WAL/event-sourced rollback semantics.</li>
 <li>= Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.</li>
 </ul>
 <hr  />

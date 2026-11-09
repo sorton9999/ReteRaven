@@ -45,32 +45,9 @@ var annotated_dup =
       [ "ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", "class_rete_engine_1_1_rete_builder-1-g" ],
       [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ],
       [ "ReteEngineOptions", "class_rete_engine_1_1_rete_engine_options.html", "class_rete_engine_1_1_rete_engine_options" ],
+      [ "RollbackLifecycleEventArgs", "class_rete_engine_1_1_rollback_lifecycle_event_args.html", "class_rete_engine_1_1_rollback_lifecycle_event_args" ],
+      [ "RollbackSideEffectAuditEntry", "class_rete_engine_1_1_rollback_side_effect_audit_entry.html", "class_rete_engine_1_1_rollback_side_effect_audit_entry" ],
+      [ "RollbackSideEffectEventArgs", "class_rete_engine_1_1_rollback_side_effect_event_args.html", "class_rete_engine_1_1_rollback_side_effect_event_args" ],
       [ "RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", "class_rete_engine_1_1_rule_fired_event_args" ]
-    ] ],
-    [ "ReteProgram", "namespace_rete_program.html", [
-      [ "SystemStatus", "class_rete_program_1_1_system_status.html", "class_rete_program_1_1_system_status" ],
-      [ "Sensor", "class_rete_program_1_1_sensor.html", "class_rete_program_1_1_sensor" ],
-      [ "CriticalCell", "class_rete_program_1_1_critical_cell.html", "class_rete_program_1_1_critical_cell" ],
-      [ "Product", "class_rete_program_1_1_product.html", "class_rete_program_1_1_product" ],
-      [ "Inventory", "class_rete_program_1_1_inventory.html", "class_rete_program_1_1_inventory" ],
-      [ "Shipment", "class_rete_program_1_1_shipment.html", "class_rete_program_1_1_shipment" ],
-      [ "Order", "class_rete_program_1_1_order.html", "class_rete_program_1_1_order" ],
-      [ "Officer", "class_rete_program_1_1_officer.html", "class_rete_program_1_1_officer" ],
-      [ "DutyStatus", "class_rete_program_1_1_duty_status.html", "class_rete_program_1_1_duty_status" ],
-      [ "RiskFactor", "class_rete_program_1_1_risk_factor.html", "class_rete_program_1_1_risk_factor" ],
-      [ "LineItem", "class_rete_program_1_1_line_item.html", "class_rete_program_1_1_line_item" ]
-    ] ],
-    [ "ReteTest", "namespace_rete_test.html", [
-      [ "Tests", "namespace_rete_test_1_1_tests.html", [
-        [ "ReteBuilderIntegrationTests", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests.html", "class_rete_test_1_1_tests_1_1_rete_builder_integration_tests" ],
-        [ "ReteBuilderTests", "class_rete_test_1_1_tests_1_1_rete_builder_tests.html", "class_rete_test_1_1_tests_1_1_rete_builder_tests" ],
-        [ "TestPublishAndResume", "class_rete_test_1_1_tests_1_1_test_publish_and_resume.html", "class_rete_test_1_1_tests_1_1_test_publish_and_resume" ],
-        [ "TraceNodeTests", "class_rete_test_1_1_tests_1_1_trace_node_tests.html", "class_rete_test_1_1_tests_1_1_trace_node_tests" ],
-        [ "UpdatePreparationTests", "class_rete_test_1_1_tests_1_1_update_preparation_tests.html", "class_rete_test_1_1_tests_1_1_update_preparation_tests" ]
-      ] ]
-    ] ],
-    [ "ReteTests", "namespace_rete_tests.html", [
-      [ "BetaNodeSharingIntegrationTests", "class_rete_tests_1_1_beta_node_sharing_integration_tests.html", "class_rete_tests_1_1_beta_node_sharing_integration_tests" ],
-      [ "BetaNodeSharingTests", "class_rete_tests_1_1_beta_node_sharing_tests.html", "class_rete_tests_1_1_beta_node_sharing_tests" ]
     ] ]
 ];

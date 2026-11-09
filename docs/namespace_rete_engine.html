@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -120,9 +120,378 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> class represents the core of a Rete-based rule engine, responsible for managing the Rete network, working memory, and agenda. It provides methods for asserting, retracting, and refreshing facts, as well as firing rules based on the current state of the network. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> maintains a root node for the Rete network, an agenda for pending activations, and a working memory to store asserted facts. It also allows for dynamic modification of the network, such as adding terminal nodes and removing rules. The <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> serves as the main interface for interacting with the Rete-based rule engine, enabling users to define rules, manage facts, and execute the inference process effectively.  <a href="class_rete_engine_1_1_rete_engine.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ReteEngineOptions" id="r_ReteEngineOptions"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rete_engine_options.html">ReteEngineOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures behavior of a <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> instance.  <a href="class_rete_engine_1_1_rete_engine_options.html#details">More...</a><br /></td></tr>
+<tr class="memitem:RollbackLifecycleEventArgs" id="r_RollbackLifecycleEventArgs"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rollback_lifecycle_event_args.html">RollbackLifecycleEventArgs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides correlation details for rollback lifecycle notifications.  <a href="class_rete_engine_1_1_rollback_lifecycle_event_args.html#details">More...</a><br /></td></tr>
+<tr class="memitem:RollbackSideEffectAuditEntry" id="r_RollbackSideEffectAuditEntry"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rollback_side_effect_audit_entry.html">RollbackSideEffectAuditEntry</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures audited metadata for side effects observed during rule execution.  <a href="class_rete_engine_1_1_rollback_side_effect_audit_entry.html#details">More...</a><br /></td></tr>
+<tr class="memitem:RollbackSideEffectEventArgs" id="r_RollbackSideEffectEventArgs"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rollback_side_effect_event_args.html">RollbackSideEffectEventArgs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lifecycle payload for side-effect audit and compensation events.  <a href="class_rete_engine_1_1_rollback_side_effect_event_args.html#details">More...</a><br /></td></tr>
 <tr class="memitem:RuleFiredEventArgs" id="r_RuleFiredEventArgs"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_rule_fired_event_args.html">RuleFiredEventArgs</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides timing and group details for a successfully fired rule activation.  <a href="class_rete_engine_1_1_rule_fired_event_args.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:af85332c650db1e9592de57e5c8e67b1b" id="r_af85332c650db1e9592de57e5c8e67b1b"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#af85332c650db1e9592de57e5c8e67b1b">RollbackBoundaryMode</a> { <a class="el" href="#af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27">PublishedFactChangesOnly</a>
+ }</td></tr>
+<tr class="memdesc:af85332c650db1e9592de57e5c8e67b1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the rollback boundary supported by this engine. Rollback only targets fact-change batches that are explicitly published from a successful rule execution context. External side effects executed directly inside a rule action are outside this boundary.  <a href="#af85332c650db1e9592de57e5c8e67b1b">More...</a><br /></td></tr>
+<tr class="memitem:ae891e03d09887b14e5b79b695d5f86b9" id="r_ae891e03d09887b14e5b79b695d5f86b9"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#ae891e03d09887b14e5b79b695d5f86b9">RollbackConflictPolicy</a> { <a class="el" href="#ae891e03d09887b14e5b79b695d5f86b9a5152ffb5859e5d94b35b10ca2204b018">FailFast</a>
+ }</td></tr>
+<tr class="memdesc:ae891e03d09887b14e5b79b695d5f86b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies how rollback execution should respond when the current fact state conflicts with the expected state captured by rollback metadata.  <a href="#ae891e03d09887b14e5b79b695d5f86b9">More...</a><br /></td></tr>
+<tr class="memitem:a3fdea11166c8b7e03bce9986be105861" id="r_a3fdea11166c8b7e03bce9986be105861"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a3fdea11166c8b7e03bce9986be105861">RollbackIdempotencyMode</a> { <a class="el" href="#a3fdea11166c8b7e03bce9986be105861ab60f7de7fba264b21cb4d67fbee53fbd">Idempotent</a>
+ }</td></tr>
+<tr class="memdesc:a3fdea11166c8b7e03bce9986be105861"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the idempotency guarantees required for rollback operations.  <a href="#a3fdea11166c8b7e03bce9986be105861">More...</a><br /></td></tr>
+<tr class="memitem:a257454692a307c1306b9dc55e504b368" id="r_a257454692a307c1306b9dc55e504b368"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a257454692a307c1306b9dc55e504b368">RollbackLifecycleStage</a> { <br />
+&#160;&#160;<a class="el" href="#a257454692a307c1306b9dc55e504b368a8428552d86c0d262a542a528af490afa">Started</a>
+, <a class="el" href="#a257454692a307c1306b9dc55e504b368a733d43480c8589b1368e5def6b480415">Applied</a>
+, <a class="el" href="#a257454692a307c1306b9dc55e504b368ad9c8f187972e6320a34e9c40b4cba605">Skipped</a>
+, <a class="el" href="#a257454692a307c1306b9dc55e504b368a1ab4f9805376031c61c6ed4cf6ffbe26">Conflicted</a>
+, <br />
+&#160;&#160;<a class="el" href="#a257454692a307c1306b9dc55e504b368a07ca5050e697392c9ed47e6453f1453f">Completed</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a257454692a307c1306b9dc55e504b368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies rollback-journal lifecycle stages emitted during publish-resume journaling and later rollback execution.  <a href="#a257454692a307c1306b9dc55e504b368">More...</a><br /></td></tr>
+<tr class="memitem:ae1588fd3fcc3077666180812bd7c5533" id="r_ae1588fd3fcc3077666180812bd7c5533"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#ae1588fd3fcc3077666180812bd7c5533">RollbackConflictOutcome</a> { <a class="el" href="#ae1588fd3fcc3077666180812bd7c5533a6adf97f83acf6453d4a6a4b1070f3754">None</a>
+, <a class="el" href="#ae1588fd3fcc3077666180812bd7c5533a365b9f9e47d5594299810fb8cecd3eea">ConflictDetected</a>
+, <a class="el" href="#ae1588fd3fcc3077666180812bd7c5533a4356b6e4234783b0ecf0a38d30d58643">FailFastAborted</a>
+ }</td></tr>
+<tr class="memdesc:ae1588fd3fcc3077666180812bd7c5533"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes conflict disposition for rollback lifecycle events.  <a href="#ae1588fd3fcc3077666180812bd7c5533">More...</a><br /></td></tr>
+<tr class="memitem:a1aa56962ccf5c73a7184815564b2ee0f" id="r_a1aa56962ccf5c73a7184815564b2ee0f"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0f">RollbackSideEffectDisposition</a> { <a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0fa2a6c9aa665f427f89acae6b3d3e8b7ff">NonRollbackable</a>
+, <a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0fab30cb3793252e94c2be431af99c97ab2">PendingCompensation</a>
+, <a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0fa843e44b3516301279b16e1fb62ffbc84">Compensated</a>
+, <a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0fa6c2d495dc11ac8cca7edfcb543995242">CompensationFailed</a>
+ }</td></tr>
+<tr class="memdesc:a1aa56962ccf5c73a7184815564b2ee0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes compensation state for an externally observed side effect.  <a href="#a1aa56962ccf5c73a7184815564b2ee0f">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa124f66ac0ef19c93ac7aadc3a919156" id="r_aa124f66ac0ef19c93ac7aadc3a919156"><td class="memItemLeft">record&#160;</td><td class="memItemRight"><a class="el" href="#aa124f66ac0ef19c93ac7aadc3a919156">RollbackJournalChangeEntry</a> (int Index, <a class="el" href="namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36">FactChangeTypeEnum</a> Kind, Guid FactId, long? ExpectedRevision, <a class="el" href="namespace_rete_core.html#a74a110b5079c75e52cb453d36a673a63">FactChangeOrigin</a>? Origin, <a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>? PublishedFact, bool ExistedBefore, long RevisionBefore, <a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>? FactBefore, bool ExistsAfter, long RevisionAfter, <a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>? FactAfter)</td></tr>
+<tr class="memdesc:aa124f66ac0ef19c93ac7aadc3a919156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures per-change provenance and before/after fact state for one committed published fact change.  <br /></td></tr>
+<tr class="memitem:a0a9a5f1c5eaff8f517dfc3a78d48dee6" id="r_a0a9a5f1c5eaff8f517dfc3a78d48dee6"><td class="memItemLeft">record&#160;</td><td class="memItemRight"><a class="el" href="#a0a9a5f1c5eaff8f517dfc3a78d48dee6">RollbackJournalEntry</a> (long Sequence, long Epoch, DateTimeOffset CommittedAt, string? <a class="el" href="class_rete_core_1_1_agenda_group.html">AgendaGroup</a>, string? RuleName, Guid? ActivationId, IReadOnlyList&lt; <a class="el" href="#aa124f66ac0ef19c93ac7aadc3a919156">RollbackJournalChangeEntry</a> &gt; Changes)</td></tr>
+<tr class="memdesc:a0a9a5f1c5eaff8f517dfc3a78d48dee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents one committed publish-resume batch in the rollback journal.  <br /></td></tr>
+<tr class="memitem:af3f6a49d742c4d953ec7510efc46ede4" id="r_af3f6a49d742c4d953ec7510efc46ede4"><td class="memItemLeft">record&#160;</td><td class="memItemRight"><a class="el" href="#af3f6a49d742c4d953ec7510efc46ede4">PublishedBatchMetadataEntry</a> (long Sequence, long Epoch, DateTimeOffset CommittedAt, string? <a class="el" href="class_rete_core_1_1_agenda_group.html">AgendaGroup</a>, string? RuleName, Guid? ActivationId, int ChangeCount)</td></tr>
+<tr class="memdesc:af3f6a49d742c4d953ec7510efc46ede4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures committed metadata for a published fact-change batch to support audit correlation.  <br /></td></tr>
 </table>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="af85332c650db1e9592de57e5c8e67b1b" name="af85332c650db1e9592de57e5c8e67b1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af85332c650db1e9592de57e5c8e67b1b">&#9670;&#160;</a></span>RollbackBoundaryMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#af85332c650db1e9592de57e5c8e67b1b">ReteEngine.RollbackBoundaryMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the rollback boundary supported by this engine. Rollback only targets fact-change batches that are explicitly published from a successful rule execution context. External side effects executed directly inside a rule action are outside this boundary. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27" name="af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27"></a>PublishedFactChangesOnly&#160;</td><td class="fielddoc"><p>Only published fact changes are eligible for rollback tracking and compensation. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ae1588fd3fcc3077666180812bd7c5533" name="ae1588fd3fcc3077666180812bd7c5533"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1588fd3fcc3077666180812bd7c5533">&#9670;&#160;</a></span>RollbackConflictOutcome</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#ae1588fd3fcc3077666180812bd7c5533">ReteEngine.RollbackConflictOutcome</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Describes conflict disposition for rollback lifecycle events. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae1588fd3fcc3077666180812bd7c5533a6adf97f83acf6453d4a6a4b1070f3754" name="ae1588fd3fcc3077666180812bd7c5533a6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ae1588fd3fcc3077666180812bd7c5533a365b9f9e47d5594299810fb8cecd3eea" name="ae1588fd3fcc3077666180812bd7c5533a365b9f9e47d5594299810fb8cecd3eea"></a>ConflictDetected&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ae1588fd3fcc3077666180812bd7c5533a4356b6e4234783b0ecf0a38d30d58643" name="ae1588fd3fcc3077666180812bd7c5533a4356b6e4234783b0ecf0a38d30d58643"></a>FailFastAborted&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="ae891e03d09887b14e5b79b695d5f86b9" name="ae891e03d09887b14e5b79b695d5f86b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae891e03d09887b14e5b79b695d5f86b9">&#9670;&#160;</a></span>RollbackConflictPolicy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#ae891e03d09887b14e5b79b695d5f86b9">ReteEngine.RollbackConflictPolicy</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Specifies how rollback execution should respond when the current fact state conflicts with the expected state captured by rollback metadata. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae891e03d09887b14e5b79b695d5f86b9a5152ffb5859e5d94b35b10ca2204b018" name="ae891e03d09887b14e5b79b695d5f86b9a5152ffb5859e5d94b35b10ca2204b018"></a>FailFast&#160;</td><td class="fielddoc"><p>Stop rollback immediately when the first conflict is detected. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a3fdea11166c8b7e03bce9986be105861" name="a3fdea11166c8b7e03bce9986be105861"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fdea11166c8b7e03bce9986be105861">&#9670;&#160;</a></span>RollbackIdempotencyMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a3fdea11166c8b7e03bce9986be105861">ReteEngine.RollbackIdempotencyMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the idempotency guarantees required for rollback operations. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3fdea11166c8b7e03bce9986be105861ab60f7de7fba264b21cb4d67fbee53fbd" name="a3fdea11166c8b7e03bce9986be105861ab60f7de7fba264b21cb4d67fbee53fbd"></a>Idempotent&#160;</td><td class="fielddoc"><p>Repeating the same rollback request is expected to produce the same final fact-base state. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a257454692a307c1306b9dc55e504b368" name="a257454692a307c1306b9dc55e504b368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a257454692a307c1306b9dc55e504b368">&#9670;&#160;</a></span>RollbackLifecycleStage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a257454692a307c1306b9dc55e504b368">ReteEngine.RollbackLifecycleStage</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Identifies rollback-journal lifecycle stages emitted during publish-resume journaling and later rollback execution. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a257454692a307c1306b9dc55e504b368a8428552d86c0d262a542a528af490afa" name="a257454692a307c1306b9dc55e504b368a8428552d86c0d262a542a528af490afa"></a>Started&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a257454692a307c1306b9dc55e504b368a733d43480c8589b1368e5def6b480415" name="a257454692a307c1306b9dc55e504b368a733d43480c8589b1368e5def6b480415"></a>Applied&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a257454692a307c1306b9dc55e504b368ad9c8f187972e6320a34e9c40b4cba605" name="a257454692a307c1306b9dc55e504b368ad9c8f187972e6320a34e9c40b4cba605"></a>Skipped&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a257454692a307c1306b9dc55e504b368a1ab4f9805376031c61c6ed4cf6ffbe26" name="a257454692a307c1306b9dc55e504b368a1ab4f9805376031c61c6ed4cf6ffbe26"></a>Conflicted&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a257454692a307c1306b9dc55e504b368a07ca5050e697392c9ed47e6453f1453f" name="a257454692a307c1306b9dc55e504b368a07ca5050e697392c9ed47e6453f1453f"></a>Completed&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a1aa56962ccf5c73a7184815564b2ee0f" name="a1aa56962ccf5c73a7184815564b2ee0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1aa56962ccf5c73a7184815564b2ee0f">&#9670;&#160;</a></span>RollbackSideEffectDisposition</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a1aa56962ccf5c73a7184815564b2ee0f">ReteEngine.RollbackSideEffectDisposition</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Describes compensation state for an externally observed side effect. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1aa56962ccf5c73a7184815564b2ee0fa2a6c9aa665f427f89acae6b3d3e8b7ff" name="a1aa56962ccf5c73a7184815564b2ee0fa2a6c9aa665f427f89acae6b3d3e8b7ff"></a>NonRollbackable&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1aa56962ccf5c73a7184815564b2ee0fab30cb3793252e94c2be431af99c97ab2" name="a1aa56962ccf5c73a7184815564b2ee0fab30cb3793252e94c2be431af99c97ab2"></a>PendingCompensation&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1aa56962ccf5c73a7184815564b2ee0fa843e44b3516301279b16e1fb62ffbc84" name="a1aa56962ccf5c73a7184815564b2ee0fa843e44b3516301279b16e1fb62ffbc84"></a>Compensated&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1aa56962ccf5c73a7184815564b2ee0fa6c2d495dc11ac8cca7edfcb543995242" name="a1aa56962ccf5c73a7184815564b2ee0fa6c2d495dc11ac8cca7edfcb543995242"></a>CompensationFailed&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="af3f6a49d742c4d953ec7510efc46ede4" name="af3f6a49d742c4d953ec7510efc46ede4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f6a49d742c4d953ec7510efc46ede4">&#9670;&#160;</a></span>PublishedBatchMetadataEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">record ReteEngine.PublishedBatchMetadataEntry </td>
+          <td>(</td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>Sequence</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>Epoch</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DateTimeOffset</td>          <td class="paramname"><span class="paramname"><em>CommittedAt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>AgendaGroup</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>RuleName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid?</td>          <td class="paramname"><span class="paramname"><em>ActivationId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>ChangeCount</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel sealed">sealed</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Captures committed metadata for a published fact-change batch to support audit correlation. </p>
+
+</div>
+</div>
+<a id="aa124f66ac0ef19c93ac7aadc3a919156" name="aa124f66ac0ef19c93ac7aadc3a919156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa124f66ac0ef19c93ac7aadc3a919156">&#9670;&#160;</a></span>RollbackJournalChangeEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">record ReteEngine.RollbackJournalChangeEntry </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>Index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_rete_core.html#a15fd416fbb2e492fb0e7753d1e7cea36">FactChangeTypeEnum</a></td>          <td class="paramname"><span class="paramname"><em>Kind</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid</td>          <td class="paramname"><span class="paramname"><em>FactId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long?</td>          <td class="paramname"><span class="paramname"><em>ExpectedRevision</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_rete_core.html#a74a110b5079c75e52cb453d36a673a63">FactChangeOrigin</a>?</td>          <td class="paramname"><span class="paramname"><em>Origin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>?</td>          <td class="paramname"><span class="paramname"><em>PublishedFact</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>ExistedBefore</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>RevisionBefore</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>?</td>          <td class="paramname"><span class="paramname"><em>FactBefore</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>ExistsAfter</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>RevisionAfter</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a>?</td>          <td class="paramname"><span class="paramname"><em>FactAfter</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel sealed">sealed</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Captures per-change provenance and before/after fact state for one committed published fact change. </p>
+
+</div>
+</div>
+<a id="a0a9a5f1c5eaff8f517dfc3a78d48dee6" name="a0a9a5f1c5eaff8f517dfc3a78d48dee6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a9a5f1c5eaff8f517dfc3a78d48dee6">&#9670;&#160;</a></span>RollbackJournalEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">record ReteEngine.RollbackJournalEntry </td>
+          <td>(</td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>Sequence</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>Epoch</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DateTimeOffset</td>          <td class="paramname"><span class="paramname"><em>CommittedAt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>AgendaGroup</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?</td>          <td class="paramname"><span class="paramname"><em>RuleName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid?</td>          <td class="paramname"><span class="paramname"><em>ActivationId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IReadOnlyList&lt; <a class="el" href="#aa124f66ac0ef19c93ac7aadc3a919156">RollbackJournalChangeEntry</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>Changes</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel sealed">sealed</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Represents one committed publish-resume batch in the rollback journal. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

@@ -1,13 +1,16 @@
 var searchData=
 [
-  ['rank_0',['Rank',['../class_rete_program_1_1_officer.html#aaa55253293e3d67345d7c28e6359f51c',1,'ReteProgram::Officer']]],
-  ['reason_1',['Reason',['../class_rete_core_1_1_agenda_focus_stack_changed_event_args.html#abe3e8b2d183ca7f65d4a4b9a0cc44e2e',1,'ReteCore::AgendaFocusStackChangedEventArgs']]],
-  ['recordactivitylog_2',['RecordActivityLog',['../class_rete_core_1_1_agenda_group.html#a574b65072454896dda7406674f14f8ad',1,'ReteCore::AgendaGroup']]],
-  ['recordgroupactivitylog_3',['RecordGroupActivityLog',['../class_rete_core_1_1_agenda.html#a9c846d9bf8ab4c26feb2aba72fbfa74a',1,'ReteCore::Agenda']]],
-  ['reference_4',['Reference',['../struct_rete_core_1_1_fact_snapshot.html#a57e986cd7a277b45e185a5f598cb0f35',1,'ReteCore::FactSnapshot']]],
-  ['reportstorank_5',['ReportsToRank',['../class_rete_program_1_1_officer.html#a6bdacacd6ccabafd35d3982935401042',1,'ReteProgram::Officer']]],
-  ['root_6',['Root',['../class_rete_engine_1_1_rete_engine.html#a9f9bbed9f002ef62bcf3717a2eaf7a87',1,'ReteEngine::ReteEngine']]],
-  ['ruleindex_7',['RuleIndex',['../class_rete_core_1_1_rule_metadata.html#a93a31c84f2c0e0e5f187217dcd8b738e',1,'ReteCore::RuleMetadata']]],
-  ['rulemetadata_8',['RuleMetadata',['../class_rete_core_1_1_terminal_node.html#a929304aa8e41bd548a2282785f643702',1,'ReteCore::TerminalNode']]],
-  ['rulename_9',['RuleName',['../class_rete_core_1_1_activation.html#a493fc7b647c43420fdd9fd8299180bf9',1,'ReteCore.Activation.RuleName'],['../class_rete_core_1_1_rule_execution_context.html#a0a86accbba54adb6297cae4fed2e412a',1,'ReteCore.RuleExecutionContext.RuleName'],['../class_rete_engine_1_1_rete_builder-1-g.html#a752cbe7669a40e4a7229de0f7e4106a9',1,'ReteEngine.ReteBuilder-1-g.RuleName'],['../class_rete_engine_1_1_rule_fired_event_args.html#abe65144f404b4660542a70f38f6f5d47',1,'ReteEngine.RuleFiredEventArgs.RuleName']]]
+  ['reason_0',['Reason',['../class_rete_core_1_1_agenda_focus_stack_changed_event_args.html#abe3e8b2d183ca7f65d4a4b9a0cc44e2e',1,'ReteCore::AgendaFocusStackChangedEventArgs']]],
+  ['recordactivitylog_1',['RecordActivityLog',['../class_rete_core_1_1_agenda_group.html#a574b65072454896dda7406674f14f8ad',1,'ReteCore::AgendaGroup']]],
+  ['recordgroupactivitylog_2',['RecordGroupActivityLog',['../class_rete_core_1_1_agenda.html#a9c846d9bf8ab4c26feb2aba72fbfa74a',1,'ReteCore::Agenda']]],
+  ['reference_3',['Reference',['../struct_rete_core_1_1_fact_snapshot.html#a57e986cd7a277b45e185a5f598cb0f35',1,'ReteCore::FactSnapshot']]],
+  ['rollbackboundarymode_4',['RollbackBoundaryMode',['../class_rete_engine_1_1_rete_engine.html#ac7629d662e31560a64c7ad37a7af3f72',1,'ReteEngine.ReteEngine.RollbackBoundaryMode'],['../class_rete_engine_1_1_rete_engine_options.html#ac5be13a5236a68f9013e9ff258e979a0',1,'ReteEngine.ReteEngineOptions.RollbackBoundaryMode']]],
+  ['rollbackconflictpolicy_5',['RollbackConflictPolicy',['../class_rete_engine_1_1_rete_engine.html#abcb9af86348bd2ec633cce03b2a26bfa',1,'ReteEngine.ReteEngine.RollbackConflictPolicy'],['../class_rete_engine_1_1_rete_engine_options.html#accd3ede633c4af6b74292f96cdaef294',1,'ReteEngine.ReteEngineOptions.RollbackConflictPolicy']]],
+  ['rollbackidempotencymode_6',['RollbackIdempotencyMode',['../class_rete_engine_1_1_rete_engine.html#aad6a677d032d338ee8d36a23980809bc',1,'ReteEngine.ReteEngine.RollbackIdempotencyMode'],['../class_rete_engine_1_1_rete_engine_options.html#aa088eeaa7ffcb33d4f192dfa45ce8e2e',1,'ReteEngine.ReteEngineOptions.RollbackIdempotencyMode']]],
+  ['rollbackjournal_7',['RollbackJournal',['../class_rete_engine_1_1_rete_engine.html#a3975557a8a307e41483a1382e000df64',1,'ReteEngine::ReteEngine']]],
+  ['rollbacksideeffectaudit_8',['RollbackSideEffectAudit',['../class_rete_engine_1_1_rete_engine.html#ae23b9c283ee079201ba9c40f8870b7b9',1,'ReteEngine::ReteEngine']]],
+  ['root_9',['Root',['../class_rete_engine_1_1_rete_engine.html#a9f9bbed9f002ef62bcf3717a2eaf7a87',1,'ReteEngine::ReteEngine']]],
+  ['ruleindex_10',['RuleIndex',['../class_rete_core_1_1_rule_metadata.html#a93a31c84f2c0e0e5f187217dcd8b738e',1,'ReteCore::RuleMetadata']]],
+  ['rulemetadata_11',['RuleMetadata',['../class_rete_core_1_1_terminal_node.html#a929304aa8e41bd548a2282785f643702',1,'ReteCore::TerminalNode']]],
+  ['rulename_12',['RuleName',['../class_rete_engine_1_1_rete_builder-1-g.html#a752cbe7669a40e4a7229de0f7e4106a9',1,'ReteEngine.ReteBuilder-1-g.RuleName'],['../class_rete_engine_1_1_rollback_lifecycle_event_args.html#aabe3d749ee08dcf27a7ac29f75bb25ca',1,'ReteEngine.RollbackLifecycleEventArgs.RuleName'],['../class_rete_engine_1_1_rollback_side_effect_audit_entry.html#a876fc011303951d9651c5164aba055ed',1,'ReteEngine.RollbackSideEffectAuditEntry.RuleName'],['../class_rete_engine_1_1_rule_fired_event_args.html#abe65144f404b4660542a70f38f6f5d47',1,'ReteEngine.RuleFiredEventArgs.RuleName'],['../class_rete_core_1_1_activation.html#a493fc7b647c43420fdd9fd8299180bf9',1,'ReteCore.Activation.RuleName'],['../class_rete_core_1_1_rule_execution_context.html#a0a86accbba54adb6297cae4fed2e412a',1,'ReteCore.RuleExecutionContext.RuleName']]]
 ];

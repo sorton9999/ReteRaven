@@ -40,9 +40,24 @@ namespace ReteEngine
         {
             string? typeName = typeof(T).FullName;
             string conditionPart = condition != null
-                ? $":{condition}"
+                ? $":{condition.Method.MethodHandle.Value}"
                 : "";
             return $"Where<{typeName}>({name}){conditionPart}";
+        }
+
+        /// <summary>
+        /// Builds a stable identity string for an optional predicate, suitable for inclusion in a cache key.
+        /// Two distinct delegate instances (even with logically identical bodies) produce distinct identities,
+        /// while the same delegate instance always produces the same identity. A missing predicate produces a
+        /// fixed "none" marker so that "no predicate" never accidentally collides with "some predicate" whose
+        /// identity happens to be empty.
+        /// </summary>
+        /// <typeparam name="T">The fact type the predicate operates on.</typeparam>
+        /// <param name="predicate">The optional predicate to identify.</param>
+        /// <returns>A stable, collision-resistant identity string for the predicate.</returns>
+        public static string PredicateIdentity<T>(Func<T, bool>? predicate)
+        {
+            return predicate != null ? predicate.Method.MethodHandle.Value.ToString() : "none";
         }
 
         /// <summary>

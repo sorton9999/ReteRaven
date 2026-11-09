@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -99,7 +99,7 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_builder-1-g.html','','class
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6d5b7d1ea2696cc4a6b00e8e4167c0cd" id="r_a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> <a class="el" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>, string name)</td></tr>
+<tr class="memitem:a6d5b7d1ea2696cc4a6b00e8e4167c0cd" id="r_a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a> (<a class="el" href="class_rete_engine_1_1_rete_engine.html">ReteEngine</a> engine, string name)</td></tr>
 <tr class="memdesc:a6d5b7d1ea2696cc4a6b00e8e4167c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the RuleBuilder class with the specified Rete engine and rule name.  <br /></td></tr>
 <tr class="memitem:a1b05a648e5ebbdf0ce9374b706ba5dda" id="r_a1b05a648e5ebbdf0ce9374b706ba5dda"><td class="memItemLeft"><a class="el" href="#a6d5b7d1ea2696cc4a6b00e8e4167c0cd">ReteBuilder</a>&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1b05a648e5ebbdf0ce9374b706ba5dda">Where&lt; T &gt;</a> (string name, string? debugLabel=null, Func&lt; T, bool &gt;? initialCondition=null)</td></tr>
 <tr class="memdesc:a1b05a648e5ebbdf0ce9374b706ba5dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a typed fact with an optional condition to the rule being built. This method creates an <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> node for the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be used to filter facts of type T as they are asserted into the <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a>. The name parameter is used to identify this match condition within the rule, allowing it to be referenced in subsequent conditions or actions. If a debug label is provided, diagnostic output will be written to the console when the type is added.  <br /></td></tr>

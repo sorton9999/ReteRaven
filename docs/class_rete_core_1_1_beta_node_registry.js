@@ -11,5 +11,6 @@ var class_rete_core_1_1_beta_node_registry =
     [ "GetStatistics", "class_rete_core_1_1_beta_node_registry.html#a2253fa61865f023679eabd3a92e3b223", null ],
     [ "GetTotalCachedNodeCount", "class_rete_core_1_1_beta_node_registry.html#a51962bf92afd83e26b45d5d3d2ba4676", null ],
     [ "IReteNode", "class_rete_core_1_1_beta_node_registry.html#ad0f11b10a6ac3281b8e893637b1498ab", null ],
-    [ "joinNode", "class_rete_core_1_1_beta_node_registry.html#a734799e9c124d2a147991b59bfdf387f", null ]
+    [ "joinNode", "class_rete_core_1_1_beta_node_registry.html#a734799e9c124d2a147991b59bfdf387f", null ],
+    [ "EnableConsoleTraceLogging", "class_rete_core_1_1_beta_node_registry.html#aac18a5e3a30132003fae6f3fadfa54ee", null ]
 ];

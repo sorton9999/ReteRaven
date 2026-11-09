@@ -29,6 +29,7 @@ var class_rete_core_1_1_agenda =
     [ "AgendaGroupFocusStack", "class_rete_core_1_1_agenda.html#a129af3a42d99a02ceb82271627b68456", null ],
     [ "AgendaGroups", "class_rete_core_1_1_agenda.html#a7d6b5aaf2871bfd71a4c44ff3c8a2937", null ],
     [ "CollectStatistics", "class_rete_core_1_1_agenda.html#a2fd3bf45a6e0931e7b9ac14f43cfb4c8", null ],
+    [ "EnableConsoleTraceLogging", "class_rete_core_1_1_agenda.html#a2dd29490ece11615e13444027c28eba4", null ],
     [ "FocusedAgendaGroup", "class_rete_core_1_1_agenda.html#a838f8dedeb4889e336511702e459e47f", null ],
     [ "GroupActivityLog", "class_rete_core_1_1_agenda.html#ae1b48c6426b72cd6806fef8c1d97df83", null ],
     [ "HasActivations", "class_rete_core_1_1_agenda.html#a3aa3a75318c9ecb9dddf03c3fa7ab14e", null ],
