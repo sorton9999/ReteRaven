@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -117,10 +117,10 @@ This project is open-source and distributed under the LGPL license.</h2>
 <li>= Expressive Pattern Matching: Rules support joins, logical branches, negation, existence checks, and additional filters.</li>
 <li>= Advanced Logic Nodes: Support for <span class="tt">Or</span>, <span class="tt">Not</span>, <span class="tt">AndNot</span>, and <span class="tt">Exists</span> conditions, including an indexed <span class="tt">Exists</span> implementation.</li>
 <li>= Beta-Node Sharing: Compatible beta-memory nodes can be cached and reused across rules to reduce duplicated network structures.</li>
-<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt"><a class="el" href="_program_8cs.html#a2819eda37afe07ede1fd15400fa9fb12">Count</a></span>, and <span class="tt">Average</span>.</li>
+<li>= Grouping and Aggregation: Group matched facts and calculate common aggregates such as <span class="tt">Sum</span>, <span class="tt">Count</span>, and <span class="tt">Average</span>.</li>
 <li>= Publish-Resume: Successful rules publish staged fact-change batches that the engine applies before agenda processing resumes.</li>
 <li>= Agenda Groups: Named groups, focus control, and readiness strategies let users organize and gate rule execution.</li>
-<li>= Rule Prioritization: Control firing order with rule priority and activation salience.</li>
+<li>= Rollback Mechanism: A Drools-like agenda control + Rete/CLIPS-style inference + WAL/event-sourced rollback semantics.</li>
 <li>= Command Queue Ready: Use the engine as an inference layer that produces effects for a separate command-processing layer.</li>
 </ul>
 <hr  />
@@ -133,29 +133,26 @@ This project is open-source and distributed under the LGPL license.</h2>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Task : Fact</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">public</span> <span class="keywordtype">int</span> ParentId { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">string</span> <a class="code hl_variable" href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a> { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
+<div class="line">    <span class="keyword">public</span> <span class="keywordtype">string</span> Status { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
 <div class="line">}</div>
-<div class="ttc" id="a_program_8cs_html_a399143b9812ebd122f31f60327ca283d"><div class="ttname"><a href="_program_8cs.html#a399143b9812ebd122f31f60327ca283d">Status</a></div><div class="ttdeci">shipment. Status</div><div class="ttdef"><b>Definition</b> Program.cs:391</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 2. Configure the Engine</h2>
 <p>Use the fluent builder to define your domain logic.</p>
-<div class="fragment"><div class="line">var <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a> = <span class="keyword">new</span> <a class="code hl_namespace" href="namespace_rete_engine.html">ReteEngine</a>();</div>
+<div class="fragment"><div class="line">var engine = <span class="keyword">new</span> <a class="code hl_namespace" href="namespace_rete_engine.html">ReteEngine</a>();</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Begin(<span class="stringliteral">&quot;BubbleUpCompletion&quot;</span>)</div>
+<div class="line">engine.Begin(<span class="stringliteral">&quot;BubbleUpCompletion&quot;</span>)</div>
 <div class="line">    .Where&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, parent =&gt; parent.Status == <span class="stringliteral">&quot;Incomplete&quot;</span>)</div>
 <div class="line">    <span class="comment">// Ensure the parent has children.</span></div>
 <div class="line">    .Exists&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, (child, parent) =&gt; child.ParentId == parent.Id)</div>
 <div class="line">    <span class="comment">// Only fire when no children are still incomplete.</span></div>
 <div class="line">    .Not&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>, (child, parent) =&gt;</div>
 <div class="line">        child.ParentId == parent.Id &amp;&amp; child.Status == <span class="stringliteral">&quot;Incomplete&quot;</span>)</div>
-<div class="line">    .<a class="code hl_function" href="_program_8cs.html#aeca908d3c8fc9e8cee7d380b93b07ad6">Then</a>(match =&gt;</div>
+<div class="line">    .Then(match =&gt;</div>
 <div class="line">    {</div>
 <div class="line">        var parent = match.Get&lt;Task&gt;(<span class="stringliteral">&quot;BubbleTask&quot;</span>);</div>
 <div class="line">        parent.Status = <span class="stringliteral">&quot;Complete&quot;</span>;</div>
-<div class="line">        <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Update(parent);</div>
+<div class="line">        engine.Update(parent);</div>
 <div class="line">    });</div>
-<div class="ttc" id="a_program_8cs_html_a11ebb594932bb49d3558b9fa3859cc36"><div class="ttname"><a href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a></div><div class="ttdeci">var engine</div><div class="ttdef"><b>Definition</b> Program.cs:15</div></div>
-<div class="ttc" id="a_program_8cs_html_aeca908d3c8fc9e8cee7d380b93b07ad6"><div class="ttname"><a href="_program_8cs.html#aeca908d3c8fc9e8cee7d380b93b07ad6">Then</a></div><div class="ttdeci">engine.CheckAdd. Then(token=&gt; { var a=token.Get&lt; Fact &gt;(&quot;FirstCell&quot;);var b=token.Get&lt; Fact &gt;(&quot;SecondCell&quot;);Console.WriteLine($&quot;Conflict found on {a.Id}!&quot;);}, salience:10)</div></div>
 <div class="ttc" id="anamespace_rete_engine_html"><div class="ttname"><a href="namespace_rete_engine.html">ReteEngine</a></div><div class="ttdef"><b>Definition</b> FluentConverter.cs:19</div></div>
 </div><!-- fragment --><p>You can define multiple rules in the engine, each with its own chain of conditions and action.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
@@ -164,10 +161,10 @@ This project is open-source and distributed under the LGPL license.</h2>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keywordtype">void</span> OnTick()</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">// 1. Synchronize world changes.</span></div>
-<div class="line">    <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.Assert(changedEntity);</div>
+<div class="line">    engine.Assert(changedEntity);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 2. Fire pending rules.</span></div>
-<div class="line">    <a class="code hl_variable" href="_program_8cs.html#a11ebb594932bb49d3558b9fa3859cc36">engine</a>.FireAll();</div>
+<div class="line">    engine.FireAll();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 3. Process resulting commands.</span></div>
 <div class="line">    commandQueue.Process();</div>

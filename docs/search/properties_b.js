@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['name_0',['Name',['../class_rete_core_1_1_agenda_group.html#ace37938288484d190cad67f5192b4c1e',1,'ReteCore.AgendaGroup.Name'],['../class_rete_core_1_1_alpha_to_beta_adapter.html#afb40e58ca2f227fa5eb195fb7bcd3b60',1,'ReteCore.AlphaToBetaAdapter.Name'],['../class_rete_core_1_1_rule_metadata.html#ad0ec447073afdf3dc6cccc6a4e7362b4',1,'ReteCore.RuleMetadata.Name'],['../class_rete_core_1_1_fact.html#a8dbc59ee8ed38e3e87471f718b773163',1,'ReteCore.Fact.Name'],['../class_rete_program_1_1_product.html#ae4851a3d17851e6cf26f524125bfef20',1,'ReteProgram.Product.Name'],['../class_rete_program_1_1_officer.html#a5077aee945d9a6b2442ad5e3905474f2',1,'ReteProgram.Officer.Name'],['../class_rete_program_1_1_duty_status.html#ab1730c90f9616c9b6455092508f16eb7',1,'ReteProgram.DutyStatus.Name'],['../class_rete_test_1_1_tests_1_1_rete_builder_integration_tests_1_1_g_product.html#a8f3356fee58c64b4167d51793b89d63f',1,'ReteTest.Tests.ReteBuilderIntegrationTests.GProduct.Name']]],
-  ['namedfacts_1',['NamedFacts',['../class_rete_core_1_1_token.html#ad361bc510849b289dfea963a81f5199a',1,'ReteCore::Token']]]
+  ['match_0',['Match',['../class_rete_core_1_1_activation.html#a4f42bc2178c6cd1084d9294f4ec343d7',1,'ReteCore.Activation.Match'],['../class_rete_core_1_1_rule_execution_context.html#ae7b84a2820040bb889b1e0e61ba1f17e',1,'ReteCore.RuleExecutionContext.Match']]],
+  ['metadata_1',['Metadata',['../class_rete_engine_1_1_rollback_side_effect_audit_entry.html#a12941a4af65162c36269b2785bdfe16f',1,'ReteEngine::RollbackSideEffectAuditEntry']]]
 ];

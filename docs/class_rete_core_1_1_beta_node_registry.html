@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -120,6 +120,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a734799e9c124d2a147991b59bfdf387f" id="r_a734799e9c124d2a147991b59bfdf387f"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_join_node.html">JoinNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a734799e9c124d2a147991b59bfdf387f">joinNode</a></td></tr>
 <tr class="memdesc:a734799e9c124d2a147991b59bfdf387f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves or creates a (<a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>) pair for a join pattern. Join pairs are atomic: both the join condition and the following beta memory are cached together. If a pair with the exact (previousNode, joinSignature) exists, it is reused (including its join condition). Otherwise, a new pair is created and cached.  <br /></td></tr>
 <tr class="memitem:ad0f11b10a6ac3281b8e893637b1498ab" id="r_ad0f11b10a6ac3281b8e893637b1498ab"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:aac18a5e3a30132003fae6f3fadfa54ee" id="r_aac18a5e3a30132003fae6f3fadfa54ee"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aac18a5e3a30132003fae6f3fadfa54ee">EnableConsoleTraceLogging</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:aac18a5e3a30132003fae6f3fadfa54ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls whether the registry writes diagnostic Console.WriteLine trace messages. Disabled by default.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A registry for reusing shared beta memory nodes and join node pairs across multiple rules. This enables beta-node sharing: when two rules request the same (previousNode, patternSignature) pair, they receive the same physical node instance, dramatically reducing memory footprint and improving token propagation efficiency. </p>
@@ -404,6 +409,31 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A cached or newly created (<a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>) pair.</dd></dl>
+
+</div>
+</div>
+<a name="doc-property-members" id="doc-property-members"></a><h2 id="header-doc-property-members" class="groupheader">Property Documentation</h2>
+<a id="aac18a5e3a30132003fae6f3fadfa54ee" name="aac18a5e3a30132003fae6f3fadfa54ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac18a5e3a30132003fae6f3fadfa54ee">&#9670;&#160;</a></span>EnableConsoleTraceLogging</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.BetaNodeRegistry.EnableConsoleTraceLogging</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Controls whether the registry writes diagnostic Console.WriteLine trace messages. Disabled by default. </p>
 
 </div>
 </div>

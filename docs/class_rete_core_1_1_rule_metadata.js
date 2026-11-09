@@ -10,6 +10,7 @@ var class_rete_core_1_1_rule_metadata =
     [ "Name", "class_rete_core_1_1_rule_metadata.html#ad0ec447073afdf3dc6cccc6a4e7362b4", null ],
     [ "Priority", "class_rete_core_1_1_rule_metadata.html#a0edab17953195a8ee545ee1d8be00d42", null ],
     [ "PublishChanges", "class_rete_core_1_1_rule_metadata.html#a0e0f708ff5a5ee23d06c2f346c9f9bdc", null ],
+    [ "PublishSideEffects", "class_rete_core_1_1_rule_metadata.html#a433d2a652a027b2502a71413065555c4", null ],
     [ "RuleIndex", "class_rete_core_1_1_rule_metadata.html#a93a31c84f2c0e0e5f187217dcd8b738e", null ],
     [ "Salience", "class_rete_core_1_1_rule_metadata.html#a4a4e8939b3afc9d4601ba993c0bc6d9e", null ]
 ];

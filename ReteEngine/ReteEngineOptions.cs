@@ -18,6 +18,11 @@ namespace ReteEngine
         public bool EnableBetaNodeSharing { get; init; } = true;
 
         /// <summary>
+        /// Gets or sets whether condition trace logging is enabled.
+        /// </summary>
+        public bool EnableConditionTraceLogging { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets whether the engine subscribes to INotifyPropertyChanged facts
         /// and refreshes the network automatically when those facts change.
         /// When disabled, callers must explicitly call Update or Refresh after a change.

@@ -2,7 +2,7 @@
 
 This file summarizes notable features and improvements.
 
-## v1.5 (Nov 6, 2026)
+## v1.5.1 (Nov 7, 2026)
 
 ### Rollback mechanism
 

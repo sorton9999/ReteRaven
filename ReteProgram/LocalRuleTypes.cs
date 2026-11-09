@@ -140,6 +140,7 @@ namespace ReteProgram
         private int _productId;
         private string _location;
         private int _count;
+        private bool _hasDiscount;
         
         public bool InStock
         {
@@ -195,13 +196,26 @@ namespace ReteProgram
             }
         }
 
+        public bool HasDiscount
+        {
+            get { return _hasDiscount; }
+            set
+            {
+                if (_hasDiscount != value)
+                {
+                    _hasDiscount = value;
+                    OnPropertyChanged(nameof(HasDiscount));
+                }
+            }
+        }
+
         public override bool Equals(object? obj)
         {
-            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation && Count == inventory.Count;
+            return obj is Inventory inventory && Id == inventory.Id && Value == inventory.Value && ProductId == inventory.ProductId && Quantity == inventory.Quantity && WarehouseLocation == inventory.WarehouseLocation && Count == inventory.Count && HasDiscount == inventory.HasDiscount;
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation, Count);
+            return HashCode.Combine(Id, Value, Quantity, ProductId, WarehouseLocation, Count, HasDiscount);
         }
     }
 

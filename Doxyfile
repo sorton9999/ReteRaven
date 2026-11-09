@@ -48,7 +48,7 @@ PROJECT_NAME           = ReteRaven
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.5
+PROJECT_NUMBER         = 1.5.1
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewers a
@@ -1029,7 +1029,6 @@ WARN_LOGFILE           =
 INPUT                  = . \
                          DOXY_README.md \
                          C:/Users/steve/source/repos/ReteRaven/ReteEngine \
-                         C:/Users/steve/source/repos/ReteRaven/ReteProgram \
                          "C:\Users\steve\source\repos\ReteRaven\ReteCore"
 
 # This tag can be used to specify the character encoding of the source files
@@ -1126,7 +1125,7 @@ FILE_PATTERNS          = *.c \
 # be searched for input files as well.
 # The default value is: NO.
 
-RECURSIVE              = YES
+RECURSIVE              = NO
 
 # The EXCLUDE tag can be used to specify files and/or directories that should be
 # excluded from the INPUT source files. This way you can easily exclude a

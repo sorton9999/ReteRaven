@@ -402,15 +402,18 @@ namespace ReteTest.Tests
 
             // Rule 1: High Value Order -> Logic Assert a Discount
             engine.Begin("HighValueDiscount")
-                .Where<Inventory>("I", o => o.Count >= 1000)
-                .Then(t => {
-                    var inv = t.Get<Inventory>("I");
+                .Where<Inventory>("IHi", o => o.Count >= 1000 && !o.HasDiscount)
+                .CtxThen(t => {
+                    var inv = t.Match.Get<Inventory>("IHi");
+                    inv.HasDiscount = true;
+                    t.Update(inv, null);
+                    t.Publish();
                     Console.WriteLine($"High value order detected (Count: {inv.Count}), applying discount.");
                 });
 
             // Rule 2: Track if Discount is in memory
             engine.Begin("TrackDiscount")
-                .Where<Inventory>("I", o => true)
+                .Where<Inventory>("IDisc", o => o.HasDiscount)
                 .Then(t => {
                     discountActiveCount++;
                 });

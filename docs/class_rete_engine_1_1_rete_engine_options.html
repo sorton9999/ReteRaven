@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -101,8 +101,16 @@ $(function(){initNavTree('class_rete_engine_1_1_rete_engine_options.html','','cl
 Properties</h2></td></tr>
 <tr class="memitem:a2d2c01f5964b273c58d4b7cdcc578cc4" id="r_a2d2c01f5964b273c58d4b7cdcc578cc4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a2d2c01f5964b273c58d4b7cdcc578cc4">EnableBetaNodeSharing</a> = true<code> [get]</code></td></tr>
 <tr class="memdesc:a2d2c01f5964b273c58d4b7cdcc578cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets whether compatible beta nodes may be shared across rules.  <br /></td></tr>
+<tr class="memitem:a8047e3efc1026017dbc22141d52c30b7" id="r_a8047e3efc1026017dbc22141d52c30b7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a8047e3efc1026017dbc22141d52c30b7">EnableConditionTraceLogging</a> = false<code> [get, set]</code></td></tr>
+<tr class="memdesc:a8047e3efc1026017dbc22141d52c30b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets whether condition trace logging is enabled.  <br /></td></tr>
 <tr class="memitem:a773cb23731712458dde6c56118fd828a" id="r_a773cb23731712458dde6c56118fd828a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a773cb23731712458dde6c56118fd828a">AutoRefreshOnPropertyChanged</a> = true<code> [get]</code></td></tr>
 <tr class="memdesc:a773cb23731712458dde6c56118fd828a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets whether the engine subscribes to INotifyPropertyChanged facts and refreshes the network automatically when those facts change. When disabled, callers must explicitly call Update or Refresh after a change. This setting does not prevent the fact object itself from being mutated.  <br /></td></tr>
+<tr class="memitem:ac5be13a5236a68f9013e9ff258e979a0" id="r_ac5be13a5236a68f9013e9ff258e979a0"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1b">RollbackBoundaryMode</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac5be13a5236a68f9013e9ff258e979a0">RollbackBoundaryMode</a> = <a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27">RollbackBoundaryMode.PublishedFactChangesOnly</a><code> [get]</code></td></tr>
+<tr class="memdesc:ac5be13a5236a68f9013e9ff258e979a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the rollback boundary mode used by the engine. The current boundary limits rollback eligibility to explicitly published fact changes.  <br /></td></tr>
+<tr class="memitem:accd3ede633c4af6b74292f96cdaef294" id="r_accd3ede633c4af6b74292f96cdaef294"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9">RollbackConflictPolicy</a>&#160;</td><td class="memItemRight"><a class="el" href="#accd3ede633c4af6b74292f96cdaef294">RollbackConflictPolicy</a> = <a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9a5152ffb5859e5d94b35b10ca2204b018">RollbackConflictPolicy.FailFast</a><code> [get]</code></td></tr>
+<tr class="memdesc:accd3ede633c4af6b74292f96cdaef294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the conflict policy used during rollback processing.  <br /></td></tr>
+<tr class="memitem:aa088eeaa7ffcb33d4f192dfa45ce8e2e" id="r_aa088eeaa7ffcb33d4f192dfa45ce8e2e"><td class="memItemLeft"><a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861">RollbackIdempotencyMode</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa088eeaa7ffcb33d4f192dfa45ce8e2e">RollbackIdempotencyMode</a> = <a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861ab60f7de7fba264b21cb4d67fbee53fbd">RollbackIdempotencyMode.Idempotent</a><code> [get]</code></td></tr>
+<tr class="memdesc:aa088eeaa7ffcb33d4f192dfa45ce8e2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the idempotency guarantee mode for rollback operations.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configures behavior of a <a class="el" href="class_rete_engine_1_1_rete_engine.html" title="The ReteEngine class represents the core of a Rete-based rule engine, responsible for managing the Re...">ReteEngine</a> instance. </p>
@@ -152,6 +160,102 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets or sets whether compatible beta nodes may be shared across rules. </p>
+
+</div>
+</div>
+<a id="a8047e3efc1026017dbc22141d52c30b7" name="a8047e3efc1026017dbc22141d52c30b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8047e3efc1026017dbc22141d52c30b7">&#9670;&#160;</a></span>EnableConditionTraceLogging</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteEngine.ReteEngineOptions.EnableConditionTraceLogging = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span><span class="mlabel set">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets whether condition trace logging is enabled. </p>
+
+</div>
+</div>
+<a id="ac5be13a5236a68f9013e9ff258e979a0" name="ac5be13a5236a68f9013e9ff258e979a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5be13a5236a68f9013e9ff258e979a0">&#9670;&#160;</a></span>RollbackBoundaryMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1b">RollbackBoundaryMode</a> ReteEngine.ReteEngineOptions.RollbackBoundaryMode = <a class="el" href="namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27">RollbackBoundaryMode.PublishedFactChangesOnly</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets the rollback boundary mode used by the engine. The current boundary limits rollback eligibility to explicitly published fact changes. </p>
+
+</div>
+</div>
+<a id="accd3ede633c4af6b74292f96cdaef294" name="accd3ede633c4af6b74292f96cdaef294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accd3ede633c4af6b74292f96cdaef294">&#9670;&#160;</a></span>RollbackConflictPolicy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9">RollbackConflictPolicy</a> ReteEngine.ReteEngineOptions.RollbackConflictPolicy = <a class="el" href="namespace_rete_engine.html#ae891e03d09887b14e5b79b695d5f86b9a5152ffb5859e5d94b35b10ca2204b018">RollbackConflictPolicy.FailFast</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets the conflict policy used during rollback processing. </p>
+
+</div>
+</div>
+<a id="aa088eeaa7ffcb33d4f192dfa45ce8e2e" name="aa088eeaa7ffcb33d4f192dfa45ce8e2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa088eeaa7ffcb33d4f192dfa45ce8e2e">&#9670;&#160;</a></span>RollbackIdempotencyMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861">RollbackIdempotencyMode</a> ReteEngine.ReteEngineOptions.RollbackIdempotencyMode = <a class="el" href="namespace_rete_engine.html#a3fdea11166c8b7e03bce9986be105861ab60f7de7fba264b21cb4d67fbee53fbd">RollbackIdempotencyMode.Idempotent</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets the idempotency guarantee mode for rollback operations. </p>
 
 </div>
 </div>

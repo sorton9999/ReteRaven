@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -116,6 +116,8 @@ Properties</h2></td></tr>
 <tr class="memdesc:acbf84b97c433a4a2cd765acba34aaf8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The context action delegate that receives the <a class="el" href="class_rete_core_1_1_rule_execution_context.html" title="Provides an activation-scoped buffer for staged fact changes. The changes are not applied to the fact...">RuleExecutionContext</a>, providing access to the token, agenda, and other relevant information when the rule is activated.  <br /></td></tr>
 <tr class="memitem:a0e0f708ff5a5ee23d06c2f346c9f9bdc" id="r_a0e0f708ff5a5ee23d06c2f346c9f9bdc"><td class="memItemLeft"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#a56e37805b0d6eeef8bde0ba7101aa94e">FactChange</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a0e0f708ff5a5ee23d06c2f346c9f9bdc">PublishChanges</a><code> [get]</code></td></tr>
 <tr class="memdesc:a0e0f708ff5a5ee23d06c2f346c9f9bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optional delegate that is called when a batch of fact changes is published by a successful staged rule action. This allows for custom handling or processing of the fact changes after the rule has been executed.  <br /></td></tr>
+<tr class="memitem:a433d2a652a027b2502a71413065555c4" id="r_a433d2a652a027b2502a71413065555c4"><td class="memItemLeft"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt; IReadOnlyList&lt; <a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a> &gt; &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a433d2a652a027b2502a71413065555c4">PublishSideEffects</a><code> [get]</code></td></tr>
+<tr class="memdesc:a433d2a652a027b2502a71413065555c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optional delegate that is called when side-effect metadata is registered by a successful context action.  <br /></td></tr>
 <tr class="memitem:a98b2b8454652408cba747729b0380749" id="r_a98b2b8454652408cba747729b0380749"><td class="memItemLeft">required Agenda&#160;</td><td class="memItemRight"><a class="el" href="#a98b2b8454652408cba747729b0380749">Agenda</a><code> [get]</code></td></tr>
 <tr class="memdesc:a98b2b8454652408cba747729b0380749"><td class="mdescLeft">&#160;</td><td class="mdescRight">The agenda to which activations of this rule should be added when the rule is activated. This allows for flexibility in managing activations, as different rules can be directed to different agendas if needed. This is a required field.  <br /></td></tr>
 <tr class="memitem:a3935ddf6a318cb2d1f2e402f39720d0e" id="r_a3935ddf6a318cb2d1f2e402f39720d0e"><td class="memItemLeft">List&lt; Func&lt; bool &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3935ddf6a318cb2d1f2e402f39720d0e">GlobalGuards</a> = new()<code> [get]</code></td></tr>
@@ -363,6 +365,30 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The optional delegate that is called when a batch of fact changes is published by a successful staged rule action. This allows for custom handling or processing of the fact changes after the rule has been executed. </p>
+
+</div>
+</div>
+<a id="a433d2a652a027b2502a71413065555c4" name="a433d2a652a027b2502a71413065555c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a433d2a652a027b2502a71413065555c4">&#9670;&#160;</a></span>PublishSideEffects</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aea47d39cca2fbd823eb3221c9634e367">Action</a>&lt;IReadOnlyList&lt;<a class="el" href="namespace_rete_core.html#ae9a8d5e0998cfd926cd13466eb5f1422">RuleSideEffect</a>&gt; &gt;? ReteCore.RuleMetadata.PublishSideEffects</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The optional delegate that is called when side-effect metadata is registered by a successful context action. </p>
 
 </div>
 </div>
