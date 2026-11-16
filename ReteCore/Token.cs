@@ -116,6 +116,38 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// A safe method to attempt to retrieve a fact by name and type from the token chain. It returns a boolean indicating success or failure,
+        /// and outputs the fact if found.
+        /// </summary>
+        /// <typeparam name="T">The type of the fact to retrieve.</typeparam>
+        /// <param name="name">The name of the fact to retrieve.</param>
+        /// <param name="fact">When this method returns, contains the fact associated with the specified name if found; otherwise, the default value for the type T.</param>
+        /// <returns><see langword="true"/> if the fact was found; otherwise, <see langword="false"/>.</returns>
+        public bool TryGet<T>(string name, out T fact)
+        {
+            // Try lookup by explicit name if provided
+            if (name != null && NamedFacts.TryGetValue(name, out var foundFact) && foundFact is T typedFact)
+            {
+                fact = typedFact;
+                return true;
+            }
+            // Walk up the parent chain: try named lookup first, then type-based fallback
+            Token? current = Parent;
+            while (current != null)
+            {
+                if (name != null && current.NamedFacts.TryGetValue(name, out var parentFact) && parentFact is T parentTypedFact)
+                {
+                    fact = parentTypedFact;
+                    return true;
+                }
+                
+                current = current.Parent;
+            }
+            fact = default!;
+            return false;
+        }
+
+        /// <summary>
         /// The overridden string output method
         /// </summary>
         /// <returns>The string representation of the object</returns>
@@ -256,6 +288,21 @@ namespace ReteCore
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"[ID:{Id}, Val:{Value}]";
+
+        /// <summary>
+        /// Set the field and call the PropertyChanged event on the field.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="propertyName"></param>
+        protected void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (Equals(field, value)) return;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 
 

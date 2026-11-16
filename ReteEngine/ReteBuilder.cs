@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ReteEngine
 {
@@ -76,7 +77,12 @@ namespace ReteEngine
         /// that triggered the rule.
         /// </summary>
         private readonly List<LateFilter> _lateFilters = new();
-
+        /// <summary>
+        /// Stores the set of aliases that have been bound in the current rule. This is used to track which 
+        /// aliases have already been used, preventing duplicate bindings and ensuring that each alias is unique
+        /// within the rule.
+        /// </summary>
+        private readonly HashSet<string> _boundAliases = new();
         /// <summary>
         /// Flag indicating whether this rule has late filters. When true, beta node registry caching
         /// is disabled to ensure late filters work correctly, since cached beta memories may not
@@ -101,6 +107,15 @@ namespace ReteEngine
         public string RuleName { get { return _ruleName; } }
 
         /// <summary>
+        /// Resets the internal state of the ReteBuilder, clearing any bound aliases and preparing it for a
+        /// new rule construction.
+        /// </summary>
+        public void Reset()
+        {
+            _boundAliases.Clear();
+        }
+
+        /// <summary>
         /// Adds a typed fact with an optional condition to the rule being built.  This method creates an AlphaMemory node for 
         /// the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be 
         /// used to filter facts of type T as they are asserted into the AlphaMemory. The name parameter is used to identify 
@@ -123,6 +138,9 @@ namespace ReteEngine
             {
                 Console.WriteLine($"===> Start {name}");
             }
+            // Add the incoming name to the bound aliases set to track which aliases have been used in the rule.
+            _boundAliases.Add(name);
+            // Retrieve or create the AlphaMemory for the specified type T.
             var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
 
             // Generate a signature for this Where pattern. The signature incorporates the predicate's
@@ -171,10 +189,10 @@ namespace ReteEngine
         /// <returns>The current <see cref="IGroupBuilder{TInitial}"/> to continue building the group.</returns>
         public IGroupBuilder<TInitial> Group<TRightFact>(string alphaMemoryName)
         {
-            // Mirroring your And<T> setup: get the alpha memory containing the facts we want to aggregate
+            // Get the alpha memory containing the facts we want to aggregate
             var alpha = _engine.GetAlphaMemory<TRightFact>(alphaMemoryName);
 
-            // Pass 'this' so the GroupBuilder can update _lastNode and return fluent chaining to the user
+            // Return GroupBuilder with the Alpha memory
             return new GroupBuilder<TInitial,TRightFact>(this, alpha, alphaMemoryName);
         }
 
@@ -329,9 +347,23 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
         public ReteBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
+            // Add the incoming name to the bound aliases set to track
+            // which aliases have been used in the rule.
+            bool isAlreadyBound = _boundAliases.Add(name);
+            Func<Token, T, bool> effectiveCondition = isAlreadyBound
+                ? (token, fact) => 
+                {
+                    if (token.TryGet<T>(name, out var existing)) // or token.Contains(name)
+                    {
+                        return ReferenceEquals(fact, existing) && joinCondition(token, fact);
+                    }
+                    return joinCondition(token, fact);
+                }
+            : joinCondition;
+
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
-                bool result = joinCondition(token, fact);
+                bool result = effectiveCondition(token, fact);
                 if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
@@ -342,7 +374,7 @@ namespace ReteEngine
             var alpha = _engine.GetAlphaMemory<T>(name);
 
             // Generate both cache key and token name together to ensure consistency
-            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, joinCondition);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, effectiveCondition, isAlreadyBound);
 
             // Use beta node registry for caching if enabled
             JoinNode join;
@@ -894,10 +926,15 @@ namespace ReteEngine
         /// alpha memory should be joined. Returns <see langword="true"/> to join the pair; otherwise, <see langword="false"/>.
         /// </param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling method chaining.</returns>
-        public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition)
+        public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition, string? name = null)
         {
+            string tokenName = name ?? $"Join_{typeof(TNext).Name}_{Guid.NewGuid()}";
+            bool isAlreadyBound = name != null && !_boundAliases.Add(name);
+            Func<Token, TNext, bool> effectiveCondition = isAlreadyBound
+                ? (token, fact) => ReferenceEquals(fact, token.Get<TNext>(name!)) && condition(token, fact) 
+                : condition;
             BetaMemory? beta = _lastNode as BetaMemory;
-            var join = new ReteCore.JoinNode(beta!, nextAlpha, "dummy", (t, f) => condition(t, (TNext)f));
+            var join = new ReteCore.JoinNode(beta!, nextAlpha, tokenName, (t, f) => effectiveCondition(t, (TNext)f));
             var nextBeta = new ReteCore.BetaMemory();
             join.AddSuccessor(nextBeta);
             _lastNode = nextBeta;

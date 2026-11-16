@@ -8,7 +8,10 @@
 //-----------------------------------------------------------------------
 using ReteCore;
 using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace ReteEngine
 {
@@ -39,12 +42,10 @@ namespace ReteEngine
         public static string WhereSignature<T>(string name, Func<T, bool>? condition)
         {
             string? typeName = typeof(T).FullName;
-            string conditionPart = condition != null
-                ? $":{condition.Method.MethodHandle.Value}"
-                : "";
+            string conditionPart = PredicateIdentity(condition);
             return $"Where<{typeName}>({name}){conditionPart}";
         }
-
+        
         /// <summary>
         /// Builds a stable identity string for an optional predicate, suitable for inclusion in a cache key.
         /// Two distinct delegate instances (even with logically identical bodies) produce distinct identities,
@@ -76,13 +77,15 @@ namespace ReteEngine
            string name,
            AlphaMemory alpha,
            Func<Token, T, bool> joinCondition,
+           bool isSelfFilter = false,
            [CallerMemberName] string methodName = "")
         {
             var methodPointer = joinCondition.Method.MethodHandle.Value;
+            string mode = isSelfFilter ? "self" : "join";
 
             // Generate a unique cache key that includes all factors affecting join semantics
             // This prevents false cache hits when conditions differ
-            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}:{mode}):{alpha.GetHashCode()}:{methodPointer}";
 
             // The token name is always the simple provided name - this is what late filters look for
             // by calling token.Get<T>(name)
@@ -186,6 +189,91 @@ namespace ReteEngine
                 ? $":{joinCondition.GetHashCode()}"
                 : "";
             return $"AndNot<{typeName}>({name}){conditionPart}";
+        }
+
+
+        private static string CanonicalizeExpression(Expression expr)
+        {
+            var visitor = new CanonicalExpressionVisitor();
+            visitor.Visit(expr);
+            return visitor.GetSignature();
+        }
+
+        private sealed class CanonicalExpressionVisitor : ExpressionVisitor
+        {
+            private readonly StringBuilder _sb = new();
+
+            public string GetSignature() => _sb.ToString();
+
+            protected override Expression VisitLambda<T>(Expression<T> node)
+            {
+                _sb.Append("(=>");
+                Visit(node.Body);
+                _sb.Append(')');
+                return node;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                // Normalize parameter names so 'f => f.Count > 10' 
+                // matches 'x => x.Count > 10'
+                _sb.Append($"$param:{node.Type.Name}");
+                return node;
+            }
+
+            protected override Expression VisitBinary(BinaryExpression node)
+            {
+                _sb.Append('(');
+                Visit(node.Left);
+                _sb.Append($" {node.NodeType} ");
+                Visit(node.Right);
+                _sb.Append(')');
+                return node;
+            }
+
+            protected override Expression VisitMember(MemberExpression node)
+            {
+                // Evaluate captured closure variables (e.g., local threshold variables)
+                if (node.Expression is ConstantExpression constantExpr)
+                {
+                    object? container = constantExpr.Value;
+                    object? value = node.Member switch
+                    {
+                        FieldInfo field => field.GetValue(container),
+                        PropertyInfo prop => prop.GetValue(container),
+                        _ => null
+                    };
+                    _sb.Append($"[Const:{value ?? "null"}]");
+                    return node;
+                }
+
+                Visit(node.Expression);
+                _sb.Append($".{node.Member.Name}");
+                return node;
+            }
+
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                _sb.Append($"[Const:{node.Value ?? "null"}]");
+                return node;
+            }
+
+            protected override Expression VisitMethodCall(MethodCallExpression node)
+            {
+                if (node.Object != null)
+                {
+                    Visit(node.Object);
+                    _sb.Append('.');
+                }
+                _sb.Append($"{node.Method.Name}(");
+                for (int i = 0; i < node.Arguments.Count; i++)
+                {
+                    if (i > 0) _sb.Append(',');
+                    Visit(node.Arguments[i]);
+                }
+                _sb.Append(')');
+                return node;
+            }
         }
     }
 }
