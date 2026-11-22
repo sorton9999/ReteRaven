@@ -141,6 +141,12 @@ namespace ReteEngine
             }
         }
         private bool _enableConditionTraceLogging;
+
+        /// <summary>
+        /// A reference to the Truth Mainteance System which tracks logical justifications for derived facts asserted
+        /// via <c>InsertLogical</c> and automatically triggers retractions when their supporting rule matches are invalidated.
+        /// </summary>
+        private readonly TruthMaintenanceSystem _tms = new();
         /// <summary>
         /// Captures the rollback boundary mode configured for this engine instance.
         /// </summary>
@@ -312,6 +318,15 @@ namespace ReteEngine
                 activity.Timestamp,
                 activity.Duration ?? TimeSpan.Zero,
                 activity.ActivationId));
+            FactChangesPublished += _tms.OnFactChangesPublished;
+            _tms.LogicalFactOrphaned += factId =>
+            {
+                var fact = FindFactById(factId);
+                if (fact != null)
+                {
+                    Retract(fact);
+                }
+            };
         }
 
         /// <summary>
@@ -371,11 +386,46 @@ namespace ReteEngine
         /// <param name="node">The terminal node to add to the Rete network.</param>
         public void AddTerminalNode(TerminalNode node)
         {
+            node.TokenRetracted += _tms.OnTokenRetracted;
             _terminalNodes.Add(node);
             if (_workingMemory.Count > 0)
             {
                 _needsWorkingMemoryReplay = true;
             }
+        }
+
+        /// <summary>
+        /// Traverses the Rete network from the root node to locate an active <see cref="IGroupByMetrics"/> node 
+        /// matching <paramref name="keyName"/> and returns its live bucket item counts.
+        /// </summary>
+        /// <param name="keyName">The token alias name assigned to the grouping key when the <c>GroupBy</c> rule was
+        /// defined (e.g., <c>"FlightStatus"</c>).</param>
+        /// <returns>A read-only dictionary mapping each distinct bucket key to its current fact count, 
+        /// or an empty dictionary if no matching <see cref="IGroupByMetrics"/> node exists in the network.</returns>
+        public IReadOnlyDictionary<object, int> GetGroupByCounts(string keyName)
+        {
+            var visited = new HashSet<IReteNode>();
+            var stack = new Stack<IReteNode>();
+            stack.Push(_root);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+                if (!visited.Add(current)) continue;
+
+                if (current is IGroupByMetrics metrics &&
+                    string.Equals(metrics.KeyName, keyName, StringComparison.Ordinal))
+                {
+                    return metrics.ObjectCounts;
+                }
+
+                foreach (var successor in current.Successors)
+                {
+                    stack.Push(successor);
+                }
+            }
+
+            return new Dictionary<object, int>();
         }
 
         /// <summary>

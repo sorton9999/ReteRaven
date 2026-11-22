@@ -40,12 +40,14 @@ namespace ReteEngine
         IRuleSetup First();
         IRuleSetup Next();
         IRuleSetup Next(int seed);
+        IRuleSetup AutoFocus();
 
         IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
             [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
         IEvaluationBuilder Trace(string label, TextWriter? output = null);
         IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition);
-        IEvaluationBuilder Group<T>(string name);
+        IAggregationBuilder Group<TRightFact>(string alphaMemoryName);
+        IAggregationBuilder GroupBy<TRightFact, TKey>(Func<TRightFact, TKey> keySelector, string asKeyName, string alphaMemoryName = "default");
         IEvaluationBuilder StartWith<T>(AlphaMemory alpha, string factName);
         IEvaluationBuilder Not<T>(string name, Func<Token, T, bool> joinCondition, 
             [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
@@ -70,6 +72,7 @@ namespace ReteEngine
         IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null, 
             params Func<Token, T, bool>[] orConditions);
         IConnectionBuilder AndNot<T>(string name, Func<Token, T, bool> joinCondition);
+        IConnectionBuilder Where(Func<Token, bool> filter, string? debugLabel = null);
         // These are for when you want to chain multiple conditions on the same fact type without needing to repeat
         // the fact type in the method signature
         IConnectionBuilder And();
@@ -89,7 +92,8 @@ namespace ReteEngine
         IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null, 
             [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null);
         IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition);
-        IEvaluationBuilder Group<T>(string name);
+        IAggregationBuilder Group<TRightFact>(string alphaMemoryName);
+        IAggregationBuilder GroupBy<TRightFact, TKey>(Func<TRightFact, TKey> keySelector, string asKeyName, string alphaMemoryName = "default");
         IEvaluationBuilder JoinWith<T>(AlphaMemory nextAlpha, Func<Token, T, bool> condition);
         IEvaluationBuilder Exists<T>(string name, Func<Token, T, bool> joinCondition, 
             [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
@@ -101,6 +105,8 @@ namespace ReteEngine
             [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel = null);
         IConnectionBuilder Or<T>(string name, [CallerArgumentExpression(nameof(orConditions))] string? debugLabel = null,
             params Func<Token, T, bool>[] orConditions);
+        IConnectionBuilder Where(Func<Token, bool> filter, string? debugLabel = null);
+        IEvaluationBuilder Having(Func<Token, bool> predicate, [CallerArgumentExpression(nameof(predicate))] string? debugLabel = null);
         // These are for when you want to chain multiple conditions on the same fact type without needing to repeat
         // the fact type in the method signature
         IConnectionBuilder And();
@@ -118,11 +124,14 @@ namespace ReteEngine
     public interface IAggregationBuilder
     {
         IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition);
+        IAggregationBuilder Where<T>(Func<T, bool> filter);
         IEvaluationBuilder All<T>(Func<IEnumerable<T>, bool> aggregatePredicate);
         IEvaluationBuilder Sum<T>(Func<T, decimal> aggregatePredicate, string asVariableName);
         IEvaluationBuilder Sum<T>(Func<T, int> aggregatePredicate, string asVariableName);
         IEvaluationBuilder Average<T>(Func<T, decimal> aggregatePredicate, string asVariableName);
         IEvaluationBuilder Count<T>(string asVariableName);
+        IEvaluationBuilder Min<T, TResult>(Func<T, TResult> selector, string asVariableName) where TResult : IComparable<TResult>;
+        IEvaluationBuilder Max<T, TResult>(Func<T, TResult> selector, string asVariableName) where TResult : IComparable<TResult>;
     }
 
     /// <summary>
@@ -138,18 +147,18 @@ namespace ReteEngine
         /// <summary>
         /// The ReteBuilder instance that is used internally to construct the rule based on the method calls made through the fluent interface.
         /// </summary>
-        private ReteBuilder<TInitial> _builder;
-
-        /// <summary>
-        /// An instance to build group operations in the Rete network. It allows the user to define conditions for grouping facts and specify 
-        /// aggregation operations such as Sum, Count, and Average on the grouped data. The interface is generic and works with an initial 
-        /// fact type TInitial, while the specific type of facts being grouped is determined by the implementation.
-        /// </summary>
-        private IGroupBuilder<TInitial> _groupBuilder;
+        private readonly ReteBuilder<TInitial> _builder;
         /// <summary>
         /// The ReteEngine instance that is used to create the ReteBuilder and ultimately build the rule. This is passed in through the constructor.
         /// </summary>
-        private ReteEngine _engine;
+        private readonly ReteEngine _engine;
+        /// <summary>
+        /// An instance to build group operations in the Rete network. It allows the user to define conditions for grouping facts and specify 
+        /// aggregation operations such as Sum, Count, and Average on the grouped data. The interface is generic and works with an initial 
+        /// fact type TInitial, while the specific type of facts being grouped is determined by the implementation.  This is a shim that
+        /// reduces the template signature from 2 types (TInital, TRightFact) to 1 type (TInitial)
+        /// </summary>
+        private IGroupAggregationShim<TInitial>? _groupShim;
         /// <summary>
         /// The name of the aggregate being built. This is used to keep track of the current aggregate when building rules that involve aggregation, 
         /// allowing for multiple aggregates to be defined within the same rule without conflicts.
@@ -166,7 +175,8 @@ namespace ReteEngine
         {
             _engine = engine;
             _builder = new ReteBuilder<TInitial>(engine, ruleName);
-            _groupBuilder = _builder.Group<object>(aggregateName);
+            // This is instantiated in the Group or GroupBy call when creating a rule
+            _groupShim = null;
         }
 
         /// <summary>
@@ -282,6 +292,17 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.AutoFocus that sets the rule to capture processing focus automatically
+        /// when group conditions are met.
+        /// </summary>
+        /// <returns>The current <see cref="IRuleSetup"/> to continue rule setup.</returns>
+        public IRuleSetup AutoFocus()
+        {
+            _builder.AutoFocus();
+            return this;
+        }
+
+        /// <summary>
         /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Where to add an initial evaluation condition on a fact type.
         /// </summary>
         /// <typeparam name="T">The fact type the condition evaluates.</typeparam>
@@ -292,6 +313,30 @@ namespace ReteEngine
         public IEvaluationBuilder Where<T>(string name, Func<T, bool> initialCondition = null ,[CallerArgumentExpression(nameof(initialCondition))] string? debugLabel = null)
         {
             _builder.Where(name, debugLabel, initialCondition);
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Where to add a condition that continues to filter facts.
+        /// </summary>
+        /// <param name="filter">A predicate that is added to test facts' truth state</param>
+        /// <param name="debugLabel">An optional debug label for diagnostics</param>
+        /// <returns>The current <see cref="IConnectionBuilder"/> to continue building evaluations.</returns>
+        public IConnectionBuilder Where(Func<Token, bool> filter, [CallerArgumentExpression(nameof(filter))] string? debugLabel = null)
+        {
+            _builder.Where(filter, debugLabel);
+            return this;
+        }
+
+        /// <summary>
+        /// Filters aggregated or grouped tokens using a post-aggregation predicate, equivalent to a SQL <c>HAVING</c> clause.
+        /// </summary>
+        /// <param name="predicate">The condition evaluated against the <see cref="Token"/> containing the aggregated variable(s).</param>
+        /// <param name="debugLabel">Optional trace label automatically populated from the caller's predicate expression for diagnostic logging.</param>
+        /// <returns>The current <see cref="IEvaluationBuilder"/> instance to continue chaining rule conditions or actions.</returns>
+        public IEvaluationBuilder Having(Func<Token, bool> predicate, [CallerArgumentExpression(nameof(predicate))] string? debugLabel = null)
+        {
+            _builder.Having(predicate, debugLabel);
             return this;
         }
 
@@ -309,11 +354,25 @@ namespace ReteEngine
         /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Where to add a join condition on a fact type.
         /// </summary>
         /// <typeparam name="T">The fact type the join condition evaluates.</typeparam>
-        /// <param name="joinCondition">A predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/> to evaluate the join condition.</param>
+        /// <param name="joinCondition">A predicate invoked with the current <see cref="Token"/> and a fact of type <typeparamref name="T"/>
+        /// to evaluate the join condition.</param>
         /// <returns>The current <see cref="IAggregationBuilder"/> to continue building aggregations.</returns>
         public IAggregationBuilder Where<T>(Func<Token, T, bool> joinCondition)
         {
-            _groupBuilder.Where(joinCondition);
+            _groupShim!.ApplyWhere(joinCondition);
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Where which applies a single-fact filter predicate to restrict which
+        /// items are included in the current group or aggregation before calculation.
+        /// </summary>
+        /// <typeparam name="T">The type of fact being filtered within the group.</typeparam>
+        /// <param name="filter">The predicate evaluated against each candidate fact of type <typeparamref name="T"/>.</param>
+        /// <returns>The current <see cref="IAggregationBuilder"/> instance to chain an aggregation operation.</returns>        
+        public IAggregationBuilder Where<T>(Func<T, bool> filter)
+        {
+            _groupShim!.ApplyWhere(filter);
             return this;
         }
 
@@ -323,12 +382,29 @@ namespace ReteEngine
         /// <typeparam name="T">The fact type contained in the group.</typeparam>
         /// <param name="name">The name to assign to the group.</param>
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations.</returns>
-        public IEvaluationBuilder Group<T>(string name)
+        public IAggregationBuilder Group<TRightFact>(string alphaMemoryName)
         {
-            _groupBuilder = _builder.Group<T>(name);
+            _groupShim = (IGroupAggregationShim<TInitial>)_builder.Group<TRightFact>(alphaMemoryName);
             return this;
         }
 
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.GroupBy which dynamically partitions incoming facts of type
+        /// <typeparamref name="TRightFact"/> into buckets based on a derived key, emitting one aggregated token per
+        /// distinct key without requiring a left-hand anchor fact.
+        /// </summary>
+        /// <typeparam name="TRightFact">The type of fact being grouped and aggregated.</typeparam>
+        /// <typeparam name="TKey">The non-nullable type of the grouping key.</typeparam>
+        /// <param name="keySelector">A function that extracts the grouping key from each fact of type <typeparamref name="TRightFact"/>.</param>
+        /// <param name="asKeyName">The token alias under which each bucket's distinct grouping key will be stored and accessed downstream.</param>
+        /// <param name="alphaMemoryName">The named <see cref="AlphaMemory"/> stream to draw facts from (defaults to <c>"default"</c>).</param>
+        /// <returns>The current <see cref="IAggregationBuilder"/> instance to chain optional filters.</returns>
+        public IAggregationBuilder GroupBy<TRightFact, TKey>(Func<TRightFact, TKey> keySelector, string asKeyName, string alphaMemoryName = "default")
+            where TKey : notnull
+        {
+            _groupShim = (IGroupAggregationShim<TInitial>)_builder.GroupBy(keySelector, asKeyName, alphaMemoryName);
+            return this;
+        }
 
         /// <summary>
         /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.StartWith to begin the rule with a provided alpha memory.
@@ -437,7 +513,7 @@ namespace ReteEngine
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
         public IEvaluationBuilder Sum<T>(Func<T, decimal> aggregatePredicate, string asVariableName)
         {
-            _groupBuilder.Sum<T>(aggregatePredicate, asVariableName);
+            _groupShim!.Sum<T>(aggregatePredicate, asVariableName);
             return this;
         }
 
@@ -452,7 +528,7 @@ namespace ReteEngine
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
         public IEvaluationBuilder Sum<T>(Func<T, int> aggregatePredicate, string asVariableName)
         {
-            _groupBuilder.Sum<T>(aggregatePredicate, asVariableName);
+            _groupShim!.Sum<T>(aggregatePredicate, asVariableName);
             return this;
         }
 
@@ -467,7 +543,39 @@ namespace ReteEngine
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
         public IEvaluationBuilder Average<T>(Func<T, decimal> aggregatePredicate, string asVariableName)
         {
-            _groupBuilder.Average<T>(aggregatePredicate, asVariableName);
+            _groupShim!.Average<T>(aggregatePredicate, asVariableName);
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Min to add an aggregate predicate that computes the Minimum value across a collection
+        /// of facts.
+        /// </summary>
+        /// <typeparam name="T">The fact type contained in the aggregate.</typeparam>
+        /// <typeparam name="TResult">The type of the resultant minumum value</typeparam>
+        /// <param name="selector">The aggregate predicate.</param>
+        /// <param name="asVariableName">The name to assign to the result of the aggregate computation.</param>
+        /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
+        public IEvaluationBuilder Min<T, TResult>(Func<T, TResult> selector, string asVariableName)
+            where TResult : IComparable<TResult>
+        {
+            _groupShim!.Min(selector, asVariableName);
+            return this;
+        }
+
+        /// <summary>
+        /// A wrapper for <see cref="ReteBuilder<TInitial>"/>.Max to add an aggregate predicate that computes the Maximum value across a collection
+        /// of facts.
+        /// </summary>
+        /// <typeparam name="T">The fact type contained in the aggregate.</typeparam>
+        /// <typeparam name="TResult">The type of the resultant maximum value</typeparam>
+        /// <param name="selector">The aggregate predicate.</param>
+        /// <param name="asVariableName">The name to assign to the result of the aggregate computation.</param>
+        /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
+        public IEvaluationBuilder Max<T, TResult>(Func<T, TResult> selector, string asVariableName)
+            where TResult : IComparable<TResult>
+        {
+            _groupShim!.Max(selector, asVariableName);
             return this;
         }
 
@@ -479,7 +587,7 @@ namespace ReteEngine
         /// <returns>The current <see cref="IEvaluationBuilder"/> to continue building evaluations after the aggregate.</returns>
         public IEvaluationBuilder Count<T>(string asVariableName)
         {
-            _groupBuilder.Count<T>(asVariableName);
+            _groupShim!.Count(asVariableName);
             return this;
         }
 

@@ -33,19 +33,28 @@ namespace ReteCore
         /// - Different previousNode OR different signature → new BetaMemory
         /// </summary>
         private readonly Dictionary<(IReteNode?, string), BetaMemory> _betaMemoryCache = new();
-
         /// <summary>
         /// Maps (previousNode, patternSignature) -> BetaMemory instance.
         /// </summary>
         private readonly Dictionary<(IReteNode?, string), (IReteNode notNode, BetaMemory memory)> _notNodeCache = new();
-
         /// <summary>
         /// Maps (previousNode, joinSignature) → (JoinNode, BetaMemory) pair.
         /// Used for caching join node pairs created by And<T>, Not<T>, etc.
         /// Returns the exact same (join, beta) pair for identical signatures.
         /// </summary>
         private readonly Dictionary<(IReteNode?, string), (JoinNode, BetaMemory)> _joinNodeCache = new();
-
+        /// <summary>
+        /// A cache for Filter Node + Beta Memory
+        /// </summary>
+        private readonly Dictionary<(IReteNode?, string), (BetaFilterNode filterNode, BetaMemory betaMemory)> _filterNodeCache = new();
+        /// <summary>
+        /// A cache for Aggregation Node + Beta Memory
+        /// </summary>
+        private readonly Dictionary<(IReteNode?, string), (AggregationGroupNode groupNode, BetaMemory betaMemory)> _aggregationNodeCache = new();
+        /// <summary>
+        /// A cache for GroupBy Node + Beta Memory
+        /// </summary>
+        private readonly Dictionary<(AlphaMemory, string), (IReteNode groupByNode, BetaMemory betaMemory)> _groupByNodeCache = new();
         /// <summary>
         /// Counters for diagnostic/telemetry purposes.
         /// </summary>
@@ -55,6 +64,12 @@ namespace ReteCore
         private int _joinNodeCacheMisses = 0;
         private int _notNodeCacheHits = 0;
         private int _notNodeCacheMisses = 0;
+        private int _filterNodeCacheHits = 0;
+        private int _filterNodeCacheMisses = 0;
+        private int _aggregationNodeCacheHits = 0;
+        private int _aggregationNodeCacheMisses = 0;
+        private int _groupByNodeCacheHits = 0;
+        private int _groupByNodeCacheMisses = 0;
 
         /// <summary>
         /// Controls whether the registry writes diagnostic Console.WriteLine trace messages. Disabled by default.
@@ -185,6 +200,130 @@ namespace ReteCore
             return pair;
         }
 
+        public (BetaFilterNode filterNode, BetaMemory betaMemory) GetOrCreateFilterPair(
+            IReteNode? previousNode,
+            string filterSignature,
+            Func<Token, bool> filterCondition)
+        {
+            if (string.IsNullOrEmpty(filterSignature))
+            {
+                throw new ArgumentException("Filter signature cannot be null or empty.", nameof(filterSignature));
+            }
+            if (filterCondition == null)
+            {
+                throw new ArgumentNullException(nameof(filterCondition));
+            }
+
+            var key = (previousNode, filterSignature);
+            if (_filterNodeCache.TryGetValue(key, out var pair))
+            {
+                _filterNodeCacheHits++;
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Filter HIT: {filterSignature}");
+                }
+                return pair;
+            }
+
+            var filterNode = new BetaFilterNode(filterCondition);
+            var betaMemory = new BetaMemory();
+            filterNode.AddSuccessor(betaMemory);
+
+            pair = (filterNode, betaMemory);
+            _filterNodeCache[key] = pair;
+            _filterNodeCacheMisses++;
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] Filter MISS (created new): {filterSignature}");
+            }
+            return pair;
+        }
+
+        public (AggregationGroupNode groupNode, BetaMemory betaMemory) GetOrCreateAggregationPair(
+            IReteNode? previousNode,
+            string groupSignature,
+            AlphaMemory alphaMemory,
+            Func<Token, object, bool> wrappedJoin,
+            string variableName,
+            Func<IEnumerable<object>, object> aggregator)
+        {
+            if (string.IsNullOrEmpty(groupSignature))
+                throw new ArgumentException("Group signature cannot be null or empty.", nameof(groupSignature));
+            if (alphaMemory == null)
+                throw new ArgumentNullException(nameof(alphaMemory));
+            if (aggregator == null)
+                throw new ArgumentNullException(nameof(aggregator));
+
+            var key = (previousNode, groupSignature);
+            if (_aggregationNodeCache.TryGetValue(key, out var pair))
+            {
+                _aggregationNodeCacheHits++;
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] Group HIT: {groupSignature}");
+                }
+                return pair;
+            }
+
+            var groupNode = new AggregationGroupNode(
+                (ILatentMemory)previousNode!,
+                alphaMemory,
+                wrappedJoin,
+                variableName,
+                aggregator);
+
+            var betaMemory = new BetaMemory();
+            groupNode.AddSuccessor(betaMemory);
+
+            pair = (groupNode, betaMemory);
+            _aggregationNodeCache[key] = pair;
+            _aggregationNodeCacheMisses++;
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] Group MISS (created new): {groupSignature}");
+            }
+            return pair;
+        }
+
+        public (IReteNode groupByNode, BetaMemory betaMemory) GetOrCreateGroupByPair(
+            AlphaMemory alphaMemory,
+            string groupBySignature,
+            Func<IReteNode> nodeFactory)
+        {
+            if (alphaMemory == null)
+                throw new ArgumentNullException(nameof(alphaMemory));
+            if (string.IsNullOrEmpty(groupBySignature))
+                throw new ArgumentException("GroupBy signature cannot be null or empty.", nameof(groupBySignature));
+            if (nodeFactory == null)
+                throw new ArgumentNullException(nameof(nodeFactory));
+
+            var key = (alphaMemory, groupBySignature);
+            if (_groupByNodeCache.TryGetValue(key, out var pair))
+            {
+                _groupByNodeCacheHits++;
+                if (EnableConsoleTraceLogging)
+                {
+                    Console.WriteLine($"[BetaRegistry] GroupBy HIT: {groupBySignature}");
+                }
+                return pair;
+            }
+
+            var groupByNode = nodeFactory();
+            var betaMemory = new BetaMemory();
+            groupByNode.AddSuccessor(betaMemory);
+
+            pair = (groupByNode, betaMemory);
+            _groupByNodeCache[key] = pair;
+            _groupByNodeCacheMisses++;
+            if (EnableConsoleTraceLogging)
+            {
+                Console.WriteLine($"[BetaRegistry] GroupBy MISS (created new): {groupBySignature}");
+            }
+            return pair;
+        }
+
+
+
         /// <summary>
         /// Connects a node to its predecessor if not already connected.
         /// This ensures that when a cached node is reused, its predecessor knows about it.
@@ -259,12 +398,15 @@ namespace ReteCore
             _betaMemoryCache.Clear();
             _joinNodeCache.Clear();
             _notNodeCache.Clear();
+            _aggregationNodeCache.Clear();
             _betaMemoryCacheHits = 0;
             _betaMemoryCacheMisses = 0;
             _joinNodeCacheHits = 0;
             _joinNodeCacheMisses = 0;
             _notNodeCacheHits = 0;
             _notNodeCacheMisses = 0;
+            _aggregationNodeCacheHits = 0;
+            _aggregationNodeCacheMisses = 0;
             if (EnableConsoleTraceLogging)
             {
                 Console.WriteLine("[BetaRegistry] Cleared all cached nodes.");

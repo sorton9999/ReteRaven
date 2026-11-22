@@ -24,6 +24,10 @@ namespace ReteCore
     public class TerminalNode : IReteNode
     {
         /// <summary>
+        /// Am event emtted by a Fact retraction.  The Token to retract is given along with the Rule Name.
+        /// </summary>
+        public event Action<string, Token>? TokenRetracted;
+        /// <summary>
         /// The name of the rule associated with this terminal node. This is used for identification and debugging purposes when activations are 
         /// created and added to the agenda.
         /// This is part of the rule metadata.
@@ -70,6 +74,10 @@ namespace ReteCore
         /// and salience.
         /// </summary>
         private readonly RuleMetadata _ruleMetadata;
+        /// <summary>
+        /// A flag indicating the rule was set to Auto Focus mode.
+        /// </summary>
+        private bool _autoFocus;
 
         /// <summary>
         /// Initializes a new instance of the TerminalNode class with the specified rule metadata.
@@ -85,6 +93,7 @@ namespace ReteCore
             _lateFilters = metaData.LateFilters;
             _priority = metaData.Priority;
             _salience = metaData.Salience;
+            _autoFocus = metaData.AutoFocus;
         }
 
         /// <summary>
@@ -135,6 +144,7 @@ namespace ReteCore
                         finalMatch,
                         _priority,
                         _salience,
+                        _autoFocus,
                         _ruleMetadata.AgendaGroupName));
                 }
                 // If a standard action is defined, create an activation with the action and add it to the agenda.
@@ -146,6 +156,7 @@ namespace ReteCore
                         finalMatch,
                         _priority,
                         _salience,
+                        _autoFocus,
                         _ruleMetadata.AgendaGroupName));
                 }
                 // If neither action is defined, throw an exception indicating that the rule metadata must define an action.
@@ -169,6 +180,8 @@ namespace ReteCore
                     Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
                 }
                 _ruleMetadata.Agenda.ForgetActivation(_ruleName, token, _ruleMetadata.AgendaGroupName);
+                // Emit a retraction event to remove any related tokens
+                TokenRetracted?.Invoke(_ruleName, token);
             }
             else if (_agenda.RemoveByRuleAndFact(_ruleName, fact, _ruleMetadata.AgendaGroupName) > 0 && _agenda.EnableConsoleTraceLogging)
             {

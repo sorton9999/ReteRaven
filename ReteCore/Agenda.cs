@@ -339,6 +339,13 @@ namespace ReteCore
                 return;
             }
             group.Add(activation);
+
+            // If Auto Focus is set for an activation in this Agenda, set it.
+            if (activation.AutoFocus &&
+                !String.Equals(FocusedAgendaGroup, activation.AgendaGroupName, StringComparison.OrdinalIgnoreCase))
+            {
+                FocusAgendaGroup(activation.AgendaGroupName);
+            }
         }
 
         /// <summary>
