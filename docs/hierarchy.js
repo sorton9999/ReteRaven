@@ -14,6 +14,18 @@ var hierarchy =
     [ "ReteEngine.IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", [
       [ "ReteEngine.FluentConverter< TInitial >", "class_rete_engine_1_1_fluent_converter-1-g.html", null ]
     ] ],
+    [ "ReteEngine.IBaseGroup&lt; TInitial, TRightFact &gt;", "interface_rete_engine_1_1_i_base_group-2-g.html", [
+      [ "ReteEngine.BaseGroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_base_group_builder-2-g.html", [
+        [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ],
+        [ "ReteEngine.GroupByBuilder< TInitial, TRightFact, TKey >", "class_rete_engine_1_1_group_by_builder-3-g.html", null ]
+      ] ],
+      [ "ReteEngine.IGroupBuilder< TInitial, TRightFact >", "interface_rete_engine_1_1_i_group_builder-2-g.html", [
+        [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ]
+      ] ],
+      [ "ReteEngine.IGroupByBuilder< TInitial, TRightFact, TKey >", "interface_rete_engine_1_1_i_group_by_builder-3-g.html", [
+        [ "ReteEngine.GroupByBuilder< TInitial, TRightFact, TKey >", "class_rete_engine_1_1_group_by_builder-3-g.html", null ]
+      ] ]
+    ] ],
     [ "IComparable", null, [
       [ "ReteCore.Activation", "class_rete_core_1_1_activation.html", null ]
     ] ],
@@ -30,8 +42,13 @@ var hierarchy =
       [ "ReteCore.Fact", "class_rete_core_1_1_fact.html", null ],
       [ "ReteCore.Fact< T >", "class_rete_core_1_1_fact-1-g.html", null ]
     ] ],
-    [ "ReteEngine.IGroupBuilder&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_builder-1-g.html", [
-      [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ]
+    [ "ReteEngine.IGroupAggregationShim&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_aggregation_shim-1-g.html", [
+      [ "ReteEngine.BaseGroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_base_group_builder-2-g.html", null ],
+      [ "ReteEngine.GroupBuilder< TInitial, TRightFact >", "class_rete_engine_1_1_group_builder-2-g.html", null ],
+      [ "ReteEngine.GroupByBuilder< TInitial, TRightFact, TKey >", "class_rete_engine_1_1_group_by_builder-3-g.html", null ]
+    ] ],
+    [ "ReteCore.IGroupByMetrics", "interface_rete_core_1_1_i_group_by_metrics.html", [
+      [ "ReteCore.GroupByNode< TRightFact, TKey >", "class_rete_core_1_1_group_by_node-2-g.html", null ]
     ] ],
     [ "ReteCore.ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", [
       [ "ReteCore.BetaMemory", "class_rete_core_1_1_beta_memory.html", null ],
@@ -48,9 +65,11 @@ var hierarchy =
       [ "ReteCore.AlphaConditionNode< T >", "class_rete_core_1_1_alpha_condition_node-1-g.html", null ],
       [ "ReteCore.AlphaMemory", "class_rete_core_1_1_alpha_memory.html", null ],
       [ "ReteCore.AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", null ],
+      [ "ReteCore.BetaFilterNode", "class_rete_core_1_1_beta_filter_node.html", null ],
       [ "ReteCore.BetaMemory", "class_rete_core_1_1_beta_memory.html", null ],
       [ "ReteCore.CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", null ],
       [ "ReteCore.ExistsNode", "class_rete_core_1_1_exists_node.html", null ],
+      [ "ReteCore.GroupByNode< TRightFact, TKey >", "class_rete_core_1_1_group_by_node-2-g.html", null ],
       [ "ReteCore.IndexedExistsNode", "class_rete_core_1_1_indexed_exists_node.html", null ],
       [ "ReteCore.JoinNode", "class_rete_core_1_1_join_node.html", null ],
       [ "ReteCore.NotNode", "class_rete_core_1_1_not_node.html", null ],
@@ -72,5 +91,6 @@ var hierarchy =
     [ "ReteEngine.ReteEngineOptions", "class_rete_engine_1_1_rete_engine_options.html", null ],
     [ "ReteEngine.RollbackSideEffectAuditEntry", "class_rete_engine_1_1_rollback_side_effect_audit_entry.html", null ],
     [ "ReteCore.RuleExecutionContext", "class_rete_core_1_1_rule_execution_context.html", null ],
-    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ]
+    [ "ReteCore.RuleMetadata", "class_rete_core_1_1_rule_metadata.html", null ],
+    [ "ReteEngine.TruthMaintenanceSystem", "class_rete_engine_1_1_truth_maintenance_system.html", null ]
 ];

@@ -1,10 +1,12 @@
 var interface_rete_engine_1_1_i_rule_setup =
 [
     [ "AgendaGroup", "interface_rete_engine_1_1_i_rule_setup.html#a92a658f4cfe0d2bf61739007305d033b", null ],
+    [ "AutoFocus", "interface_rete_engine_1_1_i_rule_setup.html#a7fa902cc8b5a48fca39b042886fda8c9", null ],
     [ "Exists< T >", "interface_rete_engine_1_1_i_rule_setup.html#a8969c898c1fa194fbc455b460d448b32", null ],
     [ "First", "interface_rete_engine_1_1_i_rule_setup.html#a2cd22dff84453936e8ac790cf8a1ca7d", null ],
     [ "From< T >", "interface_rete_engine_1_1_i_rule_setup.html#a20fde36cfa7ca64fc3a217bbe6bf24de", null ],
-    [ "Group< T >", "interface_rete_engine_1_1_i_rule_setup.html#a3aa2b6cd3a9b41087bdd4e7fa6ead958", null ],
+    [ "Group< TRightFact >", "interface_rete_engine_1_1_i_rule_setup.html#adb8d919945cfda01e90276ff939292b2", null ],
+    [ "GroupBy< TRightFact, TKey >", "interface_rete_engine_1_1_i_rule_setup.html#a83939081b62de7b3285a1bf2c60fe021", null ],
     [ "If", "interface_rete_engine_1_1_i_rule_setup.html#ab08e0c5feca3e4a955a2d3d22feedec1", null ],
     [ "If< T >", "interface_rete_engine_1_1_i_rule_setup.html#a1628f35f580ae17a4dcd93f430bce41c", null ],
     [ "Next", "interface_rete_engine_1_1_i_rule_setup.html#a43df21d39397944b8cdaca1e1ece0cc3", null ],

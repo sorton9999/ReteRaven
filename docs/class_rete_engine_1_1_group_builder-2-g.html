@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -102,13 +102,60 @@ Inheritance diagram for ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;:</
  <div class="center">
   <img src="class_rete_engine_1_1_group_builder-2-g.png" usemap="#ReteEngine_2EGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E_map" alt=""/>
   <map id="ReteEngine_2EGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E_map" name="ReteEngine_2EGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E_map">
-<area href="interface_rete_engine_1_1_i_group_builder-1-g.html" title="A interface for building group operations in a Rete network. It allows the user to define conditions ..." alt="ReteEngine.IGroupBuilder&lt; TInitial &gt;" shape="rect" coords="0,0,284,24"/>
+<area href="class_rete_engine_1_1_base_group_builder-2-g.html" title="Provides a shared base implementation for fluent aggregation builders (GroupBuilder&lt;TInitial,..." alt="ReteEngine.BaseGroupBuilder&lt; TInitial, TRightFact &gt;" shape="rect" coords="161,56,473,80"/>
+<area href="interface_rete_engine_1_1_i_group_builder-2-g.html" title="Configures and compiles an anchored aggregation group that collects and aggregates right-hand facts o..." alt="ReteEngine.IGroupBuilder&lt; TInitial, TRightFact &gt;" shape="rect" coords="644,56,956,80"/>
+<area href="interface_rete_engine_1_1_i_group_aggregation_shim-1-g.html" alt="ReteEngine.IGroupAggregationShim&lt; TInitial &gt;" shape="rect" coords="966,56,1278,80"/>
+<area href="interface_rete_engine_1_1_i_base_group-2-g.html" alt="ReteEngine.IBaseGroup&lt; TInitial, TRightFact &gt;" shape="rect" coords="0,0,312,24"/>
+<area href="interface_rete_engine_1_1_i_group_aggregation_shim-1-g.html" alt="ReteEngine.IGroupAggregationShim&lt; TInitial &gt;" shape="rect" coords="322,0,634,24"/>
+<area href="interface_rete_engine_1_1_i_base_group-2-g.html" alt="ReteEngine.IBaseGroup&lt; TInitial, TRightFact &gt;" shape="rect" coords="644,0,956,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a956c097827cef5246f52c799b4fc7ead" id="r_a956c097827cef5246f52c799b4fc7ead"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a956c097827cef5246f52c799b4fc7ead">GroupBuilder</a> (ReteBuilder&lt; TInitial &gt; reteBuilder, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory, string alphaMemoryName)</td></tr>
+<tr class="memitem:ab837e7a49cfaa2b2e2e75e01194b5b34" id="r_ab837e7a49cfaa2b2e2e75e01194b5b34"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab837e7a49cfaa2b2e2e75e01194b5b34">GroupBuilder</a> (ReteBuilder&lt; TInitial &gt; reteBuilder, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory)</td></tr>
+<tr class="memdesc:ab837e7a49cfaa2b2e2e75e01194b5b34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of <a class="el" href="class_rete_engine_1_1_group_builder-2-g.html" title="The GroupBuilder class is a concrete implementation of the IGroupBuilder interface,...">GroupBuilder&lt;TInitial, TRightFact&gt;</a>.  <br /></td></tr>
+<tr class="memitem:af26234f3234211ed90a9f3e973c7a137" id="r_af26234f3234211ed90a9f3e973c7a137"><td class="memItemLeft">IGroupBuilder&lt; TInitial, TRightFact &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af26234f3234211ed90a9f3e973c7a137">Where</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, TRightFact, bool &gt; joinCondition)</td></tr>
+<tr class="memdesc:af26234f3234211ed90a9f3e973c7a137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the join predicate used to match right-hand facts of type <em>TRightFact</em>  against each incoming left-hand <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> before aggregation.  <br /></td></tr>
+<tr class="inherit_header pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_rete_engine_1_1_base_group_builder-2-g')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html">ReteEngine.BaseGroupBuilder&lt; TInitial, TRightFact &gt;</a></td></tr>
+<tr class="memitem:ab47d583755f92eedd0596db43d6189fc inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_ab47d583755f92eedd0596db43d6189fc"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#ab47d583755f92eedd0596db43d6189fc">Count</a> (string asVariableName)</td></tr>
+<tr class="memdesc:ab47d583755f92eedd0596db43d6189fc inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregates the total number of matching facts in the group and binds the int result to <em>asVariableName</em>  on the emitted <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>.  <br /></td></tr>
+<tr class="memitem:a08ca827a8933948c54d9ea4b45be47b6 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a08ca827a8933948c54d9ea4b45be47b6"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a08ca827a8933948c54d9ea4b45be47b6">Sum</a> (Func&lt; TRightFact, int &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:a08ca827a8933948c54d9ea4b45be47b6 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the integer sum of values selected by <em>selector</em>  across all matching facts in the group and binds the int result to <em>asVariableName</em> .  <br /></td></tr>
+<tr class="memitem:adf7afc3cfdd3e942368511c2fc61eb39 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_adf7afc3cfdd3e942368511c2fc61eb39"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#adf7afc3cfdd3e942368511c2fc61eb39">Sum</a> (Func&lt; TRightFact, decimal &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:adf7afc3cfdd3e942368511c2fc61eb39 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the decimal sum of values selected by <em>selector</em>  across all matching facts in the group and binds the decimal result to <em>asVariableName</em> .  <br /></td></tr>
+<tr class="memitem:a425db9acd41ca08e7ac5019ff25e8b50 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a425db9acd41ca08e7ac5019ff25e8b50"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a425db9acd41ca08e7ac5019ff25e8b50">Average</a> (Func&lt; TRightFact, decimal &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:a425db9acd41ca08e7ac5019ff25e8b50 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the decimal arithmetic mean of values selected by <em>selector</em>  across all matching facts in the group (returning <code>0m</code> when empty) and binds the result to <em>asVariableName</em> .  <br /></td></tr>
+<tr class="memitem:a584a1de90c3ab4c015ec6734160cce86 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a584a1de90c3ab4c015ec6734160cce86"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a584a1de90c3ab4c015ec6734160cce86">Min&lt; TResult &gt;</a> (Func&lt; TRightFact, TResult &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:a584a1de90c3ab4c015ec6734160cce86 inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the minimum value selected by <em>selector</em>  across all matching facts in the group (returning <code>default</code> when empty) and binds the result to <em>asVariableName</em> .  <br /></td></tr>
+<tr class="memitem:a6a31bb1c5f5fd969d5bf8ca084edc99c inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a6a31bb1c5f5fd969d5bf8ca084edc99c"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a6a31bb1c5f5fd969d5bf8ca084edc99c">Max&lt; TResult &gt;</a> (Func&lt; TRightFact, TResult &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:a6a31bb1c5f5fd969d5bf8ca084edc99c inherit pub_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the maximum value selected by <em>selector</em>  across all matching facts in the group (returning <code>default</code> when empty) and binds the result to <em>asVariableName</em> .  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a83960ebe67c7ab4154efab5feeef5c38" id="r_a83960ebe67c7ab4154efab5feeef5c38"><td class="memItemLeft">override void&#160;</td><td class="memItemRight"><a class="el" href="#a83960ebe67c7ab4154efab5feeef5c38">ApplyJoinWhere&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
+<tr class="memdesc:a83960ebe67c7ab4154efab5feeef5c38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates the type parameter and applies a two-argument <code>(<a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>, T)</code> join condition.  <br /></td></tr>
+<tr class="memitem:a1d906f8b3d7fff0b5b12da85a457fa65" id="r_a1d906f8b3d7fff0b5b12da85a457fa65"><td class="memItemLeft">override void&#160;</td><td class="memItemRight"><a class="el" href="#a1d906f8b3d7fff0b5b12da85a457fa65">ApplyFilterWhere&lt; T &gt;</a> (Func&lt; T, bool &gt; filter)</td></tr>
+<tr class="memdesc:a1d906f8b3d7fff0b5b12da85a457fa65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapts a single-fact filter predicate into a <code>(<a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>, TRightFact)</code> join condition.  <br /></td></tr>
+<tr class="memitem:a8b4bd41788d4f9d8c19906f1ec368525" id="r_a8b4bd41788d4f9d8c19906f1ec368525"><td class="memItemLeft">override ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8b4bd41788d4f9d8c19906f1ec368525">CompileAggregation</a> (Func&lt; IEnumerable&lt; TRightFact &gt;, object &gt; aggregator, string variableName, string aggregatorKind, Delegate? selector)</td></tr>
+<tr class="memdesc:a8b4bd41788d4f9d8c19906f1ec368525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds (or retrieves from <a class="el" href="class_rete_core_1_1_beta_node_registry.html" title="A registry for reusing shared beta memory nodes and join node pairs across multiple rules....">BetaNodeRegistry</a>) an <a class="el" href="class_rete_core_1_1_aggregation_group_node.html" title="Represents a RETE network node that performs aggregation over groups of facts matching specified join...">AggregationGroupNode</a> and downstream <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, wiring them into the Rete network.  <br /></td></tr>
+<tr class="inherit_header pro_methods_class_rete_engine_1_1_base_group_builder-2-g"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_rete_engine_1_1_base_group_builder-2-g')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html">ReteEngine.BaseGroupBuilder&lt; TInitial, TRightFact &gt;</a></td></tr>
+<tr class="memitem:a83e1816bb4c87e90d1fb724facd7d3a9 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a83e1816bb4c87e90d1fb724facd7d3a9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a83e1816bb4c87e90d1fb724facd7d3a9">BaseGroupBuilder</a> (ReteBuilder&lt; TInitial &gt; reteBuilder, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory)</td></tr>
+<tr class="memdesc:a83e1816bb4c87e90d1fb724facd7d3a9 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of <a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html" title="Provides a shared base implementation for fluent aggregation builders (GroupBuilder&lt;TInitial,...">BaseGroupBuilder&lt;TInitial, TRightFact&gt;</a>.  <br /></td></tr>
+<tr class="memitem:ab1ea239bbda2a0dd112846c58b6ac90c inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_ab1ea239bbda2a0dd112846c58b6ac90c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#ab1ea239bbda2a0dd112846c58b6ac90c">ApplyJoinWhere&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
+<tr class="memdesc:ab1ea239bbda2a0dd112846c58b6ac90c inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a two-argument <code>(<a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>, T)</code> join predicate in derived builders that support left-hand token context.  <br /></td></tr>
+<tr class="memitem:a1e85bb8a54b8b8956aa2c2df2b588957 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a1e85bb8a54b8b8956aa2c2df2b588957"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a1e85bb8a54b8b8956aa2c2df2b588957">ApplyFilterWhere&lt; T &gt;</a> (Func&lt; T, bool &gt; filter)</td></tr>
+<tr class="memdesc:a1e85bb8a54b8b8956aa2c2df2b588957 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a single-fact <code>(T)</code> filter predicate to restrict candidate facts prior to aggregation.  <br /></td></tr>
+<tr class="memitem:a3fd1cc86f6b5cd365d39e60b590534a6 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g" id="r_a3fd1cc86f6b5cd365d39e60b590534a6"><td class="memItemLeft">ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a3fd1cc86f6b5cd365d39e60b590534a6">CompileAggregation</a> (Func&lt; IEnumerable&lt; TRightFact &gt;, object &gt; typedAggregator, string variableName, string aggregatorKind, Delegate? selector)</td></tr>
+<tr class="memdesc:a3fd1cc86f6b5cd365d39e60b590534a6 inherit pro_methods_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs (or retrieves from <a class="el" href="class_rete_core_1_1_beta_node_registry.html" title="A registry for reusing shared beta memory nodes and join node pairs across multiple rules....">BetaNodeRegistry</a>) the concrete Rete aggregation node (such as <a class="el" href="class_rete_core_1_1_aggregation_group_node.html" title="Represents a RETE network node that performs aggregation over groups of facts matching specified join...">AggregationGroupNode</a> or <a class="el" href="class_rete_core_1_1_group_by_node-2-g.html" title="A Rete network node that dynamically partitions incoming facts of type TRightFact  into keyed buckets...">GroupByNode&lt;TRightFact, TKey&gt;</a>), wires it into the network, and advances the builder's tail node to the downstream <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_class_rete_engine_1_1_base_group_builder-2-g"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_rete_engine_1_1_base_group_builder-2-g')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Attributes inherited from <a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html">ReteEngine.BaseGroupBuilder&lt; TInitial, TRightFact &gt;</a></td></tr>
+<tr class="memitem:aa495924417b7dc88e615b9eb4bacf01f inherit pro_attribs_class_rete_engine_1_1_base_group_builder-2-g" id="r_aa495924417b7dc88e615b9eb4bacf01f"><td class="memItemLeft">readonly ReteBuilder&lt; TInitial &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#aa495924417b7dc88e615b9eb4bacf01f">_reteBuilder</a></td></tr>
+<tr class="memdesc:aa495924417b7dc88e615b9eb4bacf01f inherit pro_attribs_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> managing the rule's Rete network construction.  <br /></td></tr>
+<tr class="memitem:a6de0ae4ef58a171ddcb8c9dd06fa1475 inherit pro_attribs_class_rete_engine_1_1_base_group_builder-2-g" id="r_a6de0ae4ef58a171ddcb8c9dd06fa1475"><td class="memItemLeft">readonly <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a>&#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_base_group_builder-2-g.html#a6de0ae4ef58a171ddcb8c9dd06fa1475">_alphaMemory</a></td></tr>
+<tr class="memdesc:a6de0ae4ef58a171ddcb8c9dd06fa1475 inherit pro_attribs_class_rete_engine_1_1_base_group_builder-2-g"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> supplying candidate facts of type <em>TRightFact</em>  to aggregate.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The GroupBuilder class is a concrete implementation of the IGroupBuilder interface, providing functionality to define grouping conditions and aggregation operations in a Rete network. It allows users to specify how facts should be grouped based on a join condition and perform aggregations like Sum, Count, and Average on the grouped data. The class is generic, with TInitial representing the type of the initial fact and TRightFact representing the type of facts being grouped. </p>
@@ -120,8 +167,155 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a956c097827cef5246f52c799b4fc7ead" name="a956c097827cef5246f52c799b4fc7ead"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a956c097827cef5246f52c799b4fc7ead">&#9670;&#160;</a></span>GroupBuilder()</h2>
+<a id="a1d906f8b3d7fff0b5b12da85a457fa65" name="a1d906f8b3d7fff0b5b12da85a457fa65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d906f8b3d7fff0b5b12da85a457fa65">&#9670;&#160;</a></span>ApplyFilterWhere&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">override void ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;.ApplyFilterWhere&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>filter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adapts a single-fact filter predicate into a <code>(<a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>, TRightFact)</code> join condition. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The expected right-hand fact type.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filter</td><td>The single-fact predicate to apply.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidOperationException</td><td>Thrown when <em>T</em>  does not match <em>TRightFact</em> .</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a83960ebe67c7ab4154efab5feeef5c38" name="a83960ebe67c7ab4154efab5feeef5c38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83960ebe67c7ab4154efab5feeef5c38">&#9670;&#160;</a></span>ApplyJoinWhere&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">override void ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;.ApplyJoinWhere&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Validates the type parameter and applies a two-argument <code>(<a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a>, T)</code> join condition. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The expected right-hand fact type.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">joinCondition</td><td>The join predicate to apply.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidOperationException</td><td>Thrown when <em>T</em>  does not match <em>TRightFact</em> .</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8b4bd41788d4f9d8c19906f1ec368525" name="a8b4bd41788d4f9d8c19906f1ec368525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b4bd41788d4f9d8c19906f1ec368525">&#9670;&#160;</a></span>CompileAggregation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">override ReteBuilder&lt; TInitial &gt; ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;.CompileAggregation </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; IEnumerable&lt; TRightFact &gt;, object &gt;</td>          <td class="paramname"><span class="paramname"><em>aggregator</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>variableName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>aggregatorKind</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Delegate?</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Builds (or retrieves from <a class="el" href="class_rete_core_1_1_beta_node_registry.html" title="A registry for reusing shared beta memory nodes and join node pairs across multiple rules....">BetaNodeRegistry</a>) an <a class="el" href="class_rete_core_1_1_aggregation_group_node.html" title="Represents a RETE network node that performs aggregation over groups of facts matching specified join...">AggregationGroupNode</a> and downstream <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>, wiring them into the Rete network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aggregator</td><td>The typed aggregation function applied to matched facts.</td></tr>
+    <tr><td class="paramname">variableName</td><td>The token alias under which the computed scalar result will be bound.</td></tr>
+    <tr><td class="paramname">aggregatorKind</td><td>A descriptive key identifying the aggregation operation (e.g., <code>"Count"</code>, <code>"Sum:Int32"</code>).</td></tr>
+    <tr><td class="paramname">selector</td><td>The optional value-selector delegate used to distinguish signatures in the node cache.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The updated <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> pointing to the downstream <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidOperationException</td><td>Thrown when no preceding left-hand memory node exists in the rule chain.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab837e7a49cfaa2b2e2e75e01194b5b34" name="ab837e7a49cfaa2b2e2e75e01194b5b34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab837e7a49cfaa2b2e2e75e01194b5b34">&#9670;&#160;</a></span>GroupBuilder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,15 +328,47 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a></td>          <td class="paramname"><span class="paramname"><em>alphaMemory</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alphaMemoryName</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a></td>          <td class="paramname"><span class="paramname"><em>alphaMemory</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initializes a new instance of <a class="el" href="class_rete_engine_1_1_group_builder-2-g.html" title="The GroupBuilder class is a concrete implementation of the IGroupBuilder interface,...">GroupBuilder&lt;TInitial, TRightFact&gt;</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reteBuilder</td><td>The parent <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a> managing the rule pipeline.</td></tr>
+    <tr><td class="paramname">alphaMemory</td><td>The <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> supplying candidate right-hand facts.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af26234f3234211ed90a9f3e973c7a137" name="af26234f3234211ed90a9f3e973c7a137"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af26234f3234211ed90a9f3e973c7a137">&#9670;&#160;</a></span>Where()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IGroupBuilder&lt; TInitial, TRightFact &gt; ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;.Where </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, TRightFact, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the join predicate used to match right-hand facts of type <em>TRightFact</em>  against each incoming left-hand <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> before aggregation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">joinCondition</td><td>The predicate receiving the current <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> and a candidate <em>TRightFact</em> . </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_group_builder-2-g.html" title="Configures and compiles an anchored aggregation group that collects and aggregates right-hand facts o...">IGroupBuilder&lt;TInitial, TRightFact&gt;</a> instance for chaining an aggregation operation.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_group_builder-2-g.html#aee6b6c651d9a3710e71479195ac54121">ReteEngine.IGroupBuilder&lt; TInitial, TRightFact &gt;</a>.</p>
 
 </div>
 </div>

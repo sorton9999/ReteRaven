@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -134,14 +134,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7557ebfc3d25fe389c38c9127f9a9a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Next that advances the rule ordering.  <br /></td></tr>
 <tr class="memitem:ad8be3b709f66eaf92547c9507e7d44e3" id="r_ad8be3b709f66eaf92547c9507e7d44e3"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad8be3b709f66eaf92547c9507e7d44e3">Next</a> (int seed)</td></tr>
 <tr class="memdesc:ad8be3b709f66eaf92547c9507e7d44e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Next that advances the rule ordering using a seed.  <br /></td></tr>
+<tr class="memitem:a03d61187e322ef0e2ae32af7f23af4a3" id="r_a03d61187e322ef0e2ae32af7f23af4a3"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a>&#160;</td><td class="memItemRight"><a class="el" href="#a03d61187e322ef0e2ae32af7f23af4a3">AutoFocus</a> ()</td></tr>
+<tr class="memdesc:a03d61187e322ef0e2ae32af7f23af4a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.AutoFocus that sets the rule to capture processing focus automatically when group conditions are met.  <br /></td></tr>
 <tr class="memitem:a5eca80cc2e3dcbbb91f37486bf31ae4d" id="r_a5eca80cc2e3dcbbb91f37486bf31ae4d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a5eca80cc2e3dcbbb91f37486bf31ae4d">Where&lt; T &gt;</a> (string name, Func&lt; T, bool &gt; initialCondition=null, [CallerArgumentExpression(nameof(initialCondition))] string? debugLabel=null)</td></tr>
 <tr class="memdesc:a5eca80cc2e3dcbbb91f37486bf31ae4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add an initial evaluation condition on a fact type.  <br /></td></tr>
+<tr class="memitem:a688addde7af7ab944ace446e5961daef" id="r_a688addde7af7ab944ace446e5961daef"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a688addde7af7ab944ace446e5961daef">Where</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt; filter, [CallerArgumentExpression(nameof(filter))] string? debugLabel=null)</td></tr>
+<tr class="memdesc:a688addde7af7ab944ace446e5961daef"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add a condition that continues to filter facts.  <br /></td></tr>
+<tr class="memitem:a0fdf62b6b09af03167962e17bc725470" id="r_a0fdf62b6b09af03167962e17bc725470"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0fdf62b6b09af03167962e17bc725470">Having</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt; predicate, [CallerArgumentExpression(nameof(predicate))] string? debugLabel=null)</td></tr>
+<tr class="memdesc:a0fdf62b6b09af03167962e17bc725470"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters aggregated or grouped tokens using a post-aggregation predicate, equivalent to a SQL <code>HAVING</code> clause.  <br /></td></tr>
 <tr class="memitem:ae5bffa3882077d91fbc28c2653cf809b" id="r_ae5bffa3882077d91fbc28c2653cf809b"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae5bffa3882077d91fbc28c2653cf809b">Trace</a> (string label, TextWriter? output=null)</td></tr>
 <tr class="memdesc:ae5bffa3882077d91fbc28c2653cf809b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a labeled pass-through trace checkpoint after the current rule condition.  <br /></td></tr>
 <tr class="memitem:ab9c2f1ea7457486e7a1d834b39c6ce61" id="r_ab9c2f1ea7457486e7a1d834b39c6ce61"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab9c2f1ea7457486e7a1d834b39c6ce61">Where&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
 <tr class="memdesc:ab9c2f1ea7457486e7a1d834b39c6ce61"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add a join condition on a fact type.  <br /></td></tr>
-<tr class="memitem:abcbe5b163a969113177d41c62a7bd0d7" id="r_abcbe5b163a969113177d41c62a7bd0d7"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#abcbe5b163a969113177d41c62a7bd0d7">Group&lt; T &gt;</a> (string name)</td></tr>
-<tr class="memdesc:abcbe5b163a969113177d41c62a7bd0d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Group to start a new group of conditions for a fact type.  <br /></td></tr>
+<tr class="memitem:a392302a0ece337ce70f3a303296c29b4" id="r_a392302a0ece337ce70f3a303296c29b4"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a392302a0ece337ce70f3a303296c29b4">Where&lt; T &gt;</a> (Func&lt; T, bool &gt; filter)</td></tr>
+<tr class="memdesc:a392302a0ece337ce70f3a303296c29b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where which applies a single-fact filter predicate to restrict which items are included in the current group or aggregation before calculation.  <br /></td></tr>
+<tr class="memitem:ae969653ce519cb3f1e948b1bb506292c" id="r_ae969653ce519cb3f1e948b1bb506292c"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae969653ce519cb3f1e948b1bb506292c">Group&lt; TRightFact &gt;</a> (string alphaMemoryName)</td></tr>
+<tr class="memdesc:ae969653ce519cb3f1e948b1bb506292c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Group to start a new group of conditions for a fact type.  <br /></td></tr>
+<tr class="memitem:a79b37021ca3a60308dc1c6f6f1d4574e" id="r_a79b37021ca3a60308dc1c6f6f1d4574e"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a79b37021ca3a60308dc1c6f6f1d4574e">GroupBy&lt; TRightFact, TKey &gt;</a> (Func&lt; TRightFact, TKey &gt; keySelector, string asKeyName, string alphaMemoryName=&quot;default&quot;)</td></tr>
+<tr class="memdesc:a79b37021ca3a60308dc1c6f6f1d4574e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.GroupBy which dynamically partitions incoming facts of type <em>TRightFact</em>  into buckets based on a derived key, emitting one aggregated token per distinct key without requiring a left-hand anchor fact.  <br /></td></tr>
 <tr class="memitem:a75e8af42e68e6be433f763e940abe8d7" id="r_a75e8af42e68e6be433f763e940abe8d7"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a75e8af42e68e6be433f763e940abe8d7">StartWith&lt; T &gt;</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alpha, string factName)</td></tr>
 <tr class="memdesc:a75e8af42e68e6be433f763e940abe8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.StartWith to begin the rule with a provided alpha memory.  <br /></td></tr>
 <tr class="memitem:ae95486a004001cc375689a72cc71bec8" id="r_ae95486a004001cc375689a72cc71bec8"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae95486a004001cc375689a72cc71bec8">JoinWith&lt; T &gt;</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> nextAlpha, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; condition)</td></tr>
@@ -162,6 +172,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab2438196e27a1867b5357510704ac36d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Sum to add an aggregate predicate that computes the sum of a numeric property across a collection of facts.  <br /></td></tr>
 <tr class="memitem:ad5a793e4a11402218b569b7f08672870" id="r_ad5a793e4a11402218b569b7f08672870"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad5a793e4a11402218b569b7f08672870">Average&lt; T &gt;</a> (Func&lt; T, decimal &gt; aggregatePredicate, string asVariableName)</td></tr>
 <tr class="memdesc:ad5a793e4a11402218b569b7f08672870"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Average to add an aggregate predicate that computes the average of a numeric property across a collection of facts.  <br /></td></tr>
+<tr class="memitem:ae84d477a4a51a7a0303ce3ece1bcb650" id="r_ae84d477a4a51a7a0303ce3ece1bcb650"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae84d477a4a51a7a0303ce3ece1bcb650">Min&lt; T, TResult &gt;</a> (Func&lt; T, TResult &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:ae84d477a4a51a7a0303ce3ece1bcb650"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Min to add an aggregate predicate that computes the Minimum value across a collection of facts.  <br /></td></tr>
+<tr class="memitem:a644610908bfa4abb8912e9ce186711b2" id="r_a644610908bfa4abb8912e9ce186711b2"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a644610908bfa4abb8912e9ce186711b2">Max&lt; T, TResult &gt;</a> (Func&lt; T, TResult &gt; selector, string asVariableName)</td></tr>
+<tr class="memdesc:a644610908bfa4abb8912e9ce186711b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Max to add an aggregate predicate that computes the Maximum value across a collection of facts.  <br /></td></tr>
 <tr class="memitem:ab183bb2ca4c49c866e4a59bd0acc1513" id="r_ab183bb2ca4c49c866e4a59bd0acc1513"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab183bb2ca4c49c866e4a59bd0acc1513">Count&lt; T &gt;</a> (string asVariableName)</td></tr>
 <tr class="memdesc:ab183bb2ca4c49c866e4a59bd0acc1513"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Count to add an aggregate predicate that computes the count of a collection of facts.  <br /></td></tr>
 <tr class="memitem:a5f3862d3bb51fed630e70d3ed02cefa0" id="r_a5f3862d3bb51fed630e70d3ed02cefa0"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a5f3862d3bb51fed630e70d3ed02cefa0">And&lt; T &gt;</a> (string name, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition, [CallerArgumentExpression(nameof(joinCondition))] string? debugLabel=null)</td></tr>
@@ -385,6 +399,28 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
 <p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#af8b9633f8c48f19dac4f6d6ad0e7d51e">ReteEngine.IEvaluationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="a03d61187e322ef0e2ae32af7f23af4a3" name="a03d61187e322ef0e2ae32af7f23af4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03d61187e322ef0e2ae32af7f23af4a3">&#9670;&#160;</a></span>AutoFocus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_rule_setup.html">IRuleSetup</a> ReteEngine.FluentConverter&lt; TInitial &gt;.AutoFocus </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.AutoFocus that sets the rule to capture processing focus automatically when group conditions are met. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html" title="This is the starting point for the fluent interface for defining rules in the Rete engine....">IRuleSetup</a> to continue rule setup.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a7fa902cc8b5a48fca39b042886fda8c9">ReteEngine.IRuleSetup</a>.</p>
 
 </div>
 </div>
@@ -635,16 +671,16 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abcbe5b163a969113177d41c62a7bd0d7" name="abcbe5b163a969113177d41c62a7bd0d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abcbe5b163a969113177d41c62a7bd0d7">&#9670;&#160;</a></span>Group&lt; T &gt;()</h2>
+<a id="ae969653ce519cb3f1e948b1bb506292c" name="ae969653ce519cb3f1e948b1bb506292c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae969653ce519cb3f1e948b1bb506292c">&#9670;&#160;</a></span>Group&lt; TRightFact &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Group&lt; T &gt; </td>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Group&lt; TRightFact &gt; </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alphaMemoryName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -665,7 +701,94 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
-<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a3aa2b6cd3a9b41087bdd4e7fa6ead958">ReteEngine.IRuleSetup</a>.</p>
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#adb8d919945cfda01e90276ff939292b2">ReteEngine.IRuleSetup</a>.</p>
+
+</div>
+</div>
+<a id="a79b37021ca3a60308dc1c6f6f1d4574e" name="a79b37021ca3a60308dc1c6f6f1d4574e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79b37021ca3a60308dc1c6f6f1d4574e">&#9670;&#160;</a></span>GroupBy&lt; TRightFact, TKey &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.GroupBy&lt; TRightFact, TKey &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; TRightFact, TKey &gt;</td>          <td class="paramname"><span class="paramname"><em>keySelector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asKeyName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>alphaMemoryName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;default&quot;</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.GroupBy which dynamically partitions incoming facts of type <em>TRightFact</em>  into buckets based on a derived key, emitting one aggregated token per distinct key without requiring a left-hand anchor fact. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">TRightFact</td><td>The type of fact being grouped and aggregated.</td></tr>
+    <tr><td class="paramname">TKey</td><td>The non-nullable type of the grouping key.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">keySelector</td><td>A function that extracts the grouping key from each fact of type <em>TRightFact</em> .</td></tr>
+    <tr><td class="paramname">asKeyName</td><td>The token alias under which each bucket's distinct grouping key will be stored and accessed downstream.</td></tr>
+    <tr><td class="paramname">alphaMemoryName</td><td>The named <a class="el" href="class_rete_core_1_1_alpha_memory.html" title="The AlphaMemory class represents a node in a Rete network that stores individual facts and propagates...">AlphaMemory</a> stream to draw facts from (defaults to <code>"default"</code>).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html" title="This interface defines the method for building aggregate conditions in a rule. It allows for specifyi...">IAggregationBuilder</a> instance to chain optional filters.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_rule_setup.html#a83939081b62de7b3285a1bf2c60fe021">ReteEngine.IRuleSetup</a>.</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>TKey</em></td><td>&#160;:</td><td valign="top"><em>notnull</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+
+</div>
+</div>
+<a id="a0fdf62b6b09af03167962e17bc725470" name="a0fdf62b6b09af03167962e17bc725470"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fdf62b6b09af03167962e17bc725470">&#9670;&#160;</a></span>Having()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Having </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>predicate</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(predicate))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Filters aggregated or grouped tokens using a post-aggregation predicate, equivalent to a SQL <code>HAVING</code> clause. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">predicate</td><td>The condition evaluated against the <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> containing the aggregated variable(s).</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>Optional trace label automatically populated from the caller's predicate expression for diagnostic logging.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> instance to continue chaining rule conditions or actions.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#ad8dde09a547de58bfc0f5c807feac227">ReteEngine.IEvaluationBuilder</a>.</p>
 
 </div>
 </div>
@@ -777,6 +900,102 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations.</dd></dl>
 
 <p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#afdc7323ee967ee908eca85ffe576f463">ReteEngine.IEvaluationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="a644610908bfa4abb8912e9ce186711b2" name="a644610908bfa4abb8912e9ce186711b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a644610908bfa4abb8912e9ce186711b2">&#9670;&#160;</a></span>Max&lt; T, TResult &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Max&lt; T, TResult &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, TResult &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Max to add an aggregate predicate that computes the Maximum value across a collection of facts. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The fact type contained in the aggregate.</td></tr>
+    <tr><td class="paramname">TResult</td><td>The type of the resultant maximum value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">selector</td><td>The aggregate predicate.</td></tr>
+    <tr><td class="paramname">asVariableName</td><td>The name to assign to the result of the aggregate computation.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#a142f01d3913aca1f1ba05c94db927551">ReteEngine.IAggregationBuilder</a>.</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>TResult</em></td><td>&#160;:</td><td valign="top"><em>IComparable&lt;TResult&gt;</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+
+</div>
+</div>
+<a id="ae84d477a4a51a7a0303ce3ece1bcb650" name="ae84d477a4a51a7a0303ce3ece1bcb650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae84d477a4a51a7a0303ce3ece1bcb650">&#9670;&#160;</a></span>Min&lt; T, TResult &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Min&lt; T, TResult &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, TResult &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Min to add an aggregate predicate that computes the Minimum value across a collection of facts. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The fact type contained in the aggregate.</td></tr>
+    <tr><td class="paramname">TResult</td><td>The type of the resultant minumum value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">selector</td><td>The aggregate predicate.</td></tr>
+    <tr><td class="paramname">asVariableName</td><td>The name to assign to the result of the aggregate computation.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html" title="This interface defines the methods for building evaluation conditions in a rule. It allows for specif...">IEvaluationBuilder</a> to continue building evaluations after the aggregate.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#afa9c9f00f9e3d9ee3dc54bc2ccd2f484">ReteEngine.IAggregationBuilder</a>.</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>TResult</em></td><td>&#160;:</td><td valign="top"><em>IComparable&lt;TResult&gt;</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
 
 </div>
 </div>
@@ -1152,14 +1371,81 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab9c2f1ea7457486e7a1d834b39c6ce61" name="ab9c2f1ea7457486e7a1d834b39c6ce61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9c2f1ea7457486e7a1d834b39c6ce61">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[1/2]</span></h2>
+<a id="a688addde7af7ab944ace446e5961daef" name="a688addde7af7ab944ace446e5961daef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a688addde7af7ab944ace446e5961daef">&#9670;&#160;</a></span>Where()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Where&lt; T &gt; </td>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_connection_builder.html">IConnectionBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Where </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>filter</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerArgumentExpression(nameof(filter))] string?</td>          <td class="paramname"><span class="paramname"><em>debugLabel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where to add a condition that continues to filter facts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filter</td><td>A predicate that is added to test facts' truth state</td></tr>
+    <tr><td class="paramname">debugLabel</td><td>An optional debug label for diagnostics</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_connection_builder.html" title="This interface defines the methods for building connections between conditions in a rule....">IConnectionBuilder</a> to continue building evaluations.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html#a10dee97fcd87e835beb655d6cb8e5c6a">ReteEngine.IEvaluationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="a392302a0ece337ce70f3a303296c29b4" name="a392302a0ece337ce70f3a303296c29b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a392302a0ece337ce70f3a303296c29b4">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.<a class="el" href="#a688addde7af7ab944ace446e5961daef">Where</a>&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>filter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A wrapper for <a class="el" href="class_rete_engine_1_1_rete_builder-1-g.html" title="Provides a fluent interface for constructing and configuring rules in a Rete-based rule engine.">ReteBuilder&lt;TInitial&gt;</a>.Where which applies a single-fact filter predicate to restrict which items are included in the current group or aggregation before calculation. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of fact being filtered within the group.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filter</td><td>The predicate evaluated against each candidate fact of type <em>T</em> .</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html" title="This interface defines the method for building aggregate conditions in a rule. It allows for specifyi...">IAggregationBuilder</a> instance to chain an aggregation operation.</dd></dl>
+
+<p>Implements <a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html#abb536b7be1278447ef3fdc3470ff34c9">ReteEngine.IAggregationBuilder</a>.</p>
+
+</div>
+</div>
+<a id="ab9c2f1ea7457486e7a1d834b39c6ce61" name="ab9c2f1ea7457486e7a1d834b39c6ce61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c2f1ea7457486e7a1d834b39c6ce61">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.<a class="el" href="#a688addde7af7ab944ace446e5961daef">Where</a>&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>joinCondition</em></span></td><td>)</td>
           <td></td>
@@ -1187,13 +1473,13 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a5eca80cc2e3dcbbb91f37486bf31ae4d" name="a5eca80cc2e3dcbbb91f37486bf31ae4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eca80cc2e3dcbbb91f37486bf31ae4d">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eca80cc2e3dcbbb91f37486bf31ae4d">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.Where&lt; T &gt; </td>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.FluentConverter&lt; TInitial &gt;.<a class="el" href="#a688addde7af7ab944ace446e5961daef">Where</a>&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>

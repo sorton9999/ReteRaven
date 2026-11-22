@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -109,11 +109,14 @@ Inheritance diagram for ReteEngine.IAggregationBuilder:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9deb482c57e844a74f4ca2c20c873aa8" id="r_a9deb482c57e844a74f4ca2c20c873aa8"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a9deb482c57e844a74f4ca2c20c873aa8">Where&lt; T &gt;</a> (Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, T, bool &gt; joinCondition)</td></tr>
+<tr class="memitem:abb536b7be1278447ef3fdc3470ff34c9" id="r_abb536b7be1278447ef3fdc3470ff34c9"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#abb536b7be1278447ef3fdc3470ff34c9">Where&lt; T &gt;</a> (Func&lt; T, bool &gt; filter)</td></tr>
 <tr class="memitem:ab94baa6eb2e4ff8367ffb2986dc6ba3d" id="r_ab94baa6eb2e4ff8367ffb2986dc6ba3d"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab94baa6eb2e4ff8367ffb2986dc6ba3d">All&lt; T &gt;</a> (Func&lt; IEnumerable&lt; T &gt;, bool &gt; aggregatePredicate)</td></tr>
 <tr class="memitem:af921b13e0c5ac004037ca222c879e719" id="r_af921b13e0c5ac004037ca222c879e719"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#af921b13e0c5ac004037ca222c879e719">Sum&lt; T &gt;</a> (Func&lt; T, decimal &gt; aggregatePredicate, string asVariableName)</td></tr>
 <tr class="memitem:a0e5dfc11b4ee4f72706a83f4b813ff4f" id="r_a0e5dfc11b4ee4f72706a83f4b813ff4f"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0e5dfc11b4ee4f72706a83f4b813ff4f">Sum&lt; T &gt;</a> (Func&lt; T, int &gt; aggregatePredicate, string asVariableName)</td></tr>
 <tr class="memitem:aaeacc023331ca8428bcc4a972a2a010c" id="r_aaeacc023331ca8428bcc4a972a2a010c"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#aaeacc023331ca8428bcc4a972a2a010c">Average&lt; T &gt;</a> (Func&lt; T, decimal &gt; aggregatePredicate, string asVariableName)</td></tr>
 <tr class="memitem:a79c21c0908e1806b9450a9866350e2c8" id="r_a79c21c0908e1806b9450a9866350e2c8"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a79c21c0908e1806b9450a9866350e2c8">Count&lt; T &gt;</a> (string asVariableName)</td></tr>
+<tr class="memitem:afa9c9f00f9e3d9ee3dc54bc2ccd2f484" id="r_afa9c9f00f9e3d9ee3dc54bc2ccd2f484"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#afa9c9f00f9e3d9ee3dc54bc2ccd2f484">Min&lt; T, TResult &gt;</a> (Func&lt; T, TResult &gt; selector, string asVariableName)</td></tr>
+<tr class="memitem:a142f01d3913aca1f1ba05c94db927551" id="r_a142f01d3913aca1f1ba05c94db927551"><td class="memItemLeft"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a>&#160;</td><td class="memItemRight"><a class="el" href="#a142f01d3913aca1f1ba05c94db927551">Max&lt; T, TResult &gt;</a> (Func&lt; T, TResult &gt; selector, string asVariableName)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This interface defines the method for building aggregate conditions in a rule. It allows for specifying an aggregate predicate that operates on a collection of facts, enabling the creation of rules that depend on the collective state of multiple facts rather than just individual facts. </p>
@@ -179,6 +182,68 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a142f01d3913aca1f1ba05c94db927551" name="a142f01d3913aca1f1ba05c94db927551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a142f01d3913aca1f1ba05c94db927551">&#9670;&#160;</a></span>Max&lt; T, TResult &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.IAggregationBuilder.Max&lt; T, TResult &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, TResult &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a644610908bfa4abb8912e9ce186711b2">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>TResult</em></td><td>&#160;:</td><td valign="top"><em>IComparable&lt;TResult&gt;</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+
+</div>
+</div>
+<a id="afa9c9f00f9e3d9ee3dc54bc2ccd2f484" name="afa9c9f00f9e3d9ee3dc54bc2ccd2f484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa9c9f00f9e3d9ee3dc54bc2ccd2f484">&#9670;&#160;</a></span>Min&lt; T, TResult &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_evaluation_builder.html">IEvaluationBuilder</a> ReteEngine.IAggregationBuilder.Min&lt; T, TResult &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, TResult &gt;</td>          <td class="paramname"><span class="paramname"><em>selector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>asVariableName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#ae84d477a4a51a7a0303ce3ece1bcb650">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>TResult</em></td><td>&#160;:</td><td valign="top"><em>IComparable&lt;TResult&gt;</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+
+</div>
+</div>
 <a id="af921b13e0c5ac004037ca222c879e719" name="af921b13e0c5ac004037ca222c879e719"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af921b13e0c5ac004037ca222c879e719">&#9670;&#160;</a></span>Sum&lt; T &gt;() <span class="overload">[1/2]</span></h2>
 
@@ -225,8 +290,27 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="abb536b7be1278447ef3fdc3470ff34c9" name="abb536b7be1278447ef3fdc3470ff34c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb536b7be1278447ef3fdc3470ff34c9">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_rete_engine_1_1_i_aggregation_builder.html">IAggregationBuilder</a> ReteEngine.IAggregationBuilder.Where&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; T, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>filter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_rete_engine_1_1_fluent_converter-1-g.html#a392302a0ece337ce70f3a303296c29b4">ReteEngine.FluentConverter&lt; TInitial &gt;</a>.</p>
+
+</div>
+</div>
 <a id="a9deb482c57e844a74f4ca2c20c873aa8" name="a9deb482c57e844a74f4ca2c20c873aa8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9deb482c57e844a74f4ca2c20c873aa8">&#9670;&#160;</a></span>Where&lt; T &gt;()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9deb482c57e844a74f4ca2c20c873aa8">&#9670;&#160;</a></span>Where&lt; T &gt;() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

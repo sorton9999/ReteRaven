@@ -1,6 +1,7 @@
 var class_rete_core_1_1_rule_execution_context =
 [
     [ "Assert", "class_rete_core_1_1_rule_execution_context.html#afe6cb2bcb8b369d3747a325d8cb29a31", null ],
+    [ "InsertLogical", "class_rete_core_1_1_rule_execution_context.html#aba62a35c6881d7e209c972d24d25adf5", null ],
     [ "Publish", "class_rete_core_1_1_rule_execution_context.html#a1a4a4407643439e4c7361fc75b0687f1", null ],
     [ "RegisterSideEffect", "class_rete_core_1_1_rule_execution_context.html#a8f8b4683c12e2e4a0b0e21cc29d6225c", null ],
     [ "Retract", "class_rete_core_1_1_rule_execution_context.html#a4cf420aca9b4735a58ab6b8bf5bc5f15", null ],

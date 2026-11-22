@@ -1,12 +1,17 @@
 var namespace_rete_engine =
 [
+    [ "IBaseGroup&lt; TInitial, TRightFact &gt;", "interface_rete_engine_1_1_i_base_group-2-g.html", "interface_rete_engine_1_1_i_base_group-2-g" ],
+    [ "IGroupAggregationShim&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_aggregation_shim-1-g.html", "interface_rete_engine_1_1_i_group_aggregation_shim-1-g" ],
+    [ "BaseGroupBuilder&lt; TInitial, TRightFact &gt;", "class_rete_engine_1_1_base_group_builder-2-g.html", "class_rete_engine_1_1_base_group_builder-2-g" ],
     [ "IRuleSetup", "interface_rete_engine_1_1_i_rule_setup.html", "interface_rete_engine_1_1_i_rule_setup" ],
     [ "IConnectionBuilder", "interface_rete_engine_1_1_i_connection_builder.html", "interface_rete_engine_1_1_i_connection_builder" ],
     [ "IEvaluationBuilder", "interface_rete_engine_1_1_i_evaluation_builder.html", "interface_rete_engine_1_1_i_evaluation_builder" ],
     [ "IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", "interface_rete_engine_1_1_i_aggregation_builder" ],
     [ "FluentConverter&lt; TInitial &gt;", "class_rete_engine_1_1_fluent_converter-1-g.html", "class_rete_engine_1_1_fluent_converter-1-g" ],
-    [ "IGroupBuilder&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_builder-1-g.html", "interface_rete_engine_1_1_i_group_builder-1-g" ],
+    [ "IGroupBuilder&lt; TInitial, TRightFact &gt;", "interface_rete_engine_1_1_i_group_builder-2-g.html", "interface_rete_engine_1_1_i_group_builder-2-g" ],
     [ "GroupBuilder&lt; TInitial, TRightFact &gt;", "class_rete_engine_1_1_group_builder-2-g.html", "class_rete_engine_1_1_group_builder-2-g" ],
+    [ "IGroupByBuilder&lt; TInitial, TRightFact, TKey &gt;", "interface_rete_engine_1_1_i_group_by_builder-3-g.html", "interface_rete_engine_1_1_i_group_by_builder-3-g" ],
+    [ "GroupByBuilder&lt; TInitial, TRightFact, TKey &gt;", "class_rete_engine_1_1_group_by_builder-3-g.html", "class_rete_engine_1_1_group_by_builder-3-g" ],
     [ "JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", "class_rete_engine_1_1_join_key_extractor" ],
     [ "ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", "class_rete_engine_1_1_rete_builder-1-g" ],
     [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ],
@@ -15,6 +20,7 @@ var namespace_rete_engine =
     [ "RollbackSideEffectAuditEntry", "class_rete_engine_1_1_rollback_side_effect_audit_entry.html", "class_rete_engine_1_1_rollback_side_effect_audit_entry" ],
     [ "RollbackSideEffectEventArgs", "class_rete_engine_1_1_rollback_side_effect_event_args.html", "class_rete_engine_1_1_rollback_side_effect_event_args" ],
     [ "RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", "class_rete_engine_1_1_rule_fired_event_args" ],
+    [ "TruthMaintenanceSystem", "class_rete_engine_1_1_truth_maintenance_system.html", "class_rete_engine_1_1_truth_maintenance_system" ],
     [ "RollbackBoundaryMode", "namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1b", [
       [ "PublishedFactChangesOnly", "namespace_rete_engine.html#af85332c650db1e9592de57e5c8e67b1ba6ba6b42838841d86a9e11f1b47a01a27", null ]
     ] ],

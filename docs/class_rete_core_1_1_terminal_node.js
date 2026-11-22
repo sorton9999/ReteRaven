@@ -10,5 +10,6 @@ var class_rete_core_1_1_terminal_node =
     [ "Retract", "class_rete_core_1_1_terminal_node.html#a9e2e20cf83f802d84591c6782dd13e3d", null ],
     [ "Parent", "class_rete_core_1_1_terminal_node.html#a5f75f65dc18c8d0655fe1345840bd34f", null ],
     [ "RuleMetadata", "class_rete_core_1_1_terminal_node.html#a929304aa8e41bd548a2282785f643702", null ],
-    [ "Successors", "class_rete_core_1_1_terminal_node.html#af840cf7a3fd16152edbe039c85abf7df", null ]
+    [ "Successors", "class_rete_core_1_1_terminal_node.html#af840cf7a3fd16152edbe039c85abf7df", null ],
+    [ "TokenRetracted", "class_rete_core_1_1_terminal_node.html#a1db4eb3976d3470a9ef7ec76074957da", null ]
 ];

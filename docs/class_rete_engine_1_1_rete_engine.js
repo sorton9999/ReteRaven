@@ -18,6 +18,7 @@ var class_rete_engine_1_1_rete_engine =
     [ "GetAgendaGroupStatistics", "class_rete_engine_1_1_rete_engine.html#a785cbb4e454395ea107e011e71dc23e6", null ],
     [ "GetAlphaMemory< T >", "class_rete_engine_1_1_rete_engine.html#ac76678ba17b90ff6fbfed05b743dad68", null ],
     [ "GetBetaNodeRegistryStatistics", "class_rete_engine_1_1_rete_engine.html#aae40d15e26860f290a3bc91424611638", null ],
+    [ "GetGroupByCounts", "class_rete_engine_1_1_rete_engine.html#add77c3509ad4a61ed95e9bd332e911d3", null ],
     [ "Refresh", "class_rete_engine_1_1_rete_engine.html#a18758b98c310f4445f0faeef7beb449e", null ],
     [ "RegisterWaitForHook", "class_rete_engine_1_1_rete_engine.html#ae1d460287885e30b29b9e04ab60d1fa2", null ],
     [ "RemoveRule", "class_rete_engine_1_1_rete_engine.html#a45ed9b79fc9b9b70baa52605f4e2e579", null ],

@@ -11,12 +11,15 @@ var annotated_dup =
       [ "AlphaConditionNode&lt; T &gt;", "class_rete_core_1_1_alpha_condition_node-1-g.html", "class_rete_core_1_1_alpha_condition_node-1-g" ],
       [ "AlphaMemory", "class_rete_core_1_1_alpha_memory.html", "class_rete_core_1_1_alpha_memory" ],
       [ "AlphaToBetaAdapter", "class_rete_core_1_1_alpha_to_beta_adapter.html", "class_rete_core_1_1_alpha_to_beta_adapter" ],
+      [ "BetaFilterNode", "class_rete_core_1_1_beta_filter_node.html", "class_rete_core_1_1_beta_filter_node" ],
       [ "BetaMemory", "class_rete_core_1_1_beta_memory.html", "class_rete_core_1_1_beta_memory" ],
       [ "BetaNodeRegistry", "class_rete_core_1_1_beta_node_registry.html", "class_rete_core_1_1_beta_node_registry" ],
       [ "CompositeBetaMemory", "class_rete_core_1_1_composite_beta_memory.html", "class_rete_core_1_1_composite_beta_memory" ],
       [ "ExistsNode", "class_rete_core_1_1_exists_node.html", "class_rete_core_1_1_exists_node" ],
       [ "IFact", "interface_rete_core_1_1_i_fact.html", "interface_rete_core_1_1_i_fact" ],
       [ "Fact&lt; T &gt;", "class_rete_core_1_1_fact-1-g.html", "class_rete_core_1_1_fact-1-g" ],
+      [ "IGroupByMetrics", "interface_rete_core_1_1_i_group_by_metrics.html", "interface_rete_core_1_1_i_group_by_metrics" ],
+      [ "GroupByNode&lt; TRightFact, TKey &gt;", "class_rete_core_1_1_group_by_node-2-g.html", "class_rete_core_1_1_group_by_node-2-g" ],
       [ "IAgendaGroupReadinessStrategy", "interface_rete_core_1_1_i_agenda_group_readiness_strategy.html", "interface_rete_core_1_1_i_agenda_group_readiness_strategy" ],
       [ "ILatentMemory", "interface_rete_core_1_1_i_latent_memory.html", "interface_rete_core_1_1_i_latent_memory" ],
       [ "IndexedExistsNode", "class_rete_core_1_1_indexed_exists_node.html", "class_rete_core_1_1_indexed_exists_node" ],
@@ -34,13 +37,18 @@ var annotated_dup =
       [ "Fact", "class_rete_core_1_1_fact.html", "class_rete_core_1_1_fact" ]
     ] ],
     [ "ReteEngine", "namespace_rete_engine.html", [
+      [ "IBaseGroup&lt; TInitial, TRightFact &gt;", "interface_rete_engine_1_1_i_base_group-2-g.html", "interface_rete_engine_1_1_i_base_group-2-g" ],
+      [ "IGroupAggregationShim&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_aggregation_shim-1-g.html", "interface_rete_engine_1_1_i_group_aggregation_shim-1-g" ],
+      [ "BaseGroupBuilder&lt; TInitial, TRightFact &gt;", "class_rete_engine_1_1_base_group_builder-2-g.html", "class_rete_engine_1_1_base_group_builder-2-g" ],
       [ "IRuleSetup", "interface_rete_engine_1_1_i_rule_setup.html", "interface_rete_engine_1_1_i_rule_setup" ],
       [ "IConnectionBuilder", "interface_rete_engine_1_1_i_connection_builder.html", "interface_rete_engine_1_1_i_connection_builder" ],
       [ "IEvaluationBuilder", "interface_rete_engine_1_1_i_evaluation_builder.html", "interface_rete_engine_1_1_i_evaluation_builder" ],
       [ "IAggregationBuilder", "interface_rete_engine_1_1_i_aggregation_builder.html", "interface_rete_engine_1_1_i_aggregation_builder" ],
       [ "FluentConverter&lt; TInitial &gt;", "class_rete_engine_1_1_fluent_converter-1-g.html", "class_rete_engine_1_1_fluent_converter-1-g" ],
-      [ "IGroupBuilder&lt; TInitial &gt;", "interface_rete_engine_1_1_i_group_builder-1-g.html", "interface_rete_engine_1_1_i_group_builder-1-g" ],
+      [ "IGroupBuilder&lt; TInitial, TRightFact &gt;", "interface_rete_engine_1_1_i_group_builder-2-g.html", "interface_rete_engine_1_1_i_group_builder-2-g" ],
       [ "GroupBuilder&lt; TInitial, TRightFact &gt;", "class_rete_engine_1_1_group_builder-2-g.html", "class_rete_engine_1_1_group_builder-2-g" ],
+      [ "IGroupByBuilder&lt; TInitial, TRightFact, TKey &gt;", "interface_rete_engine_1_1_i_group_by_builder-3-g.html", "interface_rete_engine_1_1_i_group_by_builder-3-g" ],
+      [ "GroupByBuilder&lt; TInitial, TRightFact, TKey &gt;", "class_rete_engine_1_1_group_by_builder-3-g.html", "class_rete_engine_1_1_group_by_builder-3-g" ],
       [ "JoinKeyExtractor", "class_rete_engine_1_1_join_key_extractor.html", "class_rete_engine_1_1_join_key_extractor" ],
       [ "ReteBuilder&lt; TInitial &gt;", "class_rete_engine_1_1_rete_builder-1-g.html", "class_rete_engine_1_1_rete_builder-1-g" ],
       [ "ReteEngine", "class_rete_engine_1_1_rete_engine.html", "class_rete_engine_1_1_rete_engine" ],
@@ -48,6 +56,7 @@ var annotated_dup =
       [ "RollbackLifecycleEventArgs", "class_rete_engine_1_1_rollback_lifecycle_event_args.html", "class_rete_engine_1_1_rollback_lifecycle_event_args" ],
       [ "RollbackSideEffectAuditEntry", "class_rete_engine_1_1_rollback_side_effect_audit_entry.html", "class_rete_engine_1_1_rollback_side_effect_audit_entry" ],
       [ "RollbackSideEffectEventArgs", "class_rete_engine_1_1_rollback_side_effect_event_args.html", "class_rete_engine_1_1_rollback_side_effect_event_args" ],
-      [ "RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", "class_rete_engine_1_1_rule_fired_event_args" ]
+      [ "RuleFiredEventArgs", "class_rete_engine_1_1_rule_fired_event_args.html", "class_rete_engine_1_1_rule_fired_event_args" ],
+      [ "TruthMaintenanceSystem", "class_rete_engine_1_1_truth_maintenance_system.html", "class_rete_engine_1_1_truth_maintenance_system" ]
     ] ]
 ];

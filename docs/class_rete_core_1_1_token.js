@@ -7,6 +7,7 @@ var class_rete_core_1_1_token =
     [ "Get< T >", "class_rete_core_1_1_token.html#a9f375ff2582a5b25e056a49613ca590e", null ],
     [ "GetHashCode", "class_rete_core_1_1_token.html#a03de6200272530f129866cf1e30c49f1", null ],
     [ "ToString", "class_rete_core_1_1_token.html#ae3e6883f7dd2ba5e1052daf2942b4525", null ],
+    [ "TryGet< T >", "class_rete_core_1_1_token.html#a22b0e448b0acd5827fe0f36b4bd9b27d", null ],
     [ "Fact", "class_rete_core_1_1_token.html#a176e789694d2a69443acf707848f9992", null ],
     [ "NamedFacts", "class_rete_core_1_1_token.html#ad361bc510849b289dfea963a81f5199a", null ],
     [ "Parent", "class_rete_core_1_1_token.html#ae137839a7a4f0083205e885f94ebeb55", null ]

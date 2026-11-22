@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['joinnode_0',['joinNode',['../class_rete_core_1_1_beta_node_registry.html#a734799e9c124d2a147991b59bfdf387f',1,'ReteCore::BetaNodeRegistry']]]
+  ['iretenode_0',['IReteNode',['../class_rete_core_1_1_beta_node_registry.html#ad0f11b10a6ac3281b8e893637b1498ab',1,'ReteCore::BetaNodeRegistry']]]
 ];
