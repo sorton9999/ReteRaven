@@ -410,6 +410,171 @@ namespace LogisticsEngine
                 });
         }
 
+        public static void InitializeStep6Rules(ReteEngine.ReteEngine engine)
+        {
+            Func<Token, Flight, bool> activeFlightsInTerminal = (token, flight) =>
+                (flight.Status == "Landed" || flight.Status == "Gated") &&
+                flight.AssignedGateId != null &&
+                flight.AssignedGateId.StartsWith(token.Get<Terminal>("TM").TerminalName.Last().ToString());
+
+            // =================================================================
+            // RULE 1: Logically Assert TerminalHoldDirective When Congested
+            // Uses .Then(RuleExecutionContext ctx => ...) to call ctx.InsertLogical(...)
+            // =================================================================
+            engine.Begin("IssueTerminalGroundStop")
+                .Priority(100)
+                .Where<Terminal>("TM")
+                .Group<Flight>("AllFlights")
+                    .Where(activeFlightsInTerminal)
+                    .Count<Flight>("ActiveFlightCount")
+                .Having(t => t.Get<int>("ActiveFlightCount") >= t.Get<Terminal>("TM").MaxCapacity)
+                .CtxThen(ctx =>
+                {
+                    var terminal = ctx.Match.Get<Terminal>("TM");
+                    int count = ctx.Match.Get<int>("ActiveFlightCount");
+
+                    var directive = new TerminalHoldDirective
+                    {
+                        TerminalName = terminal.TerminalName,
+                        Reason = $"Capacity reached ({count}/{terminal.MaxCapacity})"
+                    };
+
+                    Console.WriteLine($"[TMS ASSERT] Issuing logical ground-stop for {terminal.TerminalName}: {directive.Reason}");
+                    ctx.InsertLogical(directive);
+                    ctx.Publish();
+                });
+
+            // =================================================================
+            // RULE 2: React to Active TerminalHoldDirective (Divert Incoming Flights)
+            // Fires ONLY while TerminalHoldDirective exists in working memory.
+            // =================================================================
+            engine.Begin("DivertIncomingFlightsOnHold")
+                .Priority(80)
+                .Where<TerminalHoldDirective>("HOLD")
+                .And<Flight>("FL", (t, f) =>
+                    f.Status == "EnRoute" &&
+                    f.AssignedGateId != null &&
+                    f.AssignedGateId.StartsWith(t.Get<TerminalHoldDirective>("HOLD").TerminalName.Last().ToString()))
+                .Then(t =>
+                {
+                    var hold = t.Get<TerminalHoldDirective>("HOLD");
+                    var flight = t.Get<Flight>("FL");
+                    Console.WriteLine($"[DIVERSION] Holding {flight.FlightNumber} in pattern — active ground-stop on {hold.TerminalName} ({hold.Reason}).");
+                });
+
+            // =================================================================
+            // RULE 3: Clear Approach Clearance (Fires ONLY when NO Hold exists!)
+            // Uses .Not<TerminalHoldDirective> so it auto-activates when TMS retracts the hold!
+            // =================================================================
+            engine.Begin("ApproveNormalApproach")
+                .Priority(50)
+                .Where<Flight>("FL", f => f.Status == "EnRoute" && !string.IsNullOrEmpty(f.AssignedGateId))
+                .Not<TerminalHoldDirective>("HOLD", (t, hold) =>
+                    t.Get<Flight>("FL").AssignedGateId!.StartsWith(hold.TerminalName.Last().ToString()))
+                .Then(t =>
+                {
+                    var flight = t.Get<Flight>("FL");
+                    Console.WriteLine($"[APPROACH CLEARED] Flight {flight.FlightNumber} cleared for approach to Gate {flight.AssignedGateId}.");
+                });
+        }
+
+        public static void InitializeMultiJustificationTmsRules(ReteEngine.ReteEngine engine)
+        {
+            Func<Token, Flight, bool> activeFlightsInTerminal = (token, flight) =>
+                (flight.Status == "Landed" || flight.Status == "Gated") &&
+                flight.AssignedGateId != null &&
+                flight.AssignedGateId.StartsWith(token.Get<Terminal>("TM").TerminalName.Last().ToString());
+
+            // =================================================================
+            // JUSTIFICATION SOURCE 1: Terminal Congestion (Capacity >= MaxCapacity)
+            // =================================================================
+            engine.Begin("CapacityGroundStopRule")
+                .Priority(100)
+                .Where<Terminal>("TM")
+                .Group<Flight>("AllFlights")
+                    .Where(activeFlightsInTerminal)
+                    .Count<Flight>("ActiveFlightCount")
+                .Having(t => t.Get<int>("ActiveFlightCount") >= t.Get<Terminal>("TM").MaxCapacity)
+                .CtxThen(ctx =>
+                {
+                    var terminal = ctx.Match.Get<Terminal>("TM");
+                    int count = ctx.Match.Get<int>("ActiveFlightCount");
+                    var directive = TerminalHoldDirective.ForTerminal(
+                        terminal.TerminalName,
+                        $"Capacity reached ({count}/{terminal.MaxCapacity})");
+
+                    Console.WriteLine($"[TMS SUPPORT 1 - CAPACITY] Asserting logical hold on {terminal.TerminalName}");
+                    ctx.InsertLogical(directive);
+                    ctx.Publish();
+                });
+
+            // =================================================================
+            // JUSTIFICATION SOURCE 2: Severe Weather (Independent rule, same FactId!)
+            // =================================================================
+            engine.Begin("WeatherGroundStopRule")
+                .Priority(95)
+                .Where<WeatherCondition>("WX", w => w.Severity == "Severe")
+                .CtxThen(ctx =>
+                {
+                    var wx = ctx.Match.Get<WeatherCondition>("WX");
+                    var directive = TerminalHoldDirective.ForTerminal(
+                        wx.TerminalName,
+                        $"Severe weather at {wx.TerminalName}");
+
+                    Console.WriteLine($"[TMS SUPPORT 2 - WEATHER] Asserting logical hold on {wx.TerminalName}");
+                    ctx.InsertLogical(directive);
+                    ctx.Publish();
+                });
+
+            // =================================================================
+            // TRANSITIVE LOGICAL RULE: Hold Directive -> Logically Asserts AirportStatusAlert
+            // =================================================================
+            engine.Begin("EscalateHoldToAirportAlert")
+                .Priority(90)
+                .Where<TerminalHoldDirective>("HOLD")
+                .CtxThen(ctx =>
+                {
+                    var hold = ctx.Match.Get<TerminalHoldDirective>("HOLD");
+                    var alert = new AirportStatusAlert
+                    {
+                        TerminalName = hold.TerminalName,
+                        AlertLevel = "LEVEL-2 GROUND STOP"
+                    };
+
+                    Console.WriteLine($"[TRANSITIVE TMS ASSERT] Escalating {hold.TerminalName} hold -> {alert.AlertLevel}");
+                    ctx.InsertLogical(alert);
+                    ctx.Publish();
+                });
+
+            // =================================================================
+            // DOWNSTREAM CONSUMERS (Watch the transitive AirportStatusAlert!)
+            // =================================================================
+            engine.Begin("HoldIncomingFlightsOnAlert")
+                .Priority(80)
+                .Where<AirportStatusAlert>("ALERT")
+                .And<Flight>("FL", (t, f) =>
+                    f.Status == "EnRoute" &&
+                    f.AssignedGateId != null &&
+                    f.AssignedGateId.StartsWith(t.Get<AirportStatusAlert>("ALERT").TerminalName.Last().ToString()))
+                .Then(t =>
+                {
+                    var alert = t.Get<AirportStatusAlert>("ALERT");
+                    var flight = t.Get<Flight>("FL");
+                    Console.WriteLine($"[FLIGHT HELD] {flight.FlightNumber} holding due to active {alert.AlertLevel} at {alert.TerminalName}.");
+                });
+
+            engine.Begin("ClearApproachWhenNoAlert")
+                .Priority(50)
+                .Where<Flight>("FL", f => f.Status == "EnRoute" && !string.IsNullOrEmpty(f.AssignedGateId))
+                .Not<AirportStatusAlert>("ALERT", (t, alert) =>
+                    t.Get<Flight>("FL").AssignedGateId!.StartsWith(alert.TerminalName.Last().ToString()))
+                .Then(t =>
+                {
+                    var flight = t.Get<Flight>("FL");
+                    Console.WriteLine($"[APPROACH CLEARED] {flight.FlightNumber} cleared for approach to Gate {flight.AssignedGateId}.");
+                });
+        }
+
     }
 
 }

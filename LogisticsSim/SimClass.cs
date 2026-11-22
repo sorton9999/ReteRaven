@@ -45,7 +45,6 @@ namespace LogisticsSim
         private void ClearConsole()
         {
             Console.Clear();
-            Console.WriteLine("=== AIRPORT LOGISTICS: SIMULATION MENU ===");
         }
 
         private void DisplayMenu()
@@ -56,11 +55,13 @@ namespace LogisticsSim
             Console.WriteLine("3. Run Agenda Groups Simulation");
             Console.WriteLine("4: Run Aggregation Simulation");
             Console.WriteLine("5: Run Group By Simulation");
+            Console.WriteLine("6: Run Truth Maintenance Simulation");
+            Console.WriteLine("7: Run Multi-Step TMS Simulation");
             Console.WriteLine("C. Clear the console");
             Console.WriteLine("L. Toggle Logging");
             Console.WriteLine("Q. Exit");
             Console.WriteLine("=========================================");
-            Console.Write("Select an option (1-5, C|c, L|l, Q|q): ");
+            Console.Write("Select an option (1-7, C|c, L|l, Q|q): ");
         }
 
         private void HandleUserInput(string input, ref bool logging)
@@ -81,6 +82,12 @@ namespace LogisticsSim
                     break;
                 case "5":
                     RunGroupByVerificationSim(logging).GetAwaiter().GetResult();
+                    break;
+                case "6":
+                    RunTruthMaintenanceSim(logging).GetAwaiter().GetResult();
+                    break;
+                case "7":
+                    RunMultiJustificationTmsSim(logging).GetAwaiter().GetResult();
                     break;
                 case "C":
                 case "c":
@@ -110,18 +117,6 @@ namespace LogisticsSim
         private void DisplayLoggingStatus(bool logging)
         {
             Console.WriteLine($"Logging is currently {(logging ? "Enabled" : "Disabled")}");
-        }
-
-        private void CaptureAndHandleKeyPress(ref bool logging)
-        {
-            if (Console.KeyAvailable)
-            {
-                var keyInfo = Console.ReadKey(intercept: true);
-                if (keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control) && keyInfo.Key == ConsoleKey.L)
-                {
-                    ToggleLogging(ref logging);
-                }
-            }
         }
 
         private async Task RunTerminalAsyncSim(bool logging)
@@ -404,6 +399,69 @@ namespace LogisticsSim
 
             }).ConfigureAwait(false);
         }
+
+        public async static Task RunTruthMaintenanceSim(bool logging)
+        {
+            await Task.Run(() =>
+            {
+                Console.WriteLine("=== AIRPORT LOGISTICS: STEP 6 TRUTH MAINTENANCE (LOGICAL ASSERTIONS) ===");
+                var engine = new ReteEngine.ReteEngine(enableConditionTraceLogging: logging);
+                AirportRulesRegistry.InitializeStep6Rules(engine);
+
+                var termA = new Terminal { TerminalName = "Terminal A", MaxCapacity = 2 };
+                var termB = new Terminal { TerminalName = "Terminal B", MaxCapacity = 2 };
+
+                var f1 = new Flight { FlightNumber = "AA101", AssignedGateId = "A1", Status = "Gated" };
+                var f2 = new Flight { FlightNumber = "UA202", AssignedGateId = "A2", Status = "Landed" };
+                var f3 = new Flight { FlightNumber = "DL303", AssignedGateId = "A3", Status = "EnRoute" };
+                var f4 = new Flight { FlightNumber = "SW404", AssignedGateId = "B1", Status = "EnRoute" };
+
+                Console.WriteLine("\n--- Phase 1: Terminal A hits capacity (2/2) -> Issues logical hold; DL303 diverted, SW404 cleared ---");
+                engine.Assert(termA, termB, f1, f2, f3, f4);
+                engine.FireAll();
+
+                Console.WriteLine("\n--- Phase 2: AA101 departs Terminal A (1/2) -> TMS auto-retracts hold; DL303 cleared for approach ---");
+                f1.Status = "Departed";
+                engine.FireAll();
+
+                Console.WriteLine("\n=== STEP 6 VERIFICATION COMPLETE ===");
+
+            }).ConfigureAwait(false);
+        }
+
+        public async static Task RunMultiJustificationTmsSim(bool logging)
+        {
+            await Task.Run(() =>
+            {
+                Console.WriteLine("=== AIRPORT LOGISTICS: MULTI-JUSTIFICATION & TRANSITIVE TMS TEST ===");
+                var engine = new ReteEngine.ReteEngine(enableConditionTraceLogging: logging);
+                AirportRulesRegistry.InitializeMultiJustificationTmsRules(engine);
+
+                var termA = new Terminal { TerminalName = "Terminal A", MaxCapacity = 2 };
+                var wxA = new WeatherCondition { TerminalName = "Terminal A", Severity = "Severe" };
+
+                var f1 = new Flight { FlightNumber = "AA101", AssignedGateId = "A1", Status = "Gated" };
+                var f2 = new Flight { FlightNumber = "UA202", AssignedGateId = "A2", Status = "Landed" };
+                var f3 = new Flight { FlightNumber = "DL303", AssignedGateId = "A3", Status = "EnRoute" };
+
+                Console.WriteLine("\n--- Phase 1: BOTH Capacity (2/2) AND Severe Weather support Terminal A Hold ---");
+                engine.Assert(termA, wxA, f1, f2, f3);
+                engine.FireAll();
+
+                Console.WriteLine("\n--- Phase 2: AA101 departs (Capacity drops to 1/2), BUT Severe Weather remains -> Hold & Alert MUST SURVIVE ---");
+                f1.Status = "Departed";
+                engine.FireAll();
+
+                Console.WriteLine("\n--- Phase 3: Weather clears ('Clear') -> Final justification gone -> Hold & Alert TRANSITIVELY RETRACT -> DL303 clears! ---");
+                wxA.Severity = "Clear";
+                engine.FireAll();
+
+                Console.WriteLine("\n=== MULTI-JUSTIFICATION & TRANSITIVE TMS TEST COMPLETE ===");
+
+            }).ConfigureAwait(false);
+        }
+
+
 
         static void PrintCounts(ReteEngine.ReteEngine engine, string keyName)
         {

@@ -24,6 +24,10 @@ namespace ReteCore
     public class TerminalNode : IReteNode
     {
         /// <summary>
+        /// Am event emtted by a Fact retraction.  The Token to retract is given along with the Rule Name.
+        /// </summary>
+        public event Action<string, Token>? TokenRetracted;
+        /// <summary>
         /// The name of the rule associated with this terminal node. This is used for identification and debugging purposes when activations are 
         /// created and added to the agenda.
         /// This is part of the rule metadata.
@@ -176,6 +180,8 @@ namespace ReteCore
                     Console.WriteLine($"[RETRACT] Pending activation for rule '{_ruleName}' cancelled.");
                 }
                 _ruleMetadata.Agenda.ForgetActivation(_ruleName, token, _ruleMetadata.AgendaGroupName);
+                // Emit a retraction event to remove any related tokens
+                TokenRetracted?.Invoke(_ruleName, token);
             }
             else if (_agenda.RemoveByRuleAndFact(_ruleName, fact, _ruleMetadata.AgendaGroupName) > 0 && _agenda.EnableConsoleTraceLogging)
             {

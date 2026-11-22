@@ -126,7 +126,20 @@ namespace ReteCore
         /// </summary>
         /// <param name="predicate">The condition an activation must satisfy to be removed.</param>
         /// <returns>The number of activations removed.</returns>
-        internal int RemoveActivations(Predicate<Activation> predicate) => _activations.RemoveAll(predicate);
+        internal int RemoveActivations(Predicate<Activation> predicate)
+        {
+            int count = 0;
+            for (int i = _activations.Count - 1; i >= 0; i--)
+            {
+                if (predicate(_activations[i]))
+                {
+                    _activations[i].State = Activation.ActivationStateEnum.Cancelled;
+                    _activations.RemoveAt(i);
+                    count++;
+                }
+            }
+            return count;
+        }
 
         /// <summary>
         /// Updates focus counters and records the corresponding group activity.
@@ -206,17 +219,16 @@ namespace ReteCore
         {
             while (true)
             {
-                List<Activation> pending = _activations
-                    .Where(activation => activation.State == Activation.ActivationStateEnum.Pending)
-                    .ToList();
-                if (pending.Count == 0) return true;
+                if (!shouldContinue()) return true;
                 if (!CanResume()) return false;
 
-                foreach (Activation activation in pending)
-                {
-                    if (!shouldContinue()) return true;
-                    if (activation.State == Activation.ActivationStateEnum.Pending) fire(activation);
-                }
+                // Always pick the highest-priority pending activation (since _activations is kept sorted)
+                Activation? next = _activations.FirstOrDefault(
+                    activation => activation.State == Activation.ActivationStateEnum.Pending);
+
+                if (next == null) return true;
+
+                fire(next);
             }
         }
 

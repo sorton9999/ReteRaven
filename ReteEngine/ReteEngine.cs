@@ -141,6 +141,12 @@ namespace ReteEngine
             }
         }
         private bool _enableConditionTraceLogging;
+
+        /// <summary>
+        /// A reference to the Truth Mainteance System which tracks logical justifications for derived facts asserted
+        /// via <c>InsertLogical</c> and automatically triggers retractions when their supporting rule matches are invalidated.
+        /// </summary>
+        private readonly TruthMaintenanceSystem _tms = new();
         /// <summary>
         /// Captures the rollback boundary mode configured for this engine instance.
         /// </summary>
@@ -312,6 +318,15 @@ namespace ReteEngine
                 activity.Timestamp,
                 activity.Duration ?? TimeSpan.Zero,
                 activity.ActivationId));
+            FactChangesPublished += _tms.OnFactChangesPublished;
+            _tms.LogicalFactOrphaned += factId =>
+            {
+                var fact = FindFactById(factId);
+                if (fact != null)
+                {
+                    Retract(fact);
+                }
+            };
         }
 
         /// <summary>
@@ -371,6 +386,7 @@ namespace ReteEngine
         /// <param name="node">The terminal node to add to the Rete network.</param>
         public void AddTerminalNode(TerminalNode node)
         {
+            node.TokenRetracted += _tms.OnTokenRetracted;
             _terminalNodes.Add(node);
             if (_workingMemory.Count > 0)
             {
