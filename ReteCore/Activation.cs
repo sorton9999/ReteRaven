@@ -111,6 +111,10 @@ namespace ReteCore
         /// </summary>
         public long Timestamp { get; } = DateTime.UtcNow.Ticks;
         /// <summary>
+        /// A flag indicating this activation will receive focus automatically
+        /// </summary>
+        public bool AutoFocus { get; }
+        /// <summary>
         /// A private field to store the timestamp. This is so the timestamp can be set at the time of instantiation.
         /// </summary>
         private long _timestamp = 0;
@@ -126,13 +130,17 @@ namespace ReteCore
         /// <param name="name">The name of the activation.  Usually the rule name.</param>
         /// <param name="action">The action that executes when this activation fires.</param>
         /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
+        /// <param name="priority">An integer indicating priority level. Activations fire at increasing priority.</param>
         /// <param name="salience">A priority value relative to other activations.</param>
+        /// <param name="autoFocus">A flag indicating this activation will receive focus aautomatically</param>
+        /// <param name="agendaGroupName">A name to assign to an Agenda Group.  The MAIN group is defaulted.</param>
         public Activation(
             string name,
             Action<Token> action,
             Token match,
             int priority,
             int salience,
+            bool autoFocus,
             string agendaGroupName = Agenda.MainAgendaGroup)
         {
             // Mark the timestamp on this object's instantiation which will be used for tie-breaking when mutiple
@@ -144,6 +152,7 @@ namespace ReteCore
             Match = match;
             Salience = salience;
             Priority = priority;
+            AutoFocus = autoFocus;
         }
 
         /// <summary>
@@ -156,6 +165,8 @@ namespace ReteCore
         /// <param name="match">The triggering Token containing the fact on which to act upon.</param>
         /// <param name="priority">A priority value relative to other activations.</param>
         /// <param name="salience">A priority value relative to other activations.</param>
+        /// <param name="autoFocus">A flag indicating this activation will receive focus aautomatically</param>
+        /// <param name="agendaGroupName">A name to assign to an Agenda Group.  The MAIN group is defaulted.</param>
         public Activation(
             string name,
             Action<RuleExecutionContext> action,
@@ -164,8 +175,9 @@ namespace ReteCore
             Token match,
             int priority,
             int salience,
+            bool autoFocus,
             string agendaGroupName = Agenda.MainAgendaGroup)
-            : this(name, _ => { }, match, priority, salience, agendaGroupName)
+            : this(name, _ => { }, match, priority, salience, autoFocus, agendaGroupName)
         {
             ContextAction = action;
             PublishChanges = publishChanges;

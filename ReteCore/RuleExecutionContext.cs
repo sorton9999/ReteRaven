@@ -104,6 +104,17 @@ namespace ReteCore
         }
 
         /// <summary>
+        /// Stages a logical assertion for <paramref name="fact"/> justified by the current activation's <see cref="Match"/>.
+        /// When the justifying match is retracted from the network, the Truth Maintenance System automatically
+        /// retracts this fact from working memory.
+        /// </summary>
+        /// <param name="fact">The fact to insert.</param>
+        public void InsertLogical(IFact fact)
+        {
+            Stage(() => FactChange.LogicalAssert(fact, Match, _origin));
+        }
+
+        /// <summary>
         /// Retracts an existing fact from the context. The fact is staged for removal when the context is completed.
         /// </summary>
         /// <param name="factId">The unique identifier of the fact to retract.</param>

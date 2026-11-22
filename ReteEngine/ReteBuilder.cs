@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ReteEngine
 {
@@ -54,6 +55,10 @@ namespace ReteEngine
         /// </summary>
         private int _priority = 0;
         /// <summary>
+        /// A flag to indicate there is an activate status of Auto Focus
+        /// </summary>
+        private bool _autoFocus = false;
+        /// <summary>
         /// The Agenda group name.  The Main group is assigned by default.
         /// </summary>
         private string _agendaGroupName = Agenda.MainAgendaGroup;
@@ -76,7 +81,12 @@ namespace ReteEngine
         /// that triggered the rule.
         /// </summary>
         private readonly List<LateFilter> _lateFilters = new();
-
+        /// <summary>
+        /// Stores the set of aliases that have been bound in the current rule. This is used to track which 
+        /// aliases have already been used, preventing duplicate bindings and ensuring that each alias is unique
+        /// within the rule.
+        /// </summary>
+        private readonly HashSet<string> _boundAliases = new();
         /// <summary>
         /// Flag indicating whether this rule has late filters. When true, beta node registry caching
         /// is disabled to ensure late filters work correctly, since cached beta memories may not
@@ -101,6 +111,20 @@ namespace ReteEngine
         public string RuleName { get { return _ruleName; } }
 
         /// <summary>
+        /// Gets the rule engine.
+        /// </summary>
+        public ReteEngine Engine { get { return _engine; } }
+
+        /// <summary>
+        /// Resets the internal state of the ReteBuilder, clearing any bound aliases and preparing it for a
+        /// new rule construction.
+        /// </summary>
+        public void Reset()
+        {
+            _boundAliases.Clear();
+        }
+
+        /// <summary>
         /// Adds a typed fact with an optional condition to the rule being built.  This method creates an AlphaMemory node for 
         /// the specified type T and connects it to the current rule chain. If an initial condition is provided, it will be 
         /// used to filter facts of type T as they are asserted into the AlphaMemory. The name parameter is used to identify 
@@ -123,6 +147,9 @@ namespace ReteEngine
             {
                 Console.WriteLine($"===> Start {name}");
             }
+            // Add the incoming name to the bound aliases set to track which aliases have been used in the rule.
+            _boundAliases.Add(name);
+            // Retrieve or create the AlphaMemory for the specified type T.
             var alpha = _engine.GetAlphaMemory<T>(name, initialCondition);
 
             // Generate a signature for this Where pattern. The signature incorporates the predicate's
@@ -163,19 +190,87 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Adds a filter predicate to the chain that must be tested for truth.  A BetaMemory is added without
+        /// connecting an AlphaMemory.  This allows for a quick addition to add to the chain.  It attempts to
+        /// reuse a BetaMemory if there is one.
+        /// </summary>
+        /// <param name="filter">The predicate to add to the chain</param>
+        /// <param name="debugLabel">An optional debug name used for diagnostics</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling further configuration of the rule.</returns>
+        public ReteBuilder<TInitial> Where(Func<Token, bool> filter, string? debugLabel = null)
+        {
+            Func<Token, bool> wrapFilter = token =>
+            {
+                bool result = filter(token);
+                if (debugLabel != null && _engine.EnableConditionTraceLogging)
+                {
+                    Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for token {token}");
+                }
+                return result;
+            };
+
+            string filterSignature = PatternSignatureBuilder.GenerateFilterSignature(filter);
+
+            BetaFilterNode filterNode;
+            BetaMemory betaMemory;
+
+            if (_engine.BetaNodeRegistry != null)
+            {
+                (filterNode, betaMemory) = _engine.BetaNodeRegistry.GetOrCreateFilterPair(
+                    _lastNode,
+                    filterSignature,
+                    wrapFilter);
+
+                _engine.BetaNodeRegistry.ConnectNodeIfNeeded(_lastNode, filterNode);
+            }
+            else
+            {
+                filterNode = new BetaFilterNode(wrapFilter);
+                _lastNode?.AddSuccessor(filterNode);
+
+                betaMemory = new BetaMemory();
+                filterNode.AddSuccessor(betaMemory);
+            }
+            _lastNode = betaMemory;
+            return this;
+        }
+
+
+        /// <summary>
         /// Groups facts of type TRightFact into the token under the specified alias. This method creates a GroupBuilder that allows 
         /// for further configuration of the grouping operation.
         /// </summary>
         /// <typeparam name="TRightFact">The type of fact to group.</typeparam>
         /// <param name="alphaMemoryName">The name of the AlphaMemory containing the facts to group.</param>
         /// <returns>The current <see cref="IGroupBuilder{TInitial}"/> to continue building the group.</returns>
-        public IGroupBuilder<TInitial> Group<TRightFact>(string alphaMemoryName)
+        public IGroupBuilder<TInitial, TRightFact> Group<TRightFact>(string alphaMemoryName)
         {
-            // Mirroring your And<T> setup: get the alpha memory containing the facts we want to aggregate
+            // Get the alpha memory containing the facts we want to aggregate
             var alpha = _engine.GetAlphaMemory<TRightFact>(alphaMemoryName);
 
-            // Pass 'this' so the GroupBuilder can update _lastNode and return fluent chaining to the user
-            return new GroupBuilder<TInitial,TRightFact>(this, alpha, alphaMemoryName);
+            // Return GroupBuilder with the Alpha memory
+            return new GroupBuilder<TInitial, TRightFact>(this, alpha);
+        }
+
+        /// <summary>
+        /// Begins a standalone bucketed aggregation over facts of type <typeparamref name="TRightFact"/>, 
+        /// partitioning incoming facts by <paramref name="keySelector"/> and emitting one token per distinct key bucket.
+        /// </summary>
+        /// <typeparam name="TRightFact">The type of fact to partition and aggregate.</typeparam>
+        /// <typeparam name="TKey">The non-nullable type of the key used to group facts into buckets.</typeparam>
+        /// <param name="keySelector">A function that extracts the grouping key from each fact of type <typeparamref name="TRightFact"/>.</param>
+        /// <param name="asKeyName">The token alias under which each bucket's distinct grouping key will be bound for downstream conditions and actions.</param>
+        /// <param name="alphaMemoryName">The named <see cref="AlphaMemory"/> stream to source facts from (defaults to <c>"default"</c>).</param>
+        /// <returns>An <see cref="IGroupByBuilder{TInitial, TRightFact, TKey}"/> used to configure optional pre-grouping filters (<c>Where</c>) 
+        /// and select an aggregation operation.</returns>
+        public IGroupByBuilder<TInitial, TRightFact, TKey> GroupBy<TRightFact, TKey>(
+            Func<TRightFact, TKey> keySelector,
+            string asKeyName,
+            string alphaMemoryName = "default") where TKey : notnull
+        {
+            var alpha = _engine.GetAlphaMemory<TRightFact>(alphaMemoryName);
+
+            return new GroupByBuilder<TInitial, TRightFact, TKey>(this, alpha, keySelector, asKeyName);
         }
 
         // 
@@ -255,6 +350,17 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// This sets the rule for this builder to Auto Focus.  Focus will change to this rule automatically when group conditions
+        /// are met.
+        /// </summary>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
+        public ReteBuilder<TInitial> AutoFocus()
+        {
+            _autoFocus = true;
+            return this;
+        }
+
+        /// <summary>
         /// Adds a global condition to the rule, which is evaluated at the time the rule fires. Global conditions are not 
         /// associated with any specific fact or token but are general predicates that must be satisfied for the rule to 
         /// execute. They are evaluated in the terminal node before the action is executed, allowing for additional checks 
@@ -329,9 +435,24 @@ namespace ReteEngine
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, allowing for method chaining.</returns>
         public ReteBuilder<TInitial> And<T>(string name, Func<Token, T, bool> joinCondition, string? debugLabel = null)
         {
+            // Add the incoming name to the bound aliases set to track
+            // which aliases have been used in the rule.
+            bool isAlreadyBound = !_boundAliases.Add(name);
+            Func<Token, T, bool> effectiveCondition = isAlreadyBound
+                ? (token, fact) => 
+                {
+                    if (token.TryGet<T>(name, out var existing))
+                    {
+                        if (!ReferenceEquals(fact, existing) && !Equals(fact, existing))
+                        {  return false; }
+                    }
+                    return joinCondition(token, fact);
+                }
+            : joinCondition;
+
             Func<Token, T, bool> wrapCondition = (token, fact) =>
             {
-                bool result = joinCondition(token, fact);
+                bool result = effectiveCondition(token, fact);
                 if (debugLabel != null && _engine.EnableConditionTraceLogging)
                 {
                     Console.WriteLine($"[DEBUG:{debugLabel}] Result: {result} for fact {fact}");
@@ -342,7 +463,7 @@ namespace ReteEngine
             var alpha = _engine.GetAlphaMemory<T>(name);
 
             // Generate both cache key and token name together to ensure consistency
-            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, joinCondition);
+            var (joinSignature, tokenName) = PatternSignatureBuilder.GenerateJoinSignature(name, alpha, effectiveCondition, isAlreadyBound);
 
             // Use beta node registry for caching if enabled
             JoinNode join;
@@ -735,6 +856,21 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Filters aggregated or grouped tokens in the Beta network using a post-aggregation predicate, analogous to a
+        /// SQL <c>HAVING</c> clause.
+        /// </summary>
+        /// <param name="predicate">The condition evaluated against each <see cref="Token"/> carrying the computed aggregation
+        /// result(s).</param>
+        /// <param name="debugLabel">Optional diagnostic label automatically captured from the caller's predicate expression for
+        /// condition trace logging.</param>
+        /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance with a <see cref="BetaFilterNode"/> appended to the
+        /// rule chain.</returns>
+        public ReteBuilder<TInitial> Having(Func<Token, bool> predicate, [CallerArgumentExpression(nameof(predicate))] string? debugLabel = null)
+        {
+            return Where(predicate, debugLabel);
+        }
+
+        /// <summary>
         /// Adds a terminal action to the rule that will be executed when the rule is triggered.  This method finalizes the rule definition
         /// by specifying the consequence of the rule. The action will be invoked each time the rule's conditions are satisfied. Salience 
         /// can be used to control the order in which rules are executed when multiple rules are eligible to fire. Higher salience
@@ -804,7 +940,8 @@ namespace ReteEngine
                 GlobalGuards = globalConditionsCopy,
                 LateFilters = lateFiltersCopy,
                 Priority = priority,
-                Salience = salience
+                Salience = salience,
+                AutoFocus = _autoFocus
             });
 
             // Add and tie in
@@ -894,10 +1031,15 @@ namespace ReteEngine
         /// alpha memory should be joined. Returns <see langword="true"/> to join the pair; otherwise, <see langword="false"/>.
         /// </param>
         /// <returns>The current <see cref="ReteBuilder{TInitial}"/> instance, enabling method chaining.</returns>
-        public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition)
+        public ReteBuilder<TInitial> JoinWith<TNext>(ReteCore.AlphaMemory nextAlpha, Func<Token, TNext, bool> condition, string? name = null)
         {
+            string tokenName = name ?? $"Join_{typeof(TNext).Name}_{Guid.NewGuid()}";
+            bool isAlreadyBound = name != null && !_boundAliases.Add(name);
+            Func<Token, TNext, bool> effectiveCondition = isAlreadyBound
+                ? (token, fact) => ReferenceEquals(fact, token.Get<TNext>(name!)) && condition(token, fact) 
+                : condition;
             BetaMemory? beta = _lastNode as BetaMemory;
-            var join = new ReteCore.JoinNode(beta!, nextAlpha, "dummy", (t, f) => condition(t, (TNext)f));
+            var join = new ReteCore.JoinNode(beta!, nextAlpha, tokenName, (t, f) => effectiveCondition(t, (TNext)f));
             var nextBeta = new ReteCore.BetaMemory();
             join.AddSuccessor(nextBeta);
             _lastNode = nextBeta;

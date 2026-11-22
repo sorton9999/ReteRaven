@@ -8,7 +8,10 @@
 //-----------------------------------------------------------------------
 using ReteCore;
 using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace ReteEngine
 {
@@ -39,12 +42,10 @@ namespace ReteEngine
         public static string WhereSignature<T>(string name, Func<T, bool>? condition)
         {
             string? typeName = typeof(T).FullName;
-            string conditionPart = condition != null
-                ? $":{condition.Method.MethodHandle.Value}"
-                : "";
+            string conditionPart = PredicateIdentity(condition);
             return $"Where<{typeName}>({name}){conditionPart}";
         }
-
+        
         /// <summary>
         /// Builds a stable identity string for an optional predicate, suitable for inclusion in a cache key.
         /// Two distinct delegate instances (even with logically identical bodies) produce distinct identities,
@@ -76,13 +77,15 @@ namespace ReteEngine
            string name,
            AlphaMemory alpha,
            Func<Token, T, bool> joinCondition,
+           bool isSelfFilter = false,
            [CallerMemberName] string methodName = "")
         {
             var methodPointer = joinCondition.Method.MethodHandle.Value;
+            string mode = isSelfFilter ? "self" : "join";
 
             // Generate a unique cache key that includes all factors affecting join semantics
             // This prevents false cache hits when conditions differ
-            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}):{alpha.GetHashCode()}:{methodPointer}";
+            string cacheKey = $"{methodName}<{typeof(T).Name}>({name}:{mode}):{alpha.GetHashCode()}:{methodPointer}";
 
             // The token name is always the simple provided name - this is what late filters look for
             // by calling token.Get<T>(name)
@@ -118,6 +121,78 @@ namespace ReteEngine
             string tokenName = name;
 
             return (cacheKey, tokenName);
+        }
+
+        /// <summary>
+        /// Builds a deterministic cache signature for an anchored <see cref="AggregationGroupNode"/>, 
+        /// allowing <see cref="BetaNodeRegistry"/> to share identical aggregation nodes across rules.
+        /// </summary>
+        /// <param name="alpha">The right-hand <see cref="AlphaMemory"/> supplying facts to aggregate.</param>
+        /// <param name="joinCondition">The optional join predicate matching right-hand facts to left-hand tokens, or <see langword="null"/> if
+        /// unfiltered.</param>
+        /// <param name="aggregatorKind">A descriptor identifying the aggregation operation and return type (e.g., <c>"Count"</c>, <c>"Sum:Int32"</c>,
+        /// <c>"Average:Decimal"</c>).</param>
+        /// <param name="selector">The optional value-selector delegate used by operations like <c>Sum</c>, <c>Average</c>, <c>Min</c>, or <c>Max</c>,
+        /// or <see langword="null"/> for <c>Count</c>.</param>
+        /// <param name="outputVariableName">The token alias under which the computed aggregation result is stored.</param>
+        /// <returns>A unique cache key string encoding the alpha memory, delegates, operation kind, and output alias.</returns>
+        public static string GenerateAggregationSignature(
+            AlphaMemory alpha,
+            Delegate? joinCondition,
+            string aggregatorKind,
+            Delegate? selector,
+            string outputVariableName)
+        {
+            var joinPtr = joinCondition?.Method.MethodHandle.Value ?? IntPtr.Zero;
+            var selectorPtr = selector?.Method.MethodHandle.Value ?? IntPtr.Zero;
+
+            return $"Group({alpha.GetHashCode()}):join={joinPtr}:agg={aggregatorKind}:sel={selectorPtr}:as={outputVariableName}";
+        }
+
+        /// <summary>
+        /// Builds a deterministic cache signature for a standalone <see cref="GroupByNode{TRightFact, TKey}"/>, 
+        /// allowing <see cref="BetaNodeRegistry"/> to share identical bucketed aggregations across rules.
+        /// </summary>
+        /// <param name="alpha">The <see cref="AlphaMemory"/> supplying facts to partition into buckets.</param>
+        /// <param name="keySelector">The delegate that extracts the grouping key from each incoming fact.</param>
+        /// <param name="filter">The optional single-fact predicate applied before bucketing, or <see langword="null"/> if all facts in
+        /// <paramref name="alpha"/> are included.</param>
+        /// <param name="aggregatorKind">A descriptor identifying the aggregation operation and return type (e.g., <c>"Count"</c>, <c>"Min:Int32"</c>,
+        /// <c>"Max:Int32"</c>).</param>
+        /// <param name="selector">The optional value-selector delegate for numeric aggregations, or <see langword="null"/> for <c>Count</c>.</param>
+        /// <param name="keyName">The token alias under which each bucket's distinct grouping key is stored.</param>
+        /// <param name="valueName">The token alias under which each bucket's computed aggregate value is stored.</param>
+        /// <returns>A unique cache key string encoding the alpha memory, key selector, filter, operation kind, and output aliases.</returns>
+        public static string GenerateGroupBySignature(
+            AlphaMemory alpha,
+            Delegate keySelector,
+            Delegate? filter,
+            string aggregatorKind,
+            Delegate? selector,
+            string keyName,
+            string valueName)
+        {
+            var keyPtr = keySelector.Method.MethodHandle.Value;
+            var filterPtr = filter?.Method.MethodHandle.Value ?? IntPtr.Zero;
+            var selectorPtr = selector?.Method.MethodHandle.Value ?? IntPtr.Zero;
+
+            return $"GroupBy({alpha.GetHashCode()}):key={keyPtr}:filter={filterPtr}:agg={aggregatorKind}:sel={selectorPtr}:as=({keyName},{valueName})";
+        }
+
+
+        /// <summary>
+        /// Generate a cache key for the given filter predicate.  The predicates Method Handle is used along
+        /// with the calling method name.
+        /// </summary>
+        /// <param name="filter">The predicate to generate the key for</param>
+        /// <param name="methodName">The calling method name</param>
+        /// <returns>The signature string</returns>
+        public static string GenerateFilterSignature(
+            Func<Token, bool> filter,
+            [CallerMemberName] string methodName = "")
+        {
+            var methodPointer = filter.Method.MethodHandle.Value;
+            return $"{methodName}:{methodPointer}";
         }
 
         /// <summary>
@@ -186,6 +261,91 @@ namespace ReteEngine
                 ? $":{joinCondition.GetHashCode()}"
                 : "";
             return $"AndNot<{typeName}>({name}){conditionPart}";
+        }
+
+
+        private static string CanonicalizeExpression(Expression expr)
+        {
+            var visitor = new CanonicalExpressionVisitor();
+            visitor.Visit(expr);
+            return visitor.GetSignature();
+        }
+
+        private sealed class CanonicalExpressionVisitor : ExpressionVisitor
+        {
+            private readonly StringBuilder _sb = new();
+
+            public string GetSignature() => _sb.ToString();
+
+            protected override Expression VisitLambda<T>(Expression<T> node)
+            {
+                _sb.Append("(=>");
+                Visit(node.Body);
+                _sb.Append(')');
+                return node;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                // Normalize parameter names so 'f => f.Count > 10' 
+                // matches 'x => x.Count > 10'
+                _sb.Append($"$param:{node.Type.Name}");
+                return node;
+            }
+
+            protected override Expression VisitBinary(BinaryExpression node)
+            {
+                _sb.Append('(');
+                Visit(node.Left);
+                _sb.Append($" {node.NodeType} ");
+                Visit(node.Right);
+                _sb.Append(')');
+                return node;
+            }
+
+            protected override Expression VisitMember(MemberExpression node)
+            {
+                // Evaluate captured closure variables (e.g., local threshold variables)
+                if (node.Expression is ConstantExpression constantExpr)
+                {
+                    object? container = constantExpr.Value;
+                    object? value = node.Member switch
+                    {
+                        FieldInfo field => field.GetValue(container),
+                        PropertyInfo prop => prop.GetValue(container),
+                        _ => null
+                    };
+                    _sb.Append($"[Const:{value ?? "null"}]");
+                    return node;
+                }
+
+                Visit(node.Expression);
+                _sb.Append($".{node.Member.Name}");
+                return node;
+            }
+
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                _sb.Append($"[Const:{node.Value ?? "null"}]");
+                return node;
+            }
+
+            protected override Expression VisitMethodCall(MethodCallExpression node)
+            {
+                if (node.Object != null)
+                {
+                    Visit(node.Object);
+                    _sb.Append('.');
+                }
+                _sb.Append($"{node.Method.Name}(");
+                for (int i = 0; i < node.Arguments.Count; i++)
+                {
+                    if (i > 0) _sb.Append(',');
+                    Visit(node.Arguments[i]);
+                }
+                _sb.Append(')');
+                return node;
+            }
         }
     }
 }

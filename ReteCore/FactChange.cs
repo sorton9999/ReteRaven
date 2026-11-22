@@ -41,13 +41,15 @@ namespace ReteCore
             Guid factId,
             IFact? fact,
             long? expectedRevision,
-            FactChangeOrigin? origin)
+            FactChangeOrigin? origin,
+            Token? match = null)
         {
             Kind = kind;
             FactId = factId;
             Fact = fact;
             ExpectedRevision = expectedRevision;
             Origin = origin;
+            JustifyingMatch = match;
         }
 
         /// <summary>
@@ -77,6 +79,17 @@ namespace ReteCore
         public FactChangeOrigin? Origin { get; }
 
         /// <summary>
+        /// Gets the justifying <see cref="Token"/> for a logical assertion, or <see langword="null"/> for standard changes.
+        /// </summary>
+        public Token? JustifyingMatch { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this change represents a logical assertion backed by a 
+        /// <see cref="JustifyingMatch"/> for Truth Maintenance tracking.
+        /// </summary>
+        public bool IsLogical => JustifyingMatch != null;
+
+        /// <summary>
         /// Creates an assert change from a snapshot of the supplied fact.
         /// </summary>
         /// <param name="fact">The fact to assert.</param>
@@ -89,6 +102,17 @@ namespace ReteCore
             IFact snapshot = CaptureSnapshot(fact);
             return new FactChange(FactChangeTypeEnum.Assert, snapshot.Id, snapshot, null, origin);
         }
+
+        /// <summary>
+        /// Creates a logical assert change tied to <paramref name="justifyingMatch"/> for Truth Maintenance.
+        /// </summary>
+        public static FactChange LogicalAssert(IFact fact, Token justifyingMatch, FactChangeOrigin? origin = null)
+        {
+            ArgumentNullException.ThrowIfNull(justifyingMatch);
+            IFact snapshot = CaptureSnapshot(fact);
+            return new FactChange(FactChangeTypeEnum.Assert, snapshot.Id, snapshot, null, origin, justifyingMatch);
+        }
+
 
         /// <summary>
         /// Creates an update change containing the replacement state for the same logical fact identity.
