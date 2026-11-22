@@ -91,6 +91,10 @@ namespace ReteCore
         /// activations relative to those with explicitly set salience values.
         /// </summary>
         public int Salience { get; init; } = 0;
+        /// <summary>
+        /// A flag to set an Auto Focus state for a rule this meydata will be assigned to.
+        /// </summary>
+        public bool AutoFocus { get; init; } = false;
 
         /// <summary>
         /// Constructor for the RuleMetadata class. 

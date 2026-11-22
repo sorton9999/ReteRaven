@@ -70,6 +70,10 @@ namespace ReteCore
         /// and salience.
         /// </summary>
         private readonly RuleMetadata _ruleMetadata;
+        /// <summary>
+        /// A flag indicating the rule was set to Auto Focus mode.
+        /// </summary>
+        private bool _autoFocus;
 
         /// <summary>
         /// Initializes a new instance of the TerminalNode class with the specified rule metadata.
@@ -85,6 +89,7 @@ namespace ReteCore
             _lateFilters = metaData.LateFilters;
             _priority = metaData.Priority;
             _salience = metaData.Salience;
+            _autoFocus = metaData.AutoFocus;
         }
 
         /// <summary>
@@ -135,6 +140,7 @@ namespace ReteCore
                         finalMatch,
                         _priority,
                         _salience,
+                        _autoFocus,
                         _ruleMetadata.AgendaGroupName));
                 }
                 // If a standard action is defined, create an activation with the action and add it to the agenda.
@@ -146,6 +152,7 @@ namespace ReteCore
                         finalMatch,
                         _priority,
                         _salience,
+                        _autoFocus,
                         _ruleMetadata.AgendaGroupName));
                 }
                 // If neither action is defined, throw an exception indicating that the rule metadata must define an action.

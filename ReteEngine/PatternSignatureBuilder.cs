@@ -124,6 +124,78 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Builds a deterministic cache signature for an anchored <see cref="AggregationGroupNode"/>, 
+        /// allowing <see cref="BetaNodeRegistry"/> to share identical aggregation nodes across rules.
+        /// </summary>
+        /// <param name="alpha">The right-hand <see cref="AlphaMemory"/> supplying facts to aggregate.</param>
+        /// <param name="joinCondition">The optional join predicate matching right-hand facts to left-hand tokens, or <see langword="null"/> if
+        /// unfiltered.</param>
+        /// <param name="aggregatorKind">A descriptor identifying the aggregation operation and return type (e.g., <c>"Count"</c>, <c>"Sum:Int32"</c>,
+        /// <c>"Average:Decimal"</c>).</param>
+        /// <param name="selector">The optional value-selector delegate used by operations like <c>Sum</c>, <c>Average</c>, <c>Min</c>, or <c>Max</c>,
+        /// or <see langword="null"/> for <c>Count</c>.</param>
+        /// <param name="outputVariableName">The token alias under which the computed aggregation result is stored.</param>
+        /// <returns>A unique cache key string encoding the alpha memory, delegates, operation kind, and output alias.</returns>
+        public static string GenerateAggregationSignature(
+            AlphaMemory alpha,
+            Delegate? joinCondition,
+            string aggregatorKind,
+            Delegate? selector,
+            string outputVariableName)
+        {
+            var joinPtr = joinCondition?.Method.MethodHandle.Value ?? IntPtr.Zero;
+            var selectorPtr = selector?.Method.MethodHandle.Value ?? IntPtr.Zero;
+
+            return $"Group({alpha.GetHashCode()}):join={joinPtr}:agg={aggregatorKind}:sel={selectorPtr}:as={outputVariableName}";
+        }
+
+        /// <summary>
+        /// Builds a deterministic cache signature for a standalone <see cref="GroupByNode{TRightFact, TKey}"/>, 
+        /// allowing <see cref="BetaNodeRegistry"/> to share identical bucketed aggregations across rules.
+        /// </summary>
+        /// <param name="alpha">The <see cref="AlphaMemory"/> supplying facts to partition into buckets.</param>
+        /// <param name="keySelector">The delegate that extracts the grouping key from each incoming fact.</param>
+        /// <param name="filter">The optional single-fact predicate applied before bucketing, or <see langword="null"/> if all facts in
+        /// <paramref name="alpha"/> are included.</param>
+        /// <param name="aggregatorKind">A descriptor identifying the aggregation operation and return type (e.g., <c>"Count"</c>, <c>"Min:Int32"</c>,
+        /// <c>"Max:Int32"</c>).</param>
+        /// <param name="selector">The optional value-selector delegate for numeric aggregations, or <see langword="null"/> for <c>Count</c>.</param>
+        /// <param name="keyName">The token alias under which each bucket's distinct grouping key is stored.</param>
+        /// <param name="valueName">The token alias under which each bucket's computed aggregate value is stored.</param>
+        /// <returns>A unique cache key string encoding the alpha memory, key selector, filter, operation kind, and output aliases.</returns>
+        public static string GenerateGroupBySignature(
+            AlphaMemory alpha,
+            Delegate keySelector,
+            Delegate? filter,
+            string aggregatorKind,
+            Delegate? selector,
+            string keyName,
+            string valueName)
+        {
+            var keyPtr = keySelector.Method.MethodHandle.Value;
+            var filterPtr = filter?.Method.MethodHandle.Value ?? IntPtr.Zero;
+            var selectorPtr = selector?.Method.MethodHandle.Value ?? IntPtr.Zero;
+
+            return $"GroupBy({alpha.GetHashCode()}):key={keyPtr}:filter={filterPtr}:agg={aggregatorKind}:sel={selectorPtr}:as=({keyName},{valueName})";
+        }
+
+
+        /// <summary>
+        /// Generate a cache key for the given filter predicate.  The predicates Method Handle is used along
+        /// with the calling method name.
+        /// </summary>
+        /// <param name="filter">The predicate to generate the key for</param>
+        /// <param name="methodName">The calling method name</param>
+        /// <returns>The signature string</returns>
+        public static string GenerateFilterSignature(
+            Func<Token, bool> filter,
+            [CallerMemberName] string methodName = "")
+        {
+            var methodPointer = filter.Method.MethodHandle.Value;
+            return $"{methodName}:{methodPointer}";
+        }
+
+        /// <summary>
         /// Creates a signature for an And<T> join pattern.
         /// Encodes: type name, join name, and join condition predicate identity.
         /// 

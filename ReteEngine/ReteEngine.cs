@@ -379,6 +379,40 @@ namespace ReteEngine
         }
 
         /// <summary>
+        /// Traverses the Rete network from the root node to locate an active <see cref="IGroupByMetrics"/> node 
+        /// matching <paramref name="keyName"/> and returns its live bucket item counts.
+        /// </summary>
+        /// <param name="keyName">The token alias name assigned to the grouping key when the <c>GroupBy</c> rule was
+        /// defined (e.g., <c>"FlightStatus"</c>).</param>
+        /// <returns>A read-only dictionary mapping each distinct bucket key to its current fact count, 
+        /// or an empty dictionary if no matching <see cref="IGroupByMetrics"/> node exists in the network.</returns>
+        public IReadOnlyDictionary<object, int> GetGroupByCounts(string keyName)
+        {
+            var visited = new HashSet<IReteNode>();
+            var stack = new Stack<IReteNode>();
+            stack.Push(_root);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+                if (!visited.Add(current)) continue;
+
+                if (current is IGroupByMetrics metrics &&
+                    string.Equals(metrics.KeyName, keyName, StringComparison.Ordinal))
+                {
+                    return metrics.ObjectCounts;
+                }
+
+                foreach (var successor in current.Successors)
+                {
+                    stack.Push(successor);
+                }
+            }
+
+            return new Dictionary<object, int>();
+        }
+
+        /// <summary>
         /// The public fact insertion method that introduces facts as a batch Assert.  The private working Assert method is called for each fact in the array.
         /// </summary>
         /// <param name="facts">The array of facts to assert.</param>
