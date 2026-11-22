@@ -15,6 +15,21 @@ namespace ReteCore
     /// </summary>
     public sealed class AgendaGroup
     {
+        #region Events
+
+        /// <summary>
+        /// Raised whenever this group's runtime statistics change.
+        /// </summary>
+        public event Action<AgendaGroupRuntimeStatistics>? StatisticsUpdated;
+
+        #endregion
+
+        #region Public class variables
+
+        #endregion
+
+        #region Private class variables
+
         /// <summary>
         /// The maximum number of activity records retained by this group.
         /// </summary>
@@ -40,6 +55,10 @@ namespace ReteCore
         /// </summary>
         private long? _waitStartedAt;
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// Creates an agenda group with the specified canonical name.
         /// </summary>
@@ -49,10 +68,9 @@ namespace ReteCore
             Name = name;
         }
 
-        /// <summary>
-        /// Clears retained activity records without resetting the group's runtime counters.
-        /// </summary>
-        internal void ClearActivityLog() => _activityLog.Clear();
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets the canonical name of this agenda group.
@@ -70,11 +88,6 @@ namespace ReteCore
         public bool RecordActivityLog { get; set; } = true;
 
         /// <summary>
-        /// Raised whenever this group's runtime statistics change.
-        /// </summary>
-        public event Action<AgendaGroupRuntimeStatistics>? StatisticsUpdated;
-
-        /// <summary>
         /// Gets the activations owned by this group, ordered by activation priority.
         /// </summary>
         public IReadOnlyList<Activation> Activations => _activations.AsReadOnly();
@@ -89,6 +102,10 @@ namespace ReteCore
         /// </summary>
         public bool HasActivations => _activations.Any(activation => activation.State == Activation.ActivationStateEnum.Pending);
 
+        #endregion
+
+        #region Public methods
+
         /// <summary>
         /// Registers a strategy that gates the group's ability to resume firing.
         /// </summary>
@@ -102,6 +119,15 @@ namespace ReteCore
             RecordActivity("WaitHookRegistered");
             return new ReadinessRegistration(this, strategy);
         }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Clears retained activity records without resetting the group's runtime counters.
+        /// </summary>
+        internal void ClearActivityLog() => _activityLog.Clear();
 
         /// <summary>
         /// Adds an activation to this group and restores priority ordering.
@@ -294,6 +320,8 @@ namespace ReteCore
         {
             if (_readinessStrategies.Remove(strategy)) RecordActivity("WaitHookRemoved");
         }
+
+        #endregion
 
         /// <summary>
         /// Holds the mutable runtime counters used to create statistics snapshots.

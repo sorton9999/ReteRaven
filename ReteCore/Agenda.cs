@@ -22,6 +22,8 @@ namespace ReteCore
     /// </summary>
     public class Agenda
     {
+        #region Events
+
         /// <summary>
         /// Raised whenever the agenda-group focus stack changes.
         /// </summary>
@@ -35,10 +37,19 @@ namespace ReteCore
         /// </summary>
         public event Action<AgendaGroupRuntimeStatistics>? GroupStatisticsUpdated;
 
+        #endregion
+
+        #region Public class variables
+
         /// <summary>
         /// The default group.  All rules without a group assignment belong to this.
         /// </summary>
         public const string MainAgendaGroup = "MAIN";
+
+        #endregion
+
+        #region Private class variables
+
         /// <summary>
         /// Registered agenda groups. The agenda coordinates them while each group owns its local behavior.
         /// </summary>
@@ -77,6 +88,10 @@ namespace ReteCore
         /// </summary>
         private bool _recordGroupActivityLog = true;
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -86,6 +101,10 @@ namespace ReteCore
             RecordActivity(MainAgendaGroup, "GroupRegistered");
             RecordGroupFocus(MainAgendaGroup, "GroupFocused");
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets whether agenda groups collect timing and activity counters. Enabled by default.
@@ -155,6 +174,10 @@ namespace ReteCore
         /// </summary>
         public IReadOnlyList<AgendaGroupActivityRecord> GroupActivityLog =>
             Array.AsReadOnly(_groups.Values.SelectMany(group => group.ActivityLog).OrderBy(record => record.Timestamp).TakeLast(1000).ToArray());
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
         /// Gets a snapshot of timing and activity counters for every registered group.
@@ -256,24 +279,6 @@ namespace ReteCore
         public bool PopAgendaGroupFocus()
         {
             return PopAgendaGroupFocus(AgendaFocusStackChangeReason.GroupPopped);
-        }
-
-        /// <summary>
-        /// Pop the currently focused group from the focus stack, returning focus to the previous group. The base `MAIN` group
-        /// cannot be removed. Notify subscribers of the change with the specified reason.
-        /// </summary>
-        /// <param name="reason">The reason for popping the focused group.</param>
-        /// <returns>True when a focused group was removed; otherwise false.</returns>
-        private bool PopAgendaGroupFocus(AgendaFocusStackChangeReason reason)
-        {
-            if (_agendaGroupFocusStack.Count <= 1) return false;
-            IReadOnlyList<string> previousStack = CaptureFocusStack();
-            string poppedGroup = FocusedAgendaGroup;
-            _agendaGroupFocusStack.RemoveAt(_agendaGroupFocusStack.Count - 1);
-            RecordActivity(poppedGroup, "FocusPopped");
-            RecordGroupFocus(FocusedAgendaGroup, "FocusResumed");
-            NotifyFocusStackChanged(previousStack, reason);
-            return true;
         }
 
         /// <summary>
@@ -510,44 +515,6 @@ namespace ReteCore
         }
 
         /// <summary>
-        /// Fires pending activations in the specified group while coordinating with the group's readiness policy.
-        /// When focus is honored, firing pauses if another group becomes focused.
-        /// </summary>
-        /// <param name="groupName">The agenda group whose activations should be fired.</param>
-        /// <param name="honorFocus">Whether firing should stop when this group loses focus.</param>
-        /// <returns>False if a readiness strategy pauses the group; otherwise true.</returns>
-        private bool FireGroupActivations(string groupName, bool honorFocus)
-        {
-            AgendaGroup group = _groups[groupName];
-            return group.Drain(activation =>
-            {
-                string keyFacts = GenerateActivationKey(activation);
-                if (_firedActivationsRegistry.Contains(keyFacts))
-                {
-                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
-                    activation.State = Activation.ActivationStateEnum.Cancelled;
-                    RecordActivity(groupName, "DuplicateActivationSkipped", activation.RuleName);
-                    return false;
-                }
-                Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' in group '{groupName}' with facts [{keyFacts}] and salience {activation.Salience}.");
-                activation.State = Activation.ActivationStateEnum.Fired;
-                _firedActivationsRegistry.Add(keyFacts);
-                FireActivation(activation);
-                return true;
-            }, () => !honorFocus || string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal));
-        }
-
-        /// <summary>
-        /// Fire the given activation collecting statistics along the way.
-        /// </summary>
-        /// <param name="activation">The activation to fire</param>
-        private void FireActivation(Activation activation)
-        {
-            AgendaGroupActivityRecord activity = _groups[activation.AgendaGroupName].Execute(activation);
-            ActivationFired?.Invoke(activity);
-        }
-
-        /// <summary>
         /// Cancels any activations associated with the given fact.  Any activation that has a state of Pending
         /// is changed to Cancelled if the given fact is associated with it.
         /// </summary>
@@ -599,6 +566,66 @@ namespace ReteCore
             return GenerateActivationKey(activation.RuleName, activation.Match, activation.AgendaGroupName);
         }
 
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Pop the currently focused group from the focus stack, returning focus to the previous group. The base `MAIN` group
+        /// cannot be removed. Notify subscribers of the change with the specified reason.
+        /// </summary>
+        /// <param name="reason">The reason for popping the focused group.</param>
+        /// <returns>True when a focused group was removed; otherwise false.</returns>
+        private bool PopAgendaGroupFocus(AgendaFocusStackChangeReason reason)
+        {
+            if (_agendaGroupFocusStack.Count <= 1) return false;
+            IReadOnlyList<string> previousStack = CaptureFocusStack();
+            string poppedGroup = FocusedAgendaGroup;
+            _agendaGroupFocusStack.RemoveAt(_agendaGroupFocusStack.Count - 1);
+            RecordActivity(poppedGroup, "FocusPopped");
+            RecordGroupFocus(FocusedAgendaGroup, "FocusResumed");
+            NotifyFocusStackChanged(previousStack, reason);
+            return true;
+        }
+
+        /// <summary>
+        /// Fires pending activations in the specified group while coordinating with the group's readiness policy.
+        /// When focus is honored, firing pauses if another group becomes focused.
+        /// </summary>
+        /// <param name="groupName">The agenda group whose activations should be fired.</param>
+        /// <param name="honorFocus">Whether firing should stop when this group loses focus.</param>
+        /// <returns>False if a readiness strategy pauses the group; otherwise true.</returns>
+        private bool FireGroupActivations(string groupName, bool honorFocus)
+        {
+            AgendaGroup group = _groups[groupName];
+            return group.Drain(activation =>
+            {
+                string keyFacts = GenerateActivationKey(activation);
+                if (_firedActivationsRegistry.Contains(keyFacts))
+                {
+                    Console.WriteLine($"[AGENDA] Skipping activation of rule '{activation.RuleName}' with facts [{keyFacts}] as it has already been fired.");
+                    activation.State = Activation.ActivationStateEnum.Cancelled;
+                    RecordActivity(groupName, "DuplicateActivationSkipped", activation.RuleName);
+                    return false;
+                }
+                Console.WriteLine($"[AGENDA] Firing activation of rule '{activation.RuleName}' in group '{groupName}' with facts [{keyFacts}] and salience {activation.Salience}.");
+                activation.State = Activation.ActivationStateEnum.Fired;
+                _firedActivationsRegistry.Add(keyFacts);
+                FireActivation(activation);
+                return true;
+            }, () => !honorFocus || string.Equals(FocusedAgendaGroup, groupName, StringComparison.Ordinal));
+        }
+
+        /// <summary>
+        /// Fire the given activation collecting statistics along the way.
+        /// </summary>
+        /// <param name="activation">The activation to fire</param>
+        private void FireActivation(Activation activation)
+        {
+            AgendaGroupActivityRecord activity = _groups[activation.AgendaGroupName].Execute(activation);
+            ActivationFired?.Invoke(activity);
+        }
+
         /// <summary>
         /// Builds a deduplication key using stable identities for reference-type facts. 
         /// </summary>
@@ -613,7 +640,6 @@ namespace ReteCore
             string groupPart = agendaGroupName == MainAgendaGroup ? string.Empty : $"|group:{agendaGroupName}";
             return $"{GenerateTupleKey(ruleName, match)}{groupPart}|revision:{revisionParts}";
         }
-
         /// <summary>
         /// Generates a stable tuple key for an activation based on the rule name and the named facts in the match token.
         /// </summary>
@@ -792,6 +818,8 @@ namespace ReteCore
         {
             return _groups.Values.Sum(group => group.RemoveActivations(predicate));
         }
+
+        #endregion
 
         /// <summary>
         /// The ActivationIdentity record is used to assign a unique identity to reference-type objects for the purpose
