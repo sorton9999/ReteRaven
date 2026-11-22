@@ -4,6 +4,7 @@ var class_rete_core_1_1_rule_metadata =
     [ "Action", "class_rete_core_1_1_rule_metadata.html#aea47d39cca2fbd823eb3221c9634e367", null ],
     [ "Agenda", "class_rete_core_1_1_rule_metadata.html#a98b2b8454652408cba747729b0380749", null ],
     [ "AgendaGroupName", "class_rete_core_1_1_rule_metadata.html#a918b9ff2b33387c9dbb5814f77f08c2f", null ],
+    [ "AutoFocus", "class_rete_core_1_1_rule_metadata.html#aad195827c2ccc9186f06c49d71d60d26", null ],
     [ "ContextAction", "class_rete_core_1_1_rule_metadata.html#acbf84b97c433a4a2cd765acba34aaf8b", null ],
     [ "GlobalGuards", "class_rete_core_1_1_rule_metadata.html#a3935ddf6a318cb2d1f2e402f39720d0e", null ],
     [ "LateFilters", "class_rete_core_1_1_rule_metadata.html#a69797c4b08a0d7f58a27a70e1f1b602c", null ],

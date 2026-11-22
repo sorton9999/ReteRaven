@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rollbacklifecycle_0',['RollbackLifecycle',['../class_rete_engine_1_1_rete_engine.html#a1eb1e4252fbb323964e6a9adfb2b0e95',1,'ReteEngine::ReteEngine']]],
-  ['rollbacksideeffect_1',['RollbackSideEffect',['../class_rete_engine_1_1_rete_engine.html#a827d47e1552c32df12494bb51780f87c',1,'ReteEngine::ReteEngine']]],
-  ['rulefired_2',['RuleFired',['../class_rete_engine_1_1_rete_engine.html#afd46b43e5b8f2bd6e73aff262b63e4c6',1,'ReteEngine::ReteEngine']]]
+  ['propertychanged_0',['PropertyChanged',['../class_rete_core_1_1_fact-1-g.html#aff0a0f8182e4fa6986baac4597bfb6a4',1,'ReteCore.Fact-1-g.PropertyChanged'],['../class_rete_core_1_1_fact.html#a7de0440a9d4965bc3a651f0a3f42d7f5',1,'ReteCore.Fact.PropertyChanged']]],
+  ['publishedbatchmetadatacommitted_1',['PublishedBatchMetadataCommitted',['../class_rete_engine_1_1_rete_engine.html#a1936d5b399553ad9cc31b1a4ce0db10c',1,'ReteEngine::ReteEngine']]]
 ];

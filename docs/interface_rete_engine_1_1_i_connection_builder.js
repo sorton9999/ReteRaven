@@ -6,5 +6,6 @@ var interface_rete_engine_1_1_i_connection_builder =
     [ "CtxThen", "interface_rete_engine_1_1_i_connection_builder.html#a857b7580c747e9d520903a6a04c02658", null ],
     [ "Or", "interface_rete_engine_1_1_i_connection_builder.html#af31bd4fd40159987623b423610cde31a", null ],
     [ "Or< T >", "interface_rete_engine_1_1_i_connection_builder.html#a8d5c91bda1ce08d137ffe8455286d25c", null ],
-    [ "Then", "interface_rete_engine_1_1_i_connection_builder.html#ac713472d2db6809f075d4dd0ba743a8c", null ]
+    [ "Then", "interface_rete_engine_1_1_i_connection_builder.html#ac713472d2db6809f075d4dd0ba743a8c", null ],
+    [ "Where", "interface_rete_engine_1_1_i_connection_builder.html#a3bdff6f557b58d94198ed55a0128f7bf", null ]
 ];

@@ -5,13 +5,16 @@ var interface_rete_engine_1_1_i_evaluation_builder =
     [ "AndNot< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#af8b9633f8c48f19dac4f6d6ad0e7d51e", null ],
     [ "CtxThen", "interface_rete_engine_1_1_i_evaluation_builder.html#a69d4f3f67bee5354006cddc9ab04f9e4", null ],
     [ "Exists< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a53e961ef481c9dc9b8c28ea1abd80949", null ],
-    [ "Group< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a9f8c65425632fbebcf216afddd62c76e", null ],
+    [ "Group< TRightFact >", "interface_rete_engine_1_1_i_evaluation_builder.html#aa52e8429cf0a07c86b152c66d952d900", null ],
+    [ "GroupBy< TRightFact, TKey >", "interface_rete_engine_1_1_i_evaluation_builder.html#a4edfb30817f5f109a5f30734e7311f96", null ],
+    [ "Having", "interface_rete_engine_1_1_i_evaluation_builder.html#ad8dde09a547de58bfc0f5c807feac227", null ],
     [ "JoinWith< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#afdc7323ee967ee908eca85ffe576f463", null ],
     [ "Not< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#abb0705efbd12ed75c27cb8f768d2ddda", null ],
     [ "Or", "interface_rete_engine_1_1_i_evaluation_builder.html#a9a444ea5a15152fc3f6860454399fbd7", null ],
     [ "Or< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a4ab5572305fd81dc1265e517886dbe6d", null ],
     [ "Then", "interface_rete_engine_1_1_i_evaluation_builder.html#a271de538e5846c5ebcf4d4380bf7afbf", null ],
     [ "Trace", "interface_rete_engine_1_1_i_evaluation_builder.html#ac7fb793f964c3b5ed49ac37e77ac7ccb", null ],
+    [ "Where", "interface_rete_engine_1_1_i_evaluation_builder.html#a10dee97fcd87e835beb655d6cb8e5c6a", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#abccacab4c576e3af6d4c57afc256bc8c", null ],
     [ "Where< T >", "interface_rete_engine_1_1_i_evaluation_builder.html#a7477e89f31fdee5fb0aed8c1b3b845d1", null ]
 ];

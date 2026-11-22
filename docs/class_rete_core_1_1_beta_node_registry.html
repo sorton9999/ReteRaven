@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -103,6 +103,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3cc9ba1263d2d402eb7e06b16dd6c187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves or creates a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> node for a given pattern at a given point in the network. If a <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> with the exact (previousNode, patternSignature) pair exists, it is reused. Otherwise, a new <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> is created and cached.  <br /></td></tr>
 <tr class="memitem:a0416e3fc76dd15d1b05d9f68dceedc9b" id="r_a0416e3fc76dd15d1b05d9f68dceedc9b"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_join_node.html">JoinNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory&#160;</td><td class="memItemRight"><a class="el" href="#a0416e3fc76dd15d1b05d9f68dceedc9b">GetOrCreateJoinPair</a> (<a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>? previousNode, string joinSignature, string tokenName, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt; joinCondition)</td></tr>
 <tr class="memitem:a75bee4d44a82a52f7b8cba5667c33e7f" id="r_a75bee4d44a82a52f7b8cba5667c33e7f"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a>&#160;</td><td class="memItemRight"><a class="el" href="#a75bee4d44a82a52f7b8cba5667c33e7f">GetOrCreateNotPair</a> (<a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> previousNode, string joinSignature, string tokenName, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt; joinCondition)</td></tr>
+<tr class="memitem:afb0d84c8765f95057366718d479cff42" id="r_afb0d84c8765f95057366718d479cff42"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_beta_filter_node.html">BetaFilterNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory&#160;</td><td class="memItemRight"><a class="el" href="#afb0d84c8765f95057366718d479cff42">GetOrCreateFilterPair</a> (<a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>? previousNode, string filterSignature, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt; filterCondition)</td></tr>
+<tr class="memitem:acc51af3dc2a3f8b40f853e4632e524b1" id="r_acc51af3dc2a3f8b40f853e4632e524b1"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_aggregation_group_node.html">AggregationGroupNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory&#160;</td><td class="memItemRight"><a class="el" href="#acc51af3dc2a3f8b40f853e4632e524b1">GetOrCreateAggregationPair</a> (<a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>? previousNode, string groupSignature, <a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory, Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt; wrappedJoin, string variableName, Func&lt; IEnumerable&lt; object &gt;, object &gt; aggregator)</td></tr>
+<tr class="memitem:a458d123e1c506a69ab04bdf10bf0a446" id="r_a458d123e1c506a69ab04bdf10bf0a446"><td class="memItemLeft"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory&#160;</td><td class="memItemRight"><a class="el" href="#a458d123e1c506a69ab04bdf10bf0a446">GetOrCreateGroupByPair</a> (<a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a> alphaMemory, string groupBySignature, Func&lt; <a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> &gt; nodeFactory)</td></tr>
 <tr class="memitem:aa54584c05060ed68901608a9c2b10f32" id="r_aa54584c05060ed68901608a9c2b10f32"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa54584c05060ed68901608a9c2b10f32">ConnectNodeIfNeeded</a> (<a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>? previousNode, <a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> nodeToConnect)</td></tr>
 <tr class="memdesc:aa54584c05060ed68901608a9c2b10f32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects a node to its predecessor if not already connected. This ensures that when a cached node is reused, its predecessor knows about it. Safe to call multiple times; idempotent.  <br /></td></tr>
 <tr class="memitem:a2c1774b5a57f9d4a29a65c02814acc47" id="r_a2c1774b5a57f9d4a29a65c02814acc47"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2c1774b5a57f9d4a29a65c02814acc47">Clear</a> ()</td></tr>
@@ -120,6 +123,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a734799e9c124d2a147991b59bfdf387f" id="r_a734799e9c124d2a147991b59bfdf387f"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_join_node.html">JoinNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a734799e9c124d2a147991b59bfdf387f">joinNode</a></td></tr>
 <tr class="memdesc:a734799e9c124d2a147991b59bfdf387f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves or creates a (<a class="el" href="class_rete_core_1_1_join_node.html" title="Represents a join node in a RETE network that combines partial matches from the left input with facts...">JoinNode</a>, <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a>) pair for a join pattern. Join pairs are atomic: both the join condition and the following beta memory are cached together. If a pair with the exact (previousNode, joinSignature) exists, it is reused (including its join condition). Otherwise, a new pair is created and cached.  <br /></td></tr>
 <tr class="memitem:ad0f11b10a6ac3281b8e893637b1498ab" id="r_ad0f11b10a6ac3281b8e893637b1498ab"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a></td></tr>
+<tr class="memitem:a66bb70dac9f5fff545fe6592c301e973" id="r_a66bb70dac9f5fff545fe6592c301e973"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_beta_filter_node.html">BetaFilterNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a66bb70dac9f5fff545fe6592c301e973">filterNode</a></td></tr>
+<tr class="memitem:a20f3f051e7b8a2332e399e28f5cbe726" id="r_a20f3f051e7b8a2332e399e28f5cbe726"><td class="memItemLeft"><a class="el" href="class_rete_core_1_1_aggregation_group_node.html">AggregationGroupNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a20f3f051e7b8a2332e399e28f5cbe726">groupNode</a></td></tr>
+<tr class="memitem:a2d3da93167a0ee7cbd2991b73b391fef" id="r_a2d3da93167a0ee7cbd2991b73b391fef"><td class="memItemLeft"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2d3da93167a0ee7cbd2991b73b391fef">groupByNode</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -232,6 +238,47 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="acc51af3dc2a3f8b40f853e4632e524b1" name="acc51af3dc2a3f8b40f853e4632e524b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc51af3dc2a3f8b40f853e4632e524b1">&#9670;&#160;</a></span>GetOrCreateAggregationPair()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_aggregation_group_node.html">AggregationGroupNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory ReteCore.BetaNodeRegistry.GetOrCreateAggregationPair </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>?</td>          <td class="paramname"><span class="paramname"><em>previousNode</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupSignature</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a></td>          <td class="paramname"><span class="paramname"><em>alphaMemory</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, object, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>wrappedJoin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>variableName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; IEnumerable&lt; object &gt;, object &gt;</td>          <td class="paramname"><span class="paramname"><em>aggregator</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3cc9ba1263d2d402eb7e06b16dd6c187" name="a3cc9ba1263d2d402eb7e06b16dd6c187"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3cc9ba1263d2d402eb7e06b16dd6c187">&#9670;&#160;</a></span>GetOrCreateBetaMemory()</h2>
 
@@ -260,6 +307,58 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A cached or newly created <a class="el" href="class_rete_core_1_1_beta_memory.html" title="The BetaMemory class represents a node in a Rete network that stores partial matches (tokens) of fact...">BetaMemory</a> instance.</dd></dl>
+
+</div>
+</div>
+<a id="afb0d84c8765f95057366718d479cff42" name="afb0d84c8765f95057366718d479cff42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb0d84c8765f95057366718d479cff42">&#9670;&#160;</a></span>GetOrCreateFilterPair()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_beta_filter_node.html">BetaFilterNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory ReteCore.BetaNodeRegistry.GetOrCreateFilterPair </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a>?</td>          <td class="paramname"><span class="paramname"><em>previousNode</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>filterSignature</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_rete_core_1_1_token.html">Token</a>, bool &gt;</td>          <td class="paramname"><span class="paramname"><em>filterCondition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a458d123e1c506a69ab04bdf10bf0a446" name="a458d123e1c506a69ab04bdf10bf0a446"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a458d123e1c506a69ab04bdf10bf0a446">&#9670;&#160;</a></span>GetOrCreateGroupByPair()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> <a class="el" href="class_rete_core_1_1_beta_memory.html">BetaMemory</a> betaMemory ReteCore.BetaNodeRegistry.GetOrCreateGroupByPair </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_rete_core_1_1_alpha_memory.html">AlphaMemory</a></td>          <td class="paramname"><span class="paramname"><em>alphaMemory</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>groupBySignature</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nodeFactory</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -372,6 +471,48 @@ Properties</h2></td></tr>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a66bb70dac9f5fff545fe6592c301e973" name="a66bb70dac9f5fff545fe6592c301e973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66bb70dac9f5fff545fe6592c301e973">&#9670;&#160;</a></span>filterNode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_beta_filter_node.html">BetaFilterNode</a> ReteCore.BetaNodeRegistry.filterNode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2d3da93167a0ee7cbd2991b73b391fef" name="a2d3da93167a0ee7cbd2991b73b391fef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d3da93167a0ee7cbd2991b73b391fef">&#9670;&#160;</a></span>groupByNode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ad0f11b10a6ac3281b8e893637b1498ab">IReteNode</a> ReteCore.BetaNodeRegistry.groupByNode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a20f3f051e7b8a2332e399e28f5cbe726" name="a20f3f051e7b8a2332e399e28f5cbe726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20f3f051e7b8a2332e399e28f5cbe726">&#9670;&#160;</a></span>groupNode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rete_core_1_1_aggregation_group_node.html">AggregationGroupNode</a> ReteCore.BetaNodeRegistry.groupNode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad0f11b10a6ac3281b8e893637b1498ab" name="ad0f11b10a6ac3281b8e893637b1498ab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad0f11b10a6ac3281b8e893637b1498ab">&#9670;&#160;</a></span>IReteNode</h2>
 

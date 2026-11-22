@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -128,6 +128,8 @@ Properties</h2></td></tr>
 <tr class="memdesc:a0edab17953195a8ee545ee1d8be00d42"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integer representing the rule level priority of activations created by this terminal node. Higher priority values indicate that the rule will fire before lower priority ones when multiple activations are pending in the agenda. This allows for control over the execution order of rules, when it is important to ensure that certain rules are executed before others. A default value of 0 means that if priority is not specified, it will not affect the execution order of activations relative to those with explicitly set priority values.  <br /></td></tr>
 <tr class="memitem:a4a4e8939b3afc9d4601ba993c0bc6d9e" id="r_a4a4e8939b3afc9d4601ba993c0bc6d9e"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a4a4e8939b3afc9d4601ba993c0bc6d9e">Salience</a> = 0<code> [get]</code></td></tr>
 <tr class="memdesc:a4a4e8939b3afc9d4601ba993c0bc6d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integer representing the condition level priority or salience of activations created by this terminal node. Higher salience values indicate higher priority for execution when multiple activations are pending in the agenda. This allows for fine-grained control over the order in which rule conditions are fired when multiple facts are asserted that match the same rule, ensuring that more important conditions are evaluated before less important ones. The default value is 0, which means that if salience is not specified, it will not affect the execution order of activations relative to those with explicitly set salience values.  <br /></td></tr>
+<tr class="memitem:aad195827c2ccc9186f06c49d71d60d26" id="r_aad195827c2ccc9186f06c49d71d60d26"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aad195827c2ccc9186f06c49d71d60d26">AutoFocus</a> = false<code> [get]</code></td></tr>
+<tr class="memdesc:aad195827c2ccc9186f06c49d71d60d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">A flag to set an Auto Focus state for a rule this meydata will be assigned to.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_rete_core_1_1_rule_metadata.html" title="The RuleMetadata class encapsulates all the necessary information about a rule in a Rete-based rule e...">RuleMetadata</a> class encapsulates all the necessary information about a rule in a Rete-based rule engine. </p>
@@ -221,6 +223,30 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The agenda group that receives activations for this rule. </p>
+
+</div>
+</div>
+<a id="aad195827c2ccc9186f06c49d71d60d26" name="aad195827c2ccc9186f06c49d71d60d26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad195827c2ccc9186f06c49d71d60d26">&#9670;&#160;</a></span>AutoFocus</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.RuleMetadata.AutoFocus = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel get">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A flag to set an Auto Focus state for a rule this meydata will be assigned to. </p>
 
 </div>
 </div>

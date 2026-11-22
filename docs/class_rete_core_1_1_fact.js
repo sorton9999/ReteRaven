@@ -3,6 +3,7 @@ var class_rete_core_1_1_fact =
     [ "Equals", "class_rete_core_1_1_fact.html#a7b5831c5fb1685237c57a391f2d62fec", null ],
     [ "GetHashCode", "class_rete_core_1_1_fact.html#afab9d5c4b86fc95763d41c7da765bba7", null ],
     [ "OnPropertyChanged", "class_rete_core_1_1_fact.html#a5386433ee1a816cb659f031bf40e13fb", null ],
+    [ "SetField< T >", "class_rete_core_1_1_fact.html#a11ac51e379d34efa5d6ea421a90575e1", null ],
     [ "Snapshot", "class_rete_core_1_1_fact.html#a2df5e9451ce8a4e0d731de25a3a5fdfc", null ],
     [ "ToString", "class_rete_core_1_1_fact.html#aaf8838f5e8cc420f2092cd9b5c39355f", null ],
     [ "DataType", "class_rete_core_1_1_fact.html#a6ee14fbfe29a6d48e2933c809c64da6b", null ],

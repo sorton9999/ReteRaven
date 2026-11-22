@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -133,6 +133,11 @@ Properties</h2></td></tr>
 <tr class="memdesc:af840cf7a3fd16152edbe039c85abf7df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an empty enumerable of successor nodes. Terminal nodes do not have any successors, as they are the endpoint of a Rete rule network.  <br /></td></tr>
 <tr class="memitem:a5f75f65dc18c8d0655fe1345840bd34f" id="r_a5f75f65dc18c8d0655fe1345840bd34f"><td class="memItemLeft"><a class="el" href="interface_rete_core_1_1_i_rete_node.html">IReteNode</a>?&#160;</td><td class="memItemRight"><a class="el" href="#a5f75f65dc18c8d0655fe1345840bd34f">Parent</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a5f75f65dc18c8d0655fe1345840bd34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent node in the Rete network. This property allows for navigation back up the network from this node.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-events" class="groupheader"><a id="events" name="events"></a>
+Events</h2></td></tr>
+<tr class="memitem:a1db4eb3976d3470a9ef7ec76074957da" id="r_a1db4eb3976d3470a9ef7ec76074957da"><td class="memItemLeft">Action&lt; string, <a class="el" href="class_rete_core_1_1_token.html">Token</a> &gt;?&#160;</td><td class="memItemRight"><a class="el" href="#a1db4eb3976d3470a9ef7ec76074957da">TokenRetracted</a></td></tr>
+<tr class="memdesc:a1db4eb3976d3470a9ef7ec76074957da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Am event emtted by a <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> retraction. The <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> to retract is given along with the Rule Name.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a terminal node in a Rete network that schedules rule activations when matching facts are asserted. </p>
@@ -430,6 +435,23 @@ Properties</h2></td></tr>
 <p>Returns an empty enumerable of successor nodes. Terminal nodes do not have any successors, as they are the endpoint of a Rete rule network. </p>
 
 <p>Implements <a class="el" href="interface_rete_core_1_1_i_rete_node.html#ad8be8ec8825b865030c7282ea768f103">ReteCore.IReteNode</a>.</p>
+
+</div>
+</div>
+<a name="doc-event-members" id="doc-event-members"></a><h2 id="header-doc-event-members" class="groupheader">Event Documentation</h2>
+<a id="a1db4eb3976d3470a9ef7ec76074957da" name="a1db4eb3976d3470a9ef7ec76074957da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1db4eb3976d3470a9ef7ec76074957da">&#9670;&#160;</a></span>TokenRetracted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action&lt;string, <a class="el" href="class_rete_core_1_1_token.html">Token</a>&gt;? ReteCore.TerminalNode.TokenRetracted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Am event emtted by a <a class="el" href="class_rete_core_1_1_fact.html" title="Represents a data cell with an identifier and a value, supporting property change notification.">Fact</a> retraction. The <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> to retract is given along with the Rule Name. </p>
 
 </div>
 </div>

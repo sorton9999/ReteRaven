@@ -11,5 +11,6 @@ var searchData=
   ['agendagroupname_8',['AgendaGroupName',['../class_rete_core_1_1_activation.html#ac22a1bc465593bfb2a49019cd9285d00',1,'ReteCore.Activation.AgendaGroupName'],['../class_rete_core_1_1_rule_execution_context.html#a61b5a32c21cdd5cc333e8778b587e944',1,'ReteCore.RuleExecutionContext.AgendaGroupName'],['../class_rete_core_1_1_rule_metadata.html#a918b9ff2b33387c9dbb5814f77f08c2f',1,'ReteCore.RuleMetadata.AgendaGroupName']]],
   ['agendagroups_9',['AgendaGroups',['../class_rete_core_1_1_agenda.html#a7d6b5aaf2871bfd71a4c44ff3c8a2937',1,'ReteCore::Agenda']]],
   ['alias_10',['Alias',['../class_rete_core_1_1_late_filter.html#a39fcd90e9ea14c8120434be6cf33fec1',1,'ReteCore::LateFilter']]],
-  ['autorefreshonpropertychanged_11',['AutoRefreshOnPropertyChanged',['../class_rete_engine_1_1_rete_engine_options.html#a773cb23731712458dde6c56118fd828a',1,'ReteEngine::ReteEngineOptions']]]
+  ['autofocus_11',['AutoFocus',['../class_rete_core_1_1_activation.html#ae98c1f3574606f25b52c2aef2e03ba36',1,'ReteCore.Activation.AutoFocus'],['../class_rete_core_1_1_rule_metadata.html#aad195827c2ccc9186f06c49d71d60d26',1,'ReteCore.RuleMetadata.AutoFocus']]],
+  ['autorefreshonpropertychanged_12',['AutoRefreshOnPropertyChanged',['../class_rete_engine_1_1_rete_engine_options.html#a773cb23731712458dde6c56118fd828a',1,'ReteEngine::ReteEngineOptions']]]
 ];

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -96,8 +96,8 @@ $(function(){initNavTree('_group_builder_8cs.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:ReteEngine_2EIGroupBuilder_3C_20TInitial_20_3E" id="r_ReteEngine_2EIGroupBuilder_3C_20TInitial_20_3E"><td class="memItemLeft">interface &#160;</td><td class="memItemRight"><a class="el" href="interface_rete_engine_1_1_i_group_builder-1-g.html">ReteEngine.IGroupBuilder&lt; TInitial &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A interface for building group operations in a Rete network. It allows the user to define conditions for grouping facts and specify aggregation operations such as Sum, Count, and Average on the grouped data. The interface is generic and works with an initial fact type TInitial, while the specific type of facts being grouped is determined by the implementation.  <a href="interface_rete_engine_1_1_i_group_builder-1-g.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ReteEngine_2EIGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E" id="r_ReteEngine_2EIGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E"><td class="memItemLeft">interface &#160;</td><td class="memItemRight"><a class="el" href="interface_rete_engine_1_1_i_group_builder-2-g.html">ReteEngine.IGroupBuilder&lt; TInitial, TRightFact &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures and compiles an anchored aggregation group that collects and aggregates right-hand facts of type <em>TRightFact</em>  for each left-hand <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> in a Rete rule.  <a href="interface_rete_engine_1_1_i_group_builder-2-g.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ReteEngine_2EGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E" id="r_ReteEngine_2EGroupBuilder_3C_20TInitial_2C_20TRightFact_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_rete_engine_1_1_group_builder-2-g.html">ReteEngine.GroupBuilder&lt; TInitial, TRightFact &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GroupBuilder class is a concrete implementation of the IGroupBuilder interface, providing functionality to define grouping conditions and aggregation operations in a Rete network. It allows users to specify how facts should be grouped based on a join condition and perform aggregations like Sum, Count, and Average on the grouped data. The class is generic, with TInitial representing the type of the initial fact and TRightFact representing the type of facts being grouped.  <a href="class_rete_engine_1_1_group_builder-2-g.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">

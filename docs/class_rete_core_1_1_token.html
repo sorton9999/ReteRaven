@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -111,6 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a42e3ecfc938754383eb63b664e788315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_rete_core_1_1_token.html" title="Represents a chain of named facts used to track the state and ancestry of rule evaluation in a rule e...">Token</a> class by extending the specified parent token with an additional named fact.  <br /></td></tr>
 <tr class="memitem:a9f375ff2582a5b25e056a49613ca590e" id="r_a9f375ff2582a5b25e056a49613ca590e"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a9f375ff2582a5b25e056a49613ca590e">Get&lt; T &gt;</a> (string name)</td></tr>
 <tr class="memdesc:a9f375ff2582a5b25e056a49613ca590e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a fact by name and type from the collection, searching through the token chain if not found locally. This method first attempts to find the fact in the current token's NamedFacts dictionary. If not found, it walks up the parent chain to search for the fact in ancestor tokens. This is especially useful when working with reused beta memories where tokens may have been constructed through different paths.  <br /></td></tr>
+<tr class="memitem:a22b0e448b0acd5827fe0f36b4bd9b27d" id="r_a22b0e448b0acd5827fe0f36b4bd9b27d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a22b0e448b0acd5827fe0f36b4bd9b27d">TryGet&lt; T &gt;</a> (string name, out T fact)</td></tr>
+<tr class="memdesc:a22b0e448b0acd5827fe0f36b4bd9b27d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A safe method to attempt to retrieve a fact by name and type from the token chain. It returns a boolean indicating success or failure, and outputs the fact if found.  <br /></td></tr>
 <tr class="memitem:ae3e6883f7dd2ba5e1052daf2942b4525" id="r_ae3e6883f7dd2ba5e1052daf2942b4525"><td class="memItemLeft">override string&#160;</td><td class="memItemRight"><a class="el" href="#ae3e6883f7dd2ba5e1052daf2942b4525">ToString</a> ()</td></tr>
 <tr class="memdesc:ae3e6883f7dd2ba5e1052daf2942b4525"><td class="mdescLeft">&#160;</td><td class="mdescRight">The overridden string output method.  <br /></td></tr>
 <tr class="memitem:a074cc2f178ec2212f0ec674abe785ed5" id="r_a074cc2f178ec2212f0ec674abe785ed5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a074cc2f178ec2212f0ec674abe785ed5">Equals</a> (<a class="el" href="#a8f29288b719ffe49dd9f870329f2ce11">Token</a>? other)</td></tr>
@@ -359,6 +361,43 @@ Properties</h2></td></tr>
 
 <p>The overridden string output method. </p>
 <dl class="section return"><dt>Returns</dt><dd>The string representation of the object</dd></dl>
+
+</div>
+</div>
+<a id="a22b0e448b0acd5827fe0f36b4bd9b27d" name="a22b0e448b0acd5827fe0f36b4bd9b27d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22b0e448b0acd5827fe0f36b4bd9b27d">&#9670;&#160;</a></span>TryGet&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ReteCore.Token.TryGet&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out T</td>          <td class="paramname"><span class="paramname"><em>fact</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A safe method to attempt to retrieve a fact by name and type from the token chain. It returns a boolean indicating success or failure, and outputs the fact if found. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the fact to retrieve.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the fact to retrieve.</td></tr>
+    <tr><td class="paramname">fact</td><td>When this method returns, contains the fact associated with the specified name if found; otherwise, the default value for the type T.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the fact was found; otherwise, <code>false</code>.</dd></dl>
 
 </div>
 </div>

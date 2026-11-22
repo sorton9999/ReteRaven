@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -103,6 +103,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:afe6cb2bcb8b369d3747a325d8cb29a31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts a new fact into the context. The fact is staged for insertion when the context is completed.  <br /></td></tr>
 <tr class="memitem:af89b887b36d2e34bb36468ac37b3feb1" id="r_af89b887b36d2e34bb36468ac37b3feb1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af89b887b36d2e34bb36468ac37b3feb1">Update</a> (<a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a> replacement, long? expectedRevision=null)</td></tr>
 <tr class="memdesc:af89b887b36d2e34bb36468ac37b3feb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates an existing fact in the context. The fact is staged for update when the context is completed.  <br /></td></tr>
+<tr class="memitem:aba62a35c6881d7e209c972d24d25adf5" id="r_aba62a35c6881d7e209c972d24d25adf5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aba62a35c6881d7e209c972d24d25adf5">InsertLogical</a> (<a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a> fact)</td></tr>
+<tr class="memdesc:aba62a35c6881d7e209c972d24d25adf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stages a logical assertion for <em>fact</em>  justified by the current activation's <a class="el" href="#ae7b84a2820040bb889b1e0e61ba1f17e" title="The token that triggered the rule activation. This token contains the facts that matched the rule&#39;s c...">Match</a>. When the justifying match is retracted from the network, the Truth Maintenance System automatically retracts this fact from working memory.  <br /></td></tr>
 <tr class="memitem:a4cf420aca9b4735a58ab6b8bf5bc5f15" id="r_a4cf420aca9b4735a58ab6b8bf5bc5f15"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4cf420aca9b4735a58ab6b8bf5bc5f15">Retract</a> (Guid factId, long? expectedRevision=null)</td></tr>
 <tr class="memdesc:a4cf420aca9b4735a58ab6b8bf5bc5f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retracts an existing fact from the context. The fact is staged for removal when the context is completed.  <br /></td></tr>
 <tr class="memitem:a1a4a4407643439e4c7361fc75b0687f1" id="r_a1a4a4407643439e4c7361fc75b0687f1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1a4a4407643439e4c7361fc75b0687f1">Publish</a> ()</td></tr>
@@ -145,6 +147,31 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fact</td><td>The fact to assert.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aba62a35c6881d7e209c972d24d25adf5" name="aba62a35c6881d7e209c972d24d25adf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba62a35c6881d7e209c972d24d25adf5">&#9670;&#160;</a></span>InsertLogical()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.RuleExecutionContext.InsertLogical </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_rete_core_1_1_i_fact.html">IFact</a></td>          <td class="paramname"><span class="paramname"><em>fact</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stages a logical assertion for <em>fact</em>  justified by the current activation's <a class="el" href="#ae7b84a2820040bb889b1e0e61ba1f17e" title="The token that triggered the rule activation. This token contains the facts that matched the rule&#39;s c...">Match</a>. When the justifying match is retracted from the network, the Truth Maintenance System automatically retracts this fact from working memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fact</td><td>The fact to insert.</td></tr>
   </table>
   </dd>
 </dl>

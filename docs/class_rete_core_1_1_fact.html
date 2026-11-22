@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="asciiraven.png"/></td>
   <td id="projectalign">
-   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.1</span>
+   <div id="projectname">ReteRaven<span id="projectnumber">&#160;1.5.2</span>
    </div>
    <div id="projectbrief">A Rete-based rules engine and builder</div>
   </td>
@@ -121,6 +121,8 @@ Public Member Functions</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5386433ee1a816cb659f031bf40e13fb" id="r_a5386433ee1a816cb659f031bf40e13fb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5386433ee1a816cb659f031bf40e13fb">OnPropertyChanged</a> ([CallerMemberName] string propertyName=null)</td></tr>
 <tr class="memdesc:a5386433ee1a816cb659f031bf40e13fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. Observers can subscribe to the PropertyChanged event to be notified when a property value changes.  <br /></td></tr>
+<tr class="memitem:a11ac51e379d34efa5d6ea421a90575e1" id="r_a11ac51e379d34efa5d6ea421a90575e1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a11ac51e379d34efa5d6ea421a90575e1">SetField&lt; T &gt;</a> (ref T field, T value, [CallerMemberName] string? propertyName=null)</td></tr>
+<tr class="memdesc:a11ac51e379d34efa5d6ea421a90575e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the field and call the PropertyChanged event on the field.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -216,6 +218,56 @@ Events</h2></td></tr>
 <p>When a property value changes, this method is called to raise the PropertyChanged event. The CallerMemberName attribute allows the caller to omit the property name when calling this method, as it will automatically use the name of the calling property. Observers can subscribe to the PropertyChanged event to be notified when a property value changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">propertyName</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a11ac51e379d34efa5d6ea421a90575e1" name="a11ac51e379d34efa5d6ea421a90575e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11ac51e379d34efa5d6ea421a90575e1">&#9670;&#160;</a></span>SetField&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReteCore.Fact.SetField&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">ref T</td>          <td class="paramname"><span class="paramname"><em>field</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerMemberName] string?</td>          <td class="paramname"><span class="paramname"><em>propertyName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the field and call the PropertyChanged event on the field. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">field</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
     <tr><td class="paramname">propertyName</td><td></td></tr>
   </table>
   </dd>

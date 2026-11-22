@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['propertychanged_0',['PropertyChanged',['../class_rete_core_1_1_fact-1-g.html#aff0a0f8182e4fa6986baac4597bfb6a4',1,'ReteCore.Fact-1-g.PropertyChanged'],['../class_rete_core_1_1_fact.html#a7de0440a9d4965bc3a651f0a3f42d7f5',1,'ReteCore.Fact.PropertyChanged']]],
-  ['publishedbatchmetadatacommitted_1',['PublishedBatchMetadataCommitted',['../class_rete_engine_1_1_rete_engine.html#a1936d5b399553ad9cc31b1a4ce0db10c',1,'ReteEngine::ReteEngine']]]
+  ['logicalfactorphaned_0',['LogicalFactOrphaned',['../class_rete_engine_1_1_truth_maintenance_system.html#aae38c358a35261097c66d522d826248d',1,'ReteEngine::TruthMaintenanceSystem']]]
 ];
